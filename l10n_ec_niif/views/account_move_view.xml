@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+
+        <record id="account_move_form_view" model="ir.ui.view">
+            <field name="name">account.move.form</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="l10n_latam_invoice_document.view_move_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//group[@name='accounting_info_group']" position="before">
+                    <group string="SRI Data" name="sri_data">
+                        <field name="l10_ec_foreign" invisible="1" />
+                        <field name="l10n_ec_is_exportation" attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund'))]}"/>
+                        <field name="l10n_ec_identification_type_id" />
+                        <field name="l10n_ec_tax_support_id" options="{'no_create': True}"
+                               attrs="{'invisible': [('type', 'not in', ('in_invoice', 'in_refund'))]}"/>
+                        <field name="l10n_ec_tipo_regimen_pago_exterior"
+                               attrs="{'invisible':['|', ('l10_ec_foreign','=',False), ('type', 'not in', ('in_invoice', 'in_refund'))]}" />
+                        <field name="l10n_ec_aplica_convenio_doble_tributacion"
+                               attrs="{'invisible':['|', ('l10_ec_foreign','=',False), ('type', 'not in', ('in_invoice', 'in_refund'))]}"/>
+                        <field name="l10n_ec_pago_exterior_sujeto_retencion"
+                               attrs="{'invisible':['|', ('l10_ec_foreign','=',False), ('type', 'not in', ('in_invoice', 'in_refund'))]}"/>
+                    </group>
+                </xpath>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>

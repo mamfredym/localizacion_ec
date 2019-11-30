@@ -1,0 +1,25 @@
+id,sequence,code,name,report_name,internal_type,doc_code_prefix,country_id/id,active
+ec_dt_01,1,1,Factura,Factura,invoice,FA ,base.ec,1
+ec_dt_02,2,2,Nota o boleta de venta,Nota o boleta de venta,invoice,NV ,base.ec,1
+ec_dt_03,3,3,Liquidación de compra de Bienes o Prestación de servicios,Liquidación de compra de Bienes o Prestación de servicios,invoice,LDC ,base.ec,1
+ec_dt_04,4,4,N/C Compras,N/C Compras,credit_note,NC ,base.ec,1
+ec_dt_05,5,5,N/D Compras,N/D Compras,debit_note,ND ,base.ec,1
+ec_dt_08,6,8,Boletos o entradas a espectáculos públicos,Boletos o entradas a espectáculos públicos,invoice,,base.ec,1
+ec_dt_09,7,9,Tiquetes o vales emitidos por máquinas registradoras,Tiquetes o vales emitidos por máquinas registradoras,invoice,,base.ec,1
+ec_dt_11,8,11,Pasajes expedidos por empresas de aviación,Pasajes expedidos por empresas de aviación,invoice,,base.ec,1
+ec_dt_12,9,12,Documentos emitidos por instituciones financieras,Documentos emitidos por instituciones financieras,invoice,,base.ec,1
+ec_dt_13,10,13,Documentos emitidos por compañías de seguros,Documentos emitidos por compañías de seguros,invoice,,base.ec,1
+ec_dt_14,11,14,Comprobantes emitidos por empresas de telecomunicaciones,Comprobantes emitidos por empresas de telecomunicaciones,invoice,,base.ec,1
+ec_dt_15,12,15,Comprobantes  de venta emitidos en exterior,Comprobantes  de venta emitidos en exterior,invoice,,base.ec,1
+ec_dt_19,13,19,Comprobantes de Pago de Cuotas o Aportes,Comprobantes de Pago de Cuotas o Aportes,invoice,,base.ec,1
+ec_dt_20,14,20,Documentos por Servicios Administrativos emitidos por Inst. del Estado,Documentos por Servicios Administrativos emitidos por Inst. del Estado,invoice,,base.ec,1
+ec_dt_21,15,21,Carta de Porte Aéreo,Carta de Porte Aéreo,invoice,,base.ec,1
+ec_dt_41,16,41,Comprobante de venta emitido por reembolso,Comprobante de venta emitido por reembolso,invoice,REM ,base.ec,1
+ec_dt_42,17,42,Documento retención presuntiva y retención emitida por propio vendedor o por intermediario,Documento retención presuntiva y retención emitida por propio vendedor o por intermediario,invoice,,base.ec,1
+ec_dt_43,18,43,Liquidacion para Explotacion y Exploracion de Hidrocarburos,Liquidacion para Explotacion y Exploracion de Hidrocarburos,invoice,,base.ec,1
+ec_dt_45,19,45,Liquidación de medicina prepagada,Liquidación de medicina prepagada,invoice,,base.ec,1
+ec_dt_47,20,47,N/C por Reembolso Emitida por Intermediario,N/C por Reembolso Emitida por Intermediario,credit_note,NCR ,base.ec,1
+ec_dt_48,21,48,N/D por Reembolso Emitida por Intermediario,N/D por Reembolso Emitida por Intermediario,debit_note,NDR ,base.ec,1
+ec_dt_294,22,294,Liquidación de compra de Bienes Muebles Usados,Liquidación de compra de Bienes Muebles Usados,invoice,LDC ,base.ec,1
+ec_dt_344,23,344,Liquidación de compra de vehículos usados,Liquidación de compra de vehículos usados,invoice,LDC ,base.ec,1
+ec_dt_364,24,364,Acta Entrega-Recepción PET,Acta Entrega-Recepción PET,invoice,RPET ,base.ec,1

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		<record id="view_verificar_ruc_cedula_inh" model="ir.ui.view">
+			<field name="name">res.partner.verificador_ruc_cedula.form</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_partner_form" />
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<field name="name" position="after">
+					<field name="l10_ec_is_ecuadorian_company" invisible="1"/>
+				</field>
+				<field name="parent_id" position="before">
+					<field name="l10_ec_business_name" placeholder="Nombre Comercial" />
+				</field>
+				<field name="country_id" position="attributes">
+					<attribute name="required">1</attribute>
+				</field>
+				<xpath expr="//page[@name='sales_purchases']//group[@name='purchase']"
+					position="inside">
+					<field name="l10_ec_foreign" />
+					<field name="l10_ec_foreign_type"
+						attrs="{'invisible': [('l10_ec_foreign','=',False)], 'required': [('l10_ec_foreign','=',True)]}" />
+				</xpath>
+			</field>
+		</record>
+
+		<record id="view_verificar_ruc_cedula_tree_inh" model="ir.ui.view">
+			<field name="name">res.partner.verificador_ruc_cedula.tree</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_partner_tree" />
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<field name="display_name" position="attributes">
+					<attribute name="string">Razón Social</attribute>
+				</field>
+				<field name="display_name" position="after">
+					<field name="l10_ec_business_name" string="Nombre Comercial" />
+				</field>
+			</field>
+		</record>
+
+		<record id="view_verificar_ruc_cedula_search" model="ir.ui.view">
+			<field name="name">res.partner.verificador_ruc_cedula.search</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_res_partner_filter" />
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='name']" position="before">
+					<field string="Ruc/Cédula/Pasaporte" name="vat" filter_domain="['|','|',('display_name','ilike',self),('vat','=',self),('email','ilike',self)]"/>
+				</xpath>
+				<field name="name" position="attributes">
+					<attribute name="string">Razón Social</attribute>
+				</field>
+				<field name="name" position="after">
+					<field name="l10_ec_business_name" string="Nombre Comercial" />
+				</field>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="account_partner_form_view">
+			<field name="name">res.partner.form</field>
+			<field name="model">res.partner</field>
+			<field name="priority" eval="50" />
+			<field name="inherit_id" ref="account.view_partner_property_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='property_account_position_id']" position="before">
+					<field name="l10_ec_related_part" />
+					<field name="l10_ec_type_sri" groups="base.group_system" />
+					<field name="l10_ec_sex" attrs="{'invisible': [('company_type', '!=', 'person')]}"/>
+					<field name="l10_ec_marital_status" attrs="{'invisible': [('company_type', '!=', 'person')]}"/>
+					<field name="l10_ec_input_origins" attrs="{'invisible': [('company_type', '!=', 'person')]}"/>
+				</xpath>
+			</field>
+		</record>
+
+	</data>
+</odoo>
