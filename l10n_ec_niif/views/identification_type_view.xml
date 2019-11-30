@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="l10n_ec_identification_type_tree_view" model="ir.ui.view">
+            <field name="name">l10n_ec.identification.type.tree</field>
+            <field name="model">l10n_ec.identification.type</field>
+            <field name="arch" type="xml">
+                <tree string="Ecuadorian Move Identification Types">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="sale_invoice_document_type_id"/>
+                    <field name="sale_credit_note_document_type_id"/>
+                    <field name="sale_debit_note_document_type_id"/>
+                    <field name="purchase_invoice_document_type_id"/>
+                    <field name="purchase_credit_note_document_type_id"/>
+                    <field name="purchase_debit_note_document_type_id"/>
+                    <field name="purchase_liquidation_document_type_id"/>
+                    <field name="document_type_ids" widget="many2many_tags"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="l10n_ec_identification_type_form_view" model="ir.ui.view">
+            <field name="name">l10n_ec.identification.type.form</field>
+            <field name="model">l10n_ec.identification.type</field>
+            <field name="arch" type="xml">
+                <form string="Ecuadorian Move Identification Type">
+                    <sheet>
+                        <group>
+                            <field name="code"/>
+                            <field name="name"/>
+                            <field name="sale_invoice_document_type_id" options="{'no_create': True}"/>
+                            <field name="sale_credit_note_document_type_id" options="{'no_create': True}"/>
+                            <field name="sale_debit_note_document_type_id" options="{'no_create': True}"/>
+                            <field name="purchase_invoice_document_type_id" options="{'no_create': True}"/>
+                            <field name="purchase_credit_note_document_type_id" options="{'no_create': True}"/>
+                            <field name="purchase_debit_note_document_type_id" options="{'no_create': True}"/>
+                            <field name="purchase_liquidation_document_type_id" options="{'no_create': True}"/>
+                        </group>
+                        <notebook>
+                            <page name="document_types" string="Document Types">
+                                <field name="document_type_ids" colspan="4" nolabel="1"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="l10n_ec_identification_type_search_view" model="ir.ui.view">
+            <field name="name">l10n_ec.identification.type.search</field>
+            <field name="model">l10n_ec.identification.type</field>
+            <field name="arch" type="xml">
+                <search string="Ecuadorian Move Identification Type">
+                    <field name="code"/>
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_l10n_ec_identification_type_tree_view" model="ir.actions.act_window">
+            <field name="name">Ecuadorian Move Identification Type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">l10n_ec.identification.type</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_action_l10n_ec_identification_type_tree_view"
+                  name="Ecuadorian Move Identification Type"
+                  parent="account.account_account_menu"
+                  action="action_l10n_ec_identification_type_tree_view" sequence="40"/>
+
+
+    </data>
+</odoo>

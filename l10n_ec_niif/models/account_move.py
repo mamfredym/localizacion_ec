@@ -9,14 +9,26 @@ class L10nECIdentificationType(models.Model):
     code = fields.Char(string="Code", required=True)
     name = fields.Char(string="Name", required=True)
     document_type_ids = fields.Many2many('l10n_latam.document.type', string='Tipos de Transacciones Asociadas')
-    default_invoice_document_type_id = fields.Many2one(comodel_name="l10n_latam.document.type",
-                                                       string="Default Document Type for Invoices", required=False, )
-    default_credit_note_document_type_id = fields.Many2one(comodel_name="l10n_latam.document.type",
-                                                           string="Default Document Type for Credit Notes",
+    sale_invoice_document_type_id = fields.Many2one(comodel_name="l10n_latam.document.type",
+                                                    string="Default Sales Document Type for Invoices", required=False, )
+    sale_credit_note_document_type_id = fields.Many2one(comodel_name="l10n_latam.document.type",
+                                                        string="Default Sales Document Type for Credit Notes",
+                                                        required=False, )
+    sale_debit_note_document_type_id = fields.Many2one(comodel_name="l10n_latam.document.type",
+                                                       string="Default Sales Document Type for Debit Notes",
+                                                       required=False, )
+    purchase_invoice_document_type_id = fields.Many2one(comodel_name="l10n_latam.document.type",
+                                                        string="Default Purchases Document Type for Invoices",
+                                                        required=False, )
+    purchase_credit_note_document_type_id = fields.Many2one(comodel_name="l10n_latam.document.type",
+                                                            string="Default Purchases Document Type for Credit Notes",
+                                                            required=False, )
+    purchase_debit_note_document_type_id = fields.Many2one(comodel_name="l10n_latam.document.type",
+                                                           string="Default Purchases Document Type for Debit Notes",
                                                            required=False, )
-    default_debit_note_document_type_id = fields.Many2one(comodel_name="l10n_latam.document.type",
-                                                          string="Default Document Type for Debit Notes",
-                                                          required=False, )
+    purchase_liquidation_document_type_id = fields.Many2one(comodel_name="l10n_latam.document.type",
+                                                            string="Default Document Type for Purchase's Liquidation",
+                                                            required=False, )
 
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         args = args or []

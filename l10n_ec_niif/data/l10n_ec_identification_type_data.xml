@@ -22,8 +22,12 @@
                    ref('ec_dt_43'),
                    ref('ec_dt_45'),
                    ref('ec_dt_47'),
-                   ref('ec_dt_48')
+                   ref('ec_dt_48'),
                    ])]"/>
+            <field name="purchase_invoice_document_type_id" ref="ec_dt_01"/>
+            <field name="purchase_credit_note_document_type_id" ref="ec_dt_04"/>
+            <field name="purchase_debit_note_document_type_id" ref="ec_dt_05"/>
+            <field name="purchase_liquidation_document_type_id" ref="ec_dt_03"/>
         </record>
 
         <record id="ec_move_dt_02" model="l10n_ec.identification.type">
@@ -40,6 +44,10 @@
                    ref('ec_dt_294'),
                    ref('ec_dt_344')
                    ])]"/>
+            <field name="purchase_invoice_document_type_id" ref="ec_dt_03"/>
+            <field name="purchase_credit_note_document_type_id" ref="ec_dt_04"/>
+            <field name="purchase_debit_note_document_type_id" ref="ec_dt_05"/>
+            <field name="purchase_liquidation_document_type_id" ref="ec_dt_03"/>
         </record>
 
         <record id="ec_move_dt_03" model="l10n_ec.identification.type">
@@ -57,6 +65,10 @@
                    ref('ec_dt_45'),
                    ref('ec_dt_294'),
                    ref('ec_dt_344')])]"/>
+            <field name="purchase_invoice_document_type_id" ref="ec_dt_03"/>
+            <field name="purchase_credit_note_document_type_id" ref="ec_dt_04"/>
+            <field name="purchase_debit_note_document_type_id" ref="ec_dt_05"/>
+            <field name="purchase_liquidation_document_type_id" ref="ec_dt_03"/>
         </record>
 
         <record id="ec_move_dt_04" model="l10n_ec.identification.type">
@@ -70,8 +82,19 @@
                    ref('ec_dt_41'),
                    ref('ec_dt_44'),
                    ref('ec_dt_47'),
-                   ref('ec_dt_48')
+                   ref('ec_dt_48'),
+                   ref('ec_dt_49'),
+                   ref('ec_dt_50'),
+                   ref('ec_dt_51'),
+                   ref('ec_dt_52'),
+                   ref('ec_dt_370'),
+                   ref('ec_dt_371'),
+                   ref('ec_dt_372'),
+                   ref('ec_dt_373')
                    ])]"/>
+            <field name="sale_invoice_document_type_id" ref="ec_dt_18"/>
+            <field name="sale_credit_note_document_type_id" ref="ec_dt_04"/>
+            <field name="sale_debit_note_document_type_id" ref="ec_dt_05"/>
         </record>
 
         <record id="ec_move_dt_05" model="l10n_ec.identification.type">
@@ -85,8 +108,15 @@
                    ref('ec_dt_41'),
                    ref('ec_dt_44'),
                    ref('ec_dt_47'),
-                   ref('ec_dt_48')
+                   ref('ec_dt_48'),
+                   ref('ec_dt_370'),
+                   ref('ec_dt_371'),
+                   ref('ec_dt_372'),
+                   ref('ec_dt_373')
                    ])]"/>
+            <field name="sale_invoice_document_type_id" ref="ec_dt_18"/>
+            <field name="sale_credit_note_document_type_id" ref="ec_dt_04"/>
+            <field name="sale_debit_note_document_type_id" ref="ec_dt_05"/>
         </record>
 
         <record id="ec_move_dt_06" model="l10n_ec.identification.type">
@@ -100,8 +130,15 @@
                    ref('ec_dt_41'),
                    ref('ec_dt_44'),
                    ref('ec_dt_47'),
-                   ref('ec_dt_48')
+                   ref('ec_dt_48'),
+                   ref('ec_dt_370'),
+                   ref('ec_dt_371'),
+                   ref('ec_dt_372'),
+                   ref('ec_dt_373')
                    ])]"/>
+            <field name="sale_invoice_document_type_id" ref="ec_dt_18"/>
+            <field name="sale_credit_note_document_type_id" ref="ec_dt_04"/>
+            <field name="sale_debit_note_document_type_id" ref="ec_dt_05"/>
         </record>
 
         <record id="ec_move_dt_07" model="l10n_ec.identification.type">
@@ -112,6 +149,9 @@
             ref('ec_dt_05'),
             ref('ec_dt_18')
             ])]"/>
+            <field name="sale_invoice_document_type_id" ref="ec_dt_18"/>
+            <field name="sale_credit_note_document_type_id" ref="ec_dt_04"/>
+            <field name="sale_debit_note_document_type_id" ref="ec_dt_05"/>
         </record>
 
         <record id="ec_move_dt_09" model="l10n_ec.identification.type">
@@ -122,11 +162,15 @@
                    ref('ec_dt_01'),
                    ref('ec_dt_04'),
                    ref('ec_dt_05'),
+                   ref('ec_dt_15'),
                    ref('ec_dt_16'),
                    ref('ec_dt_41'),
                    ref('ec_dt_47'),
                    ref('ec_dt_48')
                    ])]"/>
+            <field name="sale_invoice_document_type_id" ref="ec_dt_01"/>
+            <field name="sale_credit_note_document_type_id" ref="ec_dt_04"/>
+            <field name="sale_debit_note_document_type_id" ref="ec_dt_05"/>
         </record>
 
         <record id="ec_move_dt_20" model="l10n_ec.identification.type">
@@ -137,11 +181,15 @@
                    ref('ec_dt_01'),
                    ref('ec_dt_04'),
                    ref('ec_dt_05'),
+                   ref('ec_dt_15'),
                    ref('ec_dt_16'),
                    ref('ec_dt_41'),
                    ref('ec_dt_47'),
                    ref('ec_dt_48')
                    ])]"/>
+            <field name="sale_invoice_document_type_id" ref="ec_dt_01"/>
+            <field name="sale_credit_note_document_type_id" ref="ec_dt_04"/>
+            <field name="sale_debit_note_document_type_id" ref="ec_dt_05"/>
         </record>
 
         <record id="ec_move_dt_21" model="l10n_ec.identification.type">
@@ -152,11 +200,15 @@
                    ref('ec_dt_01'),
                    ref('ec_dt_04'),
                    ref('ec_dt_05'),
+                   ref('ec_dt_15'),
                    ref('ec_dt_16'),
                    ref('ec_dt_41'),
                    ref('ec_dt_47'),
                    ref('ec_dt_48')
                    ])]"/>
+            <field name="sale_invoice_document_type_id" ref="ec_dt_01"/>
+            <field name="sale_credit_note_document_type_id" ref="ec_dt_04"/>
+            <field name="sale_debit_note_document_type_id" ref="ec_dt_05"/>
         </record>
 
     </data>
