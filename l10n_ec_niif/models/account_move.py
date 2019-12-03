@@ -87,9 +87,10 @@ class AccountMove(models.Model):
                 ('code', '=', code)
             ])
             return identification and identification.id or False
+        tax_support_model = self.env['l10n_ec.tax.support']
         for move in self:
             if move.company_id.country_id.code == 'EC':
-                domain = []
+                supports = tax_support_model.browse()
                 if move.partner_id.l10_ec_type_sri:
                     if move.type in ('in_invoice', 'in_refund'):
                         if move.partner_id.l10_ec_type_sri == 'Ruc':
@@ -122,10 +123,28 @@ class AccountMove(models.Model):
                 else:
                     move.l10n_ec_identification_type_id = False
                 if move.l10n_ec_identification_type_id:
-                    move.l10n_ec_document_type_domain_ids = move.l10n_ec_identification_type_id.document_type_ids.ids
-                    if move.l10n_ec_document_type_domain_ids and \
-                            move.l10n_latam_document_type_id.id not in move.l10n_ec_document_type_domain_ids.ids:
-                        move.l10n_latam_document_type_id = move.l10n_ec_document_type_domain_ids.ids[0]
+                    move.write({
+                        'l10n_latam_available_document_type_ids': [(6, 0, move.l10n_ec_identification_type_id.document_type_ids.ids)]
+                    })
+                    if move.l10n_latam_available_document_type_ids and \
+                            move.l10n_latam_document_type_id.id not in move.l10n_latam_available_document_type_ids.ids:
+                        move.l10n_latam_document_type_id = move.l10n_latam_available_document_type_ids.ids[0]
+                    if move.l10n_latam_document_type_id:
+                        supports = tax_support_model.search([
+                            ('document_type_ids', 'in', move.l10n_latam_document_type_id.ids)
+                        ])
+                else:
+                    move.write({
+                        'l10n_latam_available_document_type_ids': []
+                    })
+                if supports:
+                    move.write({
+                        'l10n_ec_tax_support_domain_ids': [(6, 0, supports.ids)]
+                    })
+                else:
+                    move.write({
+                        'l10n_ec_tax_support_domain_ids': []
+                    })
 
     l10n_ec_identification_type_id = fields.Many2one('l10n_ec.identification.type',
                                                      string="Ecuadorian Identification Type",
@@ -133,6 +152,3 @@ class AccountMove(models.Model):
     l10n_ec_tax_support_domain_ids = fields.Many2many(comodel_name="l10n_ec.tax.support",
                                                       string="Tax Support Domain",
                                                       compute='_get_l10n_ec_identification_type')
-    l10n_ec_document_type_domain_ids = fields.Many2many(comodel_name="l10n_latam.document.type",
-                                                        string="Document Type Domain",
-                                                        compute='_get_l10n_ec_identification_type')
