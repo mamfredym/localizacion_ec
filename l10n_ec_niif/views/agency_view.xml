@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+
+        <record id="l10n_ec_agency_tree_view" model="ir.ui.view">
+            <field name="name">l10n_ec.agency.tree</field>
+            <field name="model">l10n_ec.agency</field>
+            <field name="arch" type="xml">
+                <tree string="S.R.I. Agencies">
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="name"/>
+                    <field name="number"/>
+                    <field name="address_id"/>
+                    <field name="printer_point_ids" widget="many2many_tags" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="l10n_ec_agency_form_view" model="ir.ui.view">
+            <field name="name">l10n_ec.agency.form</field>
+            <field name="model">l10n_ec.agency</field>
+            <field name="arch" type="xml">
+                <form string="S.R.I Agency">
+                    <sheet>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <group>
+                            <field name="active" invisible="1"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="name"/>
+                            <field name="number"/>
+                            <field name="address_id" domain="[('parent_id', '=', partner_id)]"
+                                   context="{'default_parent_id': partner_id, 'default_type': 'invoice', 'form_view_ref': 'base.view_partner_short_form'}"/>
+                            <field name="partner_id" invisible="1"/>
+                        </group>
+                        <notebook colspan="4">
+                            <page string="Points of Emission" name="point_of_emission">
+                                <field name="printer_point_ids" colspan="4" nolabel="1">
+                                    <tree editable="bottom" string="Points of Emission">
+                                        <field name="name" />
+                                        <field name="number" />
+                                        <field name="active" />
+                                    </tree>
+                                    <form string="Point of Emission">
+                                        <group>
+                                            <field name="name" />
+                                            <field name="number" />
+                                            <field name="active" />
+                                        </group>
+                                    </form>
+                                </field>
+                            </page>
+                            <page string="Allowed Users">
+                                <field name="user_ids" nolabel="1" colspan="4"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="l10n_ec_agency_search_view" model="ir.ui.view">
+            <field name="name">l10n_ec.agency.search</field>
+            <field name="model">l10n_ec.agency</field>
+            <field name="arch" type="xml">
+                <search string="S.R.I. Agencies">
+                    <field name="name"/>
+                    <field name="number"/>
+                </search>
+            </field>
+        </record>
+
+
+        <record id="action_l10n_ec_agency_tree_view" model="ir.actions.act_window">
+            <field name="name">S.R.I. Agencies</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">l10n_ec.agency</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="manu_action_l10n_ec_agency_tree_view"
+                  name="Agencies" parent="sri_config_menu"
+                  action="action_l10n_ec_agency_tree_view" sequence="10"/>
+
+    </data>
+</odoo>

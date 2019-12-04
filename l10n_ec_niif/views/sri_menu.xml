@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+
+        <menuitem id="sri_root_menu"
+                  name="SRI" sequence="25" parent="account_accountant.menu_accounting" />
+
+        <menuitem id="sri_config_menu" groups="account.group_account_manager"
+                  name="Configurations" sequence="50" parent="sri_root_menu" />
+
+    </data>
+</odoo>
