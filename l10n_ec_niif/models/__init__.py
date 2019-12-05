@@ -1,4 +1,5 @@
 from . import agency
+from . import authorization
 from . import res_partner
 from . import account_chart_template
 from . import tax_support

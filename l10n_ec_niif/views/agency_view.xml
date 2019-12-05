@@ -79,7 +79,7 @@
 
         <menuitem id="manu_action_l10n_ec_agency_tree_view"
                   name="Agencies" parent="sri_config_menu"
-                  action="action_l10n_ec_agency_tree_view" sequence="10"/>
+                  action="action_l10n_ec_agency_tree_view" sequence="20"/>
 
     </data>
 </odoo>
