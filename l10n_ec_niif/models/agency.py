@@ -13,8 +13,7 @@ class L10nEcAgency(models.Model):
 
     name = fields.Char('Agency Name', required=True, readonly=False, index=True)
     number = fields.Char(string='S.R.I. Number', size=3, required=True, readonly=False, index=True)
-    printer_point_ids = fields.One2many('l10n_ec.point.of.emission', 'agency_id', 'Points of Emission', required=False,
-                                        auto_join=True, help="", )
+    printer_point_ids = fields.One2many('l10n_ec.point.of.emission', 'agency_id', 'Points of Emission')
     user_ids = fields.Many2many('res.users', string='Allowed Users', help="", domain=[('share', '=', False)])
     address_id = fields.Many2one('res.partner', 'Address', required=False, help="", )
     company_id = fields.Many2one('res.company', 'Company', required=False, help="",
