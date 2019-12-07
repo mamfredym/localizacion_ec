@@ -150,7 +150,7 @@ class ResPartner(models.Model):
         return res
 
     l10n_ec_authorization_ids = fields.One2many('l10n_ec.sri.authorization.supplier',
-                                                'partner_id', string='Authorizations')
+                                                'partner_id', string='Third Party Authorizations')
 
 
 ResPartner()

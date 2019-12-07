@@ -22,6 +22,11 @@
 					<field name="l10n_ec_foreign_type"
 						attrs="{'invisible': [('l10n_ec_foreign','=',False)], 'required': [('l10n_ec_foreign','=',True)]}" />
 				</xpath>
+				<xpath expr="//page[@name='sales_purchases']" position="after">
+					<page string="Third Party Authorizations" groups="account.group_account_user,account.group_account_manager">
+						<field name="l10n_ec_authorization_ids" nolabel="1" colspan="4" />
+					</page>
+				</xpath>
 			</field>
 		</record>
 
