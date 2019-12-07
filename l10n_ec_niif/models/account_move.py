@@ -60,22 +60,22 @@ class AccountMove(models.Model):
         ('02', 'Paraíso fiscal'),
         ('03', 'Régimen fiscal preferente o jurisdicción de menor imposición')
         ], string='Tipo de regimen fiscal del exterior',
-         states={}, help=u"")
+         states={}, help="")
     l10n_ec_aplica_convenio_doble_tributacion = fields.Selection([
         ('si', 'SI'),
         ('no','NO'),
         ], string='Aplica convenio doble tributación',
-         states={}, help=u"")
+         states={}, help="")
     l10n_ec_pago_exterior_sujeto_retencion = fields.Selection([
         ('si', 'SI'),
         ('no','NO'),
         ], string='Pago sujeto a retención',
-         states={}, help=u"")
-    l10_ec_foreign = fields.Boolean(u'Foreign?',
-                                    related='partner_id.l10_ec_foreign', store=True)
+         states={}, help="")
+    l10n_ec_foreign = fields.Boolean('Foreign?',
+                                    related='partner_id.l10n_ec_foreign', store=True)
 
     @api.depends(
-        'partner_id.l10_ec_type_sri',
+        'partner_id.l10n_ec_type_sri',
         'l10n_ec_is_exportation',
         'type',
         'company_id',
@@ -91,32 +91,32 @@ class AccountMove(models.Model):
         for move in self:
             if move.company_id.country_id.code == 'EC':
                 supports = tax_support_model.browse()
-                if move.partner_id.l10_ec_type_sri:
+                if move.partner_id.l10n_ec_type_sri:
                     if move.type in ('in_invoice', 'in_refund'):
-                        if move.partner_id.l10_ec_type_sri == 'Ruc':
+                        if move.partner_id.l10n_ec_type_sri == 'Ruc':
                             move.l10n_ec_identification_type_id = get_identification('01')
-                        elif move.partner_id.l10_ec_type_sri == 'Cedula':
+                        elif move.partner_id.l10n_ec_type_sri == 'Cedula':
                             move.l10n_ec_identification_type_id = get_identification('02')
-                        elif move.partner_id.l10_ec_type_sri == 'Pasaporte':
+                        elif move.partner_id.l10n_ec_type_sri == 'Pasaporte':
                             move.l10n_ec_identification_type_id = get_identification('03')
                         else:
                             move.l10n_ec_identification_type_id = False
                     elif move.type in ('out_invoice', 'out_refund'):
                         if not move.l10n_ec_is_exportation:
-                            if move.partner_id.l10_ec_type_sri == 'Ruc':
+                            if move.partner_id.l10n_ec_type_sri == 'Ruc':
                                 move.l10n_ec_identification_type_id = get_identification('04')
-                            elif move.partner_id.l10_ec_type_sri == 'Cedula':
+                            elif move.partner_id.l10n_ec_type_sri == 'Cedula':
                                 move.l10n_ec_identification_type_id = get_identification('05')
-                            elif move.partner_id.l10_ec_type_sri == 'Pasaporte':
+                            elif move.partner_id.l10n_ec_type_sri == 'Pasaporte':
                                 move.l10n_ec_identification_type_id = get_identification('06')
-                            elif move.partner_id.l10_ec_type_sri == 'Consumidor':
+                            elif move.partner_id.l10n_ec_type_sri == 'Consumidor':
                                 move.l10n_ec_identification_type_id = get_identification('07')
                             else:
                                 move.l10n_ec_identification_type_id = False
                         else:
-                            if move.partner_id.l10_ec_type_sri == 'Ruc':
+                            if move.partner_id.l10n_ec_type_sri == 'Ruc':
                                 move.l10n_ec_identification_type_id = get_identification('20')
-                            elif move.partner_id.l10_ec_type_sri == 'Pasaporte':
+                            elif move.partner_id.l10n_ec_type_sri == 'Pasaporte':
                                 move.l10n_ec_identification_type_id = get_identification('21')
                             else:
                                 move.l10n_ec_identification_type_id = False

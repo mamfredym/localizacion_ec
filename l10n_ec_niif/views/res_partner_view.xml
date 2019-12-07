@@ -8,19 +8,19 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<field name="name" position="after">
-					<field name="l10_ec_is_ecuadorian_company" invisible="1"/>
+					<field name="l10n_ec_is_ecuadorian_company" invisible="1"/>
 				</field>
 				<field name="parent_id" position="before">
-					<field name="l10_ec_business_name" placeholder="Nombre Comercial" />
+					<field name="l10n_ec_business_name" placeholder="Nombre Comercial" />
 				</field>
 				<field name="country_id" position="attributes">
 					<attribute name="required">1</attribute>
 				</field>
 				<xpath expr="//page[@name='sales_purchases']//group[@name='purchase']"
 					position="inside">
-					<field name="l10_ec_foreign" />
-					<field name="l10_ec_foreign_type"
-						attrs="{'invisible': [('l10_ec_foreign','=',False)], 'required': [('l10_ec_foreign','=',True)]}" />
+					<field name="l10n_ec_foreign" />
+					<field name="l10n_ec_foreign_type"
+						attrs="{'invisible': [('l10n_ec_foreign','=',False)], 'required': [('l10n_ec_foreign','=',True)]}" />
 				</xpath>
 			</field>
 		</record>
@@ -35,7 +35,7 @@
 					<attribute name="string">Razón Social</attribute>
 				</field>
 				<field name="display_name" position="after">
-					<field name="l10_ec_business_name" string="Nombre Comercial" />
+					<field name="l10n_ec_business_name" string="Nombre Comercial" />
 				</field>
 			</field>
 		</record>
@@ -53,7 +53,7 @@
 					<attribute name="string">Razón Social</attribute>
 				</field>
 				<field name="name" position="after">
-					<field name="l10_ec_business_name" string="Nombre Comercial" />
+					<field name="l10n_ec_business_name" string="Nombre Comercial" />
 				</field>
 			</field>
 		</record>
@@ -65,11 +65,11 @@
 			<field name="inherit_id" ref="account.view_partner_property_form" />
 			<field name="arch" type="xml">
 				<xpath expr="//field[@name='property_account_position_id']" position="before">
-					<field name="l10_ec_related_part" />
-					<field name="l10_ec_type_sri" groups="base.group_system" />
-					<field name="l10_ec_sex" attrs="{'invisible': [('company_type', '!=', 'person')]}"/>
-					<field name="l10_ec_marital_status" attrs="{'invisible': [('company_type', '!=', 'person')]}"/>
-					<field name="l10_ec_input_origins" attrs="{'invisible': [('company_type', '!=', 'person')]}"/>
+					<field name="l10n_ec_related_part" />
+					<field name="l10n_ec_type_sri" groups="base.group_system" />
+					<field name="l10n_ec_sex" attrs="{'invisible': [('company_type', '!=', 'person')]}"/>
+					<field name="l10n_ec_marital_status" attrs="{'invisible': [('company_type', '!=', 'person')]}"/>
+					<field name="l10n_ec_input_origins" attrs="{'invisible': [('company_type', '!=', 'person')]}"/>
 				</xpath>
 			</field>
 		</record>

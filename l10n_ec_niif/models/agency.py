@@ -13,12 +13,12 @@ class L10nEcAgency(models.Model):
 
     name = fields.Char('Agency Name', required=True, readonly=False, index=True)
     number = fields.Char(string='S.R.I. Number', size=3, required=True, readonly=False, index=True)
-    printer_point_ids = fields.One2many('l10n_ec.point.of.emission', 'agency_id', u'Points of Emission', required=False,
-                                        auto_join=True, help=u"", )
-    user_ids = fields.Many2many('res.users', 'rel_user_l10_ec_agency', 'shop_id', 'user_id',
-                                string='Allowed Users', help=u"", domain=[('share', '=', False)])
-    address_id = fields.Many2one('res.partner', 'Address', required=False, help=u"", )
-    company_id = fields.Many2one('res.company', 'Company', required=False, help=u"",
+    printer_point_ids = fields.One2many('l10n_ec.point.of.emission', 'agency_id', 'Points of Emission', required=False,
+                                        auto_join=True, help="", )
+    user_ids = fields.Many2many('res.users', 'rel_user_l10n_ec_agency', 'shop_id', 'user_id',
+                                string='Allowed Users', help="", domain=[('share', '=', False)])
+    address_id = fields.Many2one('res.partner', 'Address', required=False, help="", )
+    company_id = fields.Many2one('res.company', 'Company', required=False, help="",
                                  default=lambda self: self.env.user.company_id.id)
     partner_id = fields.Many2one('res.partner', string="Company's Partner",
                                  related="company_id.partner_id")
@@ -36,7 +36,7 @@ class L10nEcAgency(models.Model):
                     raise ValidationError(_("Number of agency must be only numbers"))
 
     _sql_constraints = [
-        ('number_uniq', 'unique (number, company_id)', _(u'Number of Agency must be unique by company!')),
+        ('number_uniq', 'unique (number, company_id)', _('Number of Agency must be unique by company!')),
     ]
 
 
@@ -48,8 +48,8 @@ class L10EcPointOfEmission(models.Model):
     _name = 'l10n_ec.point.of.emission'
 
     name = fields.Char("Point of emission's name", required=True, readonly=False, index=True)
-    agency_id = fields.Many2one('l10n_ec.agency', u'Agency', required=False, index=True, auto_join=True)
-    number = fields.Char(u'S.R.I. Number', size=3, required=True, readonly=False, index=True)
+    agency_id = fields.Many2one('l10n_ec.agency', 'Agency', required=False, index=True, auto_join=True)
+    number = fields.Char('S.R.I. Number', size=3, required=True, readonly=False, index=True)
     active = fields.Boolean(string="Active?", default=True)
 
     def name_get(self):
@@ -62,7 +62,7 @@ class L10EcPointOfEmission(models.Model):
         return res
 
     _sql_constraints = [
-        ('number_uniq', 'unique (number, agency_id)', _(u'The number of point of emission must be unique by Agency!')),
+        ('number_uniq', 'unique (number, agency_id)', _('The number of point of emission must be unique by Agency!')),
     ]
 
 

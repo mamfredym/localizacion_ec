@@ -1,59 +1,60 @@
-from odoo import api, fields, models
+# -*- coding: UTF-8 -*- #
+
+from odoo import api, fields, models, SUPERUSER_ID
 from odoo.tools.translate import _
 from odoo.exceptions import Warning, UserError, ValidationError
 from stdnum.ec import ci, ruc
-from stdnum.exceptions import *
 
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     @api.depends('country_id')
-    def _compute_l10_ec_foreign(self):
+    def _compute_l10n_ec_foreign(self):
         for partner in self:
-            l10_ec_foreign = False
+            l10n_ec_foreign = False
             if partner.country_id:
                 if partner.country_id.code != 'EC':
-                    l10_ec_foreign = True
-            partner.l10_ec_foreign = l10_ec_foreign
+                    l10n_ec_foreign = True
+            partner.l10n_ec_foreign = l10n_ec_foreign
 
-    l10_ec_foreign = fields.Boolean(u'Foreign?',
-                                    readonly=True, help=u"", store=True, compute='_compute_l10_ec_foreign')
-    l10_ec_foreign_type = fields.Selection(
-        [('01', u'Persona Natural'),
-         ('02', u'Sociedad'),
-         ], string=u'Foreign Type', readonly=False, help=u"", )
-    l10_ec_business_name = fields.Char(u'Business Name',
-                                       required=False, readonly=False, help=u"", )
+    l10n_ec_foreign = fields.Boolean('Foreign?',
+                                    readonly=True, help="", store=True, compute='_compute_l10n_ec_foreign')
+    l10n_ec_foreign_type = fields.Selection(
+        [('01', 'Persona Natural'),
+         ('02', 'Sociedad'),
+         ], string='Foreign Type', readonly=False, help="", )
+    l10n_ec_business_name = fields.Char('Business Name',
+                                       required=False, readonly=False, help="", )
     # Datos para el reporte dinardap
-    l10_ec_sex = fields.Selection([
-        ('M', u'Masculino'),
-        ('F', u'Femenino'),
-    ], string=u'Sex', readonly=False, help=u"", required=False)
-    l10_ec_marital_status = fields.Selection([
-        ('S', u'Soltero(a)'),
-        ('C', u'Casado(a)'),
-        ('D', u'Divorciado(a)'),
-        ('U', u'Unión Libre'),
-        ('V', u'Viudo(o)'),
-                                       ], string=u'Civil Status', readonly=False, help=u"", required=False)
-    l10_ec_input_origins = fields.Selection([('B', u'Empleado Público'),
-                                      ('V', u'Empleado Privado'),
-                                      ('I', u'Independiente'),
-                                      ('A', u'Ama de Casa o Estudiante'),
-                                      ('R', u'Rentista'),
-                                      ('H', u'Jubilado'),
-                                      ('M', u'Remesa del Exterior'),
-                                      ], string=u'Input Origins', readonly=False, help=u"", required=False)
-    l10_ec_related_part = fields.Boolean(u'Related Part?', readonly=False, help=u"", )
-    l10_ec_is_ecuadorian_company = fields.Boolean(string="is Ecuadorian Company?", compute="_get_ecuadorian_company")
+    l10n_ec_sex = fields.Selection([
+        ('M', 'Masculino'),
+        ('F', 'Femenino'),
+    ], string='Sex', readonly=False, help="", required=False)
+    l10n_ec_marital_status = fields.Selection([
+        ('S', 'Soltero(a)'),
+        ('C', 'Casado(a)'),
+        ('D', 'Divorciado(a)'),
+        ('', 'Unión Libre'),
+        ('V', 'Viudo(o)'),
+                                       ], string='Civil Status', readonly=False, help="", required=False)
+    l10n_ec_input_origins = fields.Selection([('B', 'Empleado Público'),
+                                      ('V', 'Empleado Privado'),
+                                      ('I', 'Independiente'),
+                                      ('A', 'Ama de Casa o Estudiante'),
+                                      ('R', 'Rentista'),
+                                      ('H', 'Jubilado'),
+                                      ('M', 'Remesa del Exterior'),
+                                      ], string='Input Origins', readonly=False, help="", required=False)
+    l10n_ec_related_part = fields.Boolean('Related Part?', readonly=False, help="", )
+    l10n_ec_is_ecuadorian_company = fields.Boolean(string="is Ecuadorian Company?", compute="_get_ecuadorian_company")
 
     @api.depends('company_id.country_id')
     def _get_ecuadorian_company(self):
-        l10_ec_is_ecuadorian_company = False
+        l10n_ec_is_ecuadorian_company = False
         if self.company_id and self.company_id.country_id.code == 'EC':
-            l10_ec_is_ecuadorian_company = True
-        self.l10_ec_is_ecuadorian_company = l10_ec_is_ecuadorian_company
+            l10n_ec_is_ecuadorian_company = True
+        self.l10n_ec_is_ecuadorian_company = l10n_ec_is_ecuadorian_company
 
     def copy_data(self, default=None):
         if not default:
@@ -68,7 +69,7 @@ class ResPartner(models.Model):
         if self.vat:
             other_partner = self.search([('vat', '=', self.vat)])
             if len(other_partner) > 1:
-                raise Warning(_(u"The number %s must be unique as VAT") % self.vat)
+                raise Warning(_("The number %s must be unique as VAT") % self.vat)
 
     def verify_final_consumer(self, vat):
         b = True
@@ -107,7 +108,7 @@ class ResPartner(models.Model):
             return True
 
     @api.depends('vat', 'country_id')
-    def _get_l10_ec_type_sri(self):
+    def _get_l10n_ec_type_sri(self):
         vat_type = ''
         for partner in self:
             if partner.vat:
@@ -115,17 +116,26 @@ class ResPartner(models.Model):
             if partner.country_id:
                 if partner.country_id.code != 'EC':
                     vat_type = 'Pasaporte'
-            partner.l10_ec_type_sri = vat_type
+            partner.l10n_ec_type_sri = vat_type
 
-    l10_ec_type_sri = fields.Char(u'SRI Identification Type',
-                                  store=True, readonly=True, compute='_get_l10_ec_type_sri')
+    l10n_ec_type_sri = fields.Char('SRI Identification Type',
+                                  store=True, readonly=True, compute='_get_l10n_ec_type_sri')
 
     def write(self, values):
         for partner in self:
-            if partner.ref == '9999999999999' and self._uid != 1 and \
-                    ('name' in values or 'vat' in values or 'l10_ec_foreign' in values or 'l10_ec_type_sri' in values):
-                raise Warning(_(u'You cannot modify record of final consumer'))
+            if partner.ref == '9999999999999' and self._uid != SUPERUSER_ID and \
+                    ('name' in values
+                     or 'vat' in values
+                     or 'active' in values
+                     or 'country_id' in values):
+                raise Warning(_('You cannot modify record of final consumer'))
         return super(ResPartner, self).write(values)
+
+    def unlink(self):
+        for partner in self:
+            if partner.ref == '9999999999999':
+                raise Warning(_(u"You cannot unlink final consumer"))
+        return super(ResPartner, self).unlink()
 
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         args = args or []
@@ -134,10 +144,13 @@ class ResPartner(models.Model):
         if not res and name:
             recs = self.search([('vat', operator, name)] + args, limit=limit)
             if not recs:
-                recs = self.search([('l10_ec_business_name', operator, name)] + args, limit=limit)
+                recs = self.search([('l10n_ec_business_name', operator, name)] + args, limit=limit)
             if recs:
                 res = models.lazy_name_get(self.browse(recs.ids).with_user(name_get_uid)) or []
         return res
+
+    l10n_ec_authorization_ids = fields.One2many('l10n_ec.sri.authorization.supplier',
+                                                'partner_id', string='Authorizations')
 
 
 ResPartner()

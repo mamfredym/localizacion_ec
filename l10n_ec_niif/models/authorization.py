@@ -12,17 +12,17 @@ class L10nECSriAuthorization(models.Model):
     _description = 'S.R.I. Authorization'
     _rec_name = 'number'
 
-    company_id = fields.Many2one('res.company', 'Company', required=True, help=u"",
+    company_id = fields.Many2one('res.company', 'Company', required=True, help="",
                                  default=lambda self: self.env.user.company_id.id)
     active = fields.Boolean(string="Active?", default=True)
-    number = fields.Char(u'Authorization Number',
+    number = fields.Char('Authorization Number',
                          size=10, required=True, index=True)
-    start_date = fields.Date(u'Start Date', required=True)
-    expiration_date = fields.Date(u'Expiration Date', required=True)
+    start_date = fields.Date('Start Date', required=True)
+    expiration_date = fields.Date('Expiration Date', required=True)
     line_ids = fields.One2many(comodel_name="l10n_ec.sri.authorization.line",
                                inverse_name="authorization_id", string="Document Types", required=False, )
 
-    _sql_constraints = [('number_uniq', 'unique(company_id, number)', _(u'SRI Authorization must be unique by company'))]
+    _sql_constraints = [('number_uniq', 'unique(company_id, number)', _('SRI Authorization must be unique by company'))]
 
 
 L10nECSriAuthorization()
@@ -61,15 +61,15 @@ class L10nECSriAuthorizationLine(models.Model):
     document_type = fields.Selection(string="Document Type",
                                      selection='_get_available_type',
                                      required=True)
-    first_sequence = fields.Integer(u'First Sequence')
-    last_sequence = fields.Integer(u'Last Sequence')
+    first_sequence = fields.Integer('First Sequence')
+    last_sequence = fields.Integer('Last Sequence')
     authorization_id = fields.Many2one(comodel_name="l10n_ec.sri.authorization",
                                        string="Authorization", required=True, ondelete='cascade')
     point_of_emission_id = fields.Many2one(comodel_name="l10n_ec.point.of.emission",
                                            string="Point of Emission", required=False, )
     agency_id = fields.Many2one(comodel_name="l10n_ec.agency",
                                 string="Agency", related='point_of_emission_id.agency_id', store=True)
-    padding = fields.Integer(u'Padding', default=9)
+    padding = fields.Integer('Padding', default=9)
 
     @api.constrains(
         'first_sequence',
@@ -78,9 +78,9 @@ class L10nECSriAuthorizationLine(models.Model):
     def _check_sequence(self):
         for line in self:
             if line.last_sequence < 0 or line.first_sequence < 0:
-                raise ValidationError(_(u"Number of sequence must be bigger than zero"))
+                raise ValidationError(_("Number of sequence must be bigger than zero"))
             if line.last_sequence <= line.first_sequence:
-                raise ValidationError(_(u"The first sequence %s must be lower than last sequence %s") % (line.first_sequence, line.last_sequence))
+                raise ValidationError(_("The first sequence %s must be lower than last sequence %s") % (line.first_sequence, line.last_sequence))
 
     @api.constrains(
         'padding',
@@ -88,7 +88,7 @@ class L10nECSriAuthorizationLine(models.Model):
     def _check_padding(self):
         for line in self:
             if line.padding < 0 or line.padding > 9:
-                raise ValidationError(_(u"Padding must be between 0 or 9"))
+                raise ValidationError(_("Padding must be between 0 or 9"))
 
     @api.constrains(
         'sri_authorization_id',
