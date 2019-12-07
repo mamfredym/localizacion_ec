@@ -6,3 +6,4 @@ from . import account_chart_template
 from . import tax_support
 from . import company
 from . import account_move
+from . import res_users

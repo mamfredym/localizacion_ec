@@ -134,7 +134,7 @@ class ResPartner(models.Model):
     def unlink(self):
         for partner in self:
             if partner.ref == '9999999999999':
-                raise Warning(_(u"You cannot unlink final consumer"))
+                raise Warning(_("You cannot unlink final consumer"))
         return super(ResPartner, self).unlink()
 
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):

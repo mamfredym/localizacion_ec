@@ -167,23 +167,23 @@ class L10nECSriAuthorizationSupplier(models.Model):
     @api.model
     def check_number_document(self, invoice_type, number, authorization, date=None, res_id=None, foreign=False):
         if not invoice_type:
-            raise Warning(_('Debe declarar el tipo de documento para verificar la autorización'))
+            raise Warning(_('You must declare document type to check authorization'))
         if not number:
-            raise Warning(_('Debe declarar el número de documento para verificar la autorización'))
+            raise Warning(_('You must declare document number to check authorization'))
         if not authorization and not foreign and not self.env.context.get('from_refund'):
-            raise Warning(_('Debe declarar autorización para poder verificar'))
+            raise Warning(_('You must declare authorization to check'))
         if foreign:
             return True
-        numero = number.split('-')
-        if len(numero) != 3:
-            raise Warning(_("Número Inválido, este debe tener una forma 001-001-0123456789"))
-        num_shop, num_printer, num_doc = numero
+        number = number.split('-')
+        if len(number) != 3:
+            raise Warning(_("Invalid Number, that must be like 001-001-0123456789"))
+        num_shop, num_printer, num_doc = number
         try:
             num_doc = int(num_doc)
         except ValueError:
             if not foreign:
-                raise Warning(_(
-                    "El número de documento debe ser numérico, por favor no ingrese letras, o verifique si la empresa es extranjera"))
+                raise Warning(_("The number of document must be numeric, "
+                                "please don't input letters, or check if partner is not ecuadorian"))
         document_type = modules_mapping.get_document_type(invoice_type)
         model_name = modules_mapping.get_model_name(document_type)
         description_name = modules_mapping.get_document_name(document_type)
@@ -196,17 +196,17 @@ class L10nECSriAuthorizationSupplier(models.Model):
             if not date:
                 date = fields.Date.context_today(self)
             if date > authorization.expiration_date or date < authorization.start_date:
-                raise Warning(_('%s no se encuentra dentro de las fechas de autorización %s y %s') % (
-                date, authorization.start_date, authorization.expiration_date))
+                raise Warning(_('%s is not within the authorization dates %s y %s') % (
+                    date, authorization.start_date, authorization.expiration_date))
             if num_shop != authorization.agency:
-                raise Warning(_('El número de agencia %s no corresponde a la autorización, ese deberia ser %s') % (
-                num_shop, authorization.agency))
+                raise Warning(_('The agency number %s does not correspond to the authorization, that should be %s') % (
+                    num_shop, authorization.agency))
             if num_printer != authorization.printer_point:
                 raise Warning(
-                    _('El número de punto de emisión %s no corresponde a la autorización, ese deberia ser %s') % (
-                    num_printer, authorization.printer_point))
+                    _('The emission point number %s does not correspond to the authorization, that should be %s') % (
+                        num_printer, authorization.printer_point))
             if num_doc < authorization.first_sequence or num_doc > authorization.last_sequence and not authorization.autoprinter:
-                raise Warning(_('El número de secuencia %s no se encuentra dentro del rango %s y %s') % (
+                raise Warning(_('The sequence number %s is not within the range %s and %s') % (
                 num_doc, authorization.first_sequence, authorization.last_sequence))
         if number:
             if partner_id:
@@ -226,8 +226,8 @@ class L10nECSriAuthorizationSupplier(models.Model):
                     if other_rec.id != res_id:
                         list_ids_exist.append(other_rec)
             if list_ids_exist and partner:
-                raise Warning(_("Existe otro documento de tipo %s con número '%s' para la empresa %s") % (
-                description_name, number, partner.name))
+                raise Warning(_("There is another document of type %s with number '%s' for partner %s") % (
+                    description_name, number, partner.name))
         return True
 
     def write(self, values):
@@ -348,3 +348,5 @@ class L10nECSriAuthorizationSupplier(models.Model):
             name = '%s (%s - %s)' % (rec.number, rec.agency, rec.printer_point)
             res.append((rec.id, name))
         return res
+
+L10nECSriAuthorizationSupplier()

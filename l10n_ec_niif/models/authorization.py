@@ -4,6 +4,7 @@ from odoo import models, api, fields
 import odoo.addons.decimal_precision as dp
 from odoo.tools.translate import _
 from odoo.exceptions import Warning, RedirectWarning, ValidationError
+from ..models import modules_mapping
 
 
 class L10nECSriAuthorization(models.Model):
@@ -91,7 +92,7 @@ class L10nECSriAuthorizationLine(models.Model):
                 raise ValidationError(_("Padding must be between 0 or 9"))
 
     @api.constrains(
-        'sri_authorization_id',
+        'authorization_id',
         'printer_id',
         'name',
         'first_sequence',
@@ -110,7 +111,7 @@ class L10nECSriAuthorizationLine(models.Model):
                     "There's another line with document type %s "
                     "for point of emission %s on agency %s to authorization %s") %
                                       (_DOCUMENT_NAMES.get(line.document_type), self.printer_id.display_name, self.agency_id.display_name,
-                                       self.sri_authorization_id.number))
+                                       self.authorization_id.display_name))
             other_recs = self.search(domain)
             if other_recs:
                 valid = True
@@ -128,6 +129,139 @@ class L10nECSriAuthorizationLine(models.Model):
                                             "point of emission %s in the agency %s, please check sequences") %
                                           (_DOCUMENT_NAMES.get(line.document_type),
                                            self.printer_id.display_name, self.agency_id.display_name))
+
+    @api.model
+    def validate_unique_value_document(self, invoice_type, document_number, company_id, res_id=False):
+        company_model = self.env['res.company']
+        if not document_number or not company_id:
+            raise Warning(_("Verify the arguments to use the validate_unique_value_document function"))
+        if not invoice_type:
+            raise Warning(_("You must indicate what type of document it is, Invoice, Credit Note, Debit Note, etc."))
+        document_type = modules_mapping.get_document_type(invoice_type)
+        model_description = modules_mapping.get_document_name(document_type)
+        model_name = modules_mapping.get_model_name(document_type)
+        field_name = modules_mapping.get_field_name(document_type)
+        domain = modules_mapping.get_domain(invoice_type, include_state=False)
+        res_model = self.env[model_name]
+        company = company_model.browse(company_id)
+        domain.append((field_name, '=', document_number))
+        domain.append(('company_id', '=', company_id))
+        if res_id:
+            domain.append(('id', '!=', res_id))
+        model_recs = res_model.search(domain)
+        if model_recs:
+            if isinstance(res_id, models.NewId):
+                if model_recs and len(model_recs) <= 1:
+                    return True
+            raise Warning(_("There is another document type %s with number '%s' for the company %s") % (
+                model_description, document_number, company.name))
+        return True
+
+    @api.model
+    def fill_padding(self, number, padding):
+        return str(number).rjust(padding, '0')
+
+    @api.model
+    def create_number(self, printer_id, number):
+        result = ''
+        if printer_id:
+            printer = self.env['l10n_ec.point.of.emission'].browse(printer_id)
+            result = printer.agency_id.number + '-' + printer.number + '-' + self.fill_padding(number, 9)
+        return result
+
+    @api.model
+    def complete_number(self, printer_id, number):
+        printer = self.env['l10n_ec.point.of.emission'].browse(printer_id)
+        aux = number.split('-')
+        res = number
+        if number:
+            if len(aux) == 3:
+                try:
+                    seq = self.fill_padding(int(aux[2]), 9)
+                    res = "%s-%s-%s" % (printer.agency_id.number, printer.number, seq)
+                except Exception as e:
+                    res = number
+            elif len(aux) == 1:
+                try:
+                    seq = self.fill_padding(int(number), 9)
+                    res = "%s-%s-%s" % (printer.agency_id.number, printer.number, seq)
+                except Exception as e:
+                    res = number
+        return res
+
+    @api.model
+    def get_next_value_sequence(self, invoice_type, date, company_id, printer_id, raise_exception=False):
+        if not invoice_type or not company_id or not printer_id:
+            return False, False
+        if not date:
+            date = fields.Date.context_today(self)
+        printer_model = self.env['l10n_ec.point.of.emission']
+        document_type = modules_mapping.get_document_type(invoice_type)
+        model_name = modules_mapping.get_model_name(document_type)
+        field_name = modules_mapping.get_field_name(document_type)
+        model_description = modules_mapping.get_document_name(document_type)
+        res_model = self.env[model_name]
+        printer = printer_model.browse(printer_id)
+        doc_recs = self.search([
+            ('document_type', '=', document_type),
+            ('printer_id', '=', printer_id),
+            ('authorization_id.start_date', '<=', date),
+            ('authorization_id.expiration_date', '>=', date),
+        ], order="first_sequence")
+        start_doc_number = "%s-%s-%s" % (printer.agency_id.number, printer.number, '%')
+        domain = modules_mapping.get_domain(invoice_type, include_state=False) + [
+            (field_name, 'like', start_doc_number)]
+        recs_finded = res_model.search(domain, order=field_name + ' DESC', limit=1)
+        doc_finded = None
+        last_number = False
+        seq = False
+        if recs_finded:
+            last_number = recs_finded[0][field_name]
+        try:
+            if last_number:
+                seq = int(last_number.split('-')[2])
+            if self.env.context.get('numbers_skip', []):
+                seq = int(sorted(self.env.context.get('numbers_skip', []))[-1].split('-')[2])
+        except Exception as e:
+            seq = False
+        if doc_recs:
+            for doc in doc_recs:
+                if date >= doc.authorization_id.start_date:
+                    if seq and doc.first_sequence <= seq < doc.last_sequence:
+                        last_number = self.create_number(doc.printer_id.id, seq + 1)
+                        doc_finded = doc.id
+                        break
+                    elif seq and seq == doc.last_sequence:
+                        last_number = "%s-%s-" % (printer.agency_id.number, printer.number)
+                        doc_finded = doc.id
+                        break
+                    elif not seq:
+                        last_number = self.create_number(doc.printer_id.id, doc.first_sequence)
+                        doc_finded = doc.id
+                        break
+            if not doc_finded and recs_finded:
+                try:
+                    seq = int(last_number.split('-')[2])
+                except Exception as e:
+                    seq = False
+                if seq:
+                    for doc in doc_recs:
+                        if doc.first_sequence > seq and date >= doc.authorization_id.start_date:
+                            last_number = self.create_number(doc.printer_id.id, doc.first_sequence)
+                            doc_finded = doc.id
+                            break
+                    if not doc_finded:
+                        last_number = ""
+                else:
+                    last_number = ""
+        else:
+            last_number = ""
+        if not doc_finded and raise_exception:
+            raise Warning(_(
+                "It is not possible to find authorization for the document type %s "
+                "at the point of issue %s for the agency %s with date %s") %
+                          (model_description, printer.number, printer.agency_id.number, date))
+        return last_number, doc_finded and doc_finded or False
 
 
 L10nECSriAuthorizationLine()

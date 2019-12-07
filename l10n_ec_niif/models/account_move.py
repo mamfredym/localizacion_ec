@@ -152,3 +152,6 @@ class AccountMove(models.Model):
     l10n_ec_tax_support_domain_ids = fields.Many2many(comodel_name="l10n_ec.tax.support",
                                                       string="Tax Support Domain",
                                                       compute='_get_l10n_ec_identification_type')
+
+
+AccountMove()

@@ -15,8 +15,7 @@ class L10nEcAgency(models.Model):
     number = fields.Char(string='S.R.I. Number', size=3, required=True, readonly=False, index=True)
     printer_point_ids = fields.One2many('l10n_ec.point.of.emission', 'agency_id', 'Points of Emission', required=False,
                                         auto_join=True, help="", )
-    user_ids = fields.Many2many('res.users', 'rel_user_l10n_ec_agency', 'shop_id', 'user_id',
-                                string='Allowed Users', help="", domain=[('share', '=', False)])
+    user_ids = fields.Many2many('res.users', string='Allowed Users', help="", domain=[('share', '=', False)])
     address_id = fields.Many2one('res.partner', 'Address', required=False, help="", )
     company_id = fields.Many2one('res.company', 'Company', required=False, help="",
                                  default=lambda self: self.env.user.company_id.id)
@@ -56,8 +55,8 @@ class L10EcPointOfEmission(models.Model):
         res = []
         full_name = self.env.context.get('full_name', True)
         for printer in self:
-            name = "%s-%s %s" % (printer.shop_id and printer.shop_id.number or '', printer.number,
-                                 full_name and printer.shop_id and printer.shop_id.name or '')
+            name = "%s-%s %s" % (printer.agency_id and printer.agency_id.number or '', printer.number,
+                                 full_name and printer.agency_id and printer.agency_id.name or '')
             res.append((printer['id'], name))
         return res
 
