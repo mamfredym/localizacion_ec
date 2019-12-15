@@ -123,12 +123,24 @@ class AccountMove(models.Model):
                 else:
                     move.l10n_ec_identification_type_id = False
                 if move.l10n_ec_identification_type_id:
+                    latam_type = 'invoice'
+                    if move.type in ('out_refund', 'in_refund'):
+                        latam_type = 'credit_note'
                     move.write({
-                        'l10n_latam_available_document_type_ids': [(6, 0, move.l10n_ec_identification_type_id.document_type_ids.ids)]
+                        'l10n_latam_available_document_type_ids': [(6, 0, move.l10n_ec_identification_type_id.
+                                                                    document_type_ids.filtered(
+                            lambda x: x.internal_type == latam_type).ids)]
                     })
                     if move.l10n_latam_available_document_type_ids and \
                             move.l10n_latam_document_type_id.id not in move.l10n_latam_available_document_type_ids.ids:
-                        move.l10n_latam_document_type_id = move.l10n_latam_available_document_type_ids.ids[0]
+                        if move.type == 'in_invoice':
+                            move.l10n_latam_document_type_id = move.purchase_invoice_document_type_id.id
+                        elif move.type == 'in_refund':
+                            move.l10n_latam_document_type_id = move.purchase_credit_note_document_type_id.id
+                        elif move.type == 'out_invoice':
+                            move.l10n_latam_document_type_id = move.sale_invoice_document_type_id.id
+                        elif move.type == 'out_refund':
+                            move.l10n_latam_document_type_id = move.sale_credit_note_document_type_id.id
                     if move.l10n_latam_document_type_id:
                         supports = tax_support_model.search([
                             ('document_type_ids', 'in', move.l10n_latam_document_type_id.ids)
