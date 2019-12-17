@@ -12,6 +12,6 @@ class L10nLatamDocumentType(models.Model):
             return super()._format_document_number(document_number)
         if not document_number:
             return False
-        if re.match('(\d{3})+\-(\d{3})+\-(\d{9})', document_number):
+        if not re.match('\d{3}-\d{3}-\d{9}$', document_number):
             raise UserError(_(u'Ecuadorian Document must be like 001-001-123456789'))
         return document_number

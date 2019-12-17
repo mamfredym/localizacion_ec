@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
 
                 <xpath expr="//group[@name='accounting_info_group']" position="before">
-                    <group string="SRI Data" name="sri_data" attrs="{'invisible', [('l10n_latam_country_code', '!=', 'EC')]}">
+                    <group string="SRI Data" name="sri_data" attrs="{'invisible':  [('l10n_latam_country_code', '!=', 'EC')]}">
                         <field name="l10n_ec_foreign" invisible="1" />
                         <field name="l10n_ec_is_exportation" attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund'))]}"/>
                         <field name="l10n_ec_identification_type_id" />
