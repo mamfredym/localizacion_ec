@@ -40,6 +40,7 @@ Accounting chart and localization for Ecuador.
         'views/authorization_view.xml',
         'views/authorization_supplier_view.xml',
         'views/res_users_view.xml',
+        'views/l10n_latam_document_type_view.xml',
              ],
     'demo': [''],
     'installable': True,
