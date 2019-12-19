@@ -35,8 +35,9 @@
                         <notebook colspan="4">
                             <page string="Points of Emission" name="point_of_emission">
                                 <field name="printer_point_ids" colspan="4" nolabel="1">
-                                    <tree editable="bottom" string="Points of Emission">
+                                    <tree string="Points of Emission">
                                         <field name="name" />
+                                        <field name="type_emission" />
                                         <field name="number" />
                                         <field name="active" />
                                     </tree>
@@ -45,7 +46,20 @@
                                             <field name="name" />
                                             <field name="number" />
                                             <field name="active" />
+                                            <field name="type_emission" />
                                         </group>
+                                        <field name="sequence_ids" nolabel="1" colspan="1">
+                                            <tree editable="bottom">
+                                                <field name="document_type" />
+                                                <field name="initial_sequence" />
+                                            </tree>
+                                            <form>
+                                                <group>
+                                                    <field name="document_type" />
+                                                    <field name="initial_sequence" />
+                                                </group>
+                                            </form>
+                                        </field>
                                     </form>
                                 </field>
                             </page>

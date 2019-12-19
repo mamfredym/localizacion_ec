@@ -14,21 +14,24 @@ class ResUsers(models.Model):
 
     @api.model
     def get_default_point_of_emission(self, user_id=False, get_all=True, raise_exception=True):
-        if not user_id:
-            user_id = self.env.user.id
-        user = self.browse(user_id)
-        res = []
-        if user.printer_default_id:
-            temp = (user.l10n_ec_printer_default_id.id, user.l10n_ec_printer_default_id.agency_id.id)
-            if temp not in res:
-                res.append(temp)
+        user = self.browse()
+        if user_id:
+            user = self.browse(user_id)
+        else:
+            user = self.env.user
+        printer_model = self.env['l10n_ec.point.of.emission']
+        res = {
+            'default_printer_default_id': printer_model.browse(),
+            'all_printer_ids': printer_model.browse(),
+        }
+        if user.l10n_ec_printer_default_id:
+            res['default_printer_default_id'] |= user.l10n_ec_printer_default_id
+            res['all_printer_ids'] |= user.l10n_ec_printer_default_id
         if not res or get_all:
             for agency in user.l10n_ec_agency_ids:
                 for printer in agency.printer_point_ids:
-                    temp = (printer.id, agency.id)
-                    if temp not in res:
-                        res.append(temp)
-        if not res and raise_exception:
+                    res['all_printer_ids'] |= printer
+        if not res and raise_exception and user.company_id.country_id.code == 'EC':
             raise Warning(_('Your user does not have the permissions '
                             'configured correctly (Agency, Point of emission), please check with the administrator'))
         return res

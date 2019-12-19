@@ -56,7 +56,7 @@ class L10nECSriAuthorizationLine(models.Model):
             ('name', '=', 'l10n_ec_delivery_note'),
             ('state', '=', 'installed')
         ]):
-            types.append(('delivery_note', 'Delivery Note'))
+            types.append(('delivery_note', _('Delivery Note')))
         return types
 
     document_type = fields.Selection(string="Document Type",

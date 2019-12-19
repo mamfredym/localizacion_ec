@@ -10,6 +10,12 @@
 
                 <xpath expr="//group[@name='accounting_info_group']" position="before">
                     <group string="SRI Data" name="sri_data" attrs="{'invisible':  [('l10n_latam_country_code', '!=', 'EC')]}">
+                        <field name="l10n_ec_authorization_line_id" options="{'no_create': True}"
+                               attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund'))], 'required': [('type', 'in', ('out_invoice', 'out_refund')), ('l10n_latam_country_code', '=', 'EC')]}" />
+                        <field name="l10n_ec_authorization_id" attrs="{'invisible': [('l10n_ec_authorization_id', '=', False)]}"/>
+                        <field name="l10n_ec_point_of_emission_id" options="{'no_create': True}"
+                               attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund'))], 'required': [('type', 'in', ('out_invoice', 'out_refund')), ('l10n_latam_country_code', '=', 'EC')]}" />
+                        <field name="l10n_ec_agency_id" attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund'))]}"/>
                         <field name="l10n_ec_foreign" invisible="1" />
                         <field name="l10n_ec_is_exportation" attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund'))]}"/>
                         <field name="l10n_ec_identification_type_id" />

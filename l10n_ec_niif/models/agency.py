@@ -49,6 +49,28 @@ class L10EcPointOfEmission(models.Model):
     agency_id = fields.Many2one('l10n_ec.agency', 'Agency', required=False, index=True, auto_join=True)
     number = fields.Char('S.R.I. Number', size=3, required=True, readonly=False, index=True)
     active = fields.Boolean(string="Active?", default=True)
+    type_emission = fields.Selection(string="Type Emission",
+                                     selection=[
+                                         ('electronic', 'Electronic'),
+                                         ('pre_printed', 'Pre Printed'),
+                                         ('auto_printer', 'Auto Printer'),
+                                     ],
+                                     required=True, default='electronic')
+    sequence_ids = fields.One2many(comodel_name="l10n_ec.point.of.emission.document.sequence",
+                                   inverse_name="printer_id", string="Initial Sequences", required=False, )
+
+    @api.model
+    def default_get(self, fields):
+        values = super(L10EcPointOfEmission, self).default_get(fields)
+        values['sequence_ids'] = [
+            (0, 0, {'document_type': 'invoice', 'initial_sequence': 1}),
+            (0, 0, {'document_type': 'withholding', 'initial_sequence': 1}),
+            (0, 0, {'document_type': 'liquidation', 'initial_sequence': 1}),
+            (0, 0, {'document_type': 'credit_note', 'initial_sequence': 1}),
+            (0, 0, {'document_type': 'debit_note', 'initial_sequence': 1}),
+            (0, 0, {'document_type': 'delivery_note', 'initial_sequence': 1}),
+        ]
+        return values
 
     def name_get(self):
         res = []
@@ -65,3 +87,23 @@ class L10EcPointOfEmission(models.Model):
 
 
 L10EcPointOfEmission()
+
+
+class L10EcPointOfEmissionDocumentSequence(models.Model):
+
+    _name = 'l10n_ec.point.of.emission.document.sequence'
+
+    printer_id = fields.Many2one(comodel_name="l10n_ec.point.of.emission",
+                                 string="Printer", required=True, )
+    initial_sequence = fields.Integer(string="Initial Sequence", required=True, default=1)
+    document_type = fields.Selection(string="Document Type", selection=[
+        ('invoice', _('Invoice')),
+        ('withholding', _('Withhold')),
+        ('liquidation', _('Liquidation of Purchases')),
+        ('credit_note', _('Credit Note')),
+        ('debit_note', _('Debit Note')),
+        ('delivery_note', _('Delivery Note')),
+    ], required=True, )
+
+
+L10EcPointOfEmissionDocumentSequence()

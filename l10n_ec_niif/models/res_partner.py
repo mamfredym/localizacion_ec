@@ -67,8 +67,11 @@ class ResPartner(models.Model):
     @api.constrains('vat')
     def _check_duplicity(self):
         if self.vat:
-            other_partner = self.search([('vat', '=', self.vat)])
-            if len(other_partner) > 1:
+            other_partner = self.search([
+                ('vat', '=', self.vat),
+                ('id', '!=', self.id),
+                                         ])
+            if len(other_partner) >= 1:
                 raise Warning(_("The number %s must be unique as VAT") % self.vat)
 
     def verify_final_consumer(self, vat):

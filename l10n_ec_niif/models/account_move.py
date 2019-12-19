@@ -165,5 +165,32 @@ class AccountMove(models.Model):
                                                       string="Tax Support Domain",
                                                       compute='_get_l10n_ec_identification_type')
 
+    l10n_ec_point_of_emission_id = fields.Many2one(comodel_name="l10n_ec.point.of.emission",
+                                                   string="Point of Emission", readonly=True,
+                                                   states={'draft': [('readonly', False)]})
+    l10n_ec_agency_id = fields.Many2one(comodel_name="l10n_ec.agency",
+                                        string="Agency", related="l10n_ec_point_of_emission_id.agency_id", store=True,
+                                        readonly=True)
+    l10n_ec_authorization_line_id = fields.Many2one(comodel_name="l10n_ec.sri.authorization.line",
+                                                    string="Own Ecuadorian Authorization Line")
+    l10n_ec_authorization_id = fields.Many2one(comodel_name="l10n_ec.sri.authorization",
+                                               string="Own Ecuadorian Authorization",
+                                               related="l10n_ec_authorization_line_id.authorization_id", store=True)
+    l10n_ec_type_emission = fields.Selection(string="Type Emission",
+                                             selection=[
+                                                 ('electronic', 'Electronic'),
+                                                 ('pre_printed', 'Pre Printed'),
+                                                 ('auto_printer', 'Auto Printer'),
+                                             ],
+                                             required=False)
+
+    @api.model
+    def default_get(self, fields):
+        values = super(AccountMove, self).default_get(fields)
+        values['l10n_ec_point_of_emission_id'] = self.env['res.users'].\
+            get_default_point_of_emission(self.env.user.id, raise_exception=True).get('default_printer_default_id').id
+        return values
+
 
 AccountMove()
+
