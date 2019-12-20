@@ -187,8 +187,12 @@ class AccountMove(models.Model):
     @api.model
     def default_get(self, fields):
         values = super(AccountMove, self).default_get(fields)
-        values['l10n_ec_point_of_emission_id'] = self.env['res.users'].\
-            get_default_point_of_emission(self.env.user.id, raise_exception=True).get('default_printer_default_id').id
+        default_printer_default = self.env['res.users']. \
+            get_default_point_of_emission(self.env.user.id, raise_exception=True).get('default_printer_default_id')
+        values['l10n_ec_point_of_emission_id'] = default_printer_default.id
+        if default_printer_default:
+            values['l10n_ec_type_emission'] = default_printer_default.type_emission
+
         return values
 
 
