@@ -93,7 +93,7 @@ class L10nECSriAuthorizationLine(models.Model):
 
     @api.constrains(
         'authorization_id',
-        'printer_id',
+        'point_of_emission_id',
         'name',
         'first_sequence',
         'last_sequence',
@@ -102,7 +102,7 @@ class L10nECSriAuthorizationLine(models.Model):
         for line in self:
             domain = [
                 ('document_type', '=', line.document_type),
-                ('printer_id', '=', line.point_of_emission_id.id),
+                ('point_of_emission_id', '=', line.point_of_emission_id.id),
                 ('id', '!=', line.id),
             ]
             other_recs = self.search(domain + [('authorization_id', '=', self.authorization_id.id)])
@@ -110,7 +110,7 @@ class L10nECSriAuthorizationLine(models.Model):
                 raise ValidationError(_(
                     "There's another line with document type %s "
                     "for point of emission %s on agency %s to authorization %s") %
-                                      (_DOCUMENT_NAMES.get(line.document_type), self.printer_id.display_name, self.agency_id.display_name,
+                                      (_DOCUMENT_NAMES.get(line.document_type), self.point_of_emission_id.display_name, self.agency_id.display_name,
                                        self.authorization_id.display_name))
             other_recs = self.search(domain)
             if other_recs:
@@ -128,7 +128,7 @@ class L10nECSriAuthorizationLine(models.Model):
                     raise ValidationError(_("There's another line with document type %s for "
                                             "point of emission %s in the agency %s, please check sequences") %
                                           (_DOCUMENT_NAMES.get(line.document_type),
-                                           self.printer_id.display_name, self.agency_id.display_name))
+                                           self.point_of_emission_id.display_name, self.agency_id.display_name))
 
     @api.model
     def validate_unique_value_document(self, invoice_type, document_number, company_id, res_id=False):

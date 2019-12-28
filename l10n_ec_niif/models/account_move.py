@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError
+from ..models import modules_mapping
 
 class L10nECIdentificationType(models.Model):
 
@@ -73,10 +74,15 @@ class AccountMove(models.Model):
          states={}, help="")
     l10n_ec_foreign = fields.Boolean('Foreign?',
                                     related='partner_id.l10n_ec_foreign', store=True)
+    l10n_ec_debit_note = fields.Boolean(string="Debit Note?")
+    l10n_ec_liquidation = fields.Boolean(string="Liquidation of Purchases?")
 
     @api.depends(
         'partner_id.l10n_ec_type_sri',
+        'l10n_ec_point_of_emission_id',
         'l10n_ec_is_exportation',
+        'l10n_ec_debit_note',
+        'l10n_ec_liquidation',
         'type',
         'company_id',
     )
@@ -183,18 +189,52 @@ class AccountMove(models.Model):
                                                  ('auto_printer', 'Auto Printer'),
                                              ],
                                              required=False)
+    @api.depends(
+        'name',
+        'l10n_latam_document_type_id',
+    )
+    def _compute_l10n_ec_document_number(self):
+        recs_with_name = self.filtered(lambda x: x.name != '/' and x.company_id.country_id.code == 'EC')
+        for rec in recs_with_name:
+            name = rec.name
+            doc_code_prefix = rec.l10n_latam_document_type_id.doc_code_prefix
+            if doc_code_prefix and name:
+                name = name.split(" ", 1)[-1]
+            rec.l10n_ec_document_number = name
+        remaining = self - recs_with_name
+        remaining.l10n_ec_document_number = False
+
+    l10n_ec_document_number = fields.Char(string="Ecuadorian Document Number",
+                                          readonly=True, compute="_compute_l10n_ec_document_number", store=True)
+
 
     @api.model
     def default_get(self, fields):
         values = super(AccountMove, self).default_get(fields)
-        default_printer_default = self.env['res.users']. \
-            get_default_point_of_emission(self.env.user.id, raise_exception=True).get('default_printer_default_id')
-        values['l10n_ec_point_of_emission_id'] = default_printer_default.id
-        if default_printer_default:
-            values['l10n_ec_type_emission'] = default_printer_default.type_emission
-
+        if 'type' in fields:
+            default_printer_default = self.env['res.users']. \
+                get_default_point_of_emission(self.env.user.id, raise_exception=True).get('default_printer_default_id')
+            values['l10n_ec_point_of_emission_id'] = default_printer_default.id
+            if default_printer_default:
+                values['l10n_ec_type_emission'] = default_printer_default.type_emission
         return values
 
+    @api.onchange(
+        'type',
+        'l10n_ec_debit_note',
+        'l10n_ec_liquidation',
+        'l10n_ec_point_of_emission_id',
+    )
+    def _onchange_point_of_emission(self):
+        for move in self.filtered(lambda x: x.company_id.country_id.code == 'EC' and x.type in ('out_invoice', 'out_refund')):
+            if move.l10n_ec_point_of_emission_id:
+                invoice_type = modules_mapping.get_invoice_type(move.type, move.l10n_ec_debit_note,
+                                                                move.l10n_ec_liquidation)
+                next_number, auth_line = move.l10n_ec_point_of_emission_id.get_next_value_sequence(invoice_type, False, False)
+                if next_number:
+                    move.l10n_latam_document_number = next_number
+                if auth_line:
+                    move.l10n_ec_authorization_line_id = auth_line.id
 
 AccountMove()
 

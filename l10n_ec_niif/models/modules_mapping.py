@@ -184,10 +184,10 @@ def get_model_name(document_type):
     @param document_type: el tipo de documento(el que usa los documentos de autorizaciones)
     @return: str, el nombre tecnico del tipo de documento para usar ORM
     """
-    model_name = {'invoice': 'account.invoice',
-                  'credit_note': 'account.invoice',
-                  'debit_note': 'account.invoice',
-                  'liquidation': 'account.invoice',
+    model_name = {'invoice': 'account.move',
+                  'credit_note': 'account.move',
+                  'debit_note': 'account.move',
+                  'liquidation': 'account.move',
                   'withholding': 'account.retention',
                   'delivery_note': 'account.remision',
                   'invoice_reembolso': 'account.invoice.reembolso'
@@ -200,10 +200,10 @@ def get_field_name(document_type):
     @param document_type: el tipo de documento(el que usa los documentos de autorizaciones)
     @return: str, el nombre tecnico del campo que tiene el numero del modelo para usar ORM
     """
-    field_name = {'invoice': 'l10n_latam_document_number',
-                  'credit_note': 'l10n_latam_document_number',
-                  'debit_note': 'l10n_latam_document_number',
-                  'liquidation': 'l10n_latam_document_number',
+    field_name = {'invoice': 'l10n_ec_document_number',
+                  'credit_note': 'l10n_ec_document_number',
+                  'debit_note': 'l10n_ec_document_number',
+                  'liquidation': 'l10n_ec_document_number',
                   'withholding': 'document_number',
                   'delivery_note': 'document_number',
                   'invoice_reembolso': 'number',
@@ -259,8 +259,8 @@ def get_domain(invoice_type, include_state=True):
                          'withhold_purchase': [],
                          }
     common_domain = [('type','=', invoice_type_bd),
-                     ('debit_note', '=', debit_note),
-                     ('liquidation', '=', liquidation),
+                     ('l10n_ec_debit_note', '=', debit_note),
+                     ('l10n_ec_liquidation', '=', liquidation),
                      ]
     domain_state = []
     if include_state:

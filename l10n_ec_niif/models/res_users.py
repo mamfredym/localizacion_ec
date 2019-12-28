@@ -25,8 +25,15 @@ class ResUsers(models.Model):
             'all_printer_ids': printer_model.browse(),
         }
         if user.l10n_ec_printer_default_id:
-            res['default_printer_default_id'] |= user.l10n_ec_printer_default_id
+            res['default_printer_default_id'] = user.l10n_ec_printer_default_id
             res['all_printer_ids'] |= user.l10n_ec_printer_default_id
+        else:
+            for agency in user.l10n_ec_agency_ids:
+                for printer in agency.printer_point_ids:
+                    res['default_printer_default_id'] = printer
+                    res['all_printer_ids'] |= printer
+                    break
+                break
         if not res or get_all:
             for agency in user.l10n_ec_agency_ids:
                 for printer in agency.printer_point_ids:

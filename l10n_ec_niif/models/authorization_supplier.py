@@ -117,7 +117,7 @@ class L10nECSriAuthorizationSupplier(models.Model):
                 raise ValidationError(_("Padding number must be between 0 and 9"))
 
     def _check_document_in_use(self, vals):
-        invoice_model = self.env['account.invoice']
+        invoice_model = self.env['account.move']
         retention_model = self.env['account.retention']
         invoice_recs, retention_recs = [], []
         has_change = False

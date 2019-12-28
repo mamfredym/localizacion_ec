@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+    elementFormDefault="qualified">
+    <xs:import namespace="http://www.w3.org/2000/09/xmldsig#"
+        schemaLocation="xmldsig-core-schema.xsd"/>
+    <xs:element name="lote-masivo">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="ambiente" type="ambiente"/>
+                <xs:element name="tipoEmision" type="tipoEmision"/>
+                <xs:element name="ruc" type="numeroRuc"/>
+                <xs:element name="claveAcceso" type="claveAcceso"/>
+                <xs:element name="establecimiento" type="establecimiento"/>
+                <xs:element name="codDoc" type="codDoc"/>
+                <xs:element name="comprobantes">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element maxOccurs="unbounded" name="comprobante">
+                                <xs:complexType>
+                                    <xs:simpleContent>
+                                        <xs:extension base="xs:string">
+                                            <xs:attribute name="version" type="version"/>
+                                        </xs:extension>
+                                    </xs:simpleContent>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element ref="ds:Signature" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="en"> Set of data associated with the invoice which guarantee the authorship and integrity of the message. It is defined as optional to ease the validation and transmission of the file. However, this block of electronic signature must be completed in order for an electronic invoice to be considered legally valid before third parties.</xs:documentation>
+                        <xs:documentation xml:lang="es"> Conjunto de datos asociados a la factura que garantizarán la autoría y la integridad del mensaje. Se define como opcional para facilitar la verificación y el tránsito del fichero. No obstante, debe cumplimentarse este bloque de firma electrónica para que se considere una factura electrónica válida legalmente frente a terceros.</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="id" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="lote"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="version" type="xs:NMTOKEN" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:simpleType name="ambiente">
+        <xs:annotation>
+            <xs:documentation>Desarrollo o produccion depende de en cual ambiente se genere el comprobante.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[1-2]{1}"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="numeroRuc">
+        <xs:annotation>
+            <xs:documentation>Se detalla el numero de RUC del Contribuyente</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9]{10}001"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="tipoEmision">
+        <xs:annotation>
+            <xs:documentation>Tipo de emision en el cual se genero el comprobante</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[1-3]{1}"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="version">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9].[0-9].[0-9]"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="establecimiento">
+        <xs:annotation>
+            <xs:documentation>Se detalla el numero del establecimiento</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9]{3}"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="claveAcceso">
+        <xs:annotation>
+            <xs:documentation>Corresponde al numero generado por el sistema de cada contribuyente
+                    </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9]{49}"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="codDoc">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9]{2}"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

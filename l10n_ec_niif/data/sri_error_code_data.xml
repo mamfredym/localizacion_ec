@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+    	
+    	<record model="sri.error.code" id="error_code_02">
+    		<field name="code">02</field>
+    		<field name="name">RUC del emisor se encuentra NO ACTIVO.</field>
+    		<field name="solution">Verificar que el número de RUC se encuentre en estado ACTIVO.</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_10">
+    		<field name="code">10</field>
+    		<field name="name">Establecimiento del emisor se encuentra Clausurado.</field>
+    		<field name="solution">No se autorizará comprobantes si el establecimiento emisor ha sido clausurado, automáticamente se habilitará el servicio una vez concluida la clausura.</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_26">
+    		<field name="code">26</field>
+    		<field name="name">Tamaño máximo superado</field>
+    		<field name="solution">Tamaño del archivo supera lo establecido</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_27">
+    		<field name="code">27</field>
+    		<field name="name">Clase no permitido</field>
+    		<field name="solution">La clase del contribuyente no puede emitir comprobantes electrónicos.</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_28">
+    		<field name="code">28</field>
+    		<field name="name">Acuerdo de Medios Electrónicos no aceptado</field>
+    		<field name="solution">Siempre el contribuyente debe haber aceptado el Acuerdo de medio electrónicos en el cual se establece que se acepta que lleguen las notificaciones al buzón del contribuyente.</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_33">
+    		<field name="code">33</field>
+    		<field name="name">Dirección Ip sancionada</field>
+    		<field name="solution">Cuando la dirección desde la cual está llamando muchas veces al servicio en un tiempo determinado</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_34">
+    		<field name="code">34</field>
+    		<field name="name">Comprobante no autorizado</field>
+    		<field name="solution">Cuando el comprobante no ha sido autorizado como parte de la solicitud de emisión del contribuyente.</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_35">
+    		<field name="code">35</field>
+    		<field name="name">Documento Inválido</field>
+    		<field name="solution">Cuando el xml no pasa validación de esquema.</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_36">
+    		<field name="code">36</field>
+    		<field name="name">Versión esquema descontinuada</field>
+    		<field name="solution">Cuando la versión del esquema no es la correcta.</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_37">
+    		<field name="code">37</field>
+    		<field name="name">RUC sin autorización de emisión</field>
+    		<field name="solution">Cuando el RUC del emisor no cuenta con una solicitud de emisión de comprobantes electrónicos.</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_39">
+    		<field name="code">39</field>
+    		<field name="name">Firma inválida</field>
+    		<field name="solution">Firma electrónica del emisor no es válida.</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_40">
+    		<field name="code">40</field>
+    		<field name="name">Error en el certificado</field>
+    		<field name="solution">No se encontró el certificado o no se puede convertir en certificad X509.</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_42">
+    		<field name="code">42</field>
+    		<field name="name">Certificado revocado</field>
+    		<field name="solution">Certificado que ha superado su fecha de caducidad, y no ha sido renovado.</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_43">
+    		<field name="code">43</field>
+    		<field name="name">Clave acceso registrada</field>
+    		<field name="solution">Cuando la clave de acceso ya se encuentra registrada en la base de datos.</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_45">
+    		<field name="code">45</field>
+    		<field name="name">Secuencial registrado</field>
+    		<field name="solution">Secuencial del comprobante ya se encuentra registrado en la base de datos</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_46">
+    		<field name="code">46</field>
+    		<field name="name">RUC no existe</field>
+    		<field name="solution">Cuando el ruc emisor no existe en el Registro Único de Contribuyentes.</field>
+    	</record>
+
+    	<record model="sri.error.code" id="error_code_47">
+    		<field name="code">47</field>
+    		<field name="name">Tipo de comprobante no existe</field>
+    		<field name="solution">Cuando envían en el tipo de comprobante uno que no exista en el catálogo de nuestros tipos de comprobantes.</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_48">
+    		<field name="code">48</field>
+    		<field name="name">Esquema XSD no existe</field>
+    		<field name="solution">Cuando el esquema para el tipo de comprobante enviado no existe.</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_49">
+    		<field name="code">49</field>
+    		<field name="name">Argumentos que envían al WS nulos</field>
+    		<field name="solution">Cuando se consume el WS con argumentos nulos.</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_50">
+    		<field name="code">50</field>
+    		<field name="name">Error interno general</field>
+    		<field name="solution">Cuando ocurre un error inesperado en el servidor.</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_52">
+    		<field name="code">52</field>
+    		<field name="name">Error en diferencias</field>
+    		<field name="solution">Cuando existe error en los cálculos del comprobante.</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_53">
+    		<field name="code">53</field>
+    		<field name="name">Claves no registradas</field>
+    		<field name="solution">Cuando envían comprobantes electrónicos que hayan sido generados en contingencia y las claves de acceso no son las que entregó la Administración Tributaria al contribuyente emisor.</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_56">
+    		<field name="code">56</field>
+    		<field name="name">Establecimiento Cerrado</field>
+    		<field name="solution">Cuando el establecimiento desde el cual se genera el comprobante se encuentra cerrado.</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_57">
+    		<field name="code">57</field>
+    		<field name="name">Autorización suspendida</field>
+    		<field name="solution">Cuando la autorización para emisión de comprobantes electrónicos para el emisor se encuentra suspendida por procesos de control de la Administración Tributaria.</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_58">
+    		<field name="code">58</field>
+    		<field name="name">Error en la estructura de clave acceso</field>
+    		<field name="solution">Cuando la clave de acceso tiene componentes diferentes a los del comprobante.</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_59">
+    		<field name="code">59</field>
+    		<field name="name">Identificación no existe</field>
+    		<field name="solution">Cuando el número de la identificación del adquirente no existe.</field>
+    	</record>
+
+    	<record model="sri.error.code" id="error_code_60">
+    		<field name="code">60</field>
+    		<field name="name">Ambiente ejecución.</field>
+    		<field name="solution">Siempre que el comprobante sea emitido en ambiente de certificación o pruebas se enviará como parte de la autorización esta advertencia.</field>
+    	</record>
+
+    	<record model="sri.error.code" id="error_code_62">
+    		<field name="code">62</field>
+    		<field name="name">Identificación Incorrecta</field>
+    		<field name="solution">Cuando el número de la identificación del adquirente del comprobante está incorrecta. Por ejemplo cédulas no pasan el dígito verificador.</field>
+    	</record>
+
+    	<record model="sri.error.code" id="error_code_63">
+    		<field name="code">63</field>
+    		<field name="name">RUC clausurado</field>
+    		<field name="solution">Cuando el RUC del emisor se encuentra clausurado por procesos de control de la Administración Tributaria.</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_64">
+    		<field name="code">64</field>
+    		<field name="name">Código documento sustento</field>
+    		<field name="solution">Cuando el código del documento sustento no existe en el catálogo de documentos que se tiene en la Administración.</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_65">
+    		<field name="code">65</field>
+    		<field name="name">Fecha de emisión extemporánea</field>
+    		<field name="solution">Cuando el comprobante emitido no fue enviado de acuerdo al tiempo del tipo de emisión en el cual fue realizado.</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_66">
+    		<field name="code">66</field>
+    		<field name="name">Clave reportada</field>
+    		<field name="solution">Cuando el comprobante es emitido en tipo de emisión contingente y utilizan una clave que ya fue registrada para otros comprobante en el mismo tipo de emisión.</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_67">
+    		<field name="code">67</field>
+    		<field name="name">Fecha inválida</field>
+    		<field name="solution">Cuando existe errores en el formato de la fecha.</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_68">
+    		<field name="code">68</field>
+    		<field name="name">Documento Sustento</field>
+    		<field name="solution">Cuando el comprobante relacionado no existe como electrónico.</field>
+    	</record>
+
+    	<record model="sri.error.code" id="error_code_69">
+    		<field name="code">69</field>
+    		<field name="name">Identificación del receptor</field>
+    		<field name="solution">Cuando la identificación asociada al adquirente no existe. En general cuando el RUC del adquirente no existe en el Registro Único de Contribuyentes.</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_70">
+    		<field name="code">70</field>
+    		<field name="name">Clave de acceso en procesamiento</field>
+    		<field name="solution">Cuando se desea enviar un comprobante que ha sido enviado anteriormente y el mismo no ha terminado su procesamiento.</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_71">
+    		<field name="code">71</field>
+    		<field name="name">El ruc de la cabecera del lote es diferente al ruc del comprobante recibido</field>
+    		<field name="solution">Cuando el ruc del emisor de la cabecera del comprobante que forma un lote es diferente al ruc del emisor de la cabecera del lote masivo.</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_72">
+    		<field name="code">72</field>
+    		<field name="name">Error al procesar el xml del comprobante recibido al obtener el ruc del archivo xml.</field>
+    		<field name="solution">Cuando el ruc del emisior de cada comprobante que pertenece al lote masivo se encuentra mal formado en su estructura.</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_74">
+    		<field name="code">74</field>
+    		<field name="name">El código de documento de la cabecera del lote es diferente al código del documento del comprobante recibido</field>
+    		<field name="solution">Cuando el codDoc de la cabecera del lote masivo es diferente al codDoc de la cabecera del comprobante recibido que forma parte del lote masivo.</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_75">
+    		<field name="code">75</field>
+    		<field name="name">Error en el código del documento del lote</field>
+    		<field name="solution">Cuando el codDoc del documento del lote masivo es diferente a los códigos de documentos de los comprobantes que son admitidos(Facturas, Notas de Crédito, Notas de Débito, Guías de Remisión, Comprobantes de Retención).</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_77">
+    		<field name="code">77</field>
+    		<field name="name">Error de conversión en la estructura del archivo xml del comprobante del lote</field>
+    		<field name="solution">Cuando el CodDoc de la cabecera del comprobante que pertenece a un lote masivo está formado por letras, está vacío, o no tiene el tag. Cuando en la cabecera del comprobante que pertenece a un lote masivo, en el Ruc del Emisor se envía un número de Ruc que no se encuentra en las bases del SRI.</field>
+    	</record>
+    	
+    	<record model="sri.error.code" id="error_code_80">
+    		<field name="code">80</field>
+    		<field name="name">Error en la estructura de clave acceso</field>
+    		<field name="solution">Cuando se ejecuta la consulta de autorización por clave de acceso y el valor de este parámetro supera los 49 dígitos, tiene caracteres alfanuméricos o cuando el tag(claveAccesoComprobante) está vacío</field>
+    	</record>
+    
+    </data>
+</odoo>

@@ -155,5 +155,15 @@ class ResPartner(models.Model):
     l10n_ec_authorization_ids = fields.One2many('l10n_ec.sri.authorization.supplier',
                                                 'partner_id', string='Third Party Authorizations')
 
+    l10n_ec_email_out_invoice = fields.Boolean('As Follower on Invoice', readonly=False,
+                                               default=lambda self: not ("default_parent_id" in self.env.context))
+    l10n_ec_email_out_refund = fields.Boolean('As Follower on Credit Note', readonly=False,
+                                              default=lambda self: not ("default_parent_id" in self.env.context))
+    l10n_ec_email_debit_note_out = fields.Boolean('As Follower on Debit Notes', readonly=False,
+                                                  default=lambda self: not ("default_parent_id" in self.env.context))
+    l10n_ec_email_delivery_note = fields.Boolean('As Follower Delivery Note', readonly=False,
+                                                 default=lambda self: not ("default_parent_id" in self.env.context))
+    l10n_ec_email_withhold_purchase = fields.Boolean('As Follower on Withhold', readonly=False,
+                                                     default=lambda self: not ("default_parent_id" in self.env.context))
 
 ResPartner()

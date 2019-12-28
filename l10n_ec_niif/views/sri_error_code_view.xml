@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		<record model="ir.ui.view" id="sri_error_code_tree_view">
+			<field name="name">sri.error.code.tree</field>
+			<field name="model">sri.error.code</field>
+			<field name="arch" type="xml">
+				<tree string="Codigos de Error SRI">
+					<field name="code" />
+					<field name="name" />
+					<field name="solution" />
+					<field name="raise_error" />
+					<field name="no_resend" />
+					<field name="change_key" />
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="sri_error_code_form_view">
+			<field name="name">sri.error.code.form</field>
+			<field name="model">sri.error.code</field>
+			<field name="arch" type="xml">
+				<form string="Codigo de Error SRI">
+					<group col="4" colspan="2">
+						<field name="code" />
+						<field name="name" />
+					</group>
+					<group colspan="2" string="Opciones de Sistemas" col="6">
+						<field name="raise_error" />
+						<field name="no_resend" />
+						<field name="change_key" />
+					</group>
+					<group string="Posible Solución"  col="4" colspan="2">
+						<field name="solution" placeholder="Posible Solución" nolabel="1" colspan="4"/>
+					</group>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="sri_error_code_search_view">
+			<field name="name">sri.error.code.form</field>
+			<field name="model">sri.error.code</field>
+			<field name="arch" type="xml">
+				<search string="Codigo de Error SRI">
+					<field name="code" />
+					<field name="name" />
+					<field name="raise_error" />
+					<field name="no_resend" />
+					<field name="change_key" />
+				</search>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="action_sri_error_code_tree_view">
+			<field name="name">Códigos de Error SRI</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">sri.error.code</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="sri_error_code_tree_view" />
+			<field name="search_view_id" ref="sri_error_code_search_view" />
+		</record>
+
+		<menuitem id="sri_error_code_menu" name="Códigos de Error SRI" sequence="5"
+			parent="sri_documentos_eletronicos_menu" action="action_sri_error_code_tree_view" />
+
+
+	</data>
+</odoo>

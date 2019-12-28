@@ -48,6 +48,7 @@ class L10EcPointOfEmission(models.Model):
 
     name = fields.Char("Point of emission's name", required=True, readonly=False, index=True)
     agency_id = fields.Many2one('l10n_ec.agency', 'Agency', required=False, index=True, auto_join=True)
+    company_id = fields.Many2one(comodel_name="res.company", string="Company", related="agency_id.company_id")
     number = fields.Char('S.R.I. Number', size=3, required=True, readonly=False, index=True)
     active = fields.Boolean(string="Active?", default=True)
     type_emission = fields.Selection(string="Type Emission",
@@ -86,8 +87,27 @@ class L10EcPointOfEmission(models.Model):
         ('number_uniq', 'unique (number, agency_id)', _('The number of point of emission must be unique by Agency!')),
     ]
 
+    @api.model
+    def fill_padding(self, number, padding):
+        return str(number).rjust(padding, '0')
+
+    def create_number(self, number):
+        self.ensure_one()
+        result = self.agency_id.number + '-' + self.number + '-' + self.fill_padding(number, 9)
+        return result
+
+    def _get_first_number_electronic(self, invoice_type):
+        self.ensure_one()
+        first_number_electronic = False
+        for doc in self.sequence_ids:
+            if doc.document_type == invoice_type:
+                first_number_electronic = doc.first_number_electronic or False
+                break
+        return first_number_electronic
+
     def get_next_value_sequence(self, invoice_type, date, raise_exception=False):
         self.ensure_one()
+        auth_line_model = self.env['l10n_ec.sri.authorization.line']
         if not date:
             date = fields.Date.context_today(self)
         document_type = modules_mapping.get_document_type(invoice_type)
@@ -96,9 +116,9 @@ class L10EcPointOfEmission(models.Model):
         model_description = modules_mapping.get_document_name(document_type)
         res_model = self.env[model_name]
         printer = self
-        doc_recs = self.search([
+        doc_recs = auth_line_model.search([
             ('document_type', '=', document_type),
-            ('printer_id', '=', self.id),
+            ('point_of_emission_id', '=', self.id),
             ('authorization_id.start_date', '<=', date),
             ('authorization_id.expiration_date', '>=', date),
         ], order="first_sequence")
@@ -106,14 +126,14 @@ class L10EcPointOfEmission(models.Model):
         domain = modules_mapping.get_domain(invoice_type, include_state=False) + [
             (field_name, 'like', start_doc_number)]
         recs_finded = res_model.search(domain, order=field_name + ' DESC', limit=1)
-        doc_finded = None
-        last_number = False
+        doc_finded = auth_line_model.browse()
+        next_seq = False
         seq = False
         if recs_finded:
-            last_number = recs_finded[0][field_name]
+            next_seq = recs_finded[0][field_name]
         try:
-            if last_number:
-                seq = int(last_number.split('-')[2])
+            if next_seq:
+                seq = int(next_seq.split('-')[2])
             if self.env.context.get('numbers_skip', []):
                 seq = int(sorted(self.env.context.get('numbers_skip', []))[-1].split('-')[2])
         except Exception as e:
@@ -122,40 +142,95 @@ class L10EcPointOfEmission(models.Model):
             for doc in doc_recs:
                 if date >= doc.authorization_id.start_date:
                     if seq and doc.first_sequence <= seq < doc.last_sequence:
-                        last_number = self.create_number(doc.printer_id.id, seq + 1)
-                        doc_finded = doc.id
+                        next_seq = doc.point_of_emission_id.create_number(seq + 1)
+                        doc_finded = doc
                         break
                     elif seq and seq == doc.last_sequence:
-                        last_number = "%s-%s-" % (printer.agency_id.number, printer.number)
-                        doc_finded = doc.id
+                        next_seq = "%s-%s-" % (printer.agency_id.number, printer.number)
+                        doc_finded = doc
                         break
                     elif not seq:
-                        last_number = self.create_number(doc.printer_id.id, doc.first_sequence)
-                        doc_finded = doc.id
+                        next_seq = doc.point_of_emission_id.create_number(doc.first_sequence)
+                        doc_finded = doc
                         break
             if not doc_finded and recs_finded:
                 try:
-                    seq = int(last_number.split('-')[2])
+                    seq = int(next_seq.split('-')[2])
                 except Exception as e:
                     seq = False
                 if seq:
                     for doc in doc_recs:
                         if doc.first_sequence > seq and date >= doc.authorization_id.start_date:
-                            last_number = self.create_number(doc.printer_id.id, doc.first_sequence)
-                            doc_finded = doc.id
+                            next_seq = doc.point_of_emission_id.create_number(doc.first_sequence)
+                            doc_finded = doc
                             break
                     if not doc_finded:
-                        last_number = ""
+                        next_seq = ""
                 else:
-                    last_number = ""
+                    next_seq = ""
         else:
-            last_number = ""
-        if not doc_finded and raise_exception:
-            raise Warning(_(
-                "It is not possible to find authorization for the document type %s "
-                "at the point of issue %s for the agency %s with date %s") %
-                          (model_description, printer.number, printer.agency_id.number, date))
-        return last_number, doc_finded and doc_finded or False
+            next_seq = ""
+        if printer.type_emission in ('pre_printed', 'auto_printer'):
+            if not doc_finded and raise_exception:
+                raise Warning(_(
+                    "It is not possible to find authorization for the document type %s "
+                    "at the point of issue %s for the agency %s with date %s") %
+                              (model_description, printer.number, printer.agency_id.number, date))
+            return next_seq, doc_finded
+        elif printer.type_emission == 'electronic':
+            xml_model = self.env['sri.xml.data']
+            first_number_electronic = self.env.context.get('first_number_electronic','')
+            #tomar el primer numero para facturacion electronica si esta en produccion
+            if not first_number_electronic and printer and xml_model.is_enviroment_production(invoice_type):
+                first_number_electronic = printer._get_first_number_electronic(invoice_type)
+            #si tengo un secuencial y es menor al configurado como el inicio de facturacion electronica
+            #devolver el numero configurado
+            #cuando el secuencial obtenido sea mayor, devolver ese secuencial
+            if next_seq and first_number_electronic:
+                if '-' in next_seq:
+                    #obtener el secuencial solamente
+                    if len(next_seq.split('-')[-1]) == 0:
+                        next_seq = '%s-%s' % (next_seq, first_number_electronic)
+                    next_seq_temp = next_seq.split('-')[-1]
+                    #validar que sean numeros
+                    try:
+                        next_seq_temp = int(next_seq_temp)
+                        first_number_electronic = int(first_number_electronic)
+                    except:
+                        next_seq_temp = False
+                        first_number_electronic = False
+                    #si es menor al configurado, devolver el primer secuencial
+                    #y hacer como que no se encontro secuencial, para que se empiece a generar a partir del secuencial configurado
+                    if next_seq_temp and first_number_electronic:
+                        if next_seq_temp <= first_number_electronic:
+                            next_seq = False
+            #si no encontro documento, y estoy en produccion, a partir de la primera secuencia configurada continuar la numeracion
+            if not next_seq and first_number_electronic and printer:
+                try:
+                    first_number_electronic = int(first_number_electronic)
+                except:
+                    return False, False
+                next_seq = self.create_number(first_number_electronic)
+                #todos los documentos de account.invoice se guardan en la misma tabla y con el mismo nombre de campo
+                #obtener el domain segun el tipo de documento
+                domain = modules_mapping.get_domain(invoice_type, include_state=False)
+                domain.append((field_name,'!=',False))
+                domain.append((field_name,'>=',next_seq))
+                domain.append(('company_id','=', printer.company_id.id))
+                recs = res_model.with_context(skip_picking_type_filter=True).search(domain)
+                number_in_use = []
+                if recs:
+                    SQL = 'SELECT ' + field_name + \
+                          ' FROM ' + res_model._table + \
+                          ' WHERE id IN %s' + \
+                          ' ORDER BY ' + field_name
+                    self.env.cr.execute(SQL, (tuple(recs.ids),))
+                    number_in_use = map(lambda x: x[0], self.env.cr.fetchall())
+                count = 0
+                while next_seq in number_in_use:
+                    count +=1
+                    next_seq = self.create_number(first_number_electronic + count)
+            return next_seq, doc_finded
 
 
 L10EcPointOfEmission()
