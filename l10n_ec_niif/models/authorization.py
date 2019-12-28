@@ -153,8 +153,12 @@ class L10nECSriAuthorizationLine(models.Model):
             if isinstance(res_id, models.NewId):
                 if model_recs and len(model_recs) <= 1:
                     return True
-            raise Warning(_("There is another document type %s with number '%s' for the company %s") % (
-                model_description, document_number, company.name))
+            if self.env.context.get('from_constrain', False):
+                raise ValidationError(_("There is another document type %s with number '%s' for the company %s") % (
+                    model_description, document_number, company.name))
+            else:
+                raise Warning(_("There is another document type %s with number '%s' for the company %s") % (
+                    model_description, document_number, company.name))
         return True
 
     @api.model

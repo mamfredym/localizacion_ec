@@ -13,11 +13,11 @@ Accounting chart and localization for Ecuador.
     'license': 'LGPL-3',
     'depends': [
         'account',
-        'account_accountant',
         'base_iban',
         'base_vat',
         'l10n_latam_base',
         'l10n_latam_invoice_document',
+        'account_accountant',
                 ],
     'data': [
         'security/ir.model.access.csv',

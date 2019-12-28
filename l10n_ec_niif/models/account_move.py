@@ -236,5 +236,21 @@ class AccountMove(models.Model):
                 if auth_line:
                     move.l10n_ec_authorization_line_id = auth_line.id
 
+    @api.constrains(
+        'name',
+        'l10n_ec_document_number',
+        'company_id',
+        'type',
+        'l10n_ec_debit_note',
+        'l10n_ec_liquidation',
+    )
+    def _check_l10n_ec_document_number_duplicity(self):
+        auth_line_model = self.env['l10n_ec.sri.authorization.line']
+        for move in self.filtered(lambda x: x.company_id.country_id.code == 'EC' and x.type in ('out_invoice', 'out_refund') and x.l10n_ec_document_number):
+            auth_line_model.with_context(from_constrain=True).validate_unique_value_document(
+                modules_mapping.get_invoice_type(move.type, move.l10n_ec_debit_note, move.l10n_ec_liquidation),
+                move.l10n_ec_document_number, move.company_id.id, move.id)
+
+
 AccountMove()
 

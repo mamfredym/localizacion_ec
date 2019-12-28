@@ -48,7 +48,7 @@
                                             <field name="active" />
                                             <field name="type_emission" />
                                         </group>
-                                        <field name="sequence_ids" nolabel="1" colspan="1">
+                                        <field name="sequence_ids" nolabel="1" colspan="1" attrs="{'invisible': [('type_emission', '!=', 'electronic')]}">
                                             <tree editable="bottom">
                                                 <field name="document_type" />
                                                 <field name="initial_sequence" />
