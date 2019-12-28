@@ -246,10 +246,58 @@ class AccountMove(models.Model):
     )
     def _check_l10n_ec_document_number_duplicity(self):
         auth_line_model = self.env['l10n_ec.sri.authorization.line']
-        for move in self.filtered(lambda x: x.company_id.country_id.code == 'EC' and x.type in ('out_invoice', 'out_refund') and x.l10n_ec_document_number):
+        for move in self.filtered(lambda x: x.company_id.country_id.code == 'EC'
+                                            and x.type in ('out_invoice', 'out_refund') and x.l10n_ec_document_number):
             auth_line_model.with_context(from_constrain=True).validate_unique_value_document(
                 modules_mapping.get_invoice_type(move.type, move.l10n_ec_debit_note, move.l10n_ec_liquidation),
                 move.l10n_ec_document_number, move.company_id.id, move.id)
+
+    @api.depends(
+        'type',
+        'l10n_ec_debit_note',
+        'l10n_ec_liquidation',
+                 )
+    def _compute_l10n_ec_invoice_filter_type_domain(self):
+        for move in self:
+            if move.is_sale_document(include_receipts=True):
+                if not move.l10n_ec_debit_note:
+                    move.l10n_ec_invoice_filter_type_domain = 'sale'
+                else:
+                    move.l10n_ec_invoice_filter_type_domain = 'debit_note_out'
+            elif move.is_purchase_document(include_receipts=True):
+                if not move.l10n_ec_debit_note and not move.l10n_ec_liquidation:
+                    move.l10n_ec_invoice_filter_type_domain = 'purchase'
+                elif move.l10n_ec_debit_note and not move.l10n_ec_liquidation:
+                    move.l10n_ec_invoice_filter_type_domain = 'debit_note_in'
+                elif not move.l10n_ec_debit_note and move.l10n_ec_liquidation:
+                    move.l10n_ec_invoice_filter_type_domain = 'liquidation'
+                else:
+                    move.l10n_ec_invoice_filter_type_domain = 'purchase'
+            else:
+                move.l10n_ec_invoice_filter_type_domain = False
+
+    l10n_ec_invoice_filter_type_domain = fields.Char(string="Journal Domain",
+                                                     required=False,
+                                                     compute='_compute_l10n_ec_invoice_filter_type_domain')
+
+    @api.model
+    def _get_default_journal(self):
+        journal_model = self.env['account.journal']
+        if self.env.context.get('default_type', False) in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'):
+            invoice_type = modules_mapping.get_invoice_type(self.env.context.get('default_type', False),
+                                                            self.env.context.get('default_l10n_ec_debit_note', False),
+                                                            self.env.context.get('default_l10n_ec_liquidation', False))
+            if invoice_type in ('debit_note_in', 'debit_note_out', 'liquidation'):
+                journal = journal_model.search([
+                    ('company_id', '=', self._context.get('default_company_id', self.env.company.id)),
+                    ('l10n_ec_extended_type', '=', invoice_type),
+                ])
+                if journal:
+                    return super(AccountMove, self.with_context(default_journal_id=journal.id))._get_default_journal()
+        return super(AccountMove, self)._get_default_journal()
+
+    #FIXME: When function is called by default, only call first function, not hierachy
+    journal_id = fields.Many2one(default=_get_default_journal)
 
 
 AccountMove()
