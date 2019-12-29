@@ -47,6 +47,8 @@ class AccountChartTemplate(models.Model):
                     'show_on_dashboard': journal['favorite'],
                     'color': journal.get('color', False),
                     'sequence': journal['sequence'],
+                    'l10n_ec_debit_note': journal.get('l10n_ec_debit_note', False),
+                    'l10n_ec_liquidation': journal.get('l10n_ec_liquidation', False),
                     'l10n_latam_use_documents': True,
                 }
                 journal_data.append(vals)

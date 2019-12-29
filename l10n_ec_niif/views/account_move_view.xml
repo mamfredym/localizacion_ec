@@ -12,7 +12,7 @@
                 </xpath>
                 <xpath expr="//field[@name='l10n_latam_document_number']" position="attributes">
                     <attribute name="force_save">1</attribute>
-                    <attribute name="attrs">{'invisible': ['|', ('l10n_latam_sequence_id', '!=', False), ('l10n_latam_use_documents', '=', False)], 'required': [('l10n_latam_sequence_id', '=', False), ('l10n_latam_use_documents', '=', True)], 'readonly': ['|', ('state', '!=', 'draft'), ('l10n_latam_country_code', '=', 'EC'), ('type', 'in', ('out_invoice', 'out_refund')), ('l10n_ec_type_emission', 'in', ('electronic', 'auto_printer'))]}</attribute>
+                    <attribute name="attrs">{'invisible': ['|', ('l10n_latam_sequence_id', '!=', False), ('l10n_latam_use_documents', '=', False)], 'required': [('l10n_latam_sequence_id', '=', False), ('l10n_latam_use_documents', '=', True)], 'readonly': ['|', ('state', '!=', 'draft'), '&amp;', '&amp;', ('l10n_latam_country_code', '=', 'EC'), ('type', 'in', ('out_invoice', 'out_refund')), ('l10n_ec_type_emission', 'in', ('electronic', 'auto_printer'))]}</attribute>
                 </xpath>
                 <xpath expr="//group[@name='accounting_info_group']" position="before">
                     <group string="SRI Data" name="sri_data" attrs="{'invisible':  [('l10n_latam_country_code', '!=', 'EC')]}">
@@ -41,7 +41,19 @@
                                attrs="{'invisible':['|', ('l10n_ec_foreign','=',False), ('type', 'not in', ('in_invoice', 'in_refund'))]}"/>
                     </group>
                 </xpath>
-
+                <xpath expr="//h1[@class='mt0']//field[@name='name']/../../h1[1]" position="replace">
+                    <h1>
+                        <span attrs="{'invisible': ['|', '|', '|', ('type', '!=', 'out_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/'), ('l10n_ec_debit_note', '=', True)]}">Draft Invoice</span>
+                        <span attrs="{'invisible': ['|', '|', ('type', '!=', 'out_refund'), ('state', '!=', 'draft'), ('name', '!=', '/')]}">Draft Credit Note</span>
+                        <span attrs="{'invisible': ['|', '|',  '|', '|', ('type', '!=', 'in_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/'), ('l10n_ec_debit_note', '=', True), ('l10n_ec_liquidation', '=', True)]}">Draft Bill</span>
+                        <span attrs="{'invisible': ['|', '|', ('type', '!=', 'in_refund'), ('state', '!=', 'draft'), ('name', '!=', '/')]}">Draft Refund</span>
+                        <span attrs="{'invisible': ['|', '|', ('type', '!=', 'out_receipt'), ('state', '!=', 'draft'), ('name', '!=', '/')]}">Draft Sales Receipt</span>
+                        <span attrs="{'invisible': ['|', '|', ('type', '!=', 'in_receipt'), ('state', '!=', 'draft'), ('name', '!=', '/')]}">Draft Purchase Receipt</span>
+                        <span attrs="{'invisible': ['|', '|', '|', ('type', '!=', 'out_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/'), ('l10n_ec_debit_note', '=', False)]}">Draft Debit Note</span>
+                        <span attrs="{'invisible': ['|', '|', '|', '|', ('type', '!=', 'in_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/'), ('l10n_ec_debit_note', '=', False), ('l10n_ec_liquidation', '=', True)]}">Draft Debit Note</span>
+                        <span attrs="{'invisible': ['|', '|', '|', '|', ('type', '!=', 'in_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/'), ('l10n_ec_debit_note', '=', True), ('l10n_ec_liquidation', '=', False)]}">Draft Liquidation of Purchase</span>
+                    </h1>
+                </xpath>
             </field>
         </record>
 

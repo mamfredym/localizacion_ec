@@ -74,8 +74,10 @@ class AccountMove(models.Model):
          states={}, help="")
     l10n_ec_foreign = fields.Boolean('Foreign?',
                                     related='partner_id.l10n_ec_foreign', store=True)
-    l10n_ec_debit_note = fields.Boolean(string="Debit Note?")
-    l10n_ec_liquidation = fields.Boolean(string="Liquidation of Purchases?")
+    l10n_ec_debit_note = fields.Boolean(string="Debit Note?",
+                                        default=lambda self: self.env.context.get('default_l10n_ec_debit_note', False))
+    l10n_ec_liquidation = fields.Boolean(string="Liquidation of Purchases?",
+                                         default=lambda self: self.env.context.get('default_l10n_ec_liquidation', False))
 
     @api.depends(
         'partner_id.l10n_ec_type_sri',
@@ -212,11 +214,15 @@ class AccountMove(models.Model):
     def default_get(self, fields):
         values = super(AccountMove, self).default_get(fields)
         if 'type' in fields:
-            default_printer_default = self.env['res.users']. \
-                get_default_point_of_emission(self.env.user.id, raise_exception=True).get('default_printer_default_id')
-            values['l10n_ec_point_of_emission_id'] = default_printer_default.id
-            if default_printer_default:
-                values['l10n_ec_type_emission'] = default_printer_default.type_emission
+            invoice_type = modules_mapping.get_invoice_type(values.get('type', False),
+                                                            values.get('l10n_ec_debit_note', False),
+                                                            values.get('l10n_ec_liquidation', False))
+            if invoice_type in ('out_invoice', 'out_refund', 'debit_note_out', 'liquidation'):
+                default_printer_default = self.env['res.users']. \
+                    get_default_point_of_emission(self.env.user.id, raise_exception=True).get('default_printer_default_id')
+                values['l10n_ec_point_of_emission_id'] = default_printer_default.id
+                if default_printer_default:
+                    values['l10n_ec_type_emission'] = default_printer_default.type_emission
         return values
 
     @api.onchange(
@@ -226,15 +232,17 @@ class AccountMove(models.Model):
         'l10n_ec_point_of_emission_id',
     )
     def _onchange_point_of_emission(self):
-        for move in self.filtered(lambda x: x.company_id.country_id.code == 'EC' and x.type in ('out_invoice', 'out_refund')):
+        for move in self.filtered(lambda x: x.company_id.country_id.code == 'EC' and x.type
+                                            in ('out_invoice', 'out_refund', 'in_invoice')):
             if move.l10n_ec_point_of_emission_id:
                 invoice_type = modules_mapping.get_invoice_type(move.type, move.l10n_ec_debit_note,
                                                                 move.l10n_ec_liquidation)
-                next_number, auth_line = move.l10n_ec_point_of_emission_id.get_next_value_sequence(invoice_type, False, False)
-                if next_number:
-                    move.l10n_latam_document_number = next_number
-                if auth_line:
-                    move.l10n_ec_authorization_line_id = auth_line.id
+                if invoice_type in ('out_invoice', 'out_refund', 'debit_note_out', 'liquidation'):
+                    next_number, auth_line = move.l10n_ec_point_of_emission_id.get_next_value_sequence(invoice_type, False, False)
+                    if next_number:
+                        move.l10n_latam_document_number = next_number
+                    if auth_line:
+                        move.l10n_ec_authorization_line_id = auth_line.id
 
     @api.constrains(
         'name',
@@ -247,7 +255,11 @@ class AccountMove(models.Model):
     def _check_l10n_ec_document_number_duplicity(self):
         auth_line_model = self.env['l10n_ec.sri.authorization.line']
         for move in self.filtered(lambda x: x.company_id.country_id.code == 'EC'
-                                            and x.type in ('out_invoice', 'out_refund') and x.l10n_ec_document_number):
+                                            and modules_mapping.get_invoice_type(x.type,
+                                                                                 x.l10n_ec_debit_note,
+                                                                                 x.l10n_ec_liquidation)
+                                            in ('out_invoice', 'out_refund', 'debit_note_out', 'liquidation')
+                                            and x.l10n_ec_document_number):
             auth_line_model.with_context(from_constrain=True).validate_unique_value_document(
                 modules_mapping.get_invoice_type(move.type, move.l10n_ec_debit_note, move.l10n_ec_liquidation),
                 move.l10n_ec_document_number, move.company_id.id, move.id)
