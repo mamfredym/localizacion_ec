@@ -53,6 +53,11 @@ class L10nECIdentificationType(models.Model):
 class AccountMove(models.Model):
     _inherit = "account.move"
 
+    l10n_ec_original_invoice_id = fields.Many2one(comodel_name='account.move',
+                                                  string="Original Invoice")
+    l10n_ec_credit_note_ids = fields.One2many(comodel_name="account.move",
+                                              inverse_name="l10n_ec_original_invoice_id",
+                                              string="Credit Notes", required=False, )
     l10n_ec_tax_support_id = fields.Many2one(comodel_name="l10n_ec.tax.support",
                                              string="Tax Support", required=False, )
     l10n_ec_is_exportation = fields.Boolean(string="Is Exportation?")
@@ -310,6 +315,37 @@ class AccountMove(models.Model):
 
     #FIXME: When function is called by default, only call first function, not hierachy
     journal_id = fields.Many2one(default=_get_default_journal)
+
+    @api.onchange(
+        'l10n_ec_original_invoice_id',
+        'invoice_date',
+                  )
+    def onchange_l10n_ec_original_invoice(self):
+        line_model = self.env['account.move.line'].with_context(check_move_validity=False)
+        if self.l10n_ec_original_invoice_id:
+            lines = line_model.browse()
+            default_move = {
+                'ref': _('Reversal'),
+                'date': self.invoice_date or fields.Date.context_today(self),
+                'invoice_date': self.invoice_date or fields.Date.context_today(self),
+                'journal_id': self.journal_id and self.journal_id.id,
+                'invoice_payment_term_id': None,
+            }
+            move_vals = self.l10n_ec_original_invoice_id._reverse_move_vals(default_move)
+            for a, b, line_data in move_vals.get('line_ids'):
+                if 'move_id' in line_data:
+                    line_data.pop('move_id')
+                if not 'date' in line_data:
+                    line_data.update({
+                        'date': self.invoice_date or fields.Date.context_today(self),
+                    })
+                new_line = line_model.new(line_data)
+                if new_line.currency_id:
+                    new_line._onchange_currency()
+                lines += new_line
+            self.line_ids = lines
+            self._recompute_dynamic_lines(recompute_all_taxes=False)
+
 
 
 AccountMove()
