@@ -213,7 +213,7 @@ class AccountMove(models.Model):
     @api.model
     def default_get(self, fields):
         values = super(AccountMove, self).default_get(fields)
-        if 'type' in fields:
+        if 'type' in fields and values.get('type', False) in ('out_invoice', 'out_refund', 'in_invoice'):
             invoice_type = modules_mapping.get_invoice_type(values.get('type', False),
                                                             values.get('l10n_ec_debit_note', False),
                                                             values.get('l10n_ec_liquidation', False))
@@ -257,7 +257,7 @@ class AccountMove(models.Model):
         for move in self.filtered(lambda x: x.company_id.country_id.code == 'EC'
                                             and modules_mapping.get_invoice_type(x.type,
                                                                                  x.l10n_ec_debit_note,
-                                                                                 x.l10n_ec_liquidation)
+                                                                                 x.l10n_ec_liquidation, False)
                                             in ('out_invoice', 'out_refund', 'debit_note_out', 'liquidation')
                                             and x.l10n_ec_document_number):
             auth_line_model.with_context(from_constrain=True).validate_unique_value_document(

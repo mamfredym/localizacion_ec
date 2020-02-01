@@ -32,7 +32,7 @@ def get_document_type(invoice_type):
         raise Warning(_("Tipo de Factura/Documento: %s no es válido, por favor verique, get_document_type") % (invoice_type))
     return document_type
 
-def get_invoice_type(invoice_type, debit_note=False, liquidation=False):
+def get_invoice_type(invoice_type, debit_note=False, liquidation=False, raise_exception=True):
     """
     Devolver el tipo de factura
     con el concepto de notas de debito y liquidacion de compras, 
@@ -65,7 +65,7 @@ def get_invoice_type(invoice_type, debit_note=False, liquidation=False):
     #ND Cliente
     elif invoice_type == 'out_invoice' and debit_note:
         document_type = 'debit_note_out'
-    if not document_type:
+    if not document_type and raise_exception:
         raise Warning(_("Tipo de Factura/Documento: %s no es válido, por favor verique, get_invoice_type") % (invoice_type))
     return document_type
 
