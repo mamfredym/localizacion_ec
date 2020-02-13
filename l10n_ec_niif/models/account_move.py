@@ -173,10 +173,12 @@ class AccountMove(models.Model):
 
     l10n_ec_identification_type_id = fields.Many2one('l10n_ec.identification.type',
                                                      string="Ecuadorian Identification Type",
-                                                     store=True, compute='_get_l10n_ec_identification_type')
+                                                     store=True, compute='_get_l10n_ec_identification_type',
+                                                     compute_sudo=True)
     l10n_ec_tax_support_domain_ids = fields.Many2many(comodel_name="l10n_ec.tax.support",
                                                       string="Tax Support Domain",
-                                                      compute='_get_l10n_ec_identification_type')
+                                                      compute='_get_l10n_ec_identification_type',
+                                                      compute_sudo=True)
 
     l10n_ec_point_of_emission_id = fields.Many2one(comodel_name="l10n_ec.point.of.emission",
                                                    string="Point of Emission", readonly=True,
