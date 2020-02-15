@@ -8,11 +8,14 @@ class ResCompany(models.Model):
 
     @api.onchange('country_id')
     def onchange_country(self):
-        """ Argentinian companies use round_globally as tax_calculation_rounding_method """
+        """ Ecuadorian companies use round_globally as tax_calculation_rounding_method """
         for rec in self.filtered(lambda x: x.country_id == self.env.ref('base.ec')):
             rec.tax_calculation_rounding_method = 'round_globally'
 
     def _localization_use_documents(self):
-        """ Argentinian localization use documents """
+        """ Ecuadorian localization use documents """
         self.ensure_one()
         return True if self.country_id == self.env.ref('base.ec') else super()._localization_use_documents()
+
+    l10n_ec_consumidor_final_limit = fields.Float(string="Invoice Sales Limit Final Consumer", default=200.0)
+

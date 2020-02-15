@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, models, api, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
+from odoo.tools import float_compare, float_round
 from ..models import modules_mapping
 
 class L10nECIdentificationType(models.Model):
@@ -197,7 +198,7 @@ class AccountMove(models.Model):
                                                  ('pre_printed', 'Pre Printed'),
                                                  ('auto_printer', 'Auto Printer'),
                                              ],
-                                             required=False)
+                                             required=False, default=False)
     @api.depends(
         'name',
         'l10n_latam_document_type_id',
@@ -347,6 +348,47 @@ class AccountMove(models.Model):
                 lines += new_line
             self.line_ids = lines
             self._recompute_dynamic_lines(recompute_all_taxes=False)
+
+    @api.depends(
+        'commercial_partner_id'
+    )
+    def _get_l10n_ec_consumidor_final(self):
+        consumidor_final = self.env.ref('l10n_ec_niif.consumidor_final')
+        for move in self:
+            if move.commercial_partner_id.id == consumidor_final.id:
+                move.l10n_ec_consumidor_final = True
+            else:
+                move.l10n_ec_consumidor_final = False
+
+    l10n_ec_consumidor_final = fields.Boolean(string="Consumidor Final", compute="_get_l10n_ec_consumidor_final")
+
+    def action_post(self):
+        for move in self:
+            if move.company_id.country_id.code == 'EC':
+                if move.l10n_ec_consumidor_final and move.type == 'out_invoice'\
+                    and float_compare(move.amount_total, move.company_id.l10n_ec_consumidor_final_limit,
+                                      precision_digits=2) == 1:
+                    raise UserError(_("You can't make invoice where amount total %s "
+                                      "is bigger than %s for final customer")
+                                    % (move.amount_total, move.company_id.l10n_ec_consumidor_final_limit))
+                if move.l10n_ec_consumidor_final and move.type == 'out_refund':
+                    raise UserError(_("You can't make refund to final customer on ecuadorian company"))
+                if move.l10n_ec_consumidor_final and move.type in ('in_refund', 'in_invoice'):
+                    raise UserError(_("You can't make bill or refund to final customer on ecuadorian company"))
+
+        return super(AccountMove, self).action_post()
+
+    def unlink(self):
+        if self.env.context.get('skip_recurtion', False):
+            return super(AccountMove, self).unlink()
+        for move in self:
+            if move.company_id.country_id.code == 'EC':
+                if move.type in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'):
+                    if move.state != 'draft':
+                        raise UserError(_("You only delete invoices in draft state"))
+                    else:
+                        move.with_context(skip_recurtion=True, force_delete=True).unlink()
+
 
 
 
