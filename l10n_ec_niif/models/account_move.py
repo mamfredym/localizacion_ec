@@ -336,6 +336,8 @@ class AccountMove(models.Model):
             }
             move_vals = self.l10n_ec_original_invoice_id._reverse_move_vals(default_move)
             for a, b, line_data in move_vals.get('line_ids'):
+                if line_data.get('exclude_from_invoice_tab', False):
+                    continue
                 if 'move_id' in line_data:
                     line_data.pop('move_id')
                 if not 'date' in line_data:
@@ -347,7 +349,7 @@ class AccountMove(models.Model):
                     new_line._onchange_currency()
                 lines += new_line
             self.line_ids = lines
-            self._recompute_dynamic_lines(recompute_all_taxes=False)
+            self._recompute_dynamic_lines(recompute_all_taxes=True)
 
     @api.depends(
         'commercial_partner_id'
