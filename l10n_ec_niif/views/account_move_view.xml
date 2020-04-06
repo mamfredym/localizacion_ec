@@ -83,6 +83,18 @@
             </field>
         </record>
 
+        <record id="view_move_form_debit" model="ir.ui.view">
+            <field name="name">account.move.form.view</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account_debit_note.view_move_form_debit"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='debit_origin_id']" position="replace">
+                    <field name="debit_origin_id"
+                           attrs="{'invisible': ['|', ('debit_origin_id', '=', False), ('l10n_ec_debit_note', '=', False)], 'required': [('l10n_ec_debit_note', '=', True)]}"/>
+                </xpath>
+            </field>
+        </record>
+
         <record id="account.action_move_out_invoice_type" model="ir.actions.act_window">
             <field name="domain">[('type', '=', 'out_invoice'), ('l10n_ec_debit_note', '=', False)]</field>
             <field name="context">{'default_type': 'out_invoice'}</field>

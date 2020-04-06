@@ -18,6 +18,7 @@ Accounting chart and localization for Ecuador.
         'l10n_latam_base',
         'l10n_latam_invoice_document',
         'account_accountant',
+        'account_debit_note',
                 ],
     'data': [
         'security/ir.model.access.csv',
