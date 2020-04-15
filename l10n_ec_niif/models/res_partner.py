@@ -51,10 +51,11 @@ class ResPartner(models.Model):
 
     @api.depends('company_id.country_id')
     def _get_ecuadorian_company(self):
-        l10n_ec_is_ecuadorian_company = False
-        if self.company_id and self.company_id.country_id.code == 'EC':
-            l10n_ec_is_ecuadorian_company = True
-        self.l10n_ec_is_ecuadorian_company = l10n_ec_is_ecuadorian_company
+        for rec in self:
+            l10n_ec_is_ecuadorian_company = False
+            if rec.company_id and rec.company_id.country_id.code == 'EC':
+                l10n_ec_is_ecuadorian_company = True
+            rec.l10n_ec_is_ecuadorian_company = l10n_ec_is_ecuadorian_company
 
     def copy_data(self, default=None):
         if not default:
@@ -66,13 +67,14 @@ class ResPartner(models.Model):
 
     @api.constrains('vat')
     def _check_duplicity(self):
-        if self.vat:
-            other_partner = self.search([
-                ('vat', '=', self.vat),
-                ('id', '!=', self.id),
-                                         ])
-            if len(other_partner) >= 1:
-                raise Warning(_("The number %s must be unique as VAT") % self.vat)
+        for rec in self:
+            if rec.vat:
+                other_partner = self.search([
+                    ('vat', '=', rec.vat),
+                    ('id', '!=', rec.id),
+                                            ])
+                if len(other_partner) >= 1:
+                    raise Warning(_("The number %s must be unique as VAT") % rec.vat)
 
     def verify_final_consumer(self, vat):
         b = True
