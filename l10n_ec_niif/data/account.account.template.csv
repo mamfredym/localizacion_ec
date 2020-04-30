@@ -115,7 +115,7 @@ id,code,name,reconcile,user_type_id/id,chart_template_id/id
 20111,20111,PASIVOS DIRECTAMENTE ASOCIADOS CON LOS ACTIVOS NO CORRIENTES Y OPERACIONES DISCONTINUADAS,0,account.data_account_type_current_liabilities,l10n_ec_niif.ec_chart_template
 2011201,2011201,JUBILACION PATRONAL,0,account.data_account_type_current_liabilities,l10n_ec_niif.ec_chart_template
 2011202,2011202,OTROS BENEFICIOS A LARGO PLAZO PARA LOS EMPLEADOS,0,account.data_account_type_current_liabilities,l10n_ec_niif.ec_chart_template
-20113,20113,OTROS PASIVOS CORRIENTES,0,account.data_account_type_current_liabilities,l10n_ec_niif.ec_chart_template
+2011301,2011301,INVENTARIO RECIBIDO NO FACTURADO,0,account.data_account_type_current_liabilities,l10n_ec_niif.ec_chart_template
 20201,20201,PASIVOS POR CONTRATOS DE ARRENDAMIENTO FINANCIERO,0,account.data_account_type_non_current_liabilities,l10n_ec_niif.ec_chart_template
 2020201,2020201,CUENTAS Y DOCUMENTOS POR PAGAR LOCALES,1,account.data_account_type_payable,l10n_ec_niif.ec_chart_template
 2020202,2020202,CUENTAS Y DOCUMENTOS POR PAGAR DEL EXTERIOR,1,account.data_account_type_payable,l10n_ec_niif.ec_chart_template

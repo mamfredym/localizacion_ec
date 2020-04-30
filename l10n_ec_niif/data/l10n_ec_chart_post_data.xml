@@ -8,5 +8,8 @@
         <field name="income_currency_exchange_account_id" ref="4103"/>
         <field name="expense_currency_exchange_account_id" ref="510401"/>
         <field name="default_pos_receivable_account_id" ref="101020501" />
-    </record>    
+        <field name="property_stock_account_input_categ_id" ref="2011301"/>
+        <field name="property_stock_account_output_categ_id" ref="1010314"/>
+        <field name="property_stock_valuation_account_id" ref="1010306"/>
+    </record>
 </odoo>
