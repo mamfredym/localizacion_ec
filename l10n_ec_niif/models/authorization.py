@@ -67,7 +67,7 @@ class L10nECSriAuthorizationLine(models.Model):
     authorization_id = fields.Many2one(comodel_name="l10n_ec.sri.authorization",
                                        string="Authorization", required=True, ondelete='cascade')
     point_of_emission_id = fields.Many2one(comodel_name="l10n_ec.point.of.emission",
-                                           string="Point of Emission", required=False, )
+                                           string="Point of Emission", required=True, )
     agency_id = fields.Many2one(comodel_name="l10n_ec.agency",
                                 string="Agency", related='point_of_emission_id.agency_id', store=True)
     padding = fields.Integer('Padding', default=9)
