@@ -391,7 +391,32 @@ class AccountMove(models.Model):
                     else:
                         move.with_context(skip_recurtion=True, force_delete=True).unlink()
 
+    @api.depends('line_ids.price_subtotal', 'line_ids.tax_base_amount', 'line_ids.tax_line_id', 'partner_id', 'currency_id')
+    def _compute_l10n_ec_amounts(self):
+        for rec in self:
+            for group in rec.amount_by_group:
+                iva_group = self.env.ref('l10n_ec_niif.tax_group_iva')
+                if group[6] == iva_group.id:
+                    if group[2] != 0 and group[1] == 0:
+                        rec.l10n_ec_base_iva_0 = group[2]
+                    else:
+                        rec.l10n_ec_base_iva = group[2]
+                        rec.l10n_ec_iva = group[1]
 
+    l10n_ec_base_iva = fields.Float(
+        string='Base IVA',
+        compute="_compute_l10n_ec_amounts",
+        store=True)
+
+    l10n_ec_base_iva_0 = fields.Float(
+        string='Base IVA 0',
+        compute="_compute_l10n_ec_amounts",
+        store=True)
+
+    l10n_ec_iva = fields.Float(
+        string='IVA',
+        compute="_compute_l10n_ec_amounts",
+        store=True)
 
 
 AccountMove()
