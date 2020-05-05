@@ -7,5 +7,6 @@
         <field name="cash_account_code_prefix">10101</field>
         <field name="transfer_account_code_prefix">10101</field>
         <field name="code_digits" eval="4"/>
+        <field name="use_anglo_saxon" eval="True"/>
     </record>
 </odoo>
