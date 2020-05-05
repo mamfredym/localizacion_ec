@@ -29,8 +29,11 @@ class L10nEcWithhold(models.Model):
         required=True)
     state = fields.Selection(
         string='State',
-        selection=[('draft', 'Draft'),
-                   ('done', 'Done'), ],
+        selection=[
+            ('draft', 'Draft'),
+            ('done', 'Done'),
+            ('cancelled', 'Cancelled'),
+        ],
         required=True,
         readonly=True,
         default='draft')
@@ -150,7 +153,6 @@ class L10nEcWithhold(models.Model):
 class L10nEcWithholdLine(models.Model):
 
     _name = 'l10n_ec.withhold.line'
-    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
     _description = 'Ecuadorian Withhold'
 
     withhold_id = fields.Many2one(
@@ -159,6 +161,17 @@ class L10nEcWithholdLine(models.Model):
         required=True,
         ondelete="cascade",
         readonly=True,)
+    company_id = fields.Many2one(
+        comodel_name='res.company',
+        string='Company',
+        related="withhold_id.company_id",
+        store=True
+    )
+    issue_date = fields.Date(
+        string='Issue date',
+        related="withhold_id.issue_date",
+        store=True,
+    )
     invoice_id = fields.Many2one(
         comodel_name='account.move',
         string='Related Document',
