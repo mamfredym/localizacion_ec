@@ -221,17 +221,33 @@ class AccountMove(models.Model):
     @api.model
     def default_get(self, fields):
         values = super(AccountMove, self).default_get(fields)
-        if 'type' in fields and values.get('type', False) in ('out_invoice', 'out_refund', 'in_invoice'):
-            invoice_type = modules_mapping.get_invoice_type(values.get('type', False),
-                                                            values.get('l10n_ec_debit_note', False),
-                                                            values.get('l10n_ec_liquidation', False))
+        type = values.get('type', self.type)
+        if type in ('out_invoice', 'out_refund', 'in_invoice'):
+            invoice_type = modules_mapping.get_invoice_type(type,
+                                                            values.get('l10n_ec_debit_note', self.l10n_ec_debit_note),
+                                                            values.get('l10n_ec_liquidation', self.l10n_ec_liquidation))
             if invoice_type in ('out_invoice', 'out_refund', 'debit_note_out', 'liquidation'):
-                default_printer_default = self.env['res.users']. \
+                default_printer = self.env['res.users']. \
                     get_default_point_of_emission(self.env.user.id, raise_exception=True).get('default_printer_default_id')
-                values['l10n_ec_point_of_emission_id'] = default_printer_default.id
-                if default_printer_default:
-                    values['l10n_ec_type_emission'] = default_printer_default.type_emission
+                values['l10n_ec_point_of_emission_id'] = default_printer.id
+                if default_printer:
+                    values['l10n_ec_type_emission'] = default_printer.type_emission
+                    next_number, auth_line = default_printer.get_next_value_sequence(invoice_type, False, False)
+                    if next_number:
+                        values['l10n_latam_document_number'] = next_number
+                    if auth_line:
+                        values['l10n_ec_authorization_line_id'] = auth_line.id
         return values
+
+    def copy(self, default=None):
+        if not default:
+            default = {}
+        if self.filtered(lambda x: x.company_id.country_id.code == 'EC'):
+            invoice_type = modules_mapping.get_invoice_type(self.type, self.l10n_ec_debit_note, self.l10n_ec_liquidation)
+            next_number, auth_line = self.l10n_ec_point_of_emission_id.get_next_value_sequence(invoice_type, False, False)
+            default['l10n_latam_document_number'] = next_number
+            default['l10n_ec_authorization_line_id'] = auth_line.id
+        return super(AccountMove, self).copy(default)
 
     @api.onchange(
         'type',
