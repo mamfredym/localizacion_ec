@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+<!--Ecuadorian Banks -->
+
+        <record id="amazonas" model="res.bank">
+            <field name="bic">1790221806001</field>
+            <field name="name">BANCO AMAZONAS</field>
+            <field name="country" ref="base.ec"/>
+        </record> 
+        <record id="bolivariano" model="res.bank">
+            <field name="bic">0990379017001</field>
+            <field name="name">BANCO BOLIVARIANO</field>
+            <field name="country" ref="base.ec"/>
+        </record> 
+        <record id="capital" model="res.bank">
+            <field name="bic">1090105244001</field>
+            <field name="name">BANCO CAPITAL</field>
+            <field name="country" ref="base.ec"/>
+        </record> 
+        <record id="central" model="res.bank">
+            <field name="bic">1760002600001</field>
+            <field name="name">BANCO CENTRAL</field>
+            <field name="country" ref="base.ec"/>
+        </record> 
+        <record id="cofiec" model="res.bank">
+            <field name="bic">1790021831001</field>
+            <field name="name">BANCO COFIEC</field>
+            <field name="country" ref="base.ec"/>
+        </record> 
+        <record id="manabi" model="res.bank">
+            <field name="bic">1390067506001</field>
+            <field name="name">BANCO COMERCIAL DE MANABI</field>
+            <field name="country" ref="base.ec"/>
+        </record> 
+        <record id="bguayaquil" model="res.bank">
+            <field name="bic">0990049459001</field>
+            <field name="name">BANCO DE GUAYAQUIL</field>
+            <field name="country" ref="base.ec"/>
+        </record> 
+        <record id="produbanco" model="res.bank">
+            <field name="bic">1790368718001</field>
+            <field name="name">PRODUBANCO</field>
+            <field name="country" ref="base.ec"/>
+        </record> 
+        <record id="loja" model="res.bank">
+            <field name="bic">1190002213001</field>
+            <field name="name">BANCO DE LOJA</field>
+            <field name="country" ref="base.ec"/>
+        </record> 
+        <record id="machala" model="res.bank">
+            <field name="bic">0790002350001</field>
+            <field name="name">BANCO DE MACHALA</field>
+            <field name="country" ref="base.ec"/>
+        </record> 
+        <record id="austro" model="res.bank">
+            <field name="bic">0190055965001</field>
+            <field name="name">BANCO DEL AUSTRO</field>
+            <field name="country" ref="base.ec"/>
+        </record> 
+        <record id="estado" model="res.bank">
+            <field name="bic">1760002950001</field>
+            <field name="name">BANCO DEL ESTADO</field>
+            <field name="country" ref="base.ec"/>
+        </record> 
+        <record id="litoral" model="res.bank">
+            <field name="bic">0990981930001</field>
+            <field name="name">BANCO DEL LITORAL</field>
+            <field name="country" ref="base.ec"/>
+        </record> 
+        <record id="pacifico" model="res.bank">
+            <field name="bic">0990005737001</field>
+            <field name="name">BANCO DEL PACIFICO</field>
+            <field name="country" ref="base.ec"/>
+        </record> 
+        <record id="bev" model="res.bank">
+            <field name="bic">1760002870001</field>
+            <field name="name">BANCO ECUATORIANO DE LA VIVIENDA BEV</field>
+            <field name="country" ref="base.ec"/>
+        </record> 
+        <record id="ruminahui" model="res.bank">
+            <field name="bic">1790864316001</field>
+            <field name="name">BANCO GENERAL RUMIÑAHUI</field>
+            <field name="country" ref="base.ec"/>
+        </record> 
+        <record id="internacional" model="res.bank">
+            <field name="bic">1790098354001</field>
+            <field name="name">BANCO INTERNACIONAL</field>
+            <field name="country" ref="base.ec"/>
+        </record> 
+        <record id="bnf" model="res.bank">
+            <field name="bic">1760002790001</field>
+            <field name="name">BANCO NACIONAL DE FOMENTO</field>
+            <field name="country" ref="base.ec"/>
+        </record> 
+        <record id="pichincha" model="res.bank">
+            <field name="bic">1790010937001</field>
+            <field name="name">BANCO PICHINCHA</field>
+            <field name="country" ref="base.ec"/>
+        </record> 
+        <record id="procredit" model="res.bank">
+            <field name="bic">1791269225001</field>
+            <field name="name">BANCO PROCREDIT</field>
+            <field name="country" ref="base.ec"/>
+        </record> 
+        <record id="promerica" model="res.bank">
+            <field name="bic">1790477142001</field>
+            <field name="name">BANCO PROMERICA</field>
+            <field name="country" ref="base.ec"/>
+        </record> 
+        <record id="solidario" model="res.bank">
+            <field name="bic">1791109384001</field>
+            <field name="name">BANCO SOLIDARIO</field>
+            <field name="country" ref="base.ec"/>
+        </record> 
+        <record id="sudamericano" model="res.bank">
+            <field name="bic">1791281322001</field>
+            <field name="name">BANCO SUDAMERICANO</field>
+            <field name="country" ref="base.ec"/>
+        </record> 
+        <record id="territorial" model="res.bank">
+            <field name="bic">0990029105001</field>
+            <field name="name">BANCO TERRITORIAL</field>
+            <field name="country" ref="base.ec"/>
+        </record> 
+        <record id="unibanco" model="res.bank">
+            <field name="bic">1790047660001</field>
+            <field name="name">UNIBANCO</field>
+            <field name="country" ref="base.ec"/>
+        </record> 
+        <record id="citibank" model="res.bank">
+            <field name="bic">1790033295001</field>
+            <field name="name">CITIBANK</field>
+            <field name="country" ref="base.ec"/>
+        </record> 
+        <record id="lloyds" model="res.bank">
+            <field name="bic">0990023026001</field>
+            <field name="name">LLOYDS</field>
+            <field name="country" ref="base.ec"/>
+        </record> 
+        <record id="delbank" model="res.bank">
+            <field name="bic">0990048673001</field>
+            <field name="name">DELBANK</field>
+            <field name="country" ref="base.ec"/>
+        </record> 
+</data>
+</odoo>
+
