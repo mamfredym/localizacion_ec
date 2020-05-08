@@ -32,6 +32,7 @@ Accounting chart and localization for Ecuador.
         'data/tax_data.xml',
         'data/tax_support_data.xml',
         'data/l10n_ec_chart_post_data.xml',
+        'data/bank_data.xml',
         'views/sri_menu.xml',
         'views/res_partner_view.xml',
         'views/tax_support_view.xml',
