@@ -49,6 +49,7 @@
                                attrs="{'invisible':['|', ('l10n_ec_foreign','=',False), ('type', 'not in', ('in_invoice', 'in_refund'))]}"/>
                         <field name="l10n_ec_pago_exterior_sujeto_retencion"
                                attrs="{'invisible':['|', ('l10n_ec_foreign','=',False), ('type', 'not in', ('in_invoice', 'in_refund'))]}"/>
+                        <field name="l10n_ec_withhold_required" invisible="1"/>
                     </group>
                 </xpath>
                 <xpath expr="//h1[@class='mt0']//field[@name='name']/../../h1[1]" position="replace">
@@ -63,6 +64,10 @@
                         <span attrs="{'invisible': ['|', '|', '|', '|', ('type', '!=', 'in_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/'), ('l10n_ec_debit_note', '=', False), ('l10n_ec_liquidation', '=', True)]}">Draft Vendor Debit Note</span>
                         <span attrs="{'invisible': ['|', '|', '|', '|', ('type', '!=', 'in_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/'), ('l10n_ec_debit_note', '=', True), ('l10n_ec_liquidation', '=', False)]}">Draft Liquidation of Purchase</span>
                     </h1>
+                </xpath>
+                <xpath expr="//field[@name='invoice_vendor_bill_id']" position="after">
+                    <field name="l10n_ec_withhold_number"
+                           attrs="{'invisible': ['|', ('l10n_ec_withhold_required', '=', False), ('type', '!=', 'in_invoice')], 'required': [('l10n_ec_withhold_required', '=', True), ('type', '=', 'in_invoice')]}"/>
                 </xpath>
             </field>
         </record>

@@ -40,7 +40,7 @@ DOCUMENT_MODELS = {
                  'out_refund': 'account.move',
                  'debit_note_out': 'account.move',
                  'delivery_note': 'account.remision',
-                 'withhold_purchase': 'account.retention',
+                 'withhold_purchase': 'l10n_ec.withhold',
                  }
 
 DOCUMENT_XSD_FILES = {
@@ -170,7 +170,7 @@ class sri_xml_data(models.Model):
     invoice_out_id = fields.Many2one('account.move', u'Factura', required=False, index=True, auto_join=True, help=u"",)
     credit_note_out_id = fields.Many2one('account.move', u'Nota de Crédito', required=False, index=True, auto_join=True, help=u"",)
     debit_note_out_id = fields.Many2one('account.move', u'Nota de Débito', required=False, index=True, auto_join=True, help=u"",)
-    withhold_id = fields.Many2one('account.retention', u'Retención', required=False, index=True, auto_join=True, help=u"",)
+    withhold_id = fields.Many2one('l10n_ec.withhold', u'Retención', required=False, index=True, auto_join=True, help=u"",)
     delivery_note_id = fields.Many2one('account.remision', u'Guia de Remision', required=False, index=True, auto_join=True, help=u"",)
     partner_id = fields.Many2one('res.partner', u'Cliente', required=False, index=True, auto_join=True, help=u"",)
     create_uid = fields.Many2one('res.users', u'Creado por', readonly=True, help=u"",)
@@ -1697,7 +1697,7 @@ class sri_xml_data(models.Model):
                 res_model_name = 'account.invoice'
             elif xml_rec.withhold_id:
                 document = xml_rec.withhold_id
-                res_model_name = 'account.retention'
+                res_model_name = 'l10n_ec.withhold'
             elif xml_rec.delivery_note_id:
                 document = xml_rec.delivery_note_id
                 res_model_name = 'account.remision'
@@ -2021,7 +2021,7 @@ class sri_xml_data(models.Model):
                     file_name = 'NotaDebito_%s' % xml_data.debit_note_out_id.document_number
                 elif xml_data.withhold_id:
                     res_id = xml_data.withhold_id.id
-                    model = 'account.retention'
+                    model = 'l10n_ec.withhold'
                     report_name = 'e_retention'
                     file_name = 'Retencion_%s' % xml_data.withhold_id.document_number
                 elif xml_data.delivery_note_id:

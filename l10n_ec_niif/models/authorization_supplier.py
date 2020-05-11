@@ -118,7 +118,7 @@ class L10nECSriAuthorizationSupplier(models.Model):
 
     def _check_document_in_use(self, vals):
         invoice_model = self.env['account.move']
-        retention_model = self.env['account.retention']
+        retention_model = self.env['l10n_ec.withhold']
         invoice_recs, retention_recs = [], []
         has_change = False
         fields_to_inspect = ['number', 'agency', 'printer_point', 'start_date', 'expiration_date', 'first_sequence',

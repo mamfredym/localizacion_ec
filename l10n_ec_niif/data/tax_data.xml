@@ -6,7 +6,7 @@
             <field name="name">I.V.A. 12%</field>
         </record>
         <record id="tax_group_iva_withhold" model="account.tax.group">
-            <field name="name">Retención I.V.A. 12%</field>
+            <field name="name">Retención I.V.A.</field>
         </record>
         <record id="tax_group_renta_withhold" model="account.tax.group">
             <field name="name">Retención I.R.</field>

@@ -198,7 +198,10 @@ class AccountMove(models.Model):
                                                  ('pre_printed', 'Pre Printed'),
                                                  ('auto_printer', 'Auto Printer'),
                                              ],
-                                             required=False, default=False)
+                                             required=False,
+                                             default=False,
+                                             readonly=True,
+                                             states={'draft': [('readonly', False)]})
     @api.depends(
         'name',
         'l10n_latam_document_type_id',
@@ -226,17 +229,24 @@ class AccountMove(models.Model):
             invoice_type = modules_mapping.get_invoice_type(type,
                                                             values.get('l10n_ec_debit_note', self.l10n_ec_debit_note),
                                                             values.get('l10n_ec_liquidation', self.l10n_ec_liquidation))
-            if invoice_type in ('out_invoice', 'out_refund', 'debit_note_out', 'liquidation'):
+            if invoice_type in ('out_invoice', 'out_refund', 'debit_note_out', 'liquidation', 'in_invoice'):
                 default_printer = self.env['res.users']. \
                     get_default_point_of_emission(self.env.user.id, raise_exception=True).get('default_printer_default_id')
                 values['l10n_ec_point_of_emission_id'] = default_printer.id
                 if default_printer:
                     values['l10n_ec_type_emission'] = default_printer.type_emission
-                    next_number, auth_line = default_printer.get_next_value_sequence(invoice_type, False, False)
-                    if next_number:
-                        values['l10n_latam_document_number'] = next_number
-                    if auth_line:
-                        values['l10n_ec_authorization_line_id'] = auth_line.id
+                    if invoice_type == 'in_invoice':
+                        next_number, auth_line = default_printer.get_next_value_sequence('withhold_purchase', False, False)
+                        if next_number:
+                            values['l10n_ec_withhold_number'] = next_number
+                        if auth_line:
+                            values['l10n_ec_authorization_line_id'] = auth_line.id
+                    else:
+                        next_number, auth_line = default_printer.get_next_value_sequence(invoice_type, False, False)
+                        if next_number:
+                            values['l10n_latam_document_number'] = next_number
+                        if auth_line:
+                            values['l10n_ec_authorization_line_id'] = auth_line.id
         return values
 
     def copy(self, default=None):
@@ -249,11 +259,18 @@ class AccountMove(models.Model):
             default['l10n_ec_authorization_line_id'] = auth_line.id
         return super(AccountMove, self).copy(default)
 
+    l10n_ec_withhold_number = fields.Char(
+        string='Withhold Number',
+        required=False,
+        readonly=True,
+        states={'draft': [('readonly', False)]})
+
     @api.onchange(
         'type',
         'l10n_ec_debit_note',
         'l10n_ec_liquidation',
         'l10n_ec_point_of_emission_id',
+        'invoice_date',
     )
     def _onchange_point_of_emission(self):
         for move in self.filtered(lambda x: x.company_id.country_id.code == 'EC' and x.type
@@ -261,12 +278,43 @@ class AccountMove(models.Model):
             if move.l10n_ec_point_of_emission_id:
                 invoice_type = modules_mapping.get_invoice_type(move.type, move.l10n_ec_debit_note,
                                                                 move.l10n_ec_liquidation)
-                if invoice_type in ('out_invoice', 'out_refund', 'debit_note_out', 'liquidation'):
-                    next_number, auth_line = move.l10n_ec_point_of_emission_id.get_next_value_sequence(invoice_type, False, False)
-                    if next_number:
-                        move.l10n_latam_document_number = next_number
-                    if auth_line:
-                        move.l10n_ec_authorization_line_id = auth_line.id
+                if invoice_type in ('out_invoice', 'out_refund', 'debit_note_out', 'liquidation', 'in_invoice'):
+                    if invoice_type == 'in_invoice':
+                        next_number, auth_line = move.l10n_ec_point_of_emission_id.get_next_value_sequence(
+                            'withhold_purchase', move.invoice_date, False)
+                        if next_number:
+                            move.l10n_ec_withhold_number = next_number
+                        if auth_line:
+                            move.l10n_ec_authorization_line_id = auth_line.id
+                    else:
+                        next_number, auth_line = move.l10n_ec_point_of_emission_id.get_next_value_sequence(
+                            invoice_type, move.invoice_date, False)
+                        if next_number:
+                            move.l10n_latam_document_number = next_number
+                        if auth_line:
+                            move.l10n_ec_authorization_line_id = auth_line.id
+
+    l10n_ec_withhold_required = fields.Boolean(
+        string='Withhold Required',
+        compute='_get_l10n_ec_withhold_required',
+        store=True,
+    )
+
+    @api.depends(
+        'type',
+        'line_ids.tax_ids',
+        'l10n_ec_debit_note',
+        'l10n_ec_liquidation',
+    )
+    def _get_l10n_ec_withhold_required(self):
+        group_iva_withhold = self.env.ref('l10n_ec_niif.tax_group_iva_withhold')
+        group_rent_withhold = self.env.ref('l10n_ec_niif.tax_group_renta_withhold')
+        for rec in self:
+            withhold_required = False
+            if rec.type == 'in_invoice':
+                withhold_required = any(t.tax_group_id.id in (group_iva_withhold.id, group_rent_withhold.id)
+                                        for t in rec.line_ids.mapped('tax_ids'))
+            rec.l10n_ec_withhold_required = withhold_required
 
     @api.constrains(
         'name',

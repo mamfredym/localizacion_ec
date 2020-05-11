@@ -188,7 +188,7 @@ def get_model_name(document_type):
                   'credit_note': 'account.move',
                   'debit_note': 'account.move',
                   'liquidation': 'account.move',
-                  'withholding': 'account.retention',
+                  'withholding': 'l10n_ec.withhold',
                   'delivery_note': 'account.remision',
                   'invoice_reembolso': 'account.invoice.reembolso'
                   }
@@ -204,8 +204,8 @@ def get_field_name(document_type):
                   'credit_note': 'l10n_ec_document_number',
                   'debit_note': 'l10n_ec_document_number',
                   'liquidation': 'l10n_ec_document_number',
-                  'withholding': 'document_number',
-                  'delivery_note': 'document_number',
+                  'withholding': 'number',
+                  'delivery_note': 'number',
                   'invoice_reembolso': 'number',
                   }
     return field_name.get(document_type, '')
@@ -273,8 +273,8 @@ def get_domain(invoice_type, include_state=True):
                'debit_note_in': domain_account_invoice,
                'liquidation': domain_account_invoice,
                'in_invoice': domain_account_invoice,
-               'withhold_sale': [('transaction_type', '=', 'sale')],
-               'withhold_purchase': [('transaction_type', '=', 'purchase')],
+               'withhold_sale': [('type', '=', 'sale')],
+               'withhold_purchase': [('type', '=', 'purchase')],
                'delivery_note': [],
                'invoice_reembolso': [],
                }

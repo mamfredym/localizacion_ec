@@ -217,3 +217,4 @@ class L10nEcWithholdLine(models.Model):
     tax_amount_currency = fields.Monetary(
         string='Withhold Amount',
         required=True)
+
