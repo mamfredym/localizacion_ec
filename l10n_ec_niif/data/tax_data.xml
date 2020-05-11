@@ -369,7 +369,7 @@
   <record model="account.tax.template" id="tax_302">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">En relación de dependencia que supera o no la base desgravada</field>
-    <field name="description"/>
+    <field name="description">302</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">none</field>
@@ -380,7 +380,7 @@
   <record model="account.tax.template" id="tax_303">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Servicios Honorarios profesionales</field>
-    <field name="description"/>
+    <field name="description">303</field>
     <field name="amount">-10</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -391,7 +391,7 @@
   <record model="account.tax.template" id="tax_304">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Servicios Predomina el intelecto</field>
-    <field name="description"/>
+    <field name="description">304</field>
     <field name="amount">-8</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -402,7 +402,7 @@
   <record model="account.tax.template" id="tax_307">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Servicios Predomina la mano de obra</field>
-    <field name="description"/>
+    <field name="description">307</field>
     <field name="amount">-2</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -413,7 +413,7 @@
   <record model="account.tax.template" id="tax_308">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Servicios Utilización o aprovechamiento de la imagen o renombre</field>
-    <field name="description"/>
+    <field name="description">308</field>
     <field name="amount">-10</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -424,7 +424,7 @@
   <record model="account.tax.template" id="tax_309">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Servicios Publicidad y comunicación</field>
-    <field name="description"/>
+    <field name="description">309</field>
     <field name="amount">-1</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -435,7 +435,7 @@
   <record model="account.tax.template" id="tax_310">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Servicios Transporte privado de pasajeros o servicio público o privado de carga</field>
-    <field name="description"/>
+    <field name="description">310</field>
     <field name="amount">-1</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -446,7 +446,7 @@
   <record model="account.tax.template" id="tax_311">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">A través de liquidaciones de compra (nivel cultural o rusticidad)</field>
-    <field name="description"/>
+    <field name="description">311</field>
     <field name="amount">-2</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -457,7 +457,7 @@
   <record model="account.tax.template" id="tax_312">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Transferencia de bienes muebles de naturaleza corporal</field>
-    <field name="description"/>
+    <field name="description">312</field>
     <field name="amount">-1</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -468,7 +468,7 @@
   <record model="account.tax.template" id="tax_314">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Por regalías, derechos de autor, marcas, patentes y similares</field>
-    <field name="description"/>
+    <field name="description">314</field>
     <field name="amount">-8</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -479,7 +479,7 @@
   <record model="account.tax.template" id="tax_319">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Arrendamiento Mercantil</field>
-    <field name="description"/>
+    <field name="description">319</field>
     <field name="amount">-1</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -490,7 +490,7 @@
   <record model="account.tax.template" id="tax_320">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Arrendamiento Bienes inmuebles</field>
-    <field name="description"/>
+    <field name="description">320</field>
     <field name="amount">-8</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -501,7 +501,7 @@
   <record model="account.tax.template" id="tax_322">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Seguros y reaseguros (primas y cesiones)</field>
-    <field name="description"/>
+    <field name="description">322</field>
     <field name="amount">-1</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -512,7 +512,7 @@
   <record model="account.tax.template" id="tax_323">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Rendimientos financieros</field>
-    <field name="description"/>
+    <field name="description">323</field>
     <field name="amount">-2</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -523,7 +523,7 @@
   <record model="account.tax.template" id="tax_324">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Rendimientos financieros entre instituciones del sistema financiero y entidades economía popular y solidaria</field>
-    <field name="description"/>
+    <field name="description">324</field>
     <field name="amount">-1</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -534,7 +534,7 @@
   <record model="account.tax.template" id="tax_325">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Anticipo dividendos</field>
-    <field name="description"/>
+    <field name="description">325</field>
     <field name="amount">-25</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -545,7 +545,7 @@
   <record model="account.tax.template" id="tax_326">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Dividendos distribuidos que correspondan al impuesto a la renta único establecido en el art. 27 de la LRTI</field>
-    <field name="description"/>
+    <field name="description">326</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -556,7 +556,7 @@
   <record model="account.tax.template" id="tax_327">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Dividendos distribuidos a personas naturales residentes</field>
-    <field name="description"/>
+    <field name="description">327</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -567,7 +567,7 @@
   <record model="account.tax.template" id="tax_328">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Dividendos distribuidos a sociedades residentes</field>
-    <field name="description"/>
+    <field name="description">328</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -578,7 +578,7 @@
   <record model="account.tax.template" id="tax_329">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Dividendos distribuidos a fideicomisos residentes</field>
-    <field name="description"/>
+    <field name="description">329</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -589,7 +589,7 @@
   <record model="account.tax.template" id="tax_330">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Dividendos gravados distribuidos en acciones (reinversión de utilidades sin derecho a reducción tarifa IR)</field>
-    <field name="description"/>
+    <field name="description">330</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -600,7 +600,7 @@
   <record model="account.tax.template" id="tax_331">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Dividendos exentos distribuidos en acciones (reinversión de utilidades con derecho a reducción tarifa IR)</field>
-    <field name="description"/>
+    <field name="description">331</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -611,7 +611,7 @@
   <record model="account.tax.template" id="tax_332">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Pagos de bienes y servicios no sujetos a retención</field>
-    <field name="description"/>
+    <field name="description">332</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -622,7 +622,7 @@
   <record model="account.tax.template" id="tax_333">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Enajenación de derechos representativos de capital y otros derechos cotizados en bolsa ecuatoriana</field>
-    <field name="description"/>
+    <field name="description">333</field>
     <field name="amount">-10</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -633,7 +633,7 @@
   <record model="account.tax.template" id="tax_334">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Enajenación de derechos representativos de capital y otros derechos no cotizados en bolsa ecuatoriana</field>
-    <field name="description"/>
+    <field name="description">334</field>
     <field name="amount">-1</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -644,7 +644,7 @@
   <record model="account.tax.template" id="tax_335">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Loterías, rifas, apuestas y similares</field>
-    <field name="description"/>
+    <field name="description">335</field>
     <field name="amount">-15</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -655,7 +655,7 @@
   <record model="account.tax.template" id="tax_343">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Aplicables el 1%</field>
-    <field name="description"/>
+    <field name="description">343</field>
     <field name="amount">-1</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -666,7 +666,7 @@
   <record model="account.tax.template" id="tax_344">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Aplicables el 2%</field>
-    <field name="description"/>
+    <field name="description">344</field>
     <field name="amount">-2</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -677,7 +677,7 @@
   <record model="account.tax.template" id="tax_345">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Aplicables el 8%</field>
-    <field name="description"/>
+    <field name="description">345</field>
     <field name="amount">-8</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -688,7 +688,7 @@
   <record model="account.tax.template" id="tax_346">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Aplicables a otros porcentajes</field>
-    <field name="description"/>
+    <field name="description">346</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -699,7 +699,7 @@
   <record model="account.tax.template" id="tax_402">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Con convenio de doble tributación</field>
-    <field name="description"/>
+    <field name="description">402</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -710,7 +710,7 @@
   <record model="account.tax.template" id="tax_403">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Con convenio de doble tributación Intereses de créditos</field>
-    <field name="description"/>
+    <field name="description">403</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -721,7 +721,7 @@
   <record model="account.tax.template" id="tax_404">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Con convenio de doble tributación Anticipo de dividendos</field>
-    <field name="description"/>
+    <field name="description">404</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -732,7 +732,7 @@
   <record model="account.tax.template" id="tax_405">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Con convenio de doble tributación Dividendos distribuidos a personas naturales</field>
-    <field name="description"/>
+    <field name="description">405</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -743,7 +743,7 @@
   <record model="account.tax.template" id="tax_406">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Con convenio de doble tributación Dividendos distribuidos a sociedades</field>
-    <field name="description"/>
+    <field name="description">406</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -754,7 +754,7 @@
   <record model="account.tax.template" id="tax_407">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Con convenio de doble tributación Dividendos distribuidos a fideicomisos</field>
-    <field name="description"/>
+    <field name="description">407</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -765,7 +765,7 @@
   <record model="account.tax.template" id="tax_408">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Con convenio de doble tributación Enajenación de derechos representativos de capital y otros derechos</field>
-    <field name="description"/>
+    <field name="description">408</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -776,7 +776,7 @@
   <record model="account.tax.template" id="tax_409">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Con convenio de doble tributación Seguros y reaseguros (primas y cesiones)</field>
-    <field name="description"/>
+    <field name="description">409</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -787,7 +787,7 @@
   <record model="account.tax.template" id="tax_410">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Con convenio de doble tributación Servicios técnicos, administrativos o de consultoría y regalías</field>
-    <field name="description"/>
+    <field name="description">410</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -798,7 +798,7 @@
   <record model="account.tax.template" id="tax_411">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Con convenio de doble tributación Otros conceptos de ingresos gravados</field>
-    <field name="description"/>
+    <field name="description">411</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -809,7 +809,7 @@
   <record model="account.tax.template" id="tax_412">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Con convenio de doble tributación Otros pagos al exterior no sujetos a retención</field>
-    <field name="description"/>
+    <field name="description">412</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -820,7 +820,7 @@
   <record model="account.tax.template" id="tax_413">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Sin convenio de doble tributación Intereses por financiamiento de proveedores</field>
-    <field name="description"/>
+    <field name="description">413</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -831,7 +831,7 @@
   <record model="account.tax.template" id="tax_414">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Sin convenio de doble tributación Intereses de créditos</field>
-    <field name="description"/>
+    <field name="description">414</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -842,7 +842,7 @@
   <record model="account.tax.template" id="tax_415">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Sin convenio de doble tributación Anticipo de dividendos</field>
-    <field name="description"/>
+    <field name="description">415</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -853,7 +853,7 @@
   <record model="account.tax.template" id="tax_416">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Sin convenio de doble tributación Dividendos distribuidos a personas naturales</field>
-    <field name="description"/>
+    <field name="description">416</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -864,7 +864,7 @@
   <record model="account.tax.template" id="tax_417">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Sin convenio de doble tributación Dividendos distribuidos a sociedades</field>
-    <field name="description"/>
+    <field name="description">417</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -875,7 +875,7 @@
   <record model="account.tax.template" id="tax_418">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Sin convenio de doble tributación Dividendos distribuidos a fideicomisos</field>
-    <field name="description"/>
+    <field name="description">418</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -886,7 +886,7 @@
   <record model="account.tax.template" id="tax_419">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Sin convenio de doble tributación Enajenación de derechos representativos de capital y otros derechos</field>
-    <field name="description"/>
+    <field name="description">419</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -897,7 +897,7 @@
   <record model="account.tax.template" id="tax_420">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Sin convenio de doble tributación Seguros y reaseguros (primas y cesiones)</field>
-    <field name="description"/>
+    <field name="description">420</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -908,7 +908,7 @@
   <record model="account.tax.template" id="tax_421">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Sin convenio de doble tributación Servicios técnicos, administrativos o de consultoría y regalías</field>
-    <field name="description"/>
+    <field name="description">421</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -919,7 +919,7 @@
   <record model="account.tax.template" id="tax_422">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Sin convenio de doble tributación Otros conceptos de ingresos gravados</field>
-    <field name="description"/>
+    <field name="description">422</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -930,7 +930,7 @@
   <record model="account.tax.template" id="tax_423">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">Sin convenio de doble tributación Otros pagos al exterior no sujetos a retención</field>
-    <field name="description"/>
+    <field name="description">423</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -941,7 +941,7 @@
   <record model="account.tax.template" id="tax_424">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">En paraísos fiscales o regímenes fiscales preferentes Intereses por financiamiento de proveedores</field>
-    <field name="description"/>
+    <field name="description">424</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -952,7 +952,7 @@
   <record model="account.tax.template" id="tax_425">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">En paraísos fiscales o regímenes fiscales preferentes Anticipo de dividendos</field>
-    <field name="description"/>
+    <field name="description">425</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -963,7 +963,7 @@
   <record model="account.tax.template" id="tax_426">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">En paraísos fiscales o regímenes fiscales preferentes Dividendos distribuidos a personas naturales</field>
-    <field name="description"/>
+    <field name="description">426</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -974,7 +974,7 @@
   <record model="account.tax.template" id="tax_427">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">En paraísos fiscales o regímenes fiscales preferentes Dividendos distribuidos a sociedades</field>
-    <field name="description"/>
+    <field name="description">427</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -985,7 +985,7 @@
   <record model="account.tax.template" id="tax_428">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">En paraísos fiscales o regímenes fiscales preferentes Dividendos distribuidos a fideicomisos</field>
-    <field name="description"/>
+    <field name="description">428</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -996,7 +996,7 @@
   <record model="account.tax.template" id="tax_429">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">En paraísos fiscales o regímenes fiscales preferentes Enajenación de derechos representativos de capital y otros derechos</field>
-    <field name="description"/>
+    <field name="description">429</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -1007,7 +1007,7 @@
   <record model="account.tax.template" id="tax_430">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">En paraísos fiscales o regímenes fiscales preferentes Seguros y reaseguros (primas y cesiones)</field>
-    <field name="description"/>
+    <field name="description">430</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -1018,7 +1018,7 @@
   <record model="account.tax.template" id="tax_431">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">En paraísos fiscales o regímenes fiscales preferentes Servicios técnicos, administrativos o de consultoría y regalías</field>
-    <field name="description"/>
+    <field name="description">431</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -1029,7 +1029,7 @@
   <record model="account.tax.template" id="tax_432">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">En paraísos fiscales o regímenes fiscales preferentes Otros conceptos de ingresos gravados</field>
-    <field name="description"/>
+    <field name="description">432</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
@@ -1040,7 +1040,7 @@
   <record model="account.tax.template" id="tax_433">
     <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template"/>
     <field name="name">En paraísos fiscales o regímenes fiscales preferentes Otros pagos al exterior no sujetos a retención</field>
-    <field name="description"/>
+    <field name="description">433</field>
     <field name="amount">0</field>
     <field name="amount_type">percent</field>
     <field name="type_tax_use">purchase</field>
