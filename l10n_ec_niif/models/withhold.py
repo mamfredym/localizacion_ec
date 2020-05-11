@@ -78,8 +78,11 @@ class L10nEcWithhold(models.Model):
         required=True, readonly=True, deafult=lambda self: self.env.context.get('withhold_type', 'sale'))
     document_type = fields.Selection(
         string='Document type',
-        selection=[('normal', 'Pre Printed / AutoPrinter'),
-                   ('electronic', 'Electronic'), ],
+        selection=[
+            ('electronic', 'Electronic'),
+            ('pre_printed', 'Pre Printed'),
+            ('auto_printer', 'Auto Printer'),
+        ],
         required=True,
         readonly=True,
         states=_STATES,
@@ -135,19 +138,24 @@ class L10nEcWithhold(models.Model):
     )
     def _get_tax_amount(self):
         for rec in self:
-            rec.tax_iva = sum(i.tax_amount for i in rec.line_ids.filtered(lambda x: x.type == 'iva'))
-            rec.tax_rent = sum(r.tax_amount for r in rec.line_ids.filtered(lambda x: x.type == 'rent'))
+            rec.tax_iva = sum(i.tax_amount_currency for i in rec.line_ids.filtered(lambda x: x.type == 'iva'))
+            rec.tax_rent = sum(r.tax_amount_currency for r in rec.line_ids.filtered(lambda x: x.type == 'rent'))
 
-    tax_iva = fields.Float(
+    tax_iva = fields.Monetary(
         string='Withhold IVA',
         compute="_get_tax_amount",
         store=True,
         readonly=True)
-    tax_rent = fields.Float(
+    tax_rent = fields.Monetary(
         string='Withhold Rent',
         compute="_get_tax_amount",
         store=True,
         readonly=True)
+
+    def action_done(self):
+        self.write({
+            'state': 'done',
+        })
 
 
 class L10nEcWithholdLine(models.Model):
@@ -198,14 +206,17 @@ class L10nEcWithholdLine(models.Model):
         comodel_name='res.currency',
         string='Partner Currency',
         required=False)
-    base_amount = fields.Float(
-        string='Base Amount',
+    base_amount = fields.Monetary(
+        string='Base Amount Currency',
         currency_field="partner_currency_id",
         required=True)
-    tax_amount = fields.Float(
-        string='Withhold Amount',
+    tax_amount = fields.Monetary(
+        string='Withhold Amount Currency',
         currency_field="partner_currency_id",
         required=True)
+    percentage = fields.Float(
+        string='Percentage',
+        required=False)
     currency_id = fields.Many2one(
         'res.currency',
         string='Currency',

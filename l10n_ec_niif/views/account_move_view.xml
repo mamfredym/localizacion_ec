@@ -65,10 +65,6 @@
                         <span attrs="{'invisible': ['|', '|', '|', '|', ('type', '!=', 'in_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/'), ('l10n_ec_debit_note', '=', True), ('l10n_ec_liquidation', '=', False)]}">Draft Liquidation of Purchase</span>
                     </h1>
                 </xpath>
-                <xpath expr="//field[@name='invoice_vendor_bill_id']" position="after">
-                    <field name="l10n_ec_withhold_number"
-                           attrs="{'invisible': ['|', ('l10n_ec_withhold_required', '=', False), ('type', '!=', 'in_invoice')], 'required': [('l10n_ec_withhold_required', '=', True), ('type', '=', 'in_invoice')]}"/>
-                </xpath>
             </field>
         </record>
 
@@ -85,6 +81,22 @@
                            attrs="{'invisible': [('type', '!=', 'in_refund')], 'required': [('type', '=', 'in_refund')], 'readonly': [('state', '!=', 'draft')]}"
                     domain="[('type', '=', 'out_invoice'), ('state', '=', 'posted'), ('commercial_partner_id', '=', commercial_partner_id)]"/>
                 </xpath>
+                <xpath expr="//field[@name='invoice_vendor_bill_id']" position="after">
+                    <field name="l10n_ec_withhold_number"
+                           attrs="{'invisible': ['|', ('l10n_ec_withhold_required', '=', False), ('type', '!=', 'in_invoice')], 'required': [('l10n_ec_withhold_required', '=', True), ('type', '=', 'in_invoice')]}"/>
+                    <field name="l10n_ec_withhold_date"
+                           attrs="{'invisible': ['|', ('l10n_ec_withhold_required', '=', False), ('type', '!=', 'in_invoice')], 'required': [('l10n_ec_withhold_required', '=', True), ('type', '=', 'in_invoice')]}"/>
+                    <field name="l10n_ec_withhold_count" invisible="1" />
+                </xpath>
+                <div name="button_box" position="inside">
+                    <button name="action_show_l10n_ec_withholds"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-file-text-o"
+                            string="Withholds"
+                            attrs="{'invisible':[('l10n_ec_withhold_count', '&gt;', 0), ('type', '!=', 'in_invoice')]}">
+                    </button>
+                </div>
             </field>
         </record>
 

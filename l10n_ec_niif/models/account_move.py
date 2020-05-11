@@ -299,6 +299,9 @@ class AccountMove(models.Model):
         compute='_get_l10n_ec_withhold_required',
         store=True,
     )
+    l10n_ec_withhold_date = fields.Date(
+        string='Withhold Date',
+        required=False)
 
     @api.depends(
         'type',
@@ -441,7 +444,77 @@ class AccountMove(models.Model):
                     raise UserError(_("You can't make refund to final customer on ecuadorian company"))
                 if move.l10n_ec_consumidor_final and move.type in ('in_refund', 'in_invoice'):
                     raise UserError(_("You can't make bill or refund to final customer on ecuadorian company"))
-
+                if move.type == 'in_invoice':
+                    withhold_model = self.env['l10n_ec.withhold']
+                    withhold_line_model = self.env['l10n_ec.withhold.line']
+                    tax_model = self.env['account.tax']
+                    withhold_iva_group = self.env.ref('l10n_ec_niif.tax_group_iva_withhold')
+                    withhold_rent_group = self.env.ref('l10n_ec_niif.tax_group_renta_withhold')
+                    current_withhold = withhold_model.create({
+                        'company_id': move.company_id.id,
+                        'number': move.l10n_ec_withhold_number,
+                        'issue_date': move.l10n_ec_withhold_date,
+                        'partner_id': move.partner_id.id,
+                        'invoice_id': move.id,
+                        'type': 'purchase',
+                        'document_type': move.l10n_ec_type_emission,
+                        'point_of_emission_id': move.l10n_ec_point_of_emission_id.id,
+                        'authorization_line_id': move.l10n_ec_authorization_line_id.id,
+                        'state': 'draft',
+                    })
+                    tax_data = {}
+                    for line in move.invoice_line_ids:
+                        for tax in line.tax_ids:
+                            if tax.tax_group_id.id in (withhold_iva_group.id, withhold_rent_group.id):
+                                base_tag_id = tax.invoice_repartition_line_ids.filtered(
+                                        lambda x: x.repartition_type == 'base').mapped('tag_ids')
+                                tax_tag_id = tax.invoice_repartition_line_ids.filtered(
+                                        lambda x: x.repartition_type == 'tax').mapped('tag_ids')
+                                tax_data.setdefault(tax.id, {
+                                    'withhold_id': current_withhold.id,
+                                    'invoice_id': move.id,
+                                    'partner_currency_id': move.currency_id.id,
+                                    'tax_id': tax.id,
+                                    'base_tag_id': base_tag_id and base_tag_id.ids[0] or False,
+                                    'tax_tag_id': tax_tag_id and tax_tag_id.ids[0] or False,
+                                    'type': tax.tax_group_id.id == withhold_iva_group.id
+                                            and 'iva' or tax.tax_group_id.id == withhold_rent_group.id and 'rent',
+                                    'base_amount': 0.0,
+                                    'tax_amount': 0.0,
+                                    'base_amount_currency': 0.0,
+                                    'tax_amount_currency': 0.0,
+                                    'percentage': tax.tax_group_id.id == withhold_iva_group.id
+                                                  and abs(tax.invoice_repartition_line_ids.filtered(
+                                        lambda x: x.repartition_type == 'tax').factor_percent) or abs(tax.amount),
+                                })
+                    for tax_id in tax_data.keys():
+                        base_amount = 0
+                        tax_amount = 0
+                        base_tag_id = tax_data[tax_id].get('base_tag_id')
+                        tax_tag_id = tax_data[tax_id].get('tax_tag_id')
+                        for line in move.line_ids:
+                            for tag in line.tag_ids.filtered(lambda x: x.id in (base_tag_id, tax_tag_id)):
+                                tag_amount = line.balance
+                                if tag.id == base_tag_id:
+                                    base_amount = abs(tag_amount)
+                                    tax_data[tax_id]['base_amount'] += base_amount
+                                    tax_data[tax_id]['base_amount_currency'] += move.currency_id.compute(
+                                        base_amount, move.company_id.currency_id)
+                                if tag.id == tax_tag_id:
+                                    tax_amount = abs(tag_amount)
+                                    tax_data[tax_id]['tax_amount'] += tax_amount
+                                    tax_data[tax_id]['tax_amount_currency'] += move.currency_id.compute(
+                                        tax_amount, move.company_id.currency_id)
+                    for tax_id in tax_data.keys():
+                        current_tax = tax_model.browse(tax_id)
+                        if current_tax.tax_group_id.id == withhold_iva_group.id:
+                            tax_data[tax_id]['base_amount'] = (tax_data[tax_id]['tax_amount'] /
+                                                               (tax_data[tax_id]['percentage'] / 100.0))
+                            tax_data[tax_id]['base_amount_currency'] = move.currency_id.compute(
+                                        tax_data[tax_id]['base_amount'], move.company_id.currency_id)
+                    for withhold_line in tax_data.values():
+                        withhold_line_model.create(withhold_line)
+                    current_withhold.action_done()
         return super(AccountMove, self).action_post()
 
     def unlink(self):
@@ -494,6 +567,52 @@ class AccountMove(models.Model):
         string='IVA',
         compute="_compute_l10n_ec_amounts",
         store=True)
+
+    l10n_ec_withhold_line_ids = fields.One2many(
+        comodel_name='l10n_ec.withhold.line',
+        inverse_name='invoice_id',
+        string='Withhold Lines',
+        required=False)
+
+    l10n_ec_withhold_ids = fields.Many2many(
+        comodel_name='l10n_ec.withhold',
+        string='Withhold',
+        compute='_get_l10n_ec_withhold_ids',
+    )
+    l10n_ec_withhold_count = fields.Integer(
+        string='Withhold Count',
+        compute='_get_l10n_ec_withhold_ids',
+        store=True
+    )
+
+    @api.depends(
+        'l10n_ec_withhold_line_ids.withhold_id',
+    )
+    def _get_l10n_ec_withhold_ids(self):
+        for rec in self:
+            l10n_ec_withhold_ids = rec.l10n_ec_withhold_line_ids.mapped('withhold_id').ids
+            rec.l10n_ec_withhold_ids = l10n_ec_withhold_ids
+            rec.l10n_ec_withhold_count = len(l10n_ec_withhold_ids)
+
+    def action_show_l10n_ec_withholds(self):
+        self.ensure_one()
+        type = self.mapped('type')[0]
+        action = self.env.ref('l10n_ec_niif.l10n_ec_withhold_purchase_act_window').read()[0]
+
+        withholds = self.mapped('l10n_ec_withhold_ids')
+        if len(withholds) > 1:
+            action['domain'] = [('id', 'in', withholds.ids)]
+        elif withholds:
+            form_view = [(self.env.ref('l10n_ec_niif.l10n_ec_withhold_form_view').id, 'form')]
+            if 'views' in action:
+                action['views'] = form_view + [(state,view) for state,view in action['views'] if view != 'form']
+            else:
+                action['views'] = form_view
+            action['res_id'] = withholds.id
+        action['context'] = dict(self._context,
+                                 default_partner_id=self.partner_id.id,
+                                 default_invoice_id = self.id)
+        return action
 
 
 AccountMove()

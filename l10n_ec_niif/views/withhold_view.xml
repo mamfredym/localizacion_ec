@@ -20,6 +20,7 @@
                     <field name="type"/>
                     <field name="partner_currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                     <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
+                    <field name="percentage" />
                     <field name="base_amount" groups="base.group_multi_currency"/>
                     <field name="tax_amount" sum="Tax" groups="base.group_multi_currency"/>
                     <field name="base_amount_currency"/>
@@ -47,6 +48,7 @@
                             <group>
                                 <field name="partner_currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                                 <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
+                                <field name="percentage" />
                                 <field name="base_amount" groups="base.group_multi_currency"/>
                                 <field name="tax_amount" groups="base.group_multi_currency"/>
                                 <field name="base_amount_currency"/>
@@ -173,6 +175,7 @@
                                         <field name="type"/>
                                         <field name="partner_currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                                         <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
+                                        <field name="percentage" />
                                         <field name="base_amount" groups="base.group_multi_currency"/>
                                         <field name="tax_amount" sum="Tax" groups="base.group_multi_currency"/>
                                         <field name="base_amount_currency"/>
