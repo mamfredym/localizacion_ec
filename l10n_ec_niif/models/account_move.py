@@ -448,6 +448,7 @@ class AccountMove(models.Model):
                     withhold_model = self.env['l10n_ec.withhold']
                     withhold_line_model = self.env['l10n_ec.withhold.line']
                     tax_model = self.env['account.tax']
+                    percent_model = self.env['l10n_ec.withhold.line.percent']
                     withhold_iva_group = self.env.ref('l10n_ec_niif.tax_group_iva_withhold')
                     withhold_rent_group = self.env.ref('l10n_ec_niif.tax_group_renta_withhold')
                     current_withhold = withhold_model.create({
@@ -470,6 +471,11 @@ class AccountMove(models.Model):
                                         lambda x: x.repartition_type == 'base').mapped('tag_ids')
                                 tax_tag_id = tax.invoice_repartition_line_ids.filtered(
                                         lambda x: x.repartition_type == 'tax').mapped('tag_ids')
+                                tax_type = tax.tax_group_id.id == withhold_iva_group.id \
+                                           and 'iva' or tax.tax_group_id.id == withhold_rent_group.id and 'rent'
+                                percent = tax.tax_group_id.id == withhold_iva_group.id \
+                                          and abs(tax.invoice_repartition_line_ids.filtered(
+                                    lambda x: x.repartition_type == 'tax').factor_percent) or abs(tax.amount)
                                 tax_data.setdefault(tax.id, {
                                     'withhold_id': current_withhold.id,
                                     'invoice_id': move.id,
@@ -477,15 +483,12 @@ class AccountMove(models.Model):
                                     'tax_id': tax.id,
                                     'base_tag_id': base_tag_id and base_tag_id.ids[0] or False,
                                     'tax_tag_id': tax_tag_id and tax_tag_id.ids[0] or False,
-                                    'type': tax.tax_group_id.id == withhold_iva_group.id
-                                            and 'iva' or tax.tax_group_id.id == withhold_rent_group.id and 'rent',
+                                    'type': tax_type,
                                     'base_amount': 0.0,
                                     'tax_amount': 0.0,
                                     'base_amount_currency': 0.0,
                                     'tax_amount_currency': 0.0,
-                                    'percentage': tax.tax_group_id.id == withhold_iva_group.id
-                                                  and abs(tax.invoice_repartition_line_ids.filtered(
-                                        lambda x: x.repartition_type == 'tax').factor_percent) or abs(tax.amount),
+                                    'percent_id': percent_model._get_percent(percent, tax_type).id,
                                 })
                     for tax_id in tax_data.keys():
                         base_amount = 0
@@ -509,7 +512,7 @@ class AccountMove(models.Model):
                         current_tax = tax_model.browse(tax_id)
                         if current_tax.tax_group_id.id == withhold_iva_group.id:
                             tax_data[tax_id]['base_amount'] = (tax_data[tax_id]['tax_amount'] /
-                                                               (tax_data[tax_id]['percentage'] / 100.0))
+                                                               (percent_model.browse(tax_data[tax_id]['percent_id']).percent / 100.0))
                             tax_data[tax_id]['base_amount_currency'] = move.currency_id.compute(
                                         tax_data[tax_id]['base_amount'], move.company_id.currency_id)
                     for withhold_line in tax_data.values():
