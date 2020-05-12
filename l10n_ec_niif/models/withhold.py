@@ -158,6 +158,25 @@ class L10nEcWithhold(models.Model):
         })
 
 
+class L10nEcWithholdLinePercent(models.Model):
+
+    _name = 'l10nec.withhold.line.percent'
+
+    name = fields.Char(
+        string='Percent',
+        required=False)
+    type = fields.Selection(
+        string='Type',
+        selection=[
+            ('iva', 'IVA'),
+            ('rent', 'Rent'),
+        ],
+        required=False,)
+    percent = fields.Integer(
+        string='Percent',
+        required=False)
+
+
 class L10nEcWithholdLine(models.Model):
 
     _name = 'l10n_ec.withhold.line'
@@ -214,8 +233,12 @@ class L10nEcWithholdLine(models.Model):
         string='Withhold Amount Currency',
         currency_field="partner_currency_id",
         required=True)
+    percent_id = fields.Many2one(
+        comodel_name='l10nec.withhold.line.percent',
+        string='Percent',
+        required=False)
     percentage = fields.Float(
-        string='Percentage',
+        string='Percent',
         required=False)
     currency_id = fields.Many2one(
         'res.currency',

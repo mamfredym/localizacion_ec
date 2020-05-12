@@ -19,3 +19,17 @@ class ResCompany(models.Model):
 
     l10n_ec_consumidor_final_limit = fields.Float(string="Invoice Sales Limit Final Consumer", default=200.0)
 
+    l10n_ec_withhold_sale_iva_account_id = fields.Many2one(
+        comodel_name='account.account',
+        string='Withhold Sales IVA Account',
+        required=False)
+
+    l10n_ec_withhold_sale_iva_tag_id = fields.Many2one(
+        comodel_name='account.account.tag',
+        string='Withhold Sales IVA Account Tag',
+        required=False)
+
+    l10n_ec_withhold_sale_rent_account_id = fields.Many2one(
+        comodel_name='account.account',
+        string='Withhold Sales Rent Account',
+        required=False)

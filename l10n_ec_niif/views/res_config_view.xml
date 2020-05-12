@@ -11,21 +11,47 @@
                 <xpath expr="//div[hasclass('settings')]" position="inside">
                     <div class="app_settings_block" data-string="S.R.I."
                          data-key="l10n_ec_niif" groups="account.group_account_manager">
-                    <h2>Facturación</h2>
-                    <div class="col-lg-6 o_setting_box" id="sri_invoice">
+                    <h2>Invoice</h2>
+                    <div class="col-12 col-lg-6 o_setting_box" id="sri_invoice">
                         <div class="o_setting_left_pane">
-                            <span class="o_form_label">Consumidor Final</span>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Final Consumer</span>
                             <div class="text-muted">
-                                Límite para facturación en ventas para consumidor final, monto total
+                                Limit for billing in sales for final consumer, total amount
                             </div>
                             <div class="content-group">
                                 <div class="row mt16">
-                                    <label string="Monto Límite" for="l10n_ec_consumidor_final_limit" class="col-lg-3 o_light_label"/>
+                                    <label string="Limit Amount" for="l10n_ec_consumidor_final_limit" class="col-lg-3 o_light_label"/>
                                     <field name="l10n_ec_consumidor_final_limit" class="text-center oe_inline"/>
                                 </div>
                             </div>
                         </div>
-                        <div class="o_setting_right_pane"/>
+                    </div>
+                    <h2>Withhold</h2>
+                    <div class="col-12 col-lg-6 o_setting_box" id="sri_withhold">
+                        <div class="o_setting_left_pane">
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Withhold Sales</span>
+                            <div class="text-muted">
+                                Accounting config for withhold on sales
+                            </div>
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label string="IVA Account" for="l10n_ec_withhold_sale_iva_account_id" class="col-lg-3 o_light_label"/>
+                                    <field name="l10n_ec_withhold_sale_iva_account_id" />
+                                </div>
+                                <div class="row mt16">
+                                    <label string="IVA Tag" for="l10n_ec_withhold_sale_iva_tag_id" class="col-lg-3 o_light_label"/>
+                                    <field name="l10n_ec_withhold_sale_iva_tag_id" />
+                                </div>
+                                <div class="row mt16">
+                                    <label string="Rent Account" for="l10n_ec_withhold_sale_rent_account_id" class="col-lg-3 o_light_label"/>
+                                    <field name="l10n_ec_withhold_sale_rent_account_id" />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     </div>
                 </xpath>

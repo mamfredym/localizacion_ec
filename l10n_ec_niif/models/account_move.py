@@ -617,3 +617,11 @@ class AccountMove(models.Model):
 
 AccountMove()
 
+class AccountMoveLine(models.Model):
+
+    _inherit = 'account.move.line'
+
+    l10n_ec_withhold_line_id = fields.Many2one(
+        comodel_name='l10n_ec.withhold.line',
+        string='Withhold Line',
+        readonly=True)

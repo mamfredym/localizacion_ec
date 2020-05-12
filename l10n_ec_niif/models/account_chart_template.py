@@ -53,3 +53,21 @@ class AccountChartTemplate(models.Model):
                 }
                 journal_data.append(vals)
         return journal_data
+
+    def generate_properties(self, acc_template_ref, company):
+        res = super(AccountChartTemplate, self).generate_properties(acc_template_ref, company)
+        account_model = self.env['account.account']
+        if company.country_id.code == 'EC':
+            tag_iva = self.env.ref('l10n_ec_niif.tag_f104_609')
+            iva_account = account_model.search([
+                ('code', '=', '101050107'),
+            ], limit=1)
+            renta_account = account_model.search([
+                ('code', '=', '101050201')
+            ], limit=1)
+            company.write({
+                'l10n_ec_withhold_sale_iva_account_id': iva_account.id,
+                'l10n_ec_withhold_sale_rent_account_id': renta_account.id,
+                'l10n_ec_withhold_sale_iva_tag_id': tag_iva.id,
+            })
+        return res

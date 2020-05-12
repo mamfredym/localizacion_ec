@@ -211,6 +211,11 @@
     <field name="applicability">taxes</field>
     <field name="country_id" ref="base.ec"/>
   </record>
+  <record model="account.account.tag" id="tag_f104_609">
+    <field name="name">(-) Retenciones en la fuente de IVA que le han sido efectuadas en este período</field>
+    <field name="applicability">taxes</field>
+    <field name="country_id" ref="base.ec"/>
+  </record>
   <record model="account.account.tag" id="tag_f104_721">
     <field name="name">Retención del 10%</field>
     <field name="applicability">taxes</field>
