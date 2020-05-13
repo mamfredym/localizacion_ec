@@ -26,7 +26,9 @@ class L10nEcWithhold(models.Model):
         store=True,)
     number = fields.Char(
         string='Number',
-        required=True)
+        required=True,
+        readonly=True,
+        states=_STATES)
     state = fields.Selection(
         string='State',
         selection=[
@@ -161,6 +163,7 @@ class L10nEcWithhold(models.Model):
 class L10nEcWithholdLinePercent(models.Model):
 
     _name = 'l10n_ec.withhold.line.percent'
+    _order = 'percent ASC'
 
     name = fields.Char(
         string='Percent',
@@ -275,7 +278,8 @@ class L10nEcWithholdLine(models.Model):
     partner_currency_id = fields.Many2one(
         comodel_name='res.currency',
         string='Partner Currency',
-        required=False)
+        related="invoice_id.currency_id",
+        store=True)
     base_amount = fields.Monetary(
         string='Base Amount Currency',
         currency_field="partner_currency_id",
@@ -303,4 +307,29 @@ class L10nEcWithholdLine(models.Model):
     tax_amount_currency = fields.Monetary(
         string='Withhold Amount',
         required=True)
+
+    @api.onchange(
+        'invoice_id',
+        'type',
+    )
+    def _onchange_invoice(self):
+        if self.invoice_id:
+            base_amount = 0
+            if self.type == 'iva':
+                base_amount = self.invoice_id.l10n_ec_iva
+            elif self.type == 'rent':
+                base_amount = self.invoice_id.amount_untaxed
+            self.update({
+                'base_amount': base_amount
+            })
+
+    @api.onchange(
+        'percent_id',
+        'base_amount',
+    )
+    def _onchange_amount(self):
+        if self.percent_id:
+            self.base_amount_currency = self.partner_currency_id.compute(self.base_amount, self.currency_id)
+            self.tax_amount = (self.percent_id.percent / 100.0) * self.base_amount
+            self.tax_amount_currency = self.partner_currency_id.compute(self.tax_amount, self.currency_id)
 

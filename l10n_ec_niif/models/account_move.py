@@ -517,7 +517,6 @@ class AccountMove(models.Model):
                                 tax_data.setdefault(tax.id, {
                                     'withhold_id': current_withhold.id,
                                     'invoice_id': move.id,
-                                    'partner_currency_id': move.currency_id.id,
                                     'tax_id': tax.id,
                                     'base_tag_id': base_tag_id and base_tag_id.ids[0] or False,
                                     'tax_tag_id': tax_tag_id and tax_tag_id.ids[0] or False,
