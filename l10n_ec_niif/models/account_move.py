@@ -451,6 +451,44 @@ class AccountMove(models.Model):
                     percent_model = self.env['l10n_ec.withhold.line.percent']
                     withhold_iva_group = self.env.ref('l10n_ec_niif.tax_group_iva_withhold')
                     withhold_rent_group = self.env.ref('l10n_ec_niif.tax_group_renta_withhold')
+                    iva_group = self.env.ref('l10n_ec_niif.tax_group_iva')
+                    errors = {}
+                    for line in move.invoice_line_ids:
+                        iva_taxes = line.tax_ids.filtered(lambda x: x.tax_group_id.id == iva_group.id and x.amount > 0)
+                        iva_0_taxes = line.tax_ids.filtered(lambda x: x.tax_group_id.id == iva_group.id and x.amount == 0)
+                        withhold_iva_taxes = line.tax_ids.filtered(lambda x: x.tax_group_id.id == withhold_iva_group.id
+                                                                             and x.amount > 0)
+                        rent_withhold_taxes = line.tax_ids.filtered(lambda x: x.tax_group_id.id == withhold_rent_group.id)
+                        errors.setdefault(line, [])
+                        if move.partner_id.country_id.code == 'EC':
+                            if len(rent_withhold_taxes) == 0:
+                                errors[line].append(_('You must apply at least one income withholding tax'))
+                            if len(iva_taxes) == 0 and len(iva_0_taxes) == 0:
+                                errors[line].append(_('You must apply at least one VAT tax'))
+                        if len(iva_taxes) >= 1 and len(iva_0_taxes) >= 1:
+                            errors[line].append(_('Cannot apply VAT zero rate with another VAT rate'))
+                        if len(iva_taxes) > 1:
+                            errors[line].append(_('You cannot have more than one VAT tax %s')
+                                                   % (' / '.join(t.description or t.name for t in iva_taxes)))
+                        if len(iva_0_taxes) > 1:
+                            errors[line].append(_('You cannot have more than one VAT 0 tax %s')
+                                                   % (' / '.join(t.description or t.name for t in iva_0_taxes)))
+                        if len(withhold_iva_taxes) > 1:
+                            errors[line].append(_('You cannot have more than one VAT Withholding tax %s')
+                                                   % (' / '.join(t.description or t.name for t in withhold_iva_taxes)))
+                        if len(rent_withhold_taxes) > 1:
+                            errors[line].append(_('You cannot have more than one Rent Withholding tax %s')
+                                                   % (' / '.join(t.description or t.name for t in rent_withhold_taxes)))
+                        if len(iva_taxes) == 0 and len(withhold_iva_taxes) > 0:
+                            errors[line].append(_('You cannot apply VAT withholding without an assigned VAT tax %s')
+                                                   % (' / '.join(t.description or t.name for t in withhold_iva_taxes)))
+                    error_message = ''
+                    for eline in errors.keys():
+                        error_message += '\n'.join(errors[eline])
+                    if error_message:
+                        raise UserError(error_message)
+                    if not move.l10n_ec_withhold_required:
+                        return super(AccountMove, self).action_post()
                     current_withhold = withhold_model.create({
                         'company_id': move.company_id.id,
                         'number': move.l10n_ec_withhold_number,
