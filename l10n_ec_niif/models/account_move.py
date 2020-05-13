@@ -591,9 +591,9 @@ class AccountMove(models.Model):
             rec.l10n_ec_base_iva_0 = l10n_ec_base_iva_0
             rec.l10n_ec_base_iva = l10n_ec_base_iva
             rec.l10n_ec_iva = l10n_ec_iva
-            rec.l10n_ec_base_iva_0_currency = rec.currency_id.compute(l10n_ec_base_iva_0, rec.company_id.currenty_id)
-            rec.l10n_ec_base_iva_currency = rec.currency_id.compute(l10n_ec_base_iva, rec.company_id.currenty_id)
-            rec.l10n_ec_iva_currency = rec.currency_id.compute(l10n_ec_iva, rec.company_id.currenty_id)
+            rec.l10n_ec_base_iva_0_currency = rec.currency_id.compute(l10n_ec_base_iva_0, rec.company_id.currency_id)
+            rec.l10n_ec_base_iva_currency = rec.currency_id.compute(l10n_ec_base_iva, rec.company_id.currency_id)
+            rec.l10n_ec_iva_currency = rec.currency_id.compute(l10n_ec_iva, rec.company_id.currency_id)
 
 
     l10n_ec_base_iva = fields.Float(
