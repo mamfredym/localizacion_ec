@@ -94,7 +94,7 @@ class L10nECSriAuthorizationLine(models.Model):
     @api.constrains(
         'authorization_id',
         'point_of_emission_id',
-        'name',
+        'document_type',
         'first_sequence',
         'last_sequence',
     )
