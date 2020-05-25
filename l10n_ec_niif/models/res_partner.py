@@ -65,16 +65,16 @@ class ResPartner(models.Model):
         })
         return super(ResPartner, self).copy_data(default)
 
-    @api.constrains('vat')
-    def _check_duplicity(self):
-        for rec in self:
-            if rec.vat:
-                other_partner = self.search([
-                    ('vat', '=', rec.vat),
-                    ('id', '!=', rec.id),
-                                            ])
-                if len(other_partner) >= 1:
-                    raise Warning(_("The number %s must be unique as VAT") % rec.vat)
+    # @api.constrains('vat')
+    # def _check_duplicity(self):
+    #     for rec in self:
+    #         if rec.vat:
+    #             other_partner = self.search([
+    #                 ('vat', '=', rec.vat),
+    #                 ('id', '!=', rec.id),
+    #                                         ])
+    #             if len(other_partner) >= 1:
+    #                 raise Warning(_("The number %s must be unique as VAT") % rec.vat)
 
     def verify_final_consumer(self, vat):
         b = True
