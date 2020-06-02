@@ -35,7 +35,7 @@ class L10nECSriAuthorization(models.Model):
             ]
             nauthorization = self.search_count(domain)
             if nauthorization:
-                raise ValidationError(
+                raise UserError(
                     _('You can not set 2 authorization that overlaps on the same day.'))
 
     def _compute_count_invoice(self):
