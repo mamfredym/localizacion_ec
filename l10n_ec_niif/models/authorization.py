@@ -3,7 +3,7 @@
 from odoo import models, api, fields
 import odoo.addons.decimal_precision as dp
 from odoo.tools.translate import _
-from odoo.exceptions import Warning, RedirectWarning, ValidationError
+from odoo.exceptions import UserError, Warning, RedirectWarning, ValidationError
 from ..models import modules_mapping
 
 
@@ -22,8 +22,38 @@ class L10nECSriAuthorization(models.Model):
     expiration_date = fields.Date('Expiration Date', required=True)
     line_ids = fields.One2many(comodel_name="l10n_ec.sri.authorization.line",
                                inverse_name="authorization_id", string="Document Types", required=False, )
+    count_invoice = fields.Integer(string='Count Invoice',compute='_compute_count_invoice')
 
-    _sql_constraints = [('number_uniq', 'unique(company_id, number)', _('SRI Authorization must be unique by company'))]
+    @api.constrains('start_date', 'expiration_date',)
+    def _check_date(self):
+        for authorization in self.filtered('company_id'):
+            domain = [
+                ('start_date', '<', authorization.expiration_date),
+                ('expiration_date', '>', authorization.start_date),
+                ('company_id', '=', authorization.company_id.id),
+                ('id', '!=', authorization.id),
+            ]
+            nauthorization = self.search_count(domain)
+            if nauthorization:
+                raise ValidationError(
+                    _('You can not set 2 authorization that overlaps on the same day.'))
+
+    def _compute_count_invoice(self):
+        count = self.env['account.move']
+        search = count.search_count([('l10n_ec_authorization_id', 'in', [a.id for a in self])])
+        self.count_invoice = search
+
+    def unlink(self):
+        # Check authorization is empty
+        for authorization in self.with_context(active_test=False):
+            if authorization.count_invoice > 0:
+                raise UserError(_('You cannot delete an authorization that contains an invoice. You can only archive the authorization.'))
+        # Delete the empty agency
+        result = super(L10nECSriAuthorization, self).unlink()
+        return result
+
+    _sql_constraints = [('number_uniq', 'unique(company_id, number)', _('SRI Authorization must be unique by company')),
+                        ('date_check2', "CHECK ((start_date <= expiration_date))", "The start date must be anterior to the expiration date.")]
 
 
 L10nECSriAuthorization()
@@ -71,6 +101,8 @@ class L10nECSriAuthorizationLine(models.Model):
     agency_id = fields.Many2one(comodel_name="l10n_ec.agency",
                                 string="Agency", related='point_of_emission_id.agency_id', store=True)
     padding = fields.Integer('Padding', default=9)
+    count_invoice = fields.Integer(string='Count Invoice', related='authorization_id.count_invoice')
+    active = fields.Boolean(string="Active?", related='authorization_id.active', default=True)
 
     @api.constrains(
         'first_sequence',

@@ -135,6 +135,24 @@
             </field>
         </record>
 
+        <record id="account_invoice_select" model="ir.ui.view">
+            <field name="name">account.invoice.select</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="l10n_ec_point_of_emission_id"/>
+                    <field name="l10n_ec_agency_id"/>
+                    <field name="l10n_ec_authorization_id"/>
+                </xpath>
+                <xpath expr="//filter[@name='salesperson']" position="after">
+                    <filter name="l10n_ec_point_of_emission_id" string="Point of emission" context="{'group_by':'l10n_ec_point_of_emission_id'}"/>
+                    <filter name="l10n_ec_agency_id" string="Agency" context="{'group_by':'l10n_ec_agency_id'}"/>
+                    <filter name="l10n_ec_authorization_id" string="Authorization" context="{'group_by':'l10n_ec_authorization_id'}"/>
+                </xpath>
+            </field>
+        </record>
+
         <menuitem
                 id="menu_action_move_debit_note_out_type"
                 action="action_move_debit_note_out_type"

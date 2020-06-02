@@ -1,4 +1,5 @@
 from . import models
+from . import tests
 
 from odoo import api, SUPERUSER_ID
 from odoo.addons import account

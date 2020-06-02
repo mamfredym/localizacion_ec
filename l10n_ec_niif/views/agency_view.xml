@@ -12,6 +12,7 @@
                     <field name="number"/>
                     <field name="address_id"/>
                     <field name="printer_point_ids" widget="many2many_tags" />
+                    <field name="active" widget="boolean_toggle"/>
                 </tree>
             </field>
         </record>
@@ -26,10 +27,11 @@
                         <group>
                             <field name="active" invisible="1"/>
                             <field name="company_id" groups="base.group_multi_company"/>
-                            <field name="name"/>
-                            <field name="number"/>
+                            <field name="name" attrs="{'readonly': [('count_invoice', '>', '0')]}"/>
+                            <field name="number" attrs="{'readonly': [('count_invoice', '>', '0')]}"/>
                             <field name="address_id" domain="[('parent_id', '=', partner_id)]"
                                    context="{'default_parent_id': partner_id, 'default_type': 'invoice', 'form_view_ref': 'base.view_partner_short_form'}"/>
+                            <field name="count_invoice" invisible="1"/>
                             <field name="partner_id" invisible="1"/>
                         </group>
                         <notebook colspan="4">
@@ -43,10 +45,11 @@
                                     </tree>
                                     <form string="Point of Emission">
                                         <group>
-                                            <field name="name" />
-                                            <field name="number" />
+                                            <field name="name" attrs="{'readonly': [('count_invoice', '>', '0')]}"/>
+                                            <field name="number" attrs="{'readonly': [('count_invoice', '>', '0')]}"/>
                                             <field name="active" />
-                                            <field name="type_emission" />
+                                            <field name="type_emission" attrs="{'readonly': [('count_invoice', '>', '0')]}"/>
+                                            <field name="count_invoice" invisible="1"/>
                                         </group>
                                         <field name="sequence_ids" nolabel="1" colspan="1" attrs="{'invisible': [('type_emission', '!=', 'electronic')]}">
                                             <tree editable="bottom">

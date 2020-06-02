@@ -3,7 +3,7 @@
 from odoo import models, api, fields
 import odoo.addons.decimal_precision as dp
 from odoo.tools.translate import _
-from odoo.exceptions import Warning, RedirectWarning, ValidationError
+from odoo.exceptions import UserError, Warning, RedirectWarning, ValidationError
 from ..models import modules_mapping
 
 
@@ -13,6 +13,7 @@ class L10nEcAgency(models.Model):
     _description = 'Agencia'
 
     name = fields.Char('Agency Name', required=True, readonly=False, index=True)
+    count_invoice = fields.Integer(string='Count Invoice',compute='_compute_count_invoice')
     number = fields.Char(string='S.R.I. Number', size=3, required=True, readonly=False, index=True)
     printer_point_ids = fields.One2many('l10n_ec.point.of.emission', 'agency_id', 'Points of Emission')
     user_ids = fields.Many2many('res.users', string='Allowed Users', help="", domain=[('share', '=', False)])
@@ -22,6 +23,20 @@ class L10nEcAgency(models.Model):
     partner_id = fields.Many2one('res.partner', string="Company's Partner",
                                  related="company_id.partner_id")
     active = fields.Boolean(string="Active?", default=True)
+
+    def _compute_count_invoice(self):
+        count = self.env['account.move']
+        search = count.search_count([('l10n_ec_agency_id', 'in', [a.id for a in self])])
+        self.count_invoice = search
+
+    def unlink(self):
+        # Check agency is empty
+        for agency in self.with_context(active_test=False):
+            if agency.count_invoice > 0:
+                raise UserError(_('You cannot delete an agency that contains an invoice. You can only archive the agency.'))
+        # Delete the empty agency
+        result = super(L10nEcAgency, self).unlink()
+        return result
 
     @api.constrains('number')
     def _check_number(self):
@@ -50,7 +65,8 @@ class L10EcPointOfEmission(models.Model):
     agency_id = fields.Many2one('l10n_ec.agency', 'Agency', required=False, index=True, auto_join=True)
     company_id = fields.Many2one(comodel_name="res.company", string="Company", related="agency_id.company_id")
     number = fields.Char('S.R.I. Number', size=3, required=True, readonly=False, index=True)
-    active = fields.Boolean(string="Active?", default=True)
+    active = fields.Boolean(string="Active?", related='agency_id.active', default=True)
+    count_invoice = fields.Integer(string='Count Invoice', related='agency_id.count_invoice')
     type_emission = fields.Selection(string="Type Emission",
                                      selection=[
                                          ('electronic', 'Electronic'),
@@ -60,6 +76,7 @@ class L10EcPointOfEmission(models.Model):
                                      required=True, default='electronic')
     sequence_ids = fields.One2many(comodel_name="l10n_ec.point.of.emission.document.sequence",
                                    inverse_name="printer_id", string="Initial Sequences", required=False, )
+
 
     @api.model
     def default_get(self, fields):
