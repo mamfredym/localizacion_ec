@@ -43,6 +43,13 @@ class TestModule(common.TransactionCase):
             'active': True,
         })
 
+        self.test_auth1 = self.test_obj3.create({
+            'number': 'AUTH001',
+            'start_date': '2020-9-1',
+            'expiration_date': '2020-9-20',
+            'active': True,
+        })
+
         self.test_obj4 = self.env['l10n_ec.sri.authorization.line']
         self.test_doc1 = self.test_obj4.create({
             'document_type': 'invoice',
@@ -108,7 +115,7 @@ class TestModule(common.TransactionCase):
 
     def test_duplicate_or_cross_date_ranges(self):
         with self.assertRaises(UserError):
-            self.test_auth1.write({
+            self.test_auth2.write({
                 'start_date': '2020-8-1',
                 'expiration_date': '2020-8-20',
             })
