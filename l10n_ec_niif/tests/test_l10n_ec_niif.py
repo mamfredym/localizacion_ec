@@ -108,10 +108,7 @@ class TestModule(common.TransactionCase):
 
     def test_duplicate_or_cross_date_ranges(self):
         with self.assertRaises(UserError):
-            self.test_obj3.create({
-                'number': 'AUTH003',
+            self.test_auth1.write({
                 'start_date': '2020-8-1',
                 'expiration_date': '2020-8-20',
             })
-
-
