@@ -43,8 +43,8 @@ class TestModule(common.TransactionCase):
             'active': True,
         })
 
-        self.test_auth1 = self.test_obj3.create({
-            'number': 'AUTH001',
+        self.test_auth2 = self.test_obj3.create({
+            'number': 'AUTH002',
             'start_date': '2020-9-1',
             'expiration_date': '2020-9-20',
             'active': True,
