@@ -50,6 +50,7 @@ Accounting chart and localization for Ecuador.
              ],
     'demo': [
         'demo/agency_data.xml',
+        'demo/partner_data.xml',
     ],
     'installable': True,
     'auto_install': False,

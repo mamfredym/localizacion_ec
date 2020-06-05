@@ -104,7 +104,7 @@ class AccountMove(models.Model):
         tax_support_model = self.env['l10n_ec.tax.support']
         for move in self:
             if move.company_id.country_id.code == 'EC':
-                supports = tax_support_model.browse()
+                supports = tax_support_model.sudo()
                 if move.partner_id.l10n_ec_type_sri:
                     if move.type in ('in_invoice', 'in_refund'):
                         if move.partner_id.l10n_ec_type_sri == 'Ruc':
@@ -160,17 +160,14 @@ class AccountMove(models.Model):
                             ('document_type_ids', 'in', move.l10n_latam_document_type_id.ids)
                         ])
                 else:
-                    move.write({
-                        'l10n_latam_available_document_type_ids': []
-                    })
+                    move.l10n_latam_available_document_type_ids = []
                 if supports:
-                    move.write({
-                        'l10n_ec_tax_support_domain_ids': [(6, 0, supports.ids)]
-                    })
+                    move.l10n_ec_tax_support_domain_ids = supports.ids
                 else:
-                    move.write({
-                        'l10n_ec_tax_support_domain_ids': []
-                    })
+                    move.l10n_ec_tax_support_domain_ids = []
+            else:
+                move.l10n_latam_available_document_type_ids = []
+                move.l10n_ec_tax_support_domain_ids = []
 
     l10n_ec_identification_type_id = fields.Many2one('l10n_ec.identification.type',
                                                      string="Ecuadorian Identification Type",
