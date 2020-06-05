@@ -14,7 +14,7 @@ class L10nECSriAuthorization(models.Model):
     _rec_name = 'number'
 
     company_id = fields.Many2one('res.company', 'Company', required=True, help="",
-                                 default=lambda self: self.env.user.company_id.id)
+                                 default=lambda self: self.env.company)
     active = fields.Boolean(string="Active?", default=True)
     number = fields.Char('Authorization Number',
                          size=10, required=True, index=True)

@@ -18,7 +18,7 @@ class L10nEcWithhold(models.Model):
         'Company',
         required=True,
         ondelete="restrict",
-        default=lambda self: self.env.user.company_id.id)
+        default=lambda self: self.env.company)
     currency_id = fields.Many2one(
         'res.currency',
         string='Currency',

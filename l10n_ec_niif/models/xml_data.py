@@ -239,7 +239,7 @@ class sri_xml_data(models.Model):
         'delivery_note_id',
                  )
     def _get_company_id(self):
-        company_id = self.env.user.company_id.id
+        company_id = self.env.company
         if self.invoice_out_id and self.invoice_out_id.company_id: company_id = self.invoice_out_id.company_id.id 
         if self.credit_note_out_id and self.credit_note_out_id.company_id: company_id = self.credit_note_out_id.company_id.id 
         if self.debit_note_out_id and self.debit_note_out_id.company_id: company_id = self.debit_note_out_id.company_id.id 

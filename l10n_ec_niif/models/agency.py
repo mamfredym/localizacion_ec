@@ -19,7 +19,7 @@ class L10nEcAgency(models.Model):
     user_ids = fields.Many2many('res.users', string='Allowed Users', help="", domain=[('share', '=', False)])
     address_id = fields.Many2one('res.partner', 'Address', required=False, help="", )
     company_id = fields.Many2one('res.company', 'Company', required=False, help="",
-                                 default=lambda self: self.env.user.company_id.id)
+                                 default=lambda self: self.env.company)
     partner_id = fields.Many2one('res.partner', string="Company's Partner",
                                  related="company_id.partner_id")
     active = fields.Boolean(string="Active?", default=True)

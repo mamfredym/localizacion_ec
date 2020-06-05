@@ -57,7 +57,7 @@
                                                 <field name="point_of_emission_id" attrs="{'readonly': [('count_invoice', '>', '0')]}"/>
                                                 <field name="agency_id" />
                                                 <field name="count_invoice" invisible="1"/>
-                                                <field name="active" />
+                                                <field name="active" widget="boolean_toggle"/>
                                             </group>
                                         </sheet>
                                     </form>
