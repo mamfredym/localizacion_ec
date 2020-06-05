@@ -47,7 +47,9 @@ Accounting chart and localization for Ecuador.
         'views/withhold_view.xml',
         'views/res_config_view.xml',
              ],
-    'demo': [''],
+    'demo': [
+        'demo/agency_data.xml',
+    ],
     'installable': True,
     'auto_install': False,
     'external_dependencies': {
