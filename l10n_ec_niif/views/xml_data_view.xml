@@ -99,8 +99,8 @@
 										context="{'form_view_ref':'ecua_retenciones_manual.view_account_retention_purchase_form'}"
 										options="{'no_create': True}" />
 									<field name="delivery_note_id" colspan="4"
-										domain="[('remision_type','=','sales'),('state','=','done')]"
-										context="{'form_view_ref':'ecua_remision.view_account_remision_form'}"
+										domain="[('delivery_note_type','=','sales'),('state','=','done')]"
+										context="{'form_view_ref':'l10n_ec_delivery_note.view_delivery_note_form'}"
 										options="{'no_create': True}" />
 								</group>
 							</page>

@@ -39,7 +39,7 @@ DOCUMENT_MODELS = {
                  'out_invoice': 'account.move',
                  'out_refund': 'account.move',
                  'debit_note_out': 'account.move',
-                 'delivery_note': 'account.remision',
+                 'delivery_note': 'l10n_ec.delivery.note',
                  'withhold_purchase': 'l10n_ec.withhold',
                  }
 
@@ -171,7 +171,7 @@ class sri_xml_data(models.Model):
     credit_note_out_id = fields.Many2one('account.move', u'Nota de Crédito', required=False, index=True, auto_join=True, help=u"",)
     debit_note_out_id = fields.Many2one('account.move', u'Nota de Débito', required=False, index=True, auto_join=True, help=u"",)
     withhold_id = fields.Many2one('l10n_ec.withhold', u'Retención', required=False, index=True, auto_join=True, help=u"",)
-    delivery_note_id = fields.Many2one('account.remision', u'Guia de Remision', required=False, index=True, auto_join=True, help=u"",)
+    delivery_note_id = fields.Many2one('l10n_ec.delivery.note', u'Guia de Remision', required=False, index=True, auto_join=True, help=u"",)
     partner_id = fields.Many2one('res.partner', u'Cliente', required=False, index=True, auto_join=True, help=u"",)
     create_uid = fields.Many2one('res.users', u'Creado por', readonly=True, help=u"",)
     create_date = fields.Datetime(u'Fecha de Creación', readonly=True, help=u"",)
@@ -258,7 +258,7 @@ class sri_xml_data(models.Model):
         'delivery_note_id',
                  )
     def _get_ws_type_conection(self):
-        printer_model = self.env['sri.printer.point']
+        printer_model = self.env['l10n_ec.point.of.emission']
         printer_id = False
         if self.invoice_out_id and self.invoice_out_id.printer_id: printer_id = self.invoice_out_id.printer_id.id 
         if self.credit_note_out_id and self.credit_note_out_id.printer_id: printer_id = self.credit_note_out_id.printer_id.id 
@@ -269,8 +269,8 @@ class sri_xml_data(models.Model):
             printer = printer_model.browse(printer_id)
             if printer.ws_type_conection:
                 self.ws_type_conection = printer.ws_type_conection
-            elif printer.shop_id and printer.shop_id.ws_type_conection:
-                self.ws_type_conection = printer.shop_id.ws_type_conection
+            elif printer.agency_id and printer.agency_id.ws_type_conection:
+                self.ws_type_conection = printer.agency_id.ws_type_conection
             elif self.env.user.company_id.ws_type_conection:
                 self.ws_type_conection = self.env.user.company_id.ws_type_conection
         elif self.env.user.company_id.ws_type_conection:
@@ -298,9 +298,9 @@ class sri_xml_data(models.Model):
         if self.withhold_id and self.withhold_id.printer_id: printer_id = self.withhold_id.printer_id.id 
         if self.delivery_note_id and self.delivery_note_id.printer_id: printer_id = self.delivery_note_id.printer_id.id 
         self.printer_id = printer_id
-    printer_id = fields.Many2one('sri.printer.point', string=u'Punto de Emisión', 
+    printer_id = fields.Many2one('l10n_ec.point.of.emission', string=u'Punto de Emisión',
                                  store=True, compute='_get_printer_id', help=u"")
-    shop_id = fields.Many2one('sale.shop', string=u'Agencia', related="printer_id.shop_id", store=True) 
+    shop_id = fields.Many2one('l10n_ec.agency', string=u'Agencia', related="printer_id.agency_id", store=True)
 
     @api.model
     def get_current_wsClient(self, conection_type):
@@ -546,7 +546,7 @@ class sri_xml_data(models.Model):
 
         """
         key_model = self.env['sri.keys']
-        printer_model = self.env['sri.printer.point']
+        printer_model = self.env['l10n_ec.point.of.emission']
         printer = printer_model.browse(printer_id)
         infoTributaria = SubElement(node,"infoTributaria")
         SubElement(infoTributaria,"ambiente").text = environment
@@ -577,7 +577,7 @@ class sri_xml_data(models.Model):
         SubElement(infoTributaria,"ptoEmi").text = printer.number
         SubElement(infoTributaria,"secuencial").text = key_model.fill_padding(sequence, 9)
         #Debe ser la direccion matriz
-        company_address = company.partner_id and company.partner_id.street or printer.shop_id.address_id.street 
+        company_address = company.partner_id and company.partner_id.street or printer.shop_id.address_id.street
         SubElement(infoTributaria,"dirMatriz").text = self._clean_str(company_address or '')
         return key_id, clave_acceso, node
     
@@ -1700,7 +1700,7 @@ class sri_xml_data(models.Model):
                 res_model_name = 'l10n_ec.withhold'
             elif xml_rec.delivery_note_id:
                 document = xml_rec.delivery_note_id
-                res_model_name = 'account.remision'
+                res_model_name = 'l10n_ec.delivery.note'
             if document and res_model_name:
                 ctx_invoice['active_ids'] = [document.ids]
                 ctx_invoice['active_id'] = document.id
@@ -2026,7 +2026,7 @@ class sri_xml_data(models.Model):
                     file_name = 'Retencion_%s' % xml_data.withhold_id.document_number
                 elif xml_data.delivery_note_id:
                     res_id = xml_data.delivery_note_id.id
-                    model = 'account.remision'
+                    model = 'l10n_ec.delivery.note'
                     report_name = 'e_delivery_note'
                     file_name = 'GuiaRemision_%s' % xml_data.delivery_note_id.document_number
                 if res_id and model and report_name:

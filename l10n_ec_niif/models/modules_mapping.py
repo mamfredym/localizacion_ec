@@ -189,7 +189,7 @@ def get_model_name(document_type):
                   'debit_note': 'account.move',
                   'liquidation': 'account.move',
                   'withholding': 'l10n_ec.withhold',
-                  'delivery_note': 'account.remision',
+                  'delivery_note': 'l10n_ec.delivery.note',
                   'invoice_reembolso': 'account.invoice.reembolso'
                   }
     return model_name.get(document_type, '')
@@ -205,7 +205,7 @@ def get_field_name(document_type):
                   'debit_note': 'l10n_ec_document_number',
                   'liquidation': 'l10n_ec_document_number',
                   'withholding': 'number',
-                  'delivery_note': 'number',
+                  'delivery_note': 'document_number',
                   'invoice_reembolso': 'number',
                   }
     return field_name.get(document_type, '')
