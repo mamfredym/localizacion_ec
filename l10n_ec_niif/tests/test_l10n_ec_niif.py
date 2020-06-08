@@ -58,6 +58,13 @@ class TestModule(common.TransactionCase):
             'last_sequence': '100',
             'point_of_emission_id': self.test_pofe1.id,
         })
+        self.test_doc2 = self.test_obj4.create({
+            'document_type': 'invoice',
+            'authorization_id': self.test_auth2.id,
+            'first_sequence': '101',
+            'last_sequence': '200',
+            'point_of_emission_id': self.test_pofe2.id,
+        })
 
         self.test_obj5 = self.env['account.move']
         self.test_invoice1 = self.test_obj5.create({
@@ -118,4 +125,17 @@ class TestModule(common.TransactionCase):
             self.test_auth2.write({
                 'start_date': '2020-8-1',
                 'expiration_date': '2020-8-20',
+            })
+
+    def test_invoice_date_range_outside(self):
+        with self.assertRaises(UserError):
+            self.test_invoice1.write({
+                'invoice_date': '2020-9-1',
+            })
+
+    def test_sequence_duplicated(self):
+        with self.assertRaises(UserError):
+            self.test_doc2.write({
+                'first_sequence': '1',
+                'last_sequence': '100',
             })

@@ -669,6 +669,19 @@ class AccountMove(models.Model):
                                  default_invoice_id = self.id)
         return action
 
+    l10n_ec_start_date = fields.Date('Start Date', related='l10n_ec_authorization_id.start_date')
+    l10n_ec_expiration_date = fields.Date('Expiration Date', related='l10n_ec_authorization_id.expiration_date')
+
+    @api.constrains('l10n_ec_start_date', 'l10n_ec_expiration_date','invoice_date')
+    def _check_outside(self):
+        if any(outside_start for outside_start in self
+            if outside_start.invoice_date and outside_start.l10n_ec_start_date
+            and outside_start.invoice_date < outside_start.l10n_ec_start_date):
+            raise UserError(_('Invoice date outside defined date range'))
+        if any(outside_expiration for outside_expiration in self
+            if outside_expiration.invoice_date and outside_expiration.l10n_ec_expiration_date
+            and outside_expiration.invoice_date > outside_expiration.l10n_ec_expiration_date):
+            raise UserError(_('Invoice date outside defined date range2'))
 
 AccountMove()
 

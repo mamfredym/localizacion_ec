@@ -40,6 +40,8 @@
                                attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund'))],
                                'readonly': [('state', '!=', 'draft')]}" force_save="1"/>
                         <field name="l10n_ec_identification_type_id" />
+                        <field name="l10n_ec_start_date" invisible="1"/>
+                        <field name="l10n_ec_expiration_date" invisible="1"/>
                         <field name="l10n_ec_tax_support_domain_ids" widget="many2many_tags" invisible="True"/>
                         <field name="l10n_ec_tax_support_id" options="{'no_create': True}" domain="[('id', 'in', l10n_ec_tax_support_domain_ids)]"
                                attrs="{'invisible': [('type', 'not in', ('in_invoice', 'in_refund'))]}"/>
