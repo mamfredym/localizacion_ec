@@ -110,8 +110,23 @@ class L10EcPointOfEmission(models.Model):
 
     def create_number(self, number):
         self.ensure_one()
-        result = self.agency_id.number + '-' + self.number + '-' + self.fill_padding(number, 9)
-        return result
+        return f"{self.agency_id.number}-{self.number}-{self.fill_padding(number, 9)}"
+
+    def complete_number(self, number):
+        self.ensure_one()
+        document_format = number
+        if number:
+            aux = number.split('-')
+            seq = ""
+            try:
+                if len(aux) == 3:
+                    seq = int(aux[2])
+                elif len(aux) == 1:
+                    seq = int(number)
+                document_format = self.create_number(seq)
+            except Exception as e:
+                pass
+        return document_format
 
     def _get_first_number_electronic(self, invoice_type):
         self.ensure_one()
@@ -122,7 +137,65 @@ class L10EcPointOfEmission(models.Model):
                 break
         return first_number_electronic
 
+    def get_authorization_for_number(self, invoice_type, document_number, emission_date=None, company=None):
+        '''
+        Search a authorization for document type and document_number requested
+        :param invoice_type: Options available are:
+                out_invoice, in_invoice, out_refund, in_refund, debit_note_in, debit_note_out
+                liquidation, invoice_reembolso, withhold_sale, withhold_purchase, delivery_note
+        :param document_number: Number to find authorization
+        :param emission_date, Optional: Date emission of document
+        :param company, Optional: Company for current document
+        :return: browse_record(l10n_ec.sri.authorization.line)
+        '''
+        self.ensure_one()
+        auth_line_model = self.env['l10n_ec.sri.authorization.line']
+        if company is None:
+            company = self.env.company
+        if not emission_date:
+            emission_date = fields.Date.context_today(self)
+        document_type = modules_mapping.get_document_type(invoice_type)
+        model_description = modules_mapping.get_document_name(document_type)
+        doc_find = auth_line_model.browse()
+        number = False
+        is_number_valid = True
+        try:
+            number_shop, number_printer, number = document_number.split('-')
+            number = int(number)
+            if self.agency_id.number != number_shop:
+                is_number_valid = False
+            if self.number != number_printer:
+                is_number_valid = False
+        except Exception as e:
+            is_number_valid = False
+        if is_number_valid and number:
+            doc_find = auth_line_model.search([
+                ('document_type', '=', document_type),
+                ('point_of_emission_id', '=', self.id),
+                ('first_sequence', '<=', number),
+                ('last_sequence', '>=', number),
+                ('authorization_id.company_id', '=', company.id),
+                ('authorization_id.start_date', '<=', emission_date),
+                ('authorization_id.expiration_date', '>=', emission_date),
+            ], order="first_sequence", limit=1)
+        if self.type_emission in ('pre_printed', 'auto_printer'):
+            if not doc_find:
+                raise Warning(_(
+                    "It is not possible to find authorization for the document type %s "
+                    "at the point of issue %s for the agency %s with date %s") %
+                              (model_description, self.number, self.agency_id.number, emission_date))
+        return doc_find
+
     def get_next_value_sequence(self, invoice_type, date, raise_exception=False):
+        '''
+        Search and return next number available for document type requested
+        :param invoice_type: Options available are:
+                out_invoice, in_invoice, out_refund, in_refund, debit_note_in, debit_note_out
+                liquidation, invoice_reembolso, withhold_sale, withhold_purchase, delivery_note
+        :param date: Date emission of document
+        :param raise_exception: If True, and not documents are find raise exception
+        :return: tuple(str, browse_record(l10n_ec.sri.authorization.line))
+        '''
         self.ensure_one()
         auth_line_model = self.env['l10n_ec.sri.authorization.line']
         if not date:
