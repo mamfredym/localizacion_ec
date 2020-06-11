@@ -34,6 +34,9 @@ Accounting chart and localization for Ecuador.
         'data/tax_support_data.xml',
         'data/l10n_ec_chart_post_data.xml',
         'data/bank_data.xml',
+        'report/report_withholds_pre_printed.xml',
+        'report/report_withholds_auto_printer.xml',
+        'report/report_withholds.xml',
         'views/sri_menu.xml',
         'views/res_partner_view.xml',
         'views/tax_support_view.xml',
@@ -47,6 +50,7 @@ Accounting chart and localization for Ecuador.
         'views/account_journal_view.xml',
         'views/withhold_view.xml',
         'views/res_config_view.xml',
+        'views/assets.xml',
              ],
     'demo': [
         'demo/agency_data.xml',

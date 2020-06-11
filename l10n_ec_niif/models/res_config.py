@@ -28,3 +28,9 @@ class ResConfigSettings(models.TransientModel):
         string='Withhold Sales Rent Account',
         related="company_id.l10n_ec_withhold_sale_rent_account_id",
         readonly=False)
+
+    l10n_ec_withhold_journal_id = fields.Many2one(
+        comodel_name='account.journal',
+        string='Withhold Journal',
+        related="company_id.l10n_ec_withhold_journal_id",
+        readonly=False)

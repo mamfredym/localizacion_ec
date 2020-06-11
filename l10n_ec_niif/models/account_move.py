@@ -623,6 +623,11 @@ class AccountMove(models.Model):
         compute="_compute_l10n_ec_amounts",
         store=True)
 
+    l10n_ec_withhold_id = fields.Many2one(
+        comodel_name="l10n_ec.withhold",
+        string="Withhold",
+        required=False)
+
     l10n_ec_withhold_line_ids = fields.One2many(
         comodel_name='l10n_ec.withhold.line',
         inverse_name='invoice_id',
@@ -637,7 +642,7 @@ class AccountMove(models.Model):
     l10n_ec_withhold_count = fields.Integer(
         string='Withhold Count',
         compute='_get_l10n_ec_withhold_ids',
-        store=True
+        store=False
     )
 
     @api.depends(
@@ -646,6 +651,8 @@ class AccountMove(models.Model):
     def _get_l10n_ec_withhold_ids(self):
         for rec in self:
             l10n_ec_withhold_ids = rec.l10n_ec_withhold_line_ids.mapped('withhold_id').ids
+            if not l10n_ec_withhold_ids:
+                l10n_ec_withhold_ids = rec.l10n_ec_withhold_ids.search([('invoice_id', '=', rec.id)]).ids
             rec.l10n_ec_withhold_ids = l10n_ec_withhold_ids
             rec.l10n_ec_withhold_count = len(l10n_ec_withhold_ids)
 
@@ -667,6 +674,22 @@ class AccountMove(models.Model):
         action['context'] = dict(self._context,
                                  default_partner_id=self.partner_id.id,
                                  default_invoice_id = self.id)
+        return action
+
+    def create_withhold_customer(self):
+        self.ensure_one()
+        action = self.env.ref('l10n_ec_niif.l10n_ec_withhold_sales_act_window').read()[0]
+        action['views'] = [(self.env.ref('l10n_ec_niif.l10n_ec_withhold_form_view').id, 'form')]
+        ctx = eval(action['context'])
+        ctx.update({
+            'default_partner_id': self.partner_id.id,
+            'default_invoice_id': self.id,
+            'default_type': 'sale',
+            'default_issue_date': self.invoice_date,
+            'default_document_type': self.l10n_ec_type_emission,
+            'default_l10n_ec_is_create_from_invoice': True,
+        })
+        action['context'] = ctx
         return action
 
     l10n_ec_start_date = fields.Date('Start Date', related='l10n_ec_authorization_id.start_date')

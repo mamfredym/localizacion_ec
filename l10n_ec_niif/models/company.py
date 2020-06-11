@@ -33,3 +33,8 @@ class ResCompany(models.Model):
         comodel_name='account.account',
         string='Withhold Sales Rent Account',
         required=False)
+
+    l10n_ec_withhold_journal_id = fields.Many2one(
+        comodel_name='account.journal',
+        string='Withhold Journal',
+        required=False)

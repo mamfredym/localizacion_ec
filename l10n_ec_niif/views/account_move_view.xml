@@ -96,8 +96,12 @@
                             class="oe_stat_button"
                             icon="fa-file-text-o"
                             string="Withholds"
-                            attrs="{'invisible':['|', ('l10n_ec_withhold_count', '=', 0), ('type', '!=', 'in_invoice')]}">
+                            attrs="{'invisible':['|', ('l10n_ec_withhold_count', '=', 0)]}">
                     </button>
+                    <button type="object" name="create_withhold_customer" string="Add Withhold"
+                            class="oe_stat_button"
+                            icon="fa-pencil-square-o"
+                            attrs="{'invisible': ['|', '|', ('l10n_ec_withhold_count', '!=', 0), ('type', '!=', 'out_invoice'), ('state', '!=', 'posted')]}"/>
                 </div>
             </field>
         </record>

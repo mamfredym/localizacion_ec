@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import fields, models, api, _
+from odoo.exceptions import AccessError, UserError
+import re
 
 _STATES = {'draft': [('readonly', False)]}
 
@@ -28,7 +30,8 @@ class L10nEcWithhold(models.Model):
         string='Number',
         required=True,
         readonly=True,
-        states=_STATES)
+        states=_STATES,
+        tracking=True)
     state = fields.Selection(
         string='State',
         selection=[
@@ -38,38 +41,44 @@ class L10nEcWithhold(models.Model):
         ],
         required=True,
         readonly=True,
-        default='draft')
+        default='draft',
+        tracking=True)
     issue_date = fields.Date(
         string='Issue date',
         readonly=True,
         states=_STATES,
-        required=True)
+        required=True,
+        tracking=True)
     partner_id = fields.Many2one(
         comodel_name='res.partner',
         string='Partner',
         readonly=True,
         ondelete="restrict",
         states=_STATES,
-        required=True)
+        required=True,
+        tracking=True)
     commercial_partner_id = fields.Many2one(
         comodel_name='res.partner',
         string='Commercial partner',
         readonly=True,
         ondelete="restrict",
         related="partner_id.commercial_partner_id",
-        store=True)
+        store=True,
+        tracking=True)
     invoice_id = fields.Many2one(
         comodel_name='account.move',
         string='Related Document',
         readonly=True,
         states=_STATES,
-        required=False)
+        required=False,
+        tracking=True)
     partner_authorization_id = fields.Many2one(
         comodel_name='l10n_ec.sri.authorization.supplier',
         string='Partner authorization',
         readonly=True,
         states=_STATES,
-        required=False)
+        required=False,
+        tracking=True)
     type = fields.Selection(
         string='Type',
         selection=[
@@ -88,13 +97,15 @@ class L10nEcWithhold(models.Model):
         required=True,
         readonly=True,
         states=_STATES,
-        default="electronic")
+        default="electronic",
+        tracking=True)
     electronic_authorization = fields.Char(
         string='Electronic authorization',
         size=49,
         readonly=True,
         states=_STATES,
-        required=False)
+        required=False,
+        tracking=True)
     point_of_emission_id = fields.Many2one(
         comodel_name="l10n_ec.point.of.emission",
         string="Point of Emission",
@@ -117,7 +128,8 @@ class L10nEcWithhold(models.Model):
         string='Concept',
         readonly=True,
         states=_STATES,
-        required=False)
+        required=False,
+        tracking=True)
     note = fields.Char(
         string='Note', 
         required=False)
@@ -153,11 +165,161 @@ class L10nEcWithhold(models.Model):
         compute="_get_tax_amount",
         store=True,
         readonly=True)
+    l10n_ec_related_document = fields.Boolean(
+        string="Have related document?",
+        compute="is_related_document")
+    l10n_ec_is_create_from_invoice = fields.Boolean(
+        string="Is created from invoice?")
+    move_ids = fields.One2many(
+        comodel_name="account.move",
+        inverse_name="l10n_ec_withhold_id",
+        string="Accounting entries",
+    )
+    move_count = fields.Integer(
+        string='Move Count',
+        compute='_get_l10n_ec_withhold_ids',
+        store=False
+    )
+
+    @api.depends('invoice_id')
+    def is_related_document(self):
+        for rec in self:
+            rec.l10n_ec_related_document = False
+            if rec.invoice_id:
+                rec.l10n_ec_related_document = True
+
+    def _format_withhold_document_number(self, document_number):
+        self.ensure_one()
+        if not document_number:
+            return False
+        if not re.match('\d{3}-\d{3}-\d{9}$', document_number):
+            raise UserError(_(u'Ecuadorian Document %s must be like 001-001-123456789') % (self.display_name))
+        return document_number
+
+    @api.constrains('invoice_id')
+    def _check_no_retention_same_invoice(self):
+        for rec in self:
+            l10n_ec_withhold_line_ids = rec.search([
+                ('invoice_id', '=', rec.invoice_id.id),
+                ('id', '!=', rec.id)])
+            if l10n_ec_withhold_line_ids:
+                raise UserError(_("Factura ya es registrada"))
+        return True
+
+    @api.onchange('number')
+    def _onchange_number_sale_withhold(self):
+        for rec in self:
+            if rec.number:
+                format_document_number = rec._format_withhold_document_number(rec.number)
+                if rec.number != format_document_number:
+                    rec.number = format_document_number
 
     def action_done(self):
+        model_move = self.env['account.move']
+        model_aml = self.env['account.move.line']
+
+        def _create_move_line(move_id, credit, debit, account_id, tax_code_id=None, tax_amount=0.0, name="/", partner_id=None):
+            vals_move_line = {
+                'move_id': move_id,
+                'account_id': account_id,
+                'tag_ids': tax_code_id,
+                'tax_base_amount': tax_amount,
+                'debit': debit,
+                'credit': credit,
+                'name': name,
+                'partner_id': partner_id,
+                             }
+            return model_aml.with_context(check_move_validity=False).create(vals_move_line)
+        if self.type == 'sale':
+            destination_account_id = self.partner_id.property_account_receivable_id
+            if not self.line_ids:
+                raise UserError(_(u'You must have at least one line to continue'))
+            vals_move = {
+                'ref': _(u'RET CLI: %s') % self.number,
+                'date': self.issue_date,
+                'company_id': self.company_id.id,
+                'state': 'draft',
+                'journal_id': self.company_id.l10n_ec_withhold_journal_id.id,
+                'type': 'entry',
+                'l10n_ec_withhold_id': self.id,
+            }
+            move_rec = model_move.create(vals_move)
+            total_detained_iva = 0.0
+            total_detained_rent = 0.0
+            invoices = self.invoice_id
+            for line in self.line_ids:
+                if not invoices:
+                    invoices |= line.invoice_id
+                if line.type == 'iva':
+                    total_detained_iva += line.tax_amount
+                elif line.type == 'rent':
+                    total_detained_rent += line.tax_amount
+            if total_detained_iva > 0:
+                _create_move_line(
+                    move_rec.id,
+                    0.0,
+                    total_detained_iva,
+                    self.company_id.l10n_ec_withhold_sale_iva_account_id.id,
+                    self.company_id.l10n_ec_withhold_sale_iva_tag_id.ids,
+                    total_detained_iva,
+                    name=_(u'IVA RETENIDO RET. %s') % self.number,
+                )
+            if total_detained_rent > 0:
+                _create_move_line(
+                    move_rec.id,
+                    0.0,
+                    total_detained_rent,
+                    self.company_id.l10n_ec_withhold_sale_rent_account_id.id,
+                    name=_(u'I.R. RETENIDO RET. %s') % self.number,
+                )
+            move_line = model_aml.browse()
+            if invoices:
+                move_line = invoices.line_ids.filtered(lambda l: not l.reconciled and l.account_id == destination_account_id)
+            if not move_line:
+                raise UserError(_(u'There is no outstanding balance on this invoice'))
+            lines_to_reconcile = model_aml.browse()
+            lines_to_reconcile += move_line
+            lines_to_reconcile += _create_move_line(
+                move_rec.id,
+                total_detained_iva + total_detained_rent,
+                0.0,
+                destination_account_id.id,
+                name=_(u'CRUCE RET. %s con %s') % (self.number, self.invoice_id.display_name),
+                partner_id=self.partner_id.id,
+            )
+            lines_to_reconcile.reconcile()
         self.write({
             'state': 'done',
         })
+
+    @api.depends(
+        'move_ids',
+    )
+    def _get_l10n_ec_withhold_ids(self):
+        for rec in self:
+            rec.move_count = len(rec.move_ids)
+
+    def action_show_move(self):
+        self.ensure_one()
+        type = self.mapped('type')[0]
+        action = self.env.ref('account.action_move_journal_line').read()[0]
+
+        moves = self.mapped('move_ids')
+        if len(moves) > 1:
+            action['domain'] = [('id', 'in', moves.ids)]
+        elif moves:
+            action['views'] = [(self.env.ref('account.view_move_form').id, 'form')]
+            action['res_id'] = moves.id
+        action['context'] = dict(self._context,
+                                 default_partner_id=self.partner_id.id,
+                                 default_l10n_ec_withhold_id=self.id)
+        return action
+
+    def unlink(self):
+        for rec in self:
+            if rec.state != 'draft':
+                raise UserError(_("You cannot delete an approved hold"))
+        return super(L10nEcWithhold, self).unlink()
 
 
 class L10nEcWithholdLinePercent(models.Model):
@@ -274,7 +436,7 @@ class L10nEcWithholdLine(models.Model):
         string='Type',
         selection=[('iva', 'IVA'),
                    ('rent', 'Rent'), ],
-        required=False, )
+        required=True, )
     partner_currency_id = fields.Many2one(
         comodel_name='res.currency',
         string='Partner Currency',
@@ -332,4 +494,3 @@ class L10nEcWithholdLine(models.Model):
             self.base_amount_currency = self.partner_currency_id.compute(self.base_amount, self.currency_id)
             self.tax_amount = (self.percent_id.percent / 100.0) * self.base_amount
             self.tax_amount_currency = self.partner_currency_id.compute(self.tax_amount, self.currency_id)
-
