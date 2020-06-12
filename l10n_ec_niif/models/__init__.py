@@ -11,3 +11,4 @@ from . import account_move
 from . import account_journal
 from . import withhold
 from . import res_config
+from . import l10n_ec_utils
