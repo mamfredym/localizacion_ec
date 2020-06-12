@@ -182,8 +182,8 @@ class L10EcPointOfEmission(models.Model):
             if not doc_find:
                 raise Warning(_(
                     "It is not possible to find authorization for the document type %s "
-                    "at the point of issue %s for the agency %s with date %s") %
-                              (model_description, self.number, self.agency_id.number, emission_date))
+                    "at the point of emission %s for the agency %s with date %s on company: %s") %
+                              (model_description, self.number, self.agency_id.number, emission_date, company.name))
         return doc_find
 
     def get_next_value_sequence(self, invoice_type, date, raise_exception=False):

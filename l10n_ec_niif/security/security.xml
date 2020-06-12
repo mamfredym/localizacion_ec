@@ -8,6 +8,12 @@
             <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
         </record>
 
+        <record id="l10n_ec_point_emission_comp_rule" model="ir.rule">
+            <field name="name">Ecuadorian Point Emission Multi Company</field>
+            <field name="model_id" ref="model_l10n_ec_point_of_emission"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        </record>
+
         <record id="l10n_ec_sri_authorization_comp_rule" model="ir.rule">
             <field name="name">SRI Authorization Multi Company</field>
             <field name="model_id" ref="model_l10n_ec_sri_authorization"/>
