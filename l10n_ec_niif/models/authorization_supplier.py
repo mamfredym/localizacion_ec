@@ -7,6 +7,7 @@ from odoo.exceptions import Warning, RedirectWarning, ValidationError
 import re
 from ..models import modules_mapping
 
+
 class L10nECSriAuthorizationSupplier(models.Model):
 
     _name = 'l10n_ec.sri.authorization.supplier'
@@ -38,18 +39,21 @@ class L10nECSriAuthorizationSupplier(models.Model):
         cadena = '(\d{3})'
         for auth in self:
             if auth.agency and not re.match(cadena, auth.agency):
-                raise ValidationError(_("Invalid Number Format, this must be like 001"))
+                raise ValidationError(
+                    _("Invalid Number Format, this must be like 001"))
             if auth.printer_point and not re.match(cadena, auth.printer_point):
-                raise ValidationError(_("Invalid Number Format, this must be like 001"))
+                raise ValidationError(
+                    _("Invalid Number Format, this must be like 001"))
 
     @api.constrains(
         'number',
-                    )
+    )
     def _check_number(self):
         cadena = '(\d{10})'
         for auth in self:
             if auth.number and not re.match(cadena, auth.number):
-                raise ValidationError(_("Invalid Format Number, this must be like 0123456789"))
+                raise ValidationError(
+                    _("Invalid Format Number, this must be like 0123456789"))
 
     @api.constrains(
         'start_date',
@@ -60,7 +64,7 @@ class L10nECSriAuthorizationSupplier(models.Model):
             if auth.start_date >= auth.expiration_date:
                 raise ValidationError(_("The dates of authorization of supplier %s "
                                         "must be valid start: %s end: %s") % (auth.number,
-                                                                               auth.start_date, auth.expiration_date))
+                                                                              auth.start_date, auth.expiration_date))
 
     @api.constrains(
         'number',
@@ -114,7 +118,8 @@ class L10nECSriAuthorizationSupplier(models.Model):
     def _check_padding(self):
         for auth in self:
             if auth.padding < 0 or auth.padding > 9:
-                raise ValidationError(_("Padding number must be between 0 and 9"))
+                raise ValidationError(
+                    _("Padding number must be between 0 and 9"))
 
     def _check_document_in_use(self, vals):
         invoice_model = self.env['account.move']
@@ -152,11 +157,16 @@ class L10nECSriAuthorizationSupplier(models.Model):
 
     _rec_name = "number"
 
-    partner_id = fields.Many2one('res.partner', 'Partner', required=False, index=True, auto_join=True, help="", )
-    number = fields.Char('Number', size=10, required=True, readonly=False, index=True, help="", )
-    document_type = fields.Selection('_get_name', string='Document Type', required=True, help="", )
-    agency = fields.Char('Agency', size=3, required=True, readonly=False, help="", )
-    printer_point = fields.Char('Point of Emission', size=3, required=True, readonly=False, help="", )
+    partner_id = fields.Many2one(
+        'res.partner', 'Partner', required=False, index=True, auto_join=True, help="", )
+    number = fields.Char('Number', size=10, required=True,
+                         readonly=False, index=True, help="", )
+    document_type = fields.Selection(
+        '_get_name', string='Document Type', required=True, help="", )
+    agency = fields.Char('Agency', size=3, required=True,
+                         readonly=False, help="", )
+    printer_point = fields.Char(
+        'Point of Emission', size=3, required=True, readonly=False, help="", )
     start_date = fields.Date('Start Date', required=True, help="", )
     expiration_date = fields.Date('Expiration Date', required=True, help="", )
     first_sequence = fields.Integer('First Sequence', help="", )
@@ -167,16 +177,19 @@ class L10nECSriAuthorizationSupplier(models.Model):
     @api.model
     def check_number_document(self, invoice_type, number, authorization, date=None, res_id=None, foreign=False):
         if not invoice_type:
-            raise Warning(_('You must declare document type to check authorization'))
+            raise Warning(
+                _('You must declare document type to check authorization'))
         if not number:
-            raise Warning(_('You must declare document number to check authorization'))
+            raise Warning(
+                _('You must declare document number to check authorization'))
         if not authorization and not foreign and not self.env.context.get('from_refund'):
             raise Warning(_('You must declare authorization to check'))
         if foreign:
             return True
         number = number.split('-')
         if len(number) != 3:
-            raise Warning(_("Invalid Number, that must be like 001-001-0123456789"))
+            raise Warning(
+                _("Invalid Number, that must be like 001-001-0123456789"))
         num_shop, num_printer, num_doc = number
         try:
             num_doc = int(num_doc)
@@ -207,15 +220,17 @@ class L10nECSriAuthorizationSupplier(models.Model):
                         num_printer, authorization.printer_point))
             if num_doc < authorization.first_sequence or num_doc > authorization.last_sequence and not authorization.autoprinter:
                 raise Warning(_('The sequence number %s is not within the range %s and %s') % (
-                num_doc, authorization.first_sequence, authorization.last_sequence))
+                    num_doc, authorization.first_sequence, authorization.last_sequence))
         if number:
             if partner_id:
                 # FIX: no usar like ya que si tengo un documento 001-001-00000004
                 # y el numero a validar es 001-001-000000044
                 # va a considerar como que coinciden
                 # no usar states en la validacion de que los documentos no se dupliquen por numero o si??
-                domain = modules_mapping.get_domain(invoice_type, include_state=False)
-                other_recs = res_model.search(domain + [(field_name, '=', number), ('partner_id', '=', partner_id)])
+                domain = modules_mapping.get_domain(
+                    invoice_type, include_state=False)
+                other_recs = res_model.search(
+                    domain + [(field_name, '=', number), ('partner_id', '=', partner_id)])
         if not foreign:
             if isinstance(res_id, models.NewId):
                 # FIXME: en caso de venir de un onchange, no debe validar duplicidad?
@@ -238,7 +253,8 @@ class L10nECSriAuthorizationSupplier(models.Model):
     @api.model
     def validate_unique_document_partner(self, invoice_type, number, partner_id, res_id=None):
         if not number or not partner_id:
-            raise Warning(_("Check parameters of partner and number to continue"))
+            raise Warning(
+                _("Check parameters of partner and number to continue"))
         if not invoice_type:
             raise Warning(_("You must specify type of document to continue."))
         partner_model = self.env['res.partner']
@@ -253,7 +269,8 @@ class L10nECSriAuthorizationSupplier(models.Model):
             numero = number.split('-')
             num_shop, num_printer, num_doc = numero
             num_doc = int(num_doc)
-            number_criteria = [(field_name, 'like', '%s-%s-%%s' % (num_shop, num_printer, num_doc))]
+            number_criteria = [(field_name, 'like', '%s-%s-%%s' %
+                                (num_shop, num_printer, num_doc))]
         except Exception as e:
             number_criteria = [(field_name, '=', str(number))]
         args = modules_mapping.get_domain(invoice_type, include_state=False) + [
@@ -263,7 +280,7 @@ class L10nECSriAuthorizationSupplier(models.Model):
         model_recs = number and res_model.search(args) or False
         if model_recs:
             raise Warning(_("There's another document type %s with number '%s' for partner %s") % (
-            model_description, number, partner.name))
+                model_description, number, partner.name))
         return True
 
     @api.model
@@ -348,5 +365,6 @@ class L10nECSriAuthorizationSupplier(models.Model):
             name = '%s (%s - %s)' % (rec.number, rec.agency, rec.printer_point)
             res.append((rec.id, name))
         return res
+
 
 L10nECSriAuthorizationSupplier()

@@ -4,13 +4,15 @@ from odoo.exceptions import ValidationError, UserError
 from odoo.tools import float_compare, float_round
 from ..models import modules_mapping
 
+
 class L10nECIdentificationType(models.Model):
 
     _name = 'l10n_ec.identification.type'
 
     code = fields.Char(string="Code", required=True)
     name = fields.Char(string="Name", required=True)
-    document_type_ids = fields.Many2many('l10n_latam.document.type', string='Tipos de Transacciones Asociadas')
+    document_type_ids = fields.Many2many(
+        'l10n_latam.document.type', string='Tipos de Transacciones Asociadas')
     sale_invoice_document_type_id = fields.Many2one(comodel_name="l10n_latam.document.type",
                                                     string="Default Sales Document Type for Invoices", required=False, )
     sale_credit_note_document_type_id = fields.Many2one(comodel_name="l10n_latam.document.type",
@@ -35,13 +37,16 @@ class L10nECIdentificationType(models.Model):
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         args = args or []
         recs = self.browse()
-        res = super(L10nECIdentificationType, self)._name_search(name, args, operator, limit, name_get_uid)
+        res = super(L10nECIdentificationType, self)._name_search(
+            name, args, operator, limit, name_get_uid)
         if not res and name:
             recs = self.search([('name', operator, name)] + args, limit=limit)
             if not recs:
-                recs = self.search([('code', operator, name)] + args, limit=limit)
+                recs = self.search(
+                    [('code', operator, name)] + args, limit=limit)
             if recs:
-                res = models.lazy_name_get(self.browse(recs.ids).with_user(name_get_uid)) or []
+                res = models.lazy_name_get(self.browse(
+                    recs.ids).with_user(name_get_uid)) or []
         return res
 
     def name_get(self):
@@ -50,6 +55,7 @@ class L10nECIdentificationType(models.Model):
             name = "%s - %s" % (r.code, r.name)
             res.append((r.id, name))
         return res
+
 
 class AccountMove(models.Model):
     _inherit = "account.move"
@@ -66,20 +72,20 @@ class AccountMove(models.Model):
         ('01', 'Régimen general'),
         ('02', 'Paraíso fiscal'),
         ('03', 'Régimen fiscal preferente o jurisdicción de menor imposición')
-        ], string='Tipo de regimen fiscal del exterior',
-         states={}, help="")
+    ], string='Tipo de regimen fiscal del exterior',
+        states={}, help="")
     l10n_ec_aplica_convenio_doble_tributacion = fields.Selection([
         ('si', 'SI'),
-        ('no','NO'),
-        ], string='Aplica convenio doble tributación',
-         states={}, help="")
+        ('no', 'NO'),
+    ], string='Aplica convenio doble tributación',
+        states={}, help="")
     l10n_ec_pago_exterior_sujeto_retencion = fields.Selection([
         ('si', 'SI'),
-        ('no','NO'),
-        ], string='Pago sujeto a retención',
-         states={}, help="")
+        ('no', 'NO'),
+    ], string='Pago sujeto a retención',
+        states={}, help="")
     l10n_ec_foreign = fields.Boolean('Foreign?',
-                                    related='partner_id.l10n_ec_foreign', store=True)
+                                     related='partner_id.l10n_ec_foreign', store=True)
     l10n_ec_debit_note = fields.Boolean(string="Debit Note?",
                                         default=lambda self: self.env.context.get('default_l10n_ec_debit_note', False))
     l10n_ec_liquidation = fields.Boolean(string="Liquidation of Purchases?",
@@ -108,30 +114,39 @@ class AccountMove(models.Model):
                 if move.partner_id.l10n_ec_type_sri:
                     if move.type in ('in_invoice', 'in_refund'):
                         if move.partner_id.l10n_ec_type_sri == 'Ruc':
-                            move.l10n_ec_identification_type_id = get_identification('01')
+                            move.l10n_ec_identification_type_id = get_identification(
+                                '01')
                         elif move.partner_id.l10n_ec_type_sri == 'Cedula':
-                            move.l10n_ec_identification_type_id = get_identification('02')
+                            move.l10n_ec_identification_type_id = get_identification(
+                                '02')
                         elif move.partner_id.l10n_ec_type_sri == 'Pasaporte':
-                            move.l10n_ec_identification_type_id = get_identification('03')
+                            move.l10n_ec_identification_type_id = get_identification(
+                                '03')
                         else:
                             move.l10n_ec_identification_type_id = False
                     elif move.type in ('out_invoice', 'out_refund'):
                         if not move.l10n_ec_is_exportation:
                             if move.partner_id.l10n_ec_type_sri == 'Ruc':
-                                move.l10n_ec_identification_type_id = get_identification('04')
+                                move.l10n_ec_identification_type_id = get_identification(
+                                    '04')
                             elif move.partner_id.l10n_ec_type_sri == 'Cedula':
-                                move.l10n_ec_identification_type_id = get_identification('05')
+                                move.l10n_ec_identification_type_id = get_identification(
+                                    '05')
                             elif move.partner_id.l10n_ec_type_sri == 'Pasaporte':
-                                move.l10n_ec_identification_type_id = get_identification('06')
+                                move.l10n_ec_identification_type_id = get_identification(
+                                    '06')
                             elif move.partner_id.l10n_ec_type_sri == 'Consumidor':
-                                move.l10n_ec_identification_type_id = get_identification('07')
+                                move.l10n_ec_identification_type_id = get_identification(
+                                    '07')
                             else:
                                 move.l10n_ec_identification_type_id = False
                         else:
                             if move.partner_id.l10n_ec_type_sri == 'Ruc':
-                                move.l10n_ec_identification_type_id = get_identification('20')
+                                move.l10n_ec_identification_type_id = get_identification(
+                                    '20')
                             elif move.partner_id.l10n_ec_type_sri == 'Pasaporte':
-                                move.l10n_ec_identification_type_id = get_identification('21')
+                                move.l10n_ec_identification_type_id = get_identification(
+                                    '21')
                             else:
                                 move.l10n_ec_identification_type_id = False
                 else:
@@ -143,7 +158,7 @@ class AccountMove(models.Model):
                     move.write({
                         'l10n_latam_available_document_type_ids': [(6, 0, move.l10n_ec_identification_type_id.
                                                                     document_type_ids.filtered(
-                            lambda x: x.internal_type == latam_type).ids)]
+                                                                        lambda x: x.internal_type == latam_type).ids)]
                     })
                     if move.l10n_latam_available_document_type_ids and \
                             move.l10n_latam_document_type_id.id not in move.l10n_latam_available_document_type_ids.ids:
@@ -157,7 +172,8 @@ class AccountMove(models.Model):
                             move.l10n_latam_document_type_id = move.sale_credit_note_document_type_id.id
                     if move.l10n_latam_document_type_id:
                         supports = tax_support_model.search([
-                            ('document_type_ids', 'in', move.l10n_latam_document_type_id.ids)
+                            ('document_type_ids', 'in',
+                             move.l10n_latam_document_type_id.ids)
                         ])
                 else:
                     move.l10n_latam_available_document_type_ids = []
@@ -199,12 +215,14 @@ class AccountMove(models.Model):
                                              default=False,
                                              readonly=True,
                                              states={'draft': [('readonly', False)]})
+
     @api.depends(
         'name',
         'l10n_latam_document_type_id',
     )
     def _compute_l10n_ec_document_number(self):
-        recs_with_name = self.filtered(lambda x: x.name != '/' and x.company_id.country_id.code == 'EC')
+        recs_with_name = self.filtered(
+            lambda x: x.name != '/' and x.company_id.country_id.code == 'EC')
         for rec in recs_with_name:
             name = rec.name
             doc_code_prefix = rec.l10n_latam_document_type_id.doc_code_prefix
@@ -217,29 +235,32 @@ class AccountMove(models.Model):
     l10n_ec_document_number = fields.Char(string="Ecuadorian Document Number",
                                           readonly=True, compute="_compute_l10n_ec_document_number", store=True)
 
-
     @api.model
     def default_get(self, fields):
         values = super(AccountMove, self).default_get(fields)
         type = values.get('type', self.type)
         if type in ('out_invoice', 'out_refund', 'in_invoice'):
             invoice_type = modules_mapping.get_invoice_type(type,
-                                                            values.get('l10n_ec_debit_note', self.l10n_ec_debit_note),
+                                                            values.get(
+                                                                'l10n_ec_debit_note', self.l10n_ec_debit_note),
                                                             values.get('l10n_ec_liquidation', self.l10n_ec_liquidation))
             if invoice_type in ('out_invoice', 'out_refund', 'debit_note_out', 'liquidation', 'in_invoice'):
                 default_printer = self.env['res.users']. \
-                    get_default_point_of_emission(self.env.user.id, raise_exception=True).get('default_printer_default_id')
+                    get_default_point_of_emission(self.env.user.id, raise_exception=True).get(
+                        'default_printer_default_id')
                 values['l10n_ec_point_of_emission_id'] = default_printer.id
                 if default_printer:
                     values['l10n_ec_type_emission'] = default_printer.type_emission
                     if invoice_type == 'in_invoice':
-                        next_number, auth_line = default_printer.get_next_value_sequence('withhold_purchase', False, False)
+                        next_number, auth_line = default_printer.get_next_value_sequence(
+                            'withhold_purchase', False, False)
                         if next_number:
                             values['l10n_ec_withhold_number'] = next_number
                         if auth_line:
                             values['l10n_ec_authorization_line_id'] = auth_line.id
                     else:
-                        next_number, auth_line = default_printer.get_next_value_sequence(invoice_type, False, False)
+                        next_number, auth_line = default_printer.get_next_value_sequence(
+                            invoice_type, False, False)
                         if next_number:
                             values['l10n_latam_document_number'] = next_number
                         if auth_line:
@@ -250,8 +271,10 @@ class AccountMove(models.Model):
         if not default:
             default = {}
         if self.filtered(lambda x: x.company_id.country_id.code == 'EC'):
-            invoice_type = modules_mapping.get_invoice_type(self.type, self.l10n_ec_debit_note, self.l10n_ec_liquidation)
-            next_number, auth_line = self.l10n_ec_point_of_emission_id.get_next_value_sequence(invoice_type, False, False)
+            invoice_type = modules_mapping.get_invoice_type(
+                self.type, self.l10n_ec_debit_note, self.l10n_ec_liquidation)
+            next_number, auth_line = self.l10n_ec_point_of_emission_id.get_next_value_sequence(
+                invoice_type, False, False)
             default['l10n_latam_document_number'] = next_number
             default['l10n_ec_authorization_line_id'] = auth_line.id
         return super(AccountMove, self).copy(default)
@@ -271,7 +294,7 @@ class AccountMove(models.Model):
     )
     def _onchange_point_of_emission(self):
         for move in self.filtered(lambda x: x.company_id.country_id.code == 'EC' and x.type
-                                            in ('out_invoice', 'out_refund', 'in_invoice')):
+                                  in ('out_invoice', 'out_refund', 'in_invoice')):
             if move.l10n_ec_point_of_emission_id:
                 invoice_type = modules_mapping.get_invoice_type(move.type, move.l10n_ec_debit_note,
                                                                 move.l10n_ec_liquidation)
@@ -308,7 +331,8 @@ class AccountMove(models.Model):
     )
     def _get_l10n_ec_withhold_required(self):
         group_iva_withhold = self.env.ref('l10n_ec_niif.tax_group_iva_withhold')
-        group_rent_withhold = self.env.ref('l10n_ec_niif.tax_group_renta_withhold')
+        group_rent_withhold = self.env.ref(
+            'l10n_ec_niif.tax_group_renta_withhold')
         for rec in self:
             withhold_required = False
             if rec.type == 'in_invoice':
@@ -327,20 +351,21 @@ class AccountMove(models.Model):
     def _check_l10n_ec_document_number_duplicity(self):
         auth_line_model = self.env['l10n_ec.sri.authorization.line']
         for move in self.filtered(lambda x: x.company_id.country_id.code == 'EC'
-                                            and modules_mapping.get_invoice_type(x.type,
-                                                                                 x.l10n_ec_debit_note,
-                                                                                 x.l10n_ec_liquidation, False)
-                                            in ('out_invoice', 'out_refund', 'debit_note_out', 'liquidation')
-                                            and x.l10n_ec_document_number):
+                                  and modules_mapping.get_invoice_type(x.type,
+                                                                       x.l10n_ec_debit_note,
+                                                                       x.l10n_ec_liquidation, False)
+                                  in ('out_invoice', 'out_refund', 'debit_note_out', 'liquidation')
+                                  and x.l10n_ec_document_number):
             auth_line_model.with_context(from_constrain=True).validate_unique_value_document(
-                modules_mapping.get_invoice_type(move.type, move.l10n_ec_debit_note, move.l10n_ec_liquidation),
+                modules_mapping.get_invoice_type(
+                    move.type, move.l10n_ec_debit_note, move.l10n_ec_liquidation),
                 move.l10n_ec_document_number, move.company_id.id, move.id)
 
     @api.depends(
         'type',
         'l10n_ec_debit_note',
         'l10n_ec_liquidation',
-                 )
+    )
     def _compute_l10n_ec_invoice_filter_type_domain(self):
         for move in self:
             if move.is_sale_document(include_receipts=True):
@@ -369,26 +394,28 @@ class AccountMove(models.Model):
         journal_model = self.env['account.journal']
         if self.env.context.get('default_type', False) in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'):
             invoice_type = modules_mapping.get_invoice_type(self.env.context.get('default_type', False),
-                                                            self.env.context.get('default_l10n_ec_debit_note', False),
+                                                            self.env.context.get(
+                                                                'default_l10n_ec_debit_note', False),
                                                             self.env.context.get('default_l10n_ec_liquidation', False))
             if invoice_type in ('debit_note_in', 'debit_note_out', 'liquidation'):
                 journal = journal_model.search([
-                    ('company_id', '=', self._context.get('default_company_id', self.env.company.id)),
+                    ('company_id', '=', self._context.get(
+                        'default_company_id', self.env.company.id)),
                     ('l10n_ec_extended_type', '=', invoice_type),
                 ])
                 if journal:
                     return super(AccountMove, self.with_context(default_journal_id=journal.id))._get_default_journal()
         return super(AccountMove, self)._get_default_journal()
 
-    #FIXME: When function is called by default, only call first function, not hierachy
     journal_id = fields.Many2one(default=_get_default_journal)
 
     @api.onchange(
         'l10n_ec_original_invoice_id',
         'invoice_date',
-                  )
+    )
     def onchange_l10n_ec_original_invoice(self):
-        line_model = self.env['account.move.line'].with_context(check_move_validity=False)
+        line_model = self.env['account.move.line'].with_context(
+            check_move_validity=False)
         if self.l10n_ec_original_invoice_id:
             lines = line_model.browse()
             default_move = {
@@ -398,7 +425,8 @@ class AccountMove(models.Model):
                 'journal_id': self.journal_id and self.journal_id.id,
                 'invoice_payment_term_id': None,
             }
-            move_vals = self.l10n_ec_original_invoice_id._reverse_move_vals(default_move)
+            move_vals = self.l10n_ec_original_invoice_id._reverse_move_vals(
+                default_move)
             for a, b, line_data in move_vals.get('line_ids'):
                 if line_data.get('exclude_from_invoice_tab', False):
                     continue
@@ -426,7 +454,8 @@ class AccountMove(models.Model):
             else:
                 move.l10n_ec_consumidor_final = False
 
-    l10n_ec_consumidor_final = fields.Boolean(string="Consumidor Final", compute="_get_l10n_ec_consumidor_final")
+    l10n_ec_consumidor_final = fields.Boolean(
+        string="Consumidor Final", compute="_get_l10n_ec_consumidor_final")
 
     def action_post(self):
         for move in self:
@@ -438,47 +467,57 @@ class AccountMove(models.Model):
                                       "is bigger than %s for final customer")
                                     % (move.amount_total, move.company_id.l10n_ec_consumidor_final_limit))
                 if move.l10n_ec_consumidor_final and move.type == 'out_refund':
-                    raise UserError(_("You can't make refund to final customer on ecuadorian company"))
+                    raise UserError(
+                        _("You can't make refund to final customer on ecuadorian company"))
                 if move.l10n_ec_consumidor_final and move.type in ('in_refund', 'in_invoice'):
-                    raise UserError(_("You can't make bill or refund to final customer on ecuadorian company"))
+                    raise UserError(
+                        _("You can't make bill or refund to final customer on ecuadorian company"))
                 if move.type == 'in_invoice':
                     withhold_model = self.env['l10n_ec.withhold']
                     withhold_line_model = self.env['l10n_ec.withhold.line']
                     tax_model = self.env['account.tax']
                     percent_model = self.env['l10n_ec.withhold.line.percent']
-                    withhold_iva_group = self.env.ref('l10n_ec_niif.tax_group_iva_withhold')
-                    withhold_rent_group = self.env.ref('l10n_ec_niif.tax_group_renta_withhold')
+                    withhold_iva_group = self.env.ref(
+                        'l10n_ec_niif.tax_group_iva_withhold')
+                    withhold_rent_group = self.env.ref(
+                        'l10n_ec_niif.tax_group_renta_withhold')
                     iva_group = self.env.ref('l10n_ec_niif.tax_group_iva')
                     errors = {}
                     for line in move.invoice_line_ids:
-                        iva_taxes = line.tax_ids.filtered(lambda x: x.tax_group_id.id == iva_group.id and x.amount > 0)
-                        iva_0_taxes = line.tax_ids.filtered(lambda x: x.tax_group_id.id == iva_group.id and x.amount == 0)
+                        iva_taxes = line.tax_ids.filtered(
+                            lambda x: x.tax_group_id.id == iva_group.id and x.amount > 0)
+                        iva_0_taxes = line.tax_ids.filtered(
+                            lambda x: x.tax_group_id.id == iva_group.id and x.amount == 0)
                         withhold_iva_taxes = line.tax_ids.filtered(lambda x: x.tax_group_id.id == withhold_iva_group.id
-                                                                             and x.amount > 0)
-                        rent_withhold_taxes = line.tax_ids.filtered(lambda x: x.tax_group_id.id == withhold_rent_group.id)
+                                                                   and x.amount > 0)
+                        rent_withhold_taxes = line.tax_ids.filtered(
+                            lambda x: x.tax_group_id.id == withhold_rent_group.id)
                         errors.setdefault(line, [])
                         if move.partner_id.country_id.code == 'EC':
                             if len(rent_withhold_taxes) == 0:
-                                errors[line].append(_('You must apply at least one income withholding tax'))
+                                errors[line].append(
+                                    _('You must apply at least one income withholding tax'))
                             if len(iva_taxes) == 0 and len(iva_0_taxes) == 0:
-                                errors[line].append(_('You must apply at least one VAT tax'))
+                                errors[line].append(
+                                    _('You must apply at least one VAT tax'))
                         if len(iva_taxes) >= 1 and len(iva_0_taxes) >= 1:
-                            errors[line].append(_('Cannot apply VAT zero rate with another VAT rate'))
+                            errors[line].append(
+                                _('Cannot apply VAT zero rate with another VAT rate'))
                         if len(iva_taxes) > 1:
                             errors[line].append(_('You cannot have more than one VAT tax %s')
-                                                   % (' / '.join(t.description or t.name for t in iva_taxes)))
+                                                % (' / '.join(t.description or t.name for t in iva_taxes)))
                         if len(iva_0_taxes) > 1:
                             errors[line].append(_('You cannot have more than one VAT 0 tax %s')
-                                                   % (' / '.join(t.description or t.name for t in iva_0_taxes)))
+                                                % (' / '.join(t.description or t.name for t in iva_0_taxes)))
                         if len(withhold_iva_taxes) > 1:
                             errors[line].append(_('You cannot have more than one VAT Withholding tax %s')
-                                                   % (' / '.join(t.description or t.name for t in withhold_iva_taxes)))
+                                                % (' / '.join(t.description or t.name for t in withhold_iva_taxes)))
                         if len(rent_withhold_taxes) > 1:
                             errors[line].append(_('You cannot have more than one Rent Withholding tax %s')
-                                                   % (' / '.join(t.description or t.name for t in rent_withhold_taxes)))
+                                                % (' / '.join(t.description or t.name for t in rent_withhold_taxes)))
                         if len(iva_taxes) == 0 and len(withhold_iva_taxes) > 0:
                             errors[line].append(_('You cannot apply VAT withholding without an assigned VAT tax %s')
-                                                   % (' / '.join(t.description or t.name for t in withhold_iva_taxes)))
+                                                % (' / '.join(t.description or t.name for t in withhold_iva_taxes)))
                     error_message = ''
                     for eline in errors.keys():
                         error_message += '\n'.join(errors[eline])
@@ -503,14 +542,14 @@ class AccountMove(models.Model):
                         for tax in line.tax_ids:
                             if tax.tax_group_id.id in (withhold_iva_group.id, withhold_rent_group.id):
                                 base_tag_id = tax.invoice_repartition_line_ids.filtered(
-                                        lambda x: x.repartition_type == 'base').mapped('tag_ids')
+                                    lambda x: x.repartition_type == 'base').mapped('tag_ids')
                                 tax_tag_id = tax.invoice_repartition_line_ids.filtered(
-                                        lambda x: x.repartition_type == 'tax').mapped('tag_ids')
+                                    lambda x: x.repartition_type == 'tax').mapped('tag_ids')
                                 tax_type = tax.tax_group_id.id == withhold_iva_group.id \
-                                           and 'iva' or tax.tax_group_id.id == withhold_rent_group.id and 'rent'
+                                    and 'iva' or tax.tax_group_id.id == withhold_rent_group.id and 'rent'
                                 percent = tax.tax_group_id.id == withhold_iva_group.id \
-                                          and abs(tax.invoice_repartition_line_ids.filtered(
-                                    lambda x: x.repartition_type == 'tax').factor_percent) or abs(tax.amount)
+                                    and abs(tax.invoice_repartition_line_ids.filtered(
+                                        lambda x: x.repartition_type == 'tax').factor_percent) or abs(tax.amount)
                                 tax_data.setdefault(tax.id, {
                                     'withhold_id': current_withhold.id,
                                     'invoice_id': move.id,
@@ -545,10 +584,10 @@ class AccountMove(models.Model):
                     for tax_id in tax_data.keys():
                         current_tax = tax_model.browse(tax_id)
                         if current_tax.tax_group_id.id == withhold_iva_group.id:
-                            tax_data[tax_id]['base_amount'] = (tax_data[tax_id]['tax_amount'] /
-                                                               (percent_model.browse(tax_data[tax_id]['percent_id']).percent / 100.0))
+                            tax_data[tax_id]['base_amount'] = (tax_data[tax_id]['tax_amount']
+                                                               / (percent_model.browse(tax_data[tax_id]['percent_id']).percent / 100.0))
                             tax_data[tax_id]['base_amount_currency'] = move.currency_id.compute(
-                                        tax_data[tax_id]['base_amount'], move.company_id.currency_id)
+                                tax_data[tax_id]['base_amount'], move.company_id.currency_id)
                     for withhold_line in tax_data.values():
                         withhold_line_model.create(withhold_line)
                     current_withhold.action_done()
@@ -561,9 +600,11 @@ class AccountMove(models.Model):
             if move.company_id.country_id.code == 'EC':
                 if move.type in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'):
                     if move.state != 'draft':
-                        raise UserError(_("You only delete invoices in draft state"))
+                        raise UserError(
+                            _("You only delete invoices in draft state"))
                     else:
-                        move.with_context(skip_recurtion=True, force_delete=True).unlink()
+                        move.with_context(skip_recurtion=True,
+                                          force_delete=True).unlink()
 
     @api.depends(
         'line_ids.price_subtotal',
@@ -588,10 +629,12 @@ class AccountMove(models.Model):
             rec.l10n_ec_base_iva_0 = l10n_ec_base_iva_0
             rec.l10n_ec_base_iva = l10n_ec_base_iva
             rec.l10n_ec_iva = l10n_ec_iva
-            rec.l10n_ec_base_iva_0_currency = rec.currency_id.compute(l10n_ec_base_iva_0, rec.company_id.currency_id)
-            rec.l10n_ec_base_iva_currency = rec.currency_id.compute(l10n_ec_base_iva, rec.company_id.currency_id)
-            rec.l10n_ec_iva_currency = rec.currency_id.compute(l10n_ec_iva, rec.company_id.currency_id)
-
+            rec.l10n_ec_base_iva_0_currency = rec.currency_id.compute(
+                l10n_ec_base_iva_0, rec.company_id.currency_id)
+            rec.l10n_ec_base_iva_currency = rec.currency_id.compute(
+                l10n_ec_base_iva, rec.company_id.currency_id)
+            rec.l10n_ec_iva_currency = rec.currency_id.compute(
+                l10n_ec_iva, rec.company_id.currency_id)
 
     l10n_ec_base_iva = fields.Float(
         string='Base IVA',
@@ -650,36 +693,44 @@ class AccountMove(models.Model):
     )
     def _get_l10n_ec_withhold_ids(self):
         for rec in self:
-            l10n_ec_withhold_ids = rec.l10n_ec_withhold_line_ids.mapped('withhold_id').ids
+            l10n_ec_withhold_ids = rec.l10n_ec_withhold_line_ids.mapped(
+                'withhold_id').ids
             if not l10n_ec_withhold_ids:
-                l10n_ec_withhold_ids = rec.l10n_ec_withhold_ids.search([('invoice_id', '=', rec.id)]).ids
+                l10n_ec_withhold_ids = rec.l10n_ec_withhold_ids.search(
+                    [('invoice_id', '=', rec.id)]).ids
             rec.l10n_ec_withhold_ids = l10n_ec_withhold_ids
             rec.l10n_ec_withhold_count = len(l10n_ec_withhold_ids)
 
     def action_show_l10n_ec_withholds(self):
         self.ensure_one()
         type = self.mapped('type')[0]
-        action = self.env.ref('l10n_ec_niif.l10n_ec_withhold_purchase_act_window').read()[0]
+        action = self.env.ref(
+            'l10n_ec_niif.l10n_ec_withhold_purchase_act_window').read()[0]
 
         withholds = self.mapped('l10n_ec_withhold_ids')
         if len(withholds) > 1:
             action['domain'] = [('id', 'in', withholds.ids)]
         elif withholds:
-            form_view = [(self.env.ref('l10n_ec_niif.l10n_ec_withhold_form_view').id, 'form')]
+            form_view = [
+                (self.env.ref('l10n_ec_niif.l10n_ec_withhold_form_view').id, 'form')]
             if 'views' in action:
-                action['views'] = form_view + [(state,view) for state,view in action['views'] if view != 'form']
+                action['views'] = form_view + \
+                    [(state, view)
+                     for state, view in action['views'] if view != 'form']
             else:
                 action['views'] = form_view
             action['res_id'] = withholds.id
         action['context'] = dict(self._context,
                                  default_partner_id=self.partner_id.id,
-                                 default_invoice_id = self.id)
+                                 default_invoice_id=self.id)
         return action
 
     def create_withhold_customer(self):
         self.ensure_one()
-        action = self.env.ref('l10n_ec_niif.l10n_ec_withhold_sales_act_window').read()[0]
-        action['views'] = [(self.env.ref('l10n_ec_niif.l10n_ec_withhold_form_view').id, 'form')]
+        action = self.env.ref(
+            'l10n_ec_niif.l10n_ec_withhold_sales_act_window').read()[0]
+        action['views'] = [
+            (self.env.ref('l10n_ec_niif.l10n_ec_withhold_form_view').id, 'form')]
         ctx = eval(action['context'])
         ctx.update({
             'default_partner_id': self.partner_id.id,
@@ -692,21 +743,25 @@ class AccountMove(models.Model):
         action['context'] = ctx
         return action
 
-    l10n_ec_start_date = fields.Date('Start Date', related='l10n_ec_authorization_id.start_date')
-    l10n_ec_expiration_date = fields.Date('Expiration Date', related='l10n_ec_authorization_id.expiration_date')
+    l10n_ec_start_date = fields.Date(
+        'Start Date', related='l10n_ec_authorization_id.start_date')
+    l10n_ec_expiration_date = fields.Date(
+        'Expiration Date', related='l10n_ec_authorization_id.expiration_date')
 
-    @api.constrains('l10n_ec_start_date', 'l10n_ec_expiration_date','invoice_date')
+    @api.constrains('l10n_ec_start_date', 'l10n_ec_expiration_date', 'invoice_date')
     def _check_outside(self):
         if any(outside_start for outside_start in self
-            if outside_start.invoice_date and outside_start.l10n_ec_start_date
-            and outside_start.invoice_date < outside_start.l10n_ec_start_date):
+               if outside_start.invoice_date and outside_start.l10n_ec_start_date
+               and outside_start.invoice_date < outside_start.l10n_ec_start_date):
             raise UserError(_('Invoice date outside defined date range'))
         if any(outside_expiration for outside_expiration in self
-            if outside_expiration.invoice_date and outside_expiration.l10n_ec_expiration_date
-            and outside_expiration.invoice_date > outside_expiration.l10n_ec_expiration_date):
+               if outside_expiration.invoice_date and outside_expiration.l10n_ec_expiration_date
+               and outside_expiration.invoice_date > outside_expiration.l10n_ec_expiration_date):
             raise UserError(_('Invoice date outside defined date range2'))
 
+
 AccountMove()
+
 
 class AccountMoveLine(models.Model):
 

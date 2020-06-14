@@ -3,6 +3,7 @@
 from odoo.tools.translate import _
 from odoo.exceptions import Warning
 
+
 def get_document_type(invoice_type):
     """
     Devolver el tipo de documento, el que se usa en los tipo de documento de las autorizaciones
@@ -10,27 +11,29 @@ def get_document_type(invoice_type):
     @return: str, tipo de documento como lo espera los documentos de autorizaciones
     """
     document_type = ''
-    #liquidacion de compras
+    # liquidacion de compras
     if invoice_type == 'liquidation':
         document_type = 'liquidation'
-    #facturas
+    # facturas
     elif invoice_type in ('out_invoice', 'in_invoice'):
         document_type = 'invoice'
-    #notas de credito
+    # notas de credito
     elif invoice_type in ('out_refund', 'in_refund'):
         document_type = 'credit_note'
-    #Notas de debito
+    # Notas de debito
     elif invoice_type in ('debit_note_in', 'debit_note_out'):
         document_type = 'debit_note'
     elif invoice_type == 'invoice_reembolso':
         document_type = 'invoice_reembolso'
-    elif invoice_type in ('withhold_sale','withhold_purchase'):
+    elif invoice_type in ('withhold_sale', 'withhold_purchase'):
         document_type = 'withholding'
     elif invoice_type == 'delivery_note':
         document_type = 'delivery_note'
     else:
-        raise Warning(_("Tipo de Factura/Documento: %s no es válido, por favor verique, get_document_type") % (invoice_type))
+        raise Warning(
+            _("Tipo de Factura/Documento: %s no es válido, por favor verique, get_document_type") % (invoice_type))
     return document_type
+
 
 def get_invoice_type(invoice_type, debit_note=False, liquidation=False, raise_exception=True):
     """
@@ -44,30 +47,32 @@ def get_invoice_type(invoice_type, debit_note=False, liquidation=False, raise_ex
     @return: str, tipo de factura considerando los dos tipos de documentos adicionales(ND y liquidacion de compras)
     """
     document_type = ''
-    #Factura de Proveedor
+    # Factura de Proveedor
     if invoice_type == 'in_invoice' and not debit_note and not liquidation:
         document_type = 'in_invoice'
-    #Factura de Cliente
+    # Factura de Cliente
     elif invoice_type == 'out_invoice' and not debit_note:
         document_type = 'out_invoice'
-    #NC de Cliente
+    # NC de Cliente
     elif invoice_type == 'out_refund':
         document_type = 'out_refund'
-    #NC de Proveedor
+    # NC de Proveedor
     elif invoice_type == 'in_refund':
         document_type = 'in_refund'
-    #Liquidacion
+    # Liquidacion
     elif invoice_type == 'in_invoice' and liquidation:
         document_type = 'liquidation'
-    #ND Proveedor
+    # ND Proveedor
     elif invoice_type == 'in_invoice' and debit_note:
         document_type = 'debit_note_in'
-    #ND Cliente
+    # ND Cliente
     elif invoice_type == 'out_invoice' and debit_note:
         document_type = 'debit_note_out'
     if not document_type and raise_exception:
-        raise Warning(_("Tipo de Factura/Documento: %s no es válido, por favor verique, get_invoice_type") % (invoice_type))
+        raise Warning(
+            _("Tipo de Factura/Documento: %s no es válido, por favor verique, get_invoice_type") % (invoice_type))
     return document_type
+
 
 def get_invoice_type_reverse(invoice_type):
     """
@@ -83,40 +88,42 @@ def get_invoice_type_reverse(invoice_type):
     """
     invoice_type_reverse = ''
     debit_note, liquidation = False, False
-    #Liquidacion
+    # Liquidacion
     if invoice_type == 'liquidation':
         invoice_type_reverse = 'in_invoice'
         liquidation = True
         debit_note = False
-    #ND Proveedor
+    # ND Proveedor
     elif invoice_type == 'debit_note_in':
         invoice_type_reverse = 'in_invoice'
         liquidation = False
         debit_note = True
-    #ND Cliente
+    # ND Cliente
     elif invoice_type == 'debit_note_out':
         invoice_type_reverse = 'out_invoice'
         liquidation = False
         debit_note = True
-    #Factura de Proveedor
+    # Factura de Proveedor
     elif invoice_type in ('in_invoice', 'invoice_reembolso'):
         invoice_type_reverse = 'in_invoice'
-    #Factura de Cliente
+    # Factura de Cliente
     elif invoice_type == 'out_invoice':
         invoice_type_reverse = 'out_invoice'
-    #NC de Cliente
+    # NC de Cliente
     elif invoice_type == 'out_refund':
         invoice_type_reverse = 'out_refund'
-    #NC de Proveedor
+    # NC de Proveedor
     elif invoice_type == 'in_refund':
         invoice_type_reverse = 'in_refund'
-    elif invoice_type in ('withhold_sale','withhold_purchase'):
+    elif invoice_type in ('withhold_sale', 'withhold_purchase'):
         invoice_type_reverse = 'withhold'
     elif invoice_type == 'delivery_note':
         invoice_type_reverse = 'delivery_note'
     else:
-        raise Warning(_("Tipo de Factura/Documento: %s no es válido, por favor verique, get_invoice_type_reverse") % (invoice_type))
+        raise Warning(
+            _("Tipo de Factura/Documento: %s no es válido, por favor verique, get_invoice_type_reverse") % (invoice_type))
     return invoice_type_reverse, debit_note, liquidation
+
 
 def get_invoice_field_report(invoice_type):
     """
@@ -130,21 +137,23 @@ def get_invoice_field_report(invoice_type):
     @return: str, tipo de factura considerando los dos tipos de documentos adicionales(ND y liquidacion de compras)
     """
     field_report_name = ''
-    #Factura de Cliente
+    # Factura de Cliente
     if invoice_type == 'out_invoice':
         field_report_name = 'report_out_invoice_id'
-    #NC de Cliente
+    # NC de Cliente
     elif invoice_type == 'out_refund':
         field_report_name = 'report_out_refund_id'
-    #Liquidacion
+    # Liquidacion
     elif invoice_type == 'liquidation':
         field_report_name = 'report_liquidation_id'
-    #ND Cliente
+    # ND Cliente
     elif invoice_type == 'debit_note_out':
         field_report_name = 'report_debit_note_out_id'
     if not field_report_name:
-        raise Warning(_("Tipo de Factura/Documento: %s no es válido, por favor verique. get_invoice_field_report") % (invoice_type))
+        raise Warning(
+            _("Tipo de Factura/Documento: %s no es válido, por favor verique. get_invoice_field_report") % (invoice_type))
     return field_report_name
+
 
 def get_invoice_view_id(invoice_type):
     """
@@ -152,15 +161,16 @@ def get_invoice_view_id(invoice_type):
     @param invoice_type: el tipo de factura considerando los dos tipos de documentos adicionales(ND y liquidacion de compras)
     @return: tuple(module, id_xml), False, False si el tipo de factura no es correcto
     """
-    views_data = {'out_invoice': ('account','invoice_form'),
+    views_data = {'out_invoice': ('account', 'invoice_form'),
                   'in_invoice': ('account', 'invoice_supplier_form'),
-                  'out_refund': ('account','invoice_form'),
+                  'out_refund': ('account', 'invoice_form'),
                   'in_refund': ('account', 'invoice_supplier_form'),
                   'liquidation': ('account', 'invoice_supplier_form'),
-                  'debit_note_out': ('account','invoice_form'),
+                  'debit_note_out': ('account', 'invoice_form'),
                   'debit_note_in': ('account', 'invoice_supplier_form'),
                   }
     return views_data.get(invoice_type, (False, False))
+
 
 def get_document_name(document_type):
     """
@@ -178,6 +188,7 @@ def get_document_name(document_type):
                       }
     return document_names.get(document_type, '')
 
+
 def get_model_name(document_type):
     """
     Devolver el nombre del modelo segun el tipo de documento(el que usa los documentos de autorizaciones)
@@ -193,6 +204,7 @@ def get_model_name(document_type):
                   'invoice_reembolso': 'account.invoice.reembolso'
                   }
     return model_name.get(document_type, '')
+
 
 def get_field_name(document_type):
     """
@@ -210,6 +222,7 @@ def get_field_name(document_type):
                   }
     return field_name.get(document_type, '')
 
+
 def get_field_authorization(document_type):
     """
     Devolver el nombre del campo que tiene la autorizacion del modelo segun el tipo de documento(el que usa los documentos de autorizaciones)
@@ -224,6 +237,7 @@ def get_field_authorization(document_type):
                           'delivery_note': 'authorization_owner_id',
                           }
     return authorization_name.get(document_type, '')
+
 
 def get_field_journal(invoice_type):
     """
@@ -241,13 +255,15 @@ def get_field_journal(invoice_type):
                           }
     return journal_field_name.get(invoice_type, '')
 
+
 def get_domain(invoice_type, include_state=True):
     """
     Devolver un domain para usarse en busquedas segun el tipo de documento(el que usa los documentos de autorizaciones de clientes)
     @param invoice_type: el tipo de documento(el que usa los documentos de autorizaciones de clientes)
     @return: lista de tuplas con domain valido para hacer busquedas con ORM 
     """
-    invoice_type_bd, debit_note, liquidation = get_invoice_type_reverse(invoice_type)
+    invoice_type_bd, debit_note, liquidation = get_invoice_type_reverse(
+        invoice_type)
     domain_state_data = {'out_invoice': [('state', 'in', ('open', 'paid', 'cancel'))],
                          'out_refund': [('state', 'in', ('open', 'paid', 'cancel'))],
                          'in_refund': [('state', 'in', ('open', 'paid', 'cancel'))],
@@ -258,7 +274,7 @@ def get_domain(invoice_type, include_state=True):
                          'withhold_sale': [],
                          'withhold_purchase': [],
                          }
-    common_domain = [('type','=', invoice_type_bd),
+    common_domain = [('type', '=', invoice_type_bd),
                      ('l10n_ec_debit_note', '=', debit_note),
                      ('l10n_ec_liquidation', '=', liquidation),
                      ]
@@ -278,5 +294,5 @@ def get_domain(invoice_type, include_state=True):
                'delivery_note': [],
                'invoice_reembolso': [],
                }
-    
+
     return domains.get(invoice_type, [])

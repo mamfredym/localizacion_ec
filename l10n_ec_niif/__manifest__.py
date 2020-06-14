@@ -1,14 +1,8 @@
 {
     'name': 'Ecuador - Accounting IFRS',
-    'version': '1.0',
-    'description': '''
-his is the base module to manage the accounting chart for Ecuador in Odoo.
-==============================================================================
-
-Accounting chart and localization for Ecuador.
-    ''',
+    'version': '13.0.0.1',
     'category': 'Localization',
-    'author': 'Vision Estrategica Cia. Ltda.',
+    'author': 'Spearhead',
     'website': 'https://www.vision-estrategica.com',
     'license': 'LGPL-3',
     'depends': [
@@ -19,7 +13,7 @@ Accounting chart and localization for Ecuador.
         'l10n_latam_invoice_document',
         'account_accountant',
         'account_debit_note',
-                ],
+    ],
     'data': [
         'security/ir.model.access.csv',
         'security/security.xml',
@@ -51,7 +45,7 @@ Accounting chart and localization for Ecuador.
         'views/withhold_view.xml',
         'views/res_config_view.xml',
         'views/assets.xml',
-             ],
+    ],
     'demo': [
         'demo/agency_data.xml',
         'demo/partner_data.xml',

@@ -2,6 +2,7 @@
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError
 
+
 class AccountJournal(models.Model):
 
     _inherit = 'account.journal'
@@ -32,5 +33,6 @@ class AccountJournal(models.Model):
 
     l10n_ec_extended_type = fields.Char(string="Extended Type",
                                         required=False, compute="_get_l10n_ec_extended_type", store=True)
+
 
 AccountJournal()

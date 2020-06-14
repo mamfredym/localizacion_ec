@@ -8,6 +8,7 @@ import random
 import base64
 import hashlib
 
+
 def get_random():
     return '%s%s%s%s%s%s' % (
         random.randint(1, 9),
@@ -18,30 +19,37 @@ def get_random():
         random.randint(1, 9),
     )
 
+
 def main():
     p12 = load_pkcs12(open('key.p12', 'rb').read(), b'CXGV2412')
     pkey = p12.get_privatekey()
     cert = p12.get_certificate().to_cryptography()
     x509_cert = p12.get_certificate()
-    certificado = dump_certificate(OpenSSL.crypto.FILETYPE_PEM, cert).decode().replace('-----BEGIN CERTIFICATE-----', '').replace('-----END CERTIFICATE-----', '').replace('\n', '')
+    certificado = dump_certificate(OpenSSL.crypto.FILETYPE_PEM, cert).decode().replace(
+        '-----BEGIN CERTIFICATE-----', '').replace('-----END CERTIFICATE-----', '').replace('\n', '')
     pub_key = x509_cert.get_pubkey()
-    pub_key_asn1 = OpenSSL.crypto.dump_privatekey(OpenSSL.crypto.FILETYPE_ASN1, pub_key)
+    pub_key_asn1 = OpenSSL.crypto.dump_privatekey(
+        OpenSSL.crypto.FILETYPE_ASN1, pub_key)
     pub_der = DerSequence()
     pub_der.decode(pub_key_asn1)
     x509_data = RSA.construct((int(pub_der._seq[1]), int(pub_der._seq[2])))
     e = hex(x509_data.e).replace('0x', '0')
-    exponent = codecs.encode(codecs.decode(e, 'hex_codec'), 'base64').decode().replace('\n', '')
+    exponent = codecs.encode(codecs.decode(
+        e, 'hex_codec'), 'base64').decode().replace('\n', '')
     n = hex(x509_data.n).replace('0x', '')
     modulus = codecs.encode(codecs.decode(n, 'hex_codec'), 'base64').decode()
-    certificateX509_der_hash = base64.b64encode(x509_cert.digest("sha1")).decode().replace('\n', '')
+    certificateX509_der_hash = base64.b64encode(
+        x509_cert.digest("sha1")).decode().replace('\n', '')
     X509SerialNumber = str(cert.serial_number)
     issuer = x509_cert.get_issuer()
     issuer_name = 'CN=%s,L=%s,OU=%s,O=%s,C=%s' % (
         issuer.CN, issuer.L, issuer.OU, issuer.O, issuer.C
     )
     xml_content = open('invoice.xml').read()
-    to_sign = xml_content.replace("<?xml version='1.0' encoding='UTF-8'?>\n", '')
-    firma_SignedInfo = base64.b64encode(sign(pkey, to_sign.encode(), "sha1")).decode()
+    to_sign = xml_content.replace(
+        "<?xml version='1.0' encoding='UTF-8'?>\n", '')
+    firma_SignedInfo = base64.b64encode(
+        sign(pkey, to_sign.encode(), "sha1")).decode()
 
     sha1_factura = hashlib.sha1(to_sign.encode()).hexdigest()
 
@@ -55,12 +63,12 @@ def main():
     SignatureValue_number = get_random()
     Object_number = get_random()
     SignedProperties = ''
-    SignedProperties += '<etsi:SignedProperties Id="Signature' + Signature_number + '-SignedProperties' + SignedProperties_number + '">'
+    SignedProperties += '<etsi:SignedProperties Id="Signature' + \
+        Signature_number + '-SignedProperties' + SignedProperties_number + '">'
     SignedProperties += '<etsi:SignedSignatureProperties>'
     SignedProperties += '<etsi:SigningTime>'
 
     SignedProperties += datetime.now().strftime('%Y-%m-%dT%H:%M:%S%z')
-
 
     SignedProperties += '</etsi:SigningTime>'
     SignedProperties += '<etsi:SigningCertificate>'
@@ -88,7 +96,8 @@ def main():
     SignedProperties += '</etsi:SigningCertificate>'
     SignedProperties += '</etsi:SignedSignatureProperties>'
     SignedProperties += '<etsi:SignedDataObjectProperties>'
-    SignedProperties += '<etsi:DataObjectFormat ObjectReference="#Reference-ID-' + Reference_ID_number + '">'
+    SignedProperties += '<etsi:DataObjectFormat ObjectReference="#Reference-ID-' + \
+        Reference_ID_number + '">'
     SignedProperties += '<etsi:Description>'
 
     SignedProperties += 'contenido comprobante'
@@ -102,7 +111,8 @@ def main():
     SignedProperties += '</etsi:SignedProperties>'
     SignedProperties
 
-    SignedProperties_para_hash = SignedProperties.replace('<etsi:SignedProperties', '<etsi:SignedProperties ' + xmlns).encode()
+    SignedProperties_para_hash = SignedProperties.replace(
+        '<etsi:SignedProperties', '<etsi:SignedProperties ' + xmlns).encode()
     sha1_SignedProperties = hashlib.sha1(SignedProperties_para_hash).hexdigest()
 
     KeyInfo = ''
@@ -112,7 +122,6 @@ def main():
     KeyInfo += '\n<ds:X509Certificate>\n'
 
     KeyInfo += certificado
-
 
     KeyInfo += '\n</ds:X509Certificate>'
     KeyInfo += '\n</ds:X509Data>'
@@ -142,7 +151,9 @@ def main():
     SignedInfo += '</ds:CanonicalizationMethod>'
     SignedInfo += '\n<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1">'
     SignedInfo += '</ds:SignatureMethod>'
-    SignedInfo += '\n<ds:Reference Id="SignedPropertiesID' + SignedPropertiesID_number + '" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature' + Signature_number + '-SignedProperties' + SignedProperties_number + '">'
+    SignedInfo += '\n<ds:Reference Id="SignedPropertiesID' + SignedPropertiesID_number + \
+        '" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature' + \
+        Signature_number + '-SignedProperties' + SignedProperties_number + '">'
     SignedInfo += '\n<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1">'
     SignedInfo += '</ds:DigestMethod>'
     SignedInfo += '\n<ds:DigestValue>'
@@ -160,7 +171,8 @@ def main():
 
     SignedInfo += '</ds:DigestValue>'
     SignedInfo += '\n</ds:Reference>'
-    SignedInfo += '\n<ds:Reference Id="Reference-ID-' + Reference_ID_number + '" URI="#comprobante">'
+    SignedInfo += '\n<ds:Reference Id="Reference-ID-' + \
+        Reference_ID_number + '" URI="#comprobante">'
     SignedInfo += '\n<ds:Transforms>'
     SignedInfo += '\n<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature">'
     SignedInfo += '</ds:Transform>'
@@ -175,23 +187,26 @@ def main():
     SignedInfo += '\n</ds:Reference>'
     SignedInfo += '\n</ds:SignedInfo>'
 
-    SignedInfo_para_firma = SignedInfo.replace('<ds:SignedInfo', '<ds:SignedInfo ' + xmlns)
+    SignedInfo_para_firma = SignedInfo.replace(
+        '<ds:SignedInfo', '<ds:SignedInfo ' + xmlns)
 
     xades_bes = ''
 
-    xades_bes += '<ds:Signature ' + xmlns + ' Id="Signature' + Signature_number + '">'
+    xades_bes += '<ds:Signature ' + xmlns + \
+        ' Id="Signature' + Signature_number + '">'
     xades_bes += '\n' + SignedInfo
 
-    xades_bes += '\n<ds:SignatureValue Id="SignatureValue' + SignatureValue_number + '">\n'
+    xades_bes += '\n<ds:SignatureValue Id="SignatureValue' + \
+        SignatureValue_number + '">\n'
 
     xades_bes += firma_SignedInfo
-
 
     xades_bes += '\n</ds:SignatureValue>'
 
     xades_bes += '\n' + KeyInfo
 
-    xades_bes += '\n<ds:Object Id="Signature' + Signature_number + '-Object' + Object_number + '">'
+    xades_bes += '\n<ds:Object Id="Signature' + \
+        Signature_number + '-Object' + Object_number + '">'
     xades_bes += '<etsi:QualifyingProperties Target="#Signature' + Signature_number + '">'
 
     xades_bes += SignedProperties
@@ -205,6 +220,7 @@ def main():
     myfile = open("invoice_test_sign2.xml", "w")
     myfile.write(xml_signed)
     myfile.close()
+
 
 if __name__ == '__main__':
     main()

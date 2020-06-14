@@ -22,7 +22,8 @@ class L10nECSriAuthorization(models.Model):
     expiration_date = fields.Date('Expiration Date', required=True)
     line_ids = fields.One2many(comodel_name="l10n_ec.sri.authorization.line",
                                inverse_name="authorization_id", string="Document Types", required=False, )
-    count_invoice = fields.Integer(string='Count Invoice',compute='_compute_count_invoice')
+    count_invoice = fields.Integer(
+        string='Count Invoice', compute='_compute_count_invoice')
 
     @api.constrains('start_date', 'expiration_date',)
     def _check_date(self):
@@ -40,14 +41,16 @@ class L10nECSriAuthorization(models.Model):
 
     def _compute_count_invoice(self):
         count = self.env['account.move']
-        search = count.search_count([('l10n_ec_authorization_id', 'in', [a.id for a in self])])
+        search = count.search_count(
+            [('l10n_ec_authorization_id', 'in', [a.id for a in self])])
         self.count_invoice = search
 
     def unlink(self):
         # Check authorization is empty
         for authorization in self.with_context(active_test=False):
             if authorization.count_invoice > 0:
-                raise UserError(_('You cannot delete an authorization that contains an invoice. You can only archive the authorization.'))
+                raise UserError(
+                    _('You cannot delete an authorization that contains an invoice. You can only archive the authorization.'))
         # Delete the empty agency
         result = super(L10nECSriAuthorization, self).unlink()
         return result
@@ -66,6 +69,7 @@ _DOCUMENT_NAMES = {
     'debit_note': _('Debit Note'),
     'delivery_note': _('Delivery Note'),
 }
+
 
 class L10nECSriAuthorizationLine(models.Model):
 
@@ -101,8 +105,10 @@ class L10nECSriAuthorizationLine(models.Model):
     agency_id = fields.Many2one(comodel_name="l10n_ec.agency",
                                 string="Agency", related='point_of_emission_id.agency_id', store=True)
     padding = fields.Integer('Padding', default=9)
-    count_invoice = fields.Integer(string='Count Invoice', related='authorization_id.count_invoice')
-    active = fields.Boolean(string="Active?", related='authorization_id.active', default=True)
+    count_invoice = fields.Integer(
+        string='Count Invoice', related='authorization_id.count_invoice')
+    active = fields.Boolean(
+        string="Active?", related='authorization_id.active', default=True)
 
     @api.constrains(
         'first_sequence',
@@ -111,9 +117,11 @@ class L10nECSriAuthorizationLine(models.Model):
     def _check_sequence(self):
         for line in self:
             if line.last_sequence < 0 or line.first_sequence < 0:
-                raise ValidationError(_("Number of sequence must be bigger than zero"))
+                raise ValidationError(
+                    _("Number of sequence must be bigger than zero"))
             if line.last_sequence <= line.first_sequence:
-                raise ValidationError(_("The first sequence %s must be lower than last sequence %s") % (line.first_sequence, line.last_sequence))
+                raise ValidationError(_("The first sequence %s must be lower than last sequence %s") % (
+                    line.first_sequence, line.last_sequence))
 
     @api.constrains('first_sequence', 'last_sequence')
     def _check_sequence_duplicated(self):
@@ -131,7 +139,7 @@ class L10nECSriAuthorizationLine(models.Model):
 
     @api.constrains(
         'padding',
-                    )
+    )
     def _check_padding(self):
         for line in self:
             if line.padding < 0 or line.padding > 9:
@@ -151,13 +159,14 @@ class L10nECSriAuthorizationLine(models.Model):
                 ('point_of_emission_id', '=', line.point_of_emission_id.id),
                 ('id', '!=', line.id),
             ]
-            other_recs = self.search(domain + [('authorization_id', '=', self.authorization_id.id)])
+            other_recs = self.search(
+                domain + [('authorization_id', '=', self.authorization_id.id)])
             if other_recs:
                 raise ValidationError(_(
                     "There's another line with document type %s "
                     "for point of emission %s on agency %s to authorization %s") %
-                                      (_DOCUMENT_NAMES.get(line.document_type), self.point_of_emission_id.display_name, self.agency_id.display_name,
-                                       self.authorization_id.display_name))
+                    (_DOCUMENT_NAMES.get(line.document_type), self.point_of_emission_id.display_name, self.agency_id.display_name,
+                     self.authorization_id.display_name))
             other_recs = self.search(domain)
             if other_recs:
                 valid = True
@@ -180,9 +189,11 @@ class L10nECSriAuthorizationLine(models.Model):
     def validate_unique_value_document(self, invoice_type, document_number, company_id, res_id=False):
         company_model = self.env['res.company']
         if not document_number or not company_id:
-            raise Warning(_("Verify the arguments to use the validate_unique_value_document function"))
+            raise Warning(
+                _("Verify the arguments to use the validate_unique_value_document function"))
         if not invoice_type:
-            raise Warning(_("You must indicate what type of document it is, Invoice, Credit Note, Debit Note, etc."))
+            raise Warning(
+                _("You must indicate what type of document it is, Invoice, Credit Note, Debit Note, etc."))
         document_type = modules_mapping.get_document_type(invoice_type)
         model_description = modules_mapping.get_document_name(document_type)
         model_name = modules_mapping.get_model_name(document_type)

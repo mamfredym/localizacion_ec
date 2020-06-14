@@ -17,16 +17,21 @@ class AccountChartTemplate(models.Model):
             # Get the default accounts
             default_account = False
             if journal['type'] == 'sale':
-                default_account = acc_template_ref.get(self.property_account_income_categ_id.id)
+                default_account = acc_template_ref.get(
+                    self.property_account_income_categ_id.id)
             elif journal['type'] == 'purchase':
-                default_account = acc_template_ref.get(self.property_account_expense_categ_id.id)
+                default_account = acc_template_ref.get(
+                    self.property_account_expense_categ_id.id)
             elif journal['type'] == 'general' and journal['code'] == _('EXCH'):
-                if type=='credit':
-                    default_account = acc_template_ref.get(self.income_currency_exchange_account_id.id)
+                if type == 'credit':
+                    default_account = acc_template_ref.get(
+                        self.income_currency_exchange_account_id.id)
                 else:
-                    default_account = acc_template_ref.get(self.expense_currency_exchange_account_id.id)
+                    default_account = acc_template_ref.get(
+                        self.expense_currency_exchange_account_id.id)
             return default_account
-        journal_data = super(AccountChartTemplate, self)._prepare_all_journals(acc_template_ref, company, journals_dict)
+        journal_data = super(AccountChartTemplate, self)._prepare_all_journals(
+            acc_template_ref, company, journals_dict)
         if company.country_id.code == 'EC':
             journals = [
                 {'name': _('Customer Debit Notes'), 'type': 'sale', 'code': _('CDN'), 'favorite': True,
@@ -55,7 +60,8 @@ class AccountChartTemplate(models.Model):
         return journal_data
 
     def generate_properties(self, acc_template_ref, company):
-        res = super(AccountChartTemplate, self).generate_properties(acc_template_ref, company)
+        res = super(AccountChartTemplate, self).generate_properties(
+            acc_template_ref, company)
         account_model = self.env['account.account']
         if company.country_id.code == 'EC':
             tag_iva = self.env.ref('l10n_ec_niif.tag_f104_609')

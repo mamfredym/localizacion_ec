@@ -19,13 +19,13 @@ class ResPartner(models.Model):
             partner.l10n_ec_foreign = l10n_ec_foreign
 
     l10n_ec_foreign = fields.Boolean('Foreign?',
-                                    readonly=True, help="", store=True, compute='_compute_l10n_ec_foreign')
+                                     readonly=True, help="", store=True, compute='_compute_l10n_ec_foreign')
     l10n_ec_foreign_type = fields.Selection(
         [('01', 'Persona Natural'),
          ('02', 'Sociedad'),
          ], string='Foreign Type', readonly=False, help="", )
     l10n_ec_business_name = fields.Char('Business Name',
-                                       required=False, readonly=False, help="", )
+                                        required=False, readonly=False, help="", )
     # Datos para el reporte dinardap
     l10n_ec_sex = fields.Selection([
         ('M', 'Masculino'),
@@ -37,17 +37,19 @@ class ResPartner(models.Model):
         ('D', 'Divorciado(a)'),
         ('', 'Unión Libre'),
         ('V', 'Viudo(o)'),
-                                       ], string='Civil Status', readonly=False, help="", required=False)
+    ], string='Civil Status', readonly=False, help="", required=False)
     l10n_ec_input_origins = fields.Selection([('B', 'Empleado Público'),
-                                      ('V', 'Empleado Privado'),
-                                      ('I', 'Independiente'),
-                                      ('A', 'Ama de Casa o Estudiante'),
-                                      ('R', 'Rentista'),
-                                      ('H', 'Jubilado'),
-                                      ('M', 'Remesa del Exterior'),
-                                      ], string='Input Origins', readonly=False, help="", required=False)
-    l10n_ec_related_part = fields.Boolean('Related Part?', readonly=False, help="", )
-    l10n_ec_is_ecuadorian_company = fields.Boolean(string="is Ecuadorian Company?", compute="_get_ecuadorian_company")
+                                              ('V', 'Empleado Privado'),
+                                              ('I', 'Independiente'),
+                                              ('A', 'Ama de Casa o Estudiante'),
+                                              ('R', 'Rentista'),
+                                              ('H', 'Jubilado'),
+                                              ('M', 'Remesa del Exterior'),
+                                              ], string='Input Origins', readonly=False, help="", required=False)
+    l10n_ec_related_part = fields.Boolean(
+        'Related Part?', readonly=False, help="", )
+    l10n_ec_is_ecuadorian_company = fields.Boolean(
+        string="is Ecuadorian Company?", compute="_get_ecuadorian_company")
 
     @api.depends('company_id.country_id')
     def _get_ecuadorian_company(self):
@@ -102,12 +104,14 @@ class ResPartner(models.Model):
     @api.constrains('vat', 'country_id')
     def check_vat(self):
         if self.sudo().env.ref('base.module_base_vat').state == 'installed':
-            self = self.filtered(lambda partner: partner.country_id == self.env.ref('base.ec'))
+            self = self.filtered(
+                lambda partner: partner.country_id == self.env.ref('base.ec'))
             for partner in self:
                 if partner.vat:
                     valid, vat_type = self.check_vat_ec(partner.vat)
                     if not valid:
-                        raise UserError(_('VAT %s is not valid for an Ecuadorian company, ''it must be like this form 17165373411001') % (partner.vat))
+                        raise UserError(
+                            _('VAT %s is not valid for an Ecuadorian company, ''it must be like this form 17165373411001') % (partner.vat))
             return super(ResPartner, self).check_vat()
         else:
             return True
@@ -124,7 +128,7 @@ class ResPartner(models.Model):
             partner.l10n_ec_type_sri = vat_type
 
     l10n_ec_type_sri = fields.Char('SRI Identification Type',
-                                  store=True, readonly=True, compute='_get_l10n_ec_type_sri')
+                                   store=True, readonly=True, compute='_get_l10n_ec_type_sri')
 
     def write(self, values):
         for partner in self:
@@ -145,13 +149,16 @@ class ResPartner(models.Model):
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         args = args or []
         recs = self.browse()
-        res = super(ResPartner, self)._name_search(name, args, operator, limit, name_get_uid)
+        res = super(ResPartner, self)._name_search(
+            name, args, operator, limit, name_get_uid)
         if not res and name:
             recs = self.search([('vat', operator, name)] + args, limit=limit)
             if not recs:
-                recs = self.search([('l10n_ec_business_name', operator, name)] + args, limit=limit)
+                recs = self.search(
+                    [('l10n_ec_business_name', operator, name)] + args, limit=limit)
             if recs:
-                res = models.lazy_name_get(self.browse(recs.ids).with_user(name_get_uid)) or []
+                res = models.lazy_name_get(self.browse(
+                    recs.ids).with_user(name_get_uid)) or []
         return res
 
     l10n_ec_authorization_ids = fields.One2many('l10n_ec.sri.authorization.supplier',
@@ -167,5 +174,6 @@ class ResPartner(models.Model):
                                                  default=lambda self: not ("default_parent_id" in self.env.context))
     l10n_ec_email_withhold_purchase = fields.Boolean('As Follower on Withhold', readonly=False,
                                                      default=lambda self: not ("default_parent_id" in self.env.context))
+
 
 ResPartner()

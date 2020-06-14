@@ -131,7 +131,7 @@ class L10nEcWithhold(models.Model):
         required=False,
         tracking=True)
     note = fields.Char(
-        string='Note', 
+        string='Note',
         required=False)
     move_id = fields.Many2one(
         comodel_name='account.move',
@@ -152,8 +152,10 @@ class L10nEcWithhold(models.Model):
     )
     def _get_tax_amount(self):
         for rec in self:
-            rec.tax_iva = sum(i.tax_amount_currency for i in rec.line_ids.filtered(lambda x: x.type == 'iva'))
-            rec.tax_rent = sum(r.tax_amount_currency for r in rec.line_ids.filtered(lambda x: x.type == 'rent'))
+            rec.tax_iva = sum(i.tax_amount_currency for i in rec.line_ids.filtered(
+                lambda x: x.type == 'iva'))
+            rec.tax_rent = sum(r.tax_amount_currency for r in rec.line_ids.filtered(
+                lambda x: x.type == 'rent'))
 
     tax_iva = fields.Monetary(
         string='Withhold IVA',
@@ -193,7 +195,8 @@ class L10nEcWithhold(models.Model):
         if not document_number:
             return False
         if not re.match('\d{3}-\d{3}-\d{9}$', document_number):
-            raise UserError(_(u'Ecuadorian Document %s must be like 001-001-123456789') % (self.display_name))
+            raise UserError(
+                _(u'Ecuadorian Document %s must be like 001-001-123456789') % (self.display_name))
         return document_number
 
     @api.constrains('invoice_id')
@@ -210,7 +213,8 @@ class L10nEcWithhold(models.Model):
     def _onchange_number_sale_withhold(self):
         for rec in self:
             if rec.number:
-                format_document_number = rec._format_withhold_document_number(rec.number)
+                format_document_number = rec._format_withhold_document_number(
+                    rec.number)
                 if rec.number != format_document_number:
                     rec.number = format_document_number
 
@@ -228,12 +232,13 @@ class L10nEcWithhold(models.Model):
                 'credit': credit,
                 'name': name,
                 'partner_id': partner_id,
-                             }
+            }
             return model_aml.with_context(check_move_validity=False).create(vals_move_line)
         if self.type == 'sale':
             destination_account_id = self.partner_id.property_account_receivable_id
             if not self.line_ids:
-                raise UserError(_(u'You must have at least one line to continue'))
+                raise UserError(
+                    _(u'You must have at least one line to continue'))
             vals_move = {
                 'ref': _(u'RET CLI: %s') % self.number,
                 'date': self.issue_date,
@@ -274,9 +279,11 @@ class L10nEcWithhold(models.Model):
                 )
             move_line = model_aml.browse()
             if invoices:
-                move_line = invoices.line_ids.filtered(lambda l: not l.reconciled and l.account_id == destination_account_id)
+                move_line = invoices.line_ids.filtered(
+                    lambda l: not l.reconciled and l.account_id == destination_account_id)
             if not move_line:
-                raise UserError(_(u'There is no outstanding balance on this invoice'))
+                raise UserError(
+                    _(u'There is no outstanding balance on this invoice'))
             lines_to_reconcile = model_aml.browse()
             lines_to_reconcile += move_line
             lines_to_reconcile += _create_move_line(
@@ -284,7 +291,8 @@ class L10nEcWithhold(models.Model):
                 total_detained_iva + total_detained_rent,
                 0.0,
                 destination_account_id.id,
-                name=_(u'CRUCE RET. %s con %s') % (self.number, self.invoice_id.display_name),
+                name=_(u'CRUCE RET. %s con %s') % (
+                    self.number, self.invoice_id.display_name),
                 partner_id=self.partner_id.id,
             )
             lines_to_reconcile.reconcile()
@@ -308,7 +316,8 @@ class L10nEcWithhold(models.Model):
         if len(moves) > 1:
             action['domain'] = [('id', 'in', moves.ids)]
         elif moves:
-            action['views'] = [(self.env.ref('account.view_move_form').id, 'form')]
+            action['views'] = [
+                (self.env.ref('account.view_move_form').id, 'form')]
             action['res_id'] = moves.id
         action['context'] = dict(self._context,
                                  default_partner_id=self.partner_id.id,
@@ -370,16 +379,17 @@ class AccountTax(models.Model):
     def create(self, vals):
         recs = super(AccountTax, self).create(vals)
         withhold_iva_group = self.env.ref('l10n_ec_niif.tax_group_iva_withhold')
-        withhold_rent_group = self.env.ref('l10n_ec_niif.tax_group_renta_withhold')
+        withhold_rent_group = self.env.ref(
+            'l10n_ec_niif.tax_group_renta_withhold')
         percent_model = self.env['l10n_ec.withhold.line.percent']
         for rec in recs:
             if rec.tax_group_id.id in (withhold_iva_group.id, withhold_rent_group.id):
                 type = rec.tax_group_id.id == withhold_iva_group.id and 'iva' \
-                       or rec.tax_group_id.id == withhold_rent_group.id and 'rent'
+                    or rec.tax_group_id.id == withhold_rent_group.id and 'rent'
                 percent = abs(rec.amount)
                 if type == 'iva':
                     percent = abs(rec.invoice_repartition_line_ids.filtered(
-                                            lambda x: x.repartition_type == 'tax').factor_percent)
+                        lambda x: x.repartition_type == 'tax').factor_percent)
                 current_percent = percent_model.search([
                     ('type', '=', type),
                     ('percent', '=', percent)
@@ -491,6 +501,9 @@ class L10nEcWithholdLine(models.Model):
     )
     def _onchange_amount(self):
         if self.percent_id:
-            self.base_amount_currency = self.partner_currency_id.compute(self.base_amount, self.currency_id)
-            self.tax_amount = (self.percent_id.percent / 100.0) * self.base_amount
-            self.tax_amount_currency = self.partner_currency_id.compute(self.tax_amount, self.currency_id)
+            self.base_amount_currency = self.partner_currency_id.compute(
+                self.base_amount, self.currency_id)
+            self.tax_amount = (self.percent_id.percent
+                               / 100.0) * self.base_amount
+            self.tax_amount_currency = self.partner_currency_id.compute(
+                self.tax_amount, self.currency_id)

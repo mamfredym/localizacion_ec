@@ -17,7 +17,8 @@ class ResCompany(models.Model):
         self.ensure_one()
         return True if self.country_id == self.env.ref('base.ec') else super()._localization_use_documents()
 
-    l10n_ec_consumidor_final_limit = fields.Float(string="Invoice Sales Limit Final Consumer", default=200.0)
+    l10n_ec_consumidor_final_limit = fields.Float(
+        string="Invoice Sales Limit Final Consumer", default=200.0)
 
     l10n_ec_withhold_sale_iva_account_id = fields.Many2one(
         comodel_name='account.account',
