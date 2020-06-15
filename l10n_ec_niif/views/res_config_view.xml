@@ -57,6 +57,350 @@
                             </div>
                         </div>
                     </div>
+                    <h2 name="electronic_logo">Logo para Documentos Electrónicos</h2>
+					<div class="row mt16 o_settings_container">
+						<div id="electronic_logo" class="col-12 col-md-6 o_setting_box">
+							<div class="o_setting_left_pane">
+							</div>
+							<div class="o_setting_right_pane">
+								<field name="electronic_logo" widget="image" />
+								<div class="text-muted"
+									attrs="{'invisible' : [('electronic_logo','!=',False)]}">
+									Use un tamaño de 450x150 píxeles aprox.
+								</div>
+							</div>
+						</div>
+					</div>
+					<h2 name="conection">Conexión</h2>
+					<div class="row mt16 o_settings_container">
+						<div id="conection" class="col-12 col-md-6 o_setting_box">
+							<div class="o_setting_left_pane">
+							</div>
+							<div class="o_setting_right_pane">
+								<label for="type_environment" string="Tipo de Ambiente"
+									class="col-md-5" />
+								<field name="type_environment" widget="radio" class="o_light_label" />
+								<div class="text-muted">
+									<ul>
+										<li>
+											<b>Pruebas:</b>
+											Los documentos no tienen validez Tributaria
+										</li>
+										<li>
+											<b>Producción:</b>
+											Los documentos tienen validez Tributaria
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="col-12 col-md-6 o_setting_box">
+							<div class="o_setting_left_pane">
+							</div>
+							<div class="o_setting_right_pane">
+								<div class="row">
+									<label for="max_intentos" class="col-5" />
+									<field name="max_intentos" />
+								</div>
+								<div class="row">
+									<label for="cron_process" class="col-5" />
+									<field name="cron_process" />
+								</div>
+								<div class="row">
+									<label for="ws_timeout" class="col-5" />
+									<field name="ws_timeout" />
+								</div>
+							</div>
+						</div>
+						<div class="col-12 col-md-12 o_setting_box">
+							<div class="o_setting_left_pane">
+							</div>
+							<div class="o_setting_right_pane">
+								<label for="type_conection_sri" string="Tipo de conexion con SRI"
+									class="col-3" />
+								<field name="type_conection_sri" widget="radio" class="o_light_label" />
+								<div class="text-muted">
+									<ul>
+										<li>
+											<b>On-Line:</b>
+											Los documentos se autorizan en linea con el SRI
+										</li>
+										<li>
+											<b>Off-Line:</b>
+											Los documentos se autorizan en un maximo de 24 horas con el SRI
+										</li>
+									</ul>
+								</div>
+								<span class="o_form_label col-12">URL de Web Services</span>
+								<div class="col-12 col-md-12" attrs="{'invisible' : [('type_environment','!=','production')]}">
+									<div class="row">
+										<label for="ws_receipt_production" string="Recepción de Documentos"
+											class="col-5 o_light_label" />
+										<field name="ws_receipt_production" />
+									</div>
+									<div class="row">
+										<label for="ws_auth_production" string="Autorización de Documentos"
+											class="col-5 o_light_label" />
+										<field name="ws_auth_production" />
+									</div>
+								</div>
+								<div class="col-12 col-md-12" attrs="{'invisible' : [('type_environment','!=','test')]}">
+									<div class="row">
+										<label for="ws_receipt_test" string="Recepción de Documentos"
+											class="col-5 o_light_label" />
+										<field name="ws_receipt_test" />
+									</div>
+									<div class="row">
+										<label for="ws_auth_test" string="Autorización de Documentos"
+											class="col-5 o_light_label" />
+										<field name="ws_auth_test" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<h2 name="signer">Firma Electrónica</h2>
+					<div class="row mt16 o_settings_container">
+						<div id="signer" class="col-12 col-md-6 o_setting_box">
+							<div class="o_setting_left_pane">
+							</div>
+							<div class="o_setting_right_pane">
+								<div class="row">
+									<label for="key_type_id" class="col-5" />
+									<field name="key_type_id" domain="[('state', '=', 'valid')]" options="{'no_quick_create': True}"
+										class="o_light_label" />
+								</div>
+								<div class="row">
+									<label for="path_files_electronic" string="Ruta para guardar Documentos"
+										class="col-5" />
+									<field name="path_files_electronic" class="o_light_label" />
+								</div>
+							</div>
+						</div>
+					</div>
+					<h2 name="documents">Default Values</h2>
+					<div class="row mt16 o_settings_container">
+						<div id="sri_default_values" class="col-12 col-md-6 o_setting_box">
+							<div class="o_setting_left_pane">
+							</div>
+							<div class="o_setting_right_pane">
+								<div class="row">
+									<label for="l10n_ec_sri_payment_id" class="col-5" />
+									<field name="l10n_ec_sri_payment_id" />
+								</div>
+							</div>
+						</div>
+					</div>
+					<h2 name="documents">Documentos Autorizados</h2>
+					<div class="row mt16 o_settings_container">
+						<div id="document_invoice" class="col-12 col-md-6 o_setting_box">
+							<div class="o_setting_left_pane">
+								<field name="electronic_invoice" />
+							</div>
+							<div class="o_setting_right_pane">
+								<label for="electronic_invoice" string="Facturas" />
+								<label for="invoice_version_xml_id" string="Version"
+									attrs="{'invisible': [('electronic_invoice', '=', False)]}"/>
+								<field name="invoice_version_xml_id" class="oe_in_line"
+									options="{'no_quick_create': True}" context="{'default_document_type': 'invoice'}"
+									attrs="{'required': [('electronic_invoice', '=', True)], 'invisible': [('electronic_invoice', '=', False)]}"/>
+							</div>
+						</div>
+						<div id="document_withhold" class="col-12 col-md-6 o_setting_box">
+							<div class="o_setting_left_pane">
+								<field name="electronic_withhold" />
+							</div>
+							<div class="o_setting_right_pane">
+								<label for="electronic_withhold" string="Retenciones" />
+								<label for="withholding_version_xml_id" string="Version"
+									attrs="{'invisible': [('electronic_withhold', '=', False)]}"/>
+								<field name="withholding_version_xml_id" class="oe_in_line"
+									options="{'no_quick_create': True}" context="{'default_document_type': 'withholding'}"
+									attrs="{'required': [('electronic_withhold', '=', True)], 'invisible': [('electronic_withhold', '=', False)]}"/>
+							</div>
+						</div>
+						<div id="document_credit_note" class="col-12 col-md-6 o_setting_box">
+							<div class="o_setting_left_pane">
+								<field name="electronic_credit_note" />
+							</div>
+							<div class="o_setting_right_pane">
+								<label for="electronic_credit_note" string="Notas de Crédito" />
+								<label for="credit_note_version_xml_id" string="Version"
+									attrs="{'invisible': [('electronic_credit_note', '=', False)]}"/>
+								<field name="credit_note_version_xml_id" class="oe_in_line"
+									options="{'no_quick_create': True}" context="{'default_document_type': 'credit_note'}"
+									attrs="{'required': [('electronic_credit_note', '=', True)], 'invisible': [('electronic_credit_note', '=', False)]}"/>
+							</div>
+						</div>
+						<div id="document_debit_note" class="col-12 col-md-6 o_setting_box">
+							<div class="o_setting_left_pane">
+								<field name="electronic_debit_note" />
+							</div>
+							<div class="o_setting_right_pane">
+								<label for="electronic_debit_note" string="Notas de Débito" />
+								<label for="debit_note_version_xml_id" string="Version"
+									attrs="{'invisible': [('electronic_debit_note', '=', False)]}"/>
+								<field name="debit_note_version_xml_id" class="oe_in_line"
+									options="{'no_quick_create': True}" context="{'default_document_type': 'debit_note'}"
+									attrs="{'required': [('electronic_debit_note', '=', True)], 'invisible': [('electronic_debit_note', '=', False)]}"/>
+							</div>
+						</div>
+						<div id="document_delivery_note" class="col-12 col-md-6 o_setting_box">
+							<div class="o_setting_left_pane">
+								<field name="electronic_delivery_note" />
+							</div>
+							<div class="o_setting_right_pane">
+								<label for="electronic_delivery_note" string="Guías de Remision" />
+								<label for="delivery_note_version_xml_id" string="Version"
+									attrs="{'invisible': [('electronic_delivery_note', '=', False)]}"/>
+								<field name="delivery_note_version_xml_id" class="oe_in_line"
+									options="{'no_quick_create': True}" context="{'default_document_type': 'delivery_note'}"
+									attrs="{'required': [('electronic_delivery_note', '=', True)], 'invisible': [('electronic_delivery_note', '=', False)]}"/>
+							</div>
+						</div>
+						<div id="document_liquidation" class="col-12 col-md-6 o_setting_box">
+							<div class="o_setting_left_pane">
+								<field name="electronic_liquidation" />
+							</div>
+							<div class="o_setting_right_pane">
+								<label for="electronic_liquidation" string="Liquidacion de compras" />
+								<label for="liquidation_version_xml_id" string="Version"
+									attrs="{'invisible': [('electronic_liquidation', '=', False)]}"/>
+								<field name="liquidation_version_xml_id" class="oe_in_line"
+									options="{'no_quick_create': True}" context="{'default_document_type': 'liquidation'}"
+									attrs="{'required': [('electronic_liquidation', '=', True)], 'invisible': [('electronic_liquidation', '=', False)]}"/>
+							</div>
+						</div>
+					</div>
+					<h2 name="email">Notificaciones por Correo</h2>
+					<div class="row mt16 o_settings_container">
+						<div id="send_mail_from" class="col-12 col-md-6 o_setting_box">
+							<div class="o_setting_left_pane">
+							</div>
+							<div class="o_setting_right_pane">
+								<div class="row">
+									<label for="send_mail_from" class="col-5" />
+									<field name="send_mail_from" class="o_light_label" />
+								</div>
+							</div>
+						</div>
+						<div id="email_open_company" class="col-12 col-md-6 o_setting_box">
+							<div class="o_setting_left_pane">
+
+							</div>
+							<div class="o_setting_right_pane">
+								<div>
+									<button name="open_company" icon="fa-arrow-right" type="object"
+										string="Configurar Plantillas de Correo" class="btn-link" />
+								</div>
+							</div>
+						</div>
+						<div id="email_invoice" class="col-12 col-md-6 o_setting_box">
+							<div class="o_setting_left_pane">
+								<field name="send_mail_invoice" />
+							</div>
+							<div class="o_setting_right_pane">
+								<label for="send_mail_invoice" string="Facturas" />
+							</div>
+						</div>
+						<div id="email_withhold" class="col-12 col-md-6 o_setting_box">
+							<div class="o_setting_left_pane">
+								<field name="send_mail_retention" />
+							</div>
+							<div class="o_setting_right_pane">
+								<label for="send_mail_retention" string="Retenciones" />
+							</div>
+						</div>
+						<div id="email_credit_note" class="col-12 col-md-6 o_setting_box">
+							<div class="o_setting_left_pane">
+								<field name="send_mail_credit_note" />
+							</div>
+							<div class="o_setting_right_pane">
+								<label for="send_mail_credit_note" string="Notas de Crédito" />
+							</div>
+						</div>
+						<div id="email_debit_note" class="col-12 col-md-6 o_setting_box">
+							<div class="o_setting_left_pane">
+								<field name="send_mail_debit_note" />
+							</div>
+							<div class="o_setting_right_pane">
+								<label for="send_mail_debit_note" string="Notas de Débito" />
+							</div>
+						</div>
+						<div id="email_delivery_note" class="col-12 col-md-6 o_setting_box">
+							<div class="o_setting_left_pane">
+								<field name="send_mail_remision" />
+							</div>
+							<div class="o_setting_right_pane">
+								<label for="send_mail_remision" string="Guías de Remision" />
+							</div>
+						</div>
+						<div id="email_liquidation" class="col-12 col-md-6 o_setting_box">
+							<div class="o_setting_left_pane">
+								<field name="send_mail_liquidation" />
+							</div>
+							<div class="o_setting_right_pane">
+								<label for="send_mail_liquidation" string="Liquidacion de compras" />
+							</div>
+						</div>
+					</div>
+					<h2 name="email">Portal de Clientes</h2>
+					<div class="row mt16 o_settings_container">
+						<div id="create_login_for_partners" class="col-12 col-md-6 o_setting_box">
+							<div class="o_setting_left_pane">
+								<field name="create_login_for_partners" />
+							</div>
+							<div class="o_setting_right_pane">
+								<label for="create_login_for_partners" string="Crear Usuarios para portal?" />
+								<div class="text-muted">
+									Marque esta opcion si desea crear automaticamente un usuario por cada cliente para que puedan ver sus documentos en el portal.
+								</div>
+							</div>
+						</div>
+					</div>
+					<h2 name="email">Opciones de Impresion RIDE</h2>
+					<div class="row mt16 o_settings_container">
+						<div id="option_print_ride_main_code" class="col-12 col-md-6 o_setting_box">
+							<div class="o_setting_left_pane">
+								<field name="print_ride_main_code" />
+							</div>
+							<div class="o_setting_right_pane">
+								<label for="print_ride_main_code" />
+							</div>
+						</div>
+						<div id="option_print_ride_aux_code" class="col-12 col-md-6 o_setting_box">
+							<div class="o_setting_left_pane">
+								<field name="print_ride_aux_code" />
+							</div>
+							<div class="o_setting_right_pane">
+								<label for="print_ride_aux_code" />
+							</div>
+						</div>
+						<div id="option_print_ride_detail1" class="col-12 col-md-6 o_setting_box">
+							<div class="o_setting_left_pane">
+								<field name="print_ride_detail1" />
+							</div>
+							<div class="o_setting_right_pane">
+								<label for="print_ride_detail1" />
+							</div>
+						</div>
+						<div id="option_print_ride_detail2" class="col-12 col-md-6 o_setting_box">
+							<div class="o_setting_left_pane">
+								<field name="print_ride_detail2" />
+							</div>
+							<div class="o_setting_right_pane">
+								<label for="print_ride_detail2" />
+							</div>
+						</div>
+						<div id="option_print_ride_detail3" class="col-12 col-md-6 o_setting_box">
+							<div class="o_setting_left_pane">
+								<field name="print_ride_detail3" />
+							</div>
+							<div class="o_setting_right_pane">
+								<label for="print_ride_detail3" />
+							</div>
+						</div>
+					</div>
                     </div>
                 </xpath>
             </field>

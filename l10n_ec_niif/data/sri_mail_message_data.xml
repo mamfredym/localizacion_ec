@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data noupdate="1">
+		<!-- mensaje para facturas -->
+		<record model="sri.mail.message" id="sri_mail_message_invoice"
+			forcecreate="True">
+			<field name="name">Estimado %(Cliente)s se ha emitido el documento tipo %(TipoDocumento)s con número %(NumeroDocumento)s el cual ha sido autorizado con el número %(NumeroAutorizacion)s en la fecha %(FechaAutorizacion)s. Ud puede revisar el mismo en: %(url)s</field>
+			<field name="message_first">Usted no ha ingresado a nuestra página, puede hacerlo con los siguientes datos: Su Usuario %(Usuario)s, Su Contraseña %(Password)s</field>
+			<field name="company_id" ref="base.main_company" />
+			<field name="document_type">out_invoice</field>
+		</record>
+		
+		<!-- mensaje para notas de credito -->
+		<record model="sri.mail.message" id="sri_mail_message_credit_note"
+			forcecreate="True">
+			<field name="name">Estimado %(Cliente)s se ha emitido el documento tipo %(TipoDocumento)s con número %(NumeroDocumento)s el cual ha sido autorizado con el número %(NumeroAutorizacion)s en la fecha %(FechaAutorizacion)s. Ud puede revisar el mismo en: %(url)s</field>
+			<field name="message_first">Usted no ha ingresado a nuestra página, puede hacerlo con los siguientes datos: Su Usuario %(Usuario)s, Su Contraseña %(Password)s</field>
+			<field name="company_id" ref="base.main_company" />
+			<field name="document_type">out_refund</field>
+		</record>
+		
+		<!-- mensaje para notas de debito -->
+		<record model="sri.mail.message" id="sri_mail_message_debit_note"
+			forcecreate="True">
+			<field name="name">Estimado %(Cliente)s se ha emitido el documento tipo %(TipoDocumento)s con número %(NumeroDocumento)s el cual ha sido autorizado con el número %(NumeroAutorizacion)s en la fecha %(FechaAutorizacion)s. Ud puede revisar el mismo en: %(url)s</field>
+			<field name="message_first">Usted no ha ingresado a nuestra página, puede hacerlo con los siguientes datos: Su Usuario %(Usuario)s, Su Contraseña %(Password)s</field>
+			<field name="company_id" ref="base.main_company" />
+			<field name="document_type">debit_note_out</field>
+		</record>
+		
+		<!-- mensaje para retenciones -->
+		<record model="sri.mail.message" id="sri_mail_message_withhold"
+			forcecreate="True">
+			<field name="name">Estimado %(Cliente)s se ha emitido el documento tipo %(TipoDocumento)s con número %(NumeroDocumento)s el cual ha sido autorizado con el número %(NumeroAutorizacion)s en la fecha %(FechaAutorizacion)s. Ud puede revisar el mismo en: %(url)s</field>
+			<field name="message_first">Usted no ha ingresado a nuestra página, puede hacerlo con los siguientes datos: Su Usuario %(Usuario)s, Su Contraseña %(Password)s</field>
+			<field name="company_id" ref="base.main_company" />
+			<field name="document_type">withhold_purchase</field>
+		</record>
+		
+		<!-- mensaje para guias de remision -->
+		<record model="sri.mail.message" id="sri_mail_message_delivery_note"
+			forcecreate="True">
+			<field name="name">Estimado %(Cliente)s se ha emitido el documento tipo %(TipoDocumento)s con número %(NumeroDocumento)s el cual ha sido autorizado con el número %(NumeroAutorizacion)s en la fecha %(FechaAutorizacion)s. Ud puede revisar el mismo en: %(url)s</field>
+			<field name="message_first">Usted no ha ingresado a nuestra página, puede hacerlo con los siguientes datos: Su Usuario %(Usuario)s, Su Contraseña %(Password)s</field>
+			<field name="company_id" ref="base.main_company" />
+			<field name="document_type">delivery_note</field>
+		</record>
+		
+	</data>
+</odoo>

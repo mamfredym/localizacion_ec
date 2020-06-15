@@ -50,6 +50,7 @@ class ResPartner(models.Model):
         'Related Part?', readonly=False, help="", )
     l10n_ec_is_ecuadorian_company = fields.Boolean(
         string="is Ecuadorian Company?", compute="_get_ecuadorian_company")
+    l10n_ec_sri_payment_id = fields.Many2one('l10n_ec.sri.payment.method', 'SRI Payment Method')
 
     @api.depends('company_id.country_id')
     def _get_ecuadorian_company(self):
@@ -174,6 +175,9 @@ class ResPartner(models.Model):
                                                  default=lambda self: not ("default_parent_id" in self.env.context))
     l10n_ec_email_withhold_purchase = fields.Boolean('As Follower on Withhold', readonly=False,
                                                      default=lambda self: not ("default_parent_id" in self.env.context))
+
+    def get_direccion_matriz(self, printer_point):
+        return self.street or printer_point.agency_id.address_id.street or 'NA'
 
 
 ResPartner()

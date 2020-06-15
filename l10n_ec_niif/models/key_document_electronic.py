@@ -45,7 +45,7 @@ class res_company(models.Model):
         if authorization_days <= 0:
             authorization_days = 20
         for key in keys_expired:
-            expiration_date = datetime.strptime(key.expiration_date, DF)
+            expiration_date = key.expiration_date
             tdelta = expiration_date - datetime.now()
             days = round(tdelta.days + (tdelta.seconds / 86400.0), 0)
             # si no esta configurado, tomar 20 dias por defecto

@@ -178,13 +178,13 @@ def get_document_name(document_type):
     @param document_type: el tipo de documento(el que usa los documentos de autorizaciones)
     @return: str, la descripcion del tipo de documento, entendible por el usuario
     """
-    document_names = {'invoice': _(u'Factura'),
-                      'credit_note': _(u'Nota de Crédito'),
-                      'debit_note': _(u'Nota de Débito'),
-                      'liquidation': _(u'Liquidación de Compras'),
-                      'withholding': _(u'Retención'),
-                      'delivery_note': _(u'Guía de Remisión'),
-                      'invoice_reembolso': _(u'Reembolso de gasto'),
+    document_names = {'invoice': _('Factura'),
+                      'credit_note': _('Nota de Crédito'),
+                      'debit_note': _('Nota de Débito'),
+                      'liquidation': _('Liquidación de Compras'),
+                      'withholding': _('Retención'),
+                      'delivery_note': _('Guía de Remisión'),
+                      'invoice_reembolso': _('Reembolso de gasto'),
                       }
     return document_names.get(document_type, '')
 

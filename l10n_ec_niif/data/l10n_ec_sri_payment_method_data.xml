@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+    <record model="l10n_ec.sri.payment.method" id="cp_01">
+        <field name="name">SIN UTILIZACION DEL SISTEMA FINANCIERO</field>
+        <field name="code">01</field>
+    </record>
+    <record model="l10n_ec.sri.payment.method" id="cp_02">
+        <field name="name">CHEQUE PROPIO</field>
+        <field name="code">02</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record model="l10n_ec.sri.payment.method" id="cp_03">
+        <field name="name">CHEQUE CERTIFICADO</field>
+        <field name="code">03</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record model="l10n_ec.sri.payment.method" id="cp_04">
+        <field name="name">CHEQUE DE GERENCIA</field>
+        <field name="code">04</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record model="l10n_ec.sri.payment.method" id="cp_05">
+        <field name="name">CHEQUE DEL EXTERIOR</field>
+        <field name="code">05</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record model="l10n_ec.sri.payment.method" id="cp_06">
+        <field name="name">DÉBITO DE CUENTA</field>
+        <field name="code">06</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record model="l10n_ec.sri.payment.method" id="cp_07">
+        <field name="name">TRANSFERENCIA PROPIO BANCO</field>
+        <field name="code">07</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record model="l10n_ec.sri.payment.method" id="cp_08">
+        <field name="name">TRANSFERENCIA OTRO BANCO NACIONAL</field>
+        <field name="code">08</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record model="l10n_ec.sri.payment.method" id="cp_09">
+        <field name="name">TRANSFERENCIA BANCO EXTERIOR</field>
+        <field name="code">09</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record model="l10n_ec.sri.payment.method" id="cp_10">
+        <field name="name">TARJETA DE CRÉDITO NACIONAL</field>
+        <field name="code">10</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record model="l10n_ec.sri.payment.method" id="cp_11">
+        <field name="name">TARJETA DE CRÉDITO INTERNACIONAL</field>
+        <field name="code">11</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record model="l10n_ec.sri.payment.method" id="cp_12">
+        <field name="name">GIRO</field>
+        <field name="code">12</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record model="l10n_ec.sri.payment.method" id="cp_13">
+        <field name="name">DEPOSITO EN CUENTA (CORRIENTE/AHORROS)</field>
+        <field name="code">13</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record model="l10n_ec.sri.payment.method" id="cp_14">
+        <field name="name">ENDOSO DE INVERSIÓN</field>
+        <field name="code">14</field>
+        <field name="active" eval="False"/>
+    </record>
+    <!-- 2016 -->
+    <record model="l10n_ec.sri.payment.method" id="cp_15">
+        <field name="name">COMPENSACIÓN DE DEUDAS</field>
+        <field name="code">15</field>
+    </record>
+    <record model="l10n_ec.sri.payment.method" id="cp_16">
+        <field name="name">TARJETA DE DÉBITO</field>
+        <field name="code">16</field>
+    </record>
+    <record model="l10n_ec.sri.payment.method" id="cp_17">
+        <field name="name">DINERO ELECTRÓNICO</field>
+        <field name="code">17</field>
+    </record>
+    <record model="l10n_ec.sri.payment.method" id="cp_18">
+        <field name="name">TARJETA PREPAGO</field>
+        <field name="code">18</field>
+    </record>
+    <record model="l10n_ec.sri.payment.method" id="cp_19">
+        <field name="name">TARJETA DE CRÉDITO</field>
+        <field name="code">19</field>
+    </record>
+    <record model="l10n_ec.sri.payment.method" id="cp_20">
+        <field name="name">OTROS CON UTILIZACION DEL SISTEMA FINANCIERO</field>
+        <field name="code">20</field>
+    </record>
+    <record model="l10n_ec.sri.payment.method" id="cp_21">
+        <field name="name">ENDOSO DE TÍTULOS</field>
+        <field name="code">21</field>
+    </record>
+
+</odoo>

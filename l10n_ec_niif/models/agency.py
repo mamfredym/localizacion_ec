@@ -214,6 +214,7 @@ class L10EcPointOfEmission(models.Model):
         '''
         self.ensure_one()
         auth_line_model = self.env['l10n_ec.sri.authorization.line']
+        xml_model = self.env['sri.xml.data']
         if not date:
             date = fields.Date.context_today(self)
         document_type = modules_mapping.get_document_type(invoice_type)
@@ -283,7 +284,13 @@ class L10EcPointOfEmission(models.Model):
                     next_seq = ""
         else:
             next_seq = ""
-        if printer.type_emission in ('pre_printed', 'auto_printer'):
+        # mostrar excepcion si el punto de emision es electronico
+        # pero para el tipo de documento no se esta en produccion aun(ambiente pruebas)
+        force_preprint = False
+        if printer.type_emission == 'electronic' and not xml_model.is_enviroment_production(invoice_type, printer):
+            force_preprint = True
+            raise_exception = True
+        if printer.type_emission in ('pre_printed', 'auto_printer') or force_preprint:
             if not doc_finded and raise_exception:
                 raise Warning(_(
                     "It is not possible to find authorization for the document type %s "
@@ -297,7 +304,7 @@ class L10EcPointOfEmission(models.Model):
             # tomar el primer numero para facturacion electronica si esta en produccion
             if not first_number_electronic and printer and xml_model.is_enviroment_production(invoice_type):
                 first_number_electronic = printer._get_first_number_electronic(
-                    invoice_type)
+                    invoice_type, printer)
             # si tengo un secuencial y es menor al configurado como el inicio de facturacion electronica
             # devolver el numero configurado
             # cuando el secuencial obtenido sea mayor, devolver ese secuencial
@@ -326,7 +333,7 @@ class L10EcPointOfEmission(models.Model):
                 except:
                     return False, False
                 next_seq = self.create_number(first_number_electronic)
-                # todos los documentos de account.invoice se guardan en la misma tabla y con el mismo nombre de campo
+                # todos los documentos de account.move se guardan en la misma tabla y con el mismo nombre de campo
                 # obtener el domain segun el tipo de documento
                 domain = modules_mapping.get_domain(
                     invoice_type, include_state=False)

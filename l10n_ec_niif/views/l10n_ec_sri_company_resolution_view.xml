@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_ec_sri_company_resolution_form_view" model="ir.ui.view">
+        <field name="name">l10n_ec.sri.company.resolution.form</field>
+        <field name="model">l10n_ec.sri.company.resolution</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger"
+                            attrs="{'invisible': [('active', '=', True)]}"/>
+                    <group>
+                        <group>
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                            <field name="resolution" required="1"/>
+                        </group>
+                        <group>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_ec_sri_company_resolution_tree_view" model="ir.ui.view">
+        <field name="name">l10n_ec.sri.company.resolution.tree</field>
+        <field name="model">l10n_ec.sri.company.resolution</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="resolution"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="l10n_ec_sri_company_resolution_search_view" model="ir.ui.view">
+        <field name="name">l10n_ec.sri.company.resolution.search</field>
+        <field name="model">l10n_ec.sri.company.resolution</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="resolution"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <group expand="1" string="Group By">
+                    <filter string="Company" name="group_by_company_id"
+                            context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="l10n_ec_sri_company_resolution_act_window" model="ir.actions.act_window">
+        <field name="name">S.R.I. Company Resolutions</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_ec.sri.company.resolution</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                There is no Company resolutions click here to add new Company resolution.
+            </p>
+        </field>
+    </record>
+
+    <menuitem name="S.R.I. Company Resolutions" id="l10n_ec_sri_company_resolution_menu" parent="sri_config_menu"
+              sequence="30"
+              action="l10n_ec_sri_company_resolution_act_window"/>
+
+</odoo>

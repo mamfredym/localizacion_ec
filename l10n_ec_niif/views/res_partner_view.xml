@@ -75,6 +75,7 @@
 					<field name="l10n_ec_sex" attrs="{'invisible': [('company_type', '!=', 'person')]}"/>
 					<field name="l10n_ec_marital_status" attrs="{'invisible': [('company_type', '!=', 'person')]}"/>
 					<field name="l10n_ec_input_origins" attrs="{'invisible': [('company_type', '!=', 'person')]}"/>
+					<field name="l10n_ec_sri_payment_id" options="{'no_create': True}"/>
 				</xpath>
 			</field>
 		</record>

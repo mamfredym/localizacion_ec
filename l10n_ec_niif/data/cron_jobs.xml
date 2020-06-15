@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data noupdate="1">
+		<!-- tarea para las emisiones por contingencia -->
+		<record forcecreate="True" id="ir_cron_xml_per_contingence"
+			model="ir.cron">
+			<field name="name">Documentos emitidos en contingecia</field>
+			<field eval="True" name="active" />
+			<field name="user_id" ref="base.user_root" />
+			<field name="interval_number">1</field>
+			<field name="interval_type">days</field>
+			<field name="numbercall">-1</field>
+			<field eval="False" name="doall" />
+			<field ref="ecua_documentos_electronicos.model_sri_xml_data" name="model_id" />
+			<field name="state">code</field>
+			<field name="code">model.send_documents_contingency()</field>
+		</record>
+		<!-- tarea para los documentos que no han sido autorizados, pero que no 
+			debo volver a autorizarlos -->
+		<record forcecreate="True" id="ir_cron_xml_no_authorizated"
+			model="ir.cron">
+			<field name="name">Documentos en espera de autorizacion</field>
+			<field eval="True" name="active" />
+			<field name="user_id" ref="base.user_root" />
+			<field name="interval_number">1</field>
+			<field name="interval_type">days</field>
+			<field name="numbercall">-1</field>
+			<field eval="False" name="doall" />
+			<field ref="ecua_documentos_electronicos.model_sri_xml_data" name="model_id" />
+			<field name="state">code</field>
+			<field name="code">model.send_documents_waiting_autorization()</field>
+		</record>
+
+		<!-- tarea para los documentos que no han sido autorizados, pero que no 
+			debo volver a autorizarlos -->
+		<record forcecreate="True" id="ir_cron_send_email_to_partner"
+			model="ir.cron">
+			<field name="name">Enviar Correo de Documento Electrónico</field>
+			<field eval="True" name="active" />
+			<field name="user_id" ref="base.user_root" />
+			<field name="interval_number">1</field>
+			<field name="interval_type">days</field>
+			<field name="numbercall">-1</field>
+			<field eval="False" name="doall" />
+			<field ref="ecua_documentos_electronicos.model_sri_xml_data" name="model_id" />
+			<field name="state">code</field>
+			<field name="code">model.send_mail_to_partner()</field>
+		</record>
+		
+		<!-- documentos electronicas que no han sido autorizados -->
+		<record forcecreate="True" id="ir_cron_send_email_documents_no_autorization"
+			model="ir.cron">
+			<field name="name">Enviar Correo de Documentos Electrónica no Autorizada</field>
+			<field eval="True" name="active" />
+			<field name="user_id" ref="base.user_root" />
+			<field name="interval_number">1</field>
+			<field name="interval_type">days</field>
+			<field name="numbercall">-1</field>
+			<field eval="False" name="doall" />
+			<field ref="ecua_documentos_electronicos.model_sri_xml_data" name="model_id" />
+			<field name="state">code</field>
+			<field name="code">model.send_massage_documents_no_autorization()</field>
+		</record>
+
+		<!-- tarea llaves electronicas expiradas sri -->
+		<record forcecreate="True" id="ir_cron_key_expire"
+			model="ir.cron">
+			<field name="name">Llaves expiradas</field>
+			<field eval="True" name="active" />
+			<field name="user_id" ref="base.user_root" />
+			<field name="interval_number">1</field>
+			<field name="interval_type">days</field>
+			<field name="numbercall">-1</field>
+			<field eval="False" name="doall" />
+			<field ref="ecua_documentos_electronicos.model_sri_key_type" name="model_id" />
+			<field eval="'recompute_date_expire'" name="function" />
+		</record>
+	</data>
+</odoo>
