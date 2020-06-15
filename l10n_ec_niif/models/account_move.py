@@ -98,7 +98,9 @@ class AccountMove(models.Model):
         ('si', 'SI'),
         ('no', 'NO'),
     ], string='Pago sujeto a retención',
-        states={}, help="")
+         states={}, help="")
+    l10n_ec_sri_payment_id = fields.Many2one('l10n_ec.sri.payment.method', 'SRI Payment Method',
+        default=lambda self: self.env.company.l10n_ec_sri_payment_id)
     l10n_ec_foreign = fields.Boolean('Foreign?',
         related='partner_id.l10n_ec_foreign', store=True)
     l10n_ec_debit_note = fields.Boolean(string="Debit Note?",
@@ -249,6 +251,13 @@ class AccountMove(models.Model):
 
     l10n_ec_document_number = fields.Char(string="Ecuadorian Document Number",
                                           readonly=True, compute="_compute_l10n_ec_document_number", store=True)
+
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        res = super(AccountMove, self)._onchange_partner_id()
+        if self.partner_id and self.partner_id.l10n_ec_sri_payment_id:
+            self.l10n_ec_sri_payment_id = self.partner_id.l10n_ec_sri_payment_id.id
+        return res
 
     @api.model
     def default_get(self, fields):
@@ -846,31 +855,31 @@ class AccountMove(models.Model):
 
     @api.model
     def get_total_impuestos(self, parent_node, codigo, codigo_porcentaje, base, valor, tag_name='totalImpuesto',
-                            tarifa=-1, reembolso=False, liquidation=False):
+                            tarifa=-1, reembolso=False, liquidation=False, decimales=2):
         util_model = self.env['l10n_ec.utils']
         tag = SubElement(parent_node, tag_name)
         SubElement(tag, "codigo").text = codigo
         SubElement(tag, "codigoPorcentaje").text = codigo_porcentaje
         if liquidation:
             if reembolso:
-                SubElement(tag, "baseImponibleReembolso").text = util_model.formato_numero(base, 2)
+                SubElement(tag, "baseImponibleReembolso").text = util_model.formato_numero(base, decimales)
                 if tarifa != -1:
                     SubElement(tag, "tarifa").text = util_model.formato_numero(tarifa, 0)
-                SubElement(tag, "valorReembolso").text = util_model.formato_numero(valor, 2)
+                SubElement(tag, "valorReembolso").text = util_model.formato_numero(valor, decimales)
             else:
-                SubElement(tag, "baseImponible").text = util_model.formato_numero(base, 2)
+                SubElement(tag, "baseImponible").text = util_model.formato_numero(base, decimales)
                 if tarifa != -1:
                     SubElement(tag, "tarifa").text = util_model.formato_numero(tarifa, 0)
-                SubElement(tag, "valor").text = util_model.formato_numero(valor, 2)
+                SubElement(tag, "valor").text = util_model.formato_numero(valor, decimales)
         else:
             if tarifa != -1:
                 SubElement(tag, "tarifa").text = util_model.formato_numero(tarifa, 0)
             if reembolso:
-                SubElement(tag, "baseImponibleReembolso").text = util_model.formato_numero(base, 2)
-                SubElement(tag, "valorReembolso").text = util_model.formato_numero(valor, 2)
+                SubElement(tag, "baseImponibleReembolso").text = util_model.formato_numero(base, decimales)
+                SubElement(tag, "valorReembolso").text = util_model.formato_numero(valor, decimales)
             else:
-                SubElement(tag, "baseImponible").text = util_model.formato_numero(base, 2)
-                SubElement(tag, "valor").text = util_model.formato_numero(valor, 2)
+                SubElement(tag, "baseImponible").text = util_model.formato_numero(base, decimales)
+                SubElement(tag, "valor").text = util_model.formato_numero(valor, decimales)
         return tag
 
     @api.model
@@ -886,6 +895,10 @@ class AccountMove(models.Model):
         # Hacer una funcion que me permita agregar los campos adicionales que deben ser pasados en un diccionario
         return True
 
+    def get_pagos_data(self):
+        # TODO: agregar informacion de pagos, considerar para ATS
+        return []
+
     @api.model
     def get_info_factura(self, invoice_id, node):
         util_model = self.env['l10n_ec.utils']
@@ -896,99 +909,62 @@ class AccountMove(models.Model):
         digits_precision_product = precision_get('Product Price')
         digits_precision_qty = precision_get('Product Unit of Measure')
         digits_precision_discount = precision_get('Discount')
-        # obtener informacion de la factura
-        SQL = """SELECT i.invoice_date AS "fechaEmision",
-                        addr_shop.street AS "dirEstablecimiento",
-                        part_comp.numero_contribuyente_especial AS "contribuyenteEspecial",
-                        CASE WHEN fp_part.l10n_ec_no_account THEN 'NO'
-                            ELSE 'SI' 
-                        END AS "obligadoContabilidad",
-                        CASE WHEN i.l10n_ec_identification_type_id IS NOT NULL THEN tran.code
-                            WHEN part_inv.type_ref = 'ruc' THEN '04'
-                            WHEN part_inv.type_ref = 'cedula' THEN '05'
-                            WHEN part_inv.type_ref = 'passport' THEN '06'
-                            ELSE '07'
-                        END AS "tipoIdentificacionComprador",
-                        part_inv.name AS "razonSocialComprador",
-                        part_inv.vat AS "identificacionComprador",
-                        part_inv.street AS "direccionComprador",
-                        part_inv.foreign as "foreign",
-                        i.total_sin_descuento AS "totalSinImpuestos",
-                        i.total_descuento AS "totalDescuento",
-                        i.base_iva_0 AS "base_iva_0",
-                        i.base_iva AS "base_iva",
-                        i.total_iva AS "total_iva",
-                        i.base_no_iva AS "base_no_iva",
-                        i.propina AS "propina",
-                        i.amount_untaxed as "amount_untaxed",
-                        i.total_con_impuestos AS "importeTotal",
-                        CASE WHEN i.moneda IS NOT NULL THEN i.moneda
-                        ELSE 'DOLAR' END AS "moneda"
-                    FROM account_move i
-                    LEFT JOIN res_company comp ON (comp.id=i.company_id)
-                    LEFT JOIN res_users usr ON (usr.id=i.invoice_user_id)
-                    LEFT JOIN res_partner part_inv ON part_inv.id=i.commercial_partner_id
-                    LEFT JOIN res_partner part_comp ON part_comp.id=comp.partner_id
-                    LEFT JOIN l10n_ec_agency shop ON shop.id = i.l10n_ec_agency_id
-                    LEFT JOIN res_partner addr_shop ON addr_shop.id=shop.address_id
-                    LEFT JOIN l10n_ec_identification_type tran ON (tran.id=i.l10n_ec_identification_type_id)
-                    LEFT JOIN (
-                        SELECT CAST(split_part(value_reference,',',2) AS INTEGER) AS property_account_position_id,
-                            prop.company_id, prop.res_id
-                        FROM ir_property prop
-                        WHERE prop.name='property_account_position_id' 
-                        ) AS prop_fiscal_position 
-                        ON (prop_fiscal_position.company_id = i.company_id
-                            AND (prop_fiscal_position.res_id = CONCAT('res.partner,',comp.partner_id) OR prop_fiscal_position.res_id IS NULL))
-                    LEFT JOIN account_fiscal_position fp_part ON (fp_part.id=prop_fiscal_position.property_account_position_id)
-                    WHERE i.id = %(invoice_id)s
-                """
-        self.env.cr.execute(SQL, {'invoice_id': invoice_id})
-        invoice_data = self.env.cr.dictfetchone()
         invoice = self.browse(invoice_id)
         infoFactura = SubElement(node, "infoFactura")
-        SubElement(infoFactura, "fechaEmision").text = invoice_data['fechaEmision'].strftime(
-            util_model.get_formato_date())
-        SubElement(infoFactura, "dirEstablecimiento").text = xml_model._clean_str(
-            invoice_data['dirEstablecimiento'] or 'NA')
-        company = self.env.user.company_id
-        numero_contribuyente_especial = company.get_contribuyente_data(invoice_data['fechaEmision'])
+        fecha_factura = invoice.invoice_date.strftime(util_model.get_formato_date())
+        SubElement(infoFactura, "fechaEmision").text = fecha_factura
+        address = company.partner_id.street
+        SubElement(infoFactura, "dirEstablecimiento").text = xml_model._clean_str(address)[:300]
+        if invoice.l10n_ec_identification_type_id:
+            tipoIdentificacionComprador = invoice.l10n_ec_identification_type_id.code
+        elif invoice.commercial_partner_id:
+            # si no hay l10n_ec_identification_type_id, se debe pasar un valor segun tabla 7 de la ficha tecnica del sri, no 00
+            # buscar el tipo de identificacion del cliente, si es cedula, ruc
+            if invoice.commercial_partner_id.type_ref == 'ruc':
+                tipoIdentificacionComprador = '04'
+            elif invoice.commercial_partner_id.type_ref == 'cedula':
+                tipoIdentificacionComprador = '05'
+            elif invoice.commercial_partner_id.type_ref == 'passport':
+                tipoIdentificacionComprador = '06'
+            else:
+                # pasar por defecto consumidor final
+                tipoIdentificacionComprador = '07'
+        else:
+            # si no tengo informacion paso por defecto consumiro final
+            # pero debe tener como identificacion 13 digitos 99999999999999
+            tipoIdentificacionComprador = '07'
+        numero_contribuyente_especial = company.get_contribuyente_data(invoice.invoice_date)
         SubElement(infoFactura, "contribuyenteEspecial").text = numero_contribuyente_especial
-        SubElement(infoFactura, "obligadoContabilidad").text = invoice_data['obligadoContabilidad']
-        SubElement(infoFactura, "tipoIdentificacionComprador").text = invoice_data['tipoIdentificacionComprador']
-        if invoice.remision_id:
-            SubElement(infoFactura, "guiaRemision").text = invoice.remision_id.document_number
+        SubElement(infoFactura, "obligadoContabilidad").text = util_model.get_obligado_contabilidad(
+            company.partner_id.property_account_position_id)
+        SubElement(infoFactura, "tipoIdentificacionComprador").text = tipoIdentificacionComprador
+        # if invoice.remision_id:
+        #     SubElement(infoFactura, "guiaRemision").text = invoice.remision_id.document_number
         SubElement(infoFactura, "razonSocialComprador").text = xml_model._clean_str(
-            invoice_data['razonSocialComprador'])
-        SubElement(infoFactura, "identificacionComprador").text = invoice_data["foreign"] and "9999999999" or \
-                                                                  invoice_data['identificacionComprador']
-        SubElement(infoFactura, "direccionComprador").text = xml_model._clean_str(
-            invoice_data['direccionComprador'][:300])
+            invoice.commercial_partner_id.name[:300])
+        SubElement(infoFactura, "identificacionComprador").text = invoice.commercial_partner_id.vat
+        SubElement(infoFactura, "direccionComprador").text = xml_model._clean_str(invoice.commercial_partner_id.street)[:300]
+        
         SubElement(infoFactura, "totalSinImpuestos").text = util_model.formato_numero(
-            invoice_data['amount_untaxed'], currency.decimal_places)
-        SubElement(infoFactura, "totalDescuento").text = util_model.formato_numero(invoice_data['totalDescuento'],
-                                                                                       currency.decimal_places)
+            invoice.amount_untaxed, currency.decimal_places)
+        # SubElement(infoFactura, "totalDescuento").text = util_model.formato_numero(
+        #     invoice.total_descuento, currency.decimal_places)
         # Definicion de Impuestos
         totalConImpuestos = SubElement(infoFactura, "totalConImpuestos")
-        tarifa_iva = invoice_data['base_iva'] and round((invoice_data['total_iva'] / invoice_data['base_iva']),
-                                                        2) or 0.0
-        tipo_iva = '2'
-        if tarifa_iva == 0.14:
-            tipo_iva = '3'
-        if invoice_data['base_iva_0'] != 0:
-            self.get_total_impuestos(totalConImpuestos, '2', '0', invoice_data['base_iva_0'], 0.0,
+        if invoice.l10n_ec_base_iva_0 != 0:
+            self.get_total_impuestos(totalConImpuestos, '2', '0', invoice.l10n_ec_base_iva_0, 0.0,
                                      decimales=currency.decimal_places)
-        if invoice_data['base_iva'] != 0:
-            self.get_total_impuestos(totalConImpuestos, '2', tipo_iva, invoice_data['base_iva'],
-                                     invoice_data['total_iva'], decimales=currency.decimal_places)
-        if invoice_data['base_no_iva'] != 0:
-            self.get_total_impuestos(totalConImpuestos, '2', '6', invoice_data['base_no_iva'], 0.0,
+        if invoice.l10n_ec_base_iva != 0:
+            self.get_total_impuestos(totalConImpuestos, '2', '2', invoice.l10n_ec_base_iva, invoice.l10n_ec_iva,
                                      decimales=currency.decimal_places)
-        SubElement(infoFactura, "propina").text = util_model.formato_numero(invoice_data['propina'] or 0,
-                                                                                currency.decimal_places)
-        SubElement(infoFactura, "importeTotal").text = util_model.formato_numero(invoice_data['importeTotal'],
+        # if invoice.base_no_iva != 0:
+        #     self.get_total_impuestos(totalConImpuestos, '2', '6', invoice.base_no_iva, 0.0,
+        #                              decimales=currency.decimal_places)
+        # SubElement(infoFactura, "propina").text = util_model.formato_numero(invoice.propina or 0,
+        #                                                                         currency.decimal_places)
+        SubElement(infoFactura, "importeTotal").text = util_model.formato_numero(invoice.amount_total,
                                                                                      currency.decimal_places)
-        SubElement(infoFactura, "moneda").text = invoice_data['moneda'] or 'DOLAR'
+        SubElement(infoFactura, "moneda").text = invoice.company_id.currency_id.name or 'DOLAR'
         # Procesamiento de los pagos
         pagos_data = invoice.get_pagos_data()
         if pagos_data:
@@ -1010,75 +986,42 @@ class AccountMove(models.Model):
                 payment_code = invoice.commercial_partner_id.l10n_ec_sri_payment_id.code
             SubElement(pago, "formaPago").text = payment_code
             SubElement(pago, "total").text = util_model.formato_numero(invoice.amount_total)
-            if invoice.payment_term_id:
-                if invoice.payment_term_id.sri_type == 'credito':
+            if invoice.invoice_payment_term_id:
+                if invoice.invoice_payment_term_id.sri_type == 'credito':
                     if invoice.dias_credito > 0:
                         SubElement(pago, "plazo").text = util_model.formato_numero(invoice.dias_credito, 0)
                         SubElement(pago, "unidadTiempo").text = 'dias'
         # Lineas de Factura
-        SQL = """SELECT CASE WHEN (il.product_id IS NOT NULL and not pt.show_description_sri_invoice) THEN pt.name
-                                ELSE il.name
-                            END AS "descripcion",
-                            CASE WHEN il.product_id IS NOT NULL THEN pp.default_code
-                                ELSE 'N/A'
-                            END AS "codigoPrincipal",
-                            il.quantity AS "cantidad",
-                            il.type_iva_ec AS "type_iva_ec",
-                            il.price_unit AS "precioUnitario",
-                            il.discount AS "descuento",
-                            CASE WHEN il.base_iva_0 IS NOT NULL THEN il.base_iva_0
-                                ELSE 0.0 
-                            END AS "base_iva_0",
-                            CASE WHEN il.base_iva IS NOT NULL THEN il.base_iva
-                                ELSE 0.0 
-                            END AS "base_iva",
-                            CASE WHEN il.total_iva IS NOT NULL THEN il.total_iva
-                                ELSE 0.0 
-                            END AS "total_iva",
-                            CASE WHEN il.base_no_iva IS NOT NULL THEN il.base_no_iva
-                                ELSE 0.0 
-                            END AS "base_no_iva"
-                        FROM account_move_line il
-                        INNER JOIN account_move i ON (il.move_id = i.id)
-                        LEFT JOIN product_product pp ON (pp.id = il.product_id)
-                        LEFT JOIN product_template pt ON (pt.id=pp.product_tmpl_id)
-                        WHERE i.id = %(invoice_id)s AND price_unit > 0 AND il.display_type IS NULL
-                """
-        self.env.cr.execute(SQL, {'invoice_id': invoice_id})
-        invoice_line_data = self.env.cr.dictfetchall()
         detalles = SubElement(node, "detalles")
-        for line in invoice_line_data:
-            discount = round(((line['precioUnitario'] * line['cantidad']) * ((line['descuento'] or 0.0) / 100)), 2)
-            subtotal = round(((line['precioUnitario'] * line['cantidad']) - discount), 2)
+        for line in invoice.invoice_line_ids.filtered(lambda x: not x.display_type):
+            discount = round(((line.price_unit * line.quantity) * ((line.discount or 0.0) / 100)), 2)
+            subtotal = round(((line.price_unit * line.quantity) - discount), 2)
             if currency.is_zero(subtotal):
                 continue
             detalle = SubElement(detalles, "detalle")
             SubElement(detalle, "codigoPrincipal").text = xml_model._clean_str(
-                line['codigoPrincipal'] and line['codigoPrincipal'][:25] or 'N/A')
-            SubElement(detalle, "descripcion").text = xml_model._clean_str(line['descripcion'][:300])
+                line.product_id and line.product_id.default_code and line.product_id.default_code[:25] or 'N/A')
+            #             SubElement(detalle,"codigoAdicional").text = xml_obj._clean_str(line.product_id and line.product_id.default_code and line.product_id.default_code[:25] or 'N/A')
+            SubElement(detalle, "descripcion").text = xml_model._clean_str(
+                line.product_id and line.product_id.name[:300] or line.name[:300])
             # Debido a que los precios son en 2 decimales, es necesario hacer razonable el precio unitario
-            SubElement(detalle, "cantidad").text = util_model.formato_numero(line['cantidad'], digits_precision_qty)
-            SubElement(detalle, "precioUnitario").text = util_model.formato_numero(line['precioUnitario'],
-                                                                                       digits_precision_product)
-
-            SubElement(detalle, "descuento").text = util_model.formato_numero(discount, digits_precision_discount)
+            SubElement(detalle, "cantidad").text = util_model.formato_numero(line.quantity, digits_precision_qty)
+            SubElement(detalle, "precioUnitario").text = util_model.formato_numero(line.price_unit,
+                                                                                   digits_precision_product)
+            SubElement(detalle, "descuento").text = util_model.formato_numero(discount or 0.0,
+                                                                              digits_precision_discount)
             SubElement(detalle, "precioTotalSinImpuesto").text = util_model.formato_numero(subtotal,
-                                                                                               currency.decimal_places)
+                                                                                           currency.decimal_places)
             impuestos = SubElement(detalle, "impuestos")
-            tipo_iva = '2'
-            tarifa = 12
-            if line['base_iva'] and round((line['total_iva'] / line['base_iva']), 2) == 0.14:
-                tipo_iva = '3'
-                tarifa = 14
-            if line['type_iva_ec'] == 'iva_0':
-                self.get_total_impuestos(impuestos, '2', '0', line['base_iva_0'], 0.0, 'impuesto', 0,
+            if line.l10n_ec_base_iva_0 != 0:
+                self.get_total_impuestos(impuestos, '2', '0', line.l10n_ec_base_iva_0, 0.0, 'impuesto', 0,
                                          decimales=currency.decimal_places)
-            if line['type_iva_ec'] == 'iva':
-                self.get_total_impuestos(impuestos, '2', tipo_iva, line['base_iva'], line['total_iva'], 'impuesto',
-                                         tarifa, decimales=currency.decimal_places)
-            if line['type_iva_ec'] == 'no_iva':
-                self.get_total_impuestos(impuestos, '2', '6', line['base_no_iva'], 0.0, 'impuesto', 0,
+            if line.l10n_ec_base_iva != 0:
+                self.get_total_impuestos(impuestos, '2', '2', line.l10n_ec_base_iva, line.l10n_ec_iva, 'impuesto', 12,
                                          decimales=currency.decimal_places)
+            # if line.base_no_iva != 0:
+            #     self.get_total_impuestos(impuestos, '2', '6', line.base_no_iva, 0.0, 'impuesto', 0,
+            #                              decimales=currency.decimal_places)
         # Las retenciones solo aplican para el esquema de gasolineras
         # retenciones = SubElement(node,"retenciones")
         infoAdicional = SubElement(node, "infoAdicional")
@@ -1091,14 +1034,12 @@ class AccountMove(models.Model):
     def get_info_credit_note(self, credit_note_id, node):
         util_model = self.env['l10n_ec.utils']
         xml_model = self.env['sri.xml.data']
-        partner_model = self.env['res.partner']
         company = self.env.company
         currency = company.currency_id
         precision_get = self.env['decimal.precision'].precision_get
         digits_precision_product = precision_get('Product Price')
         digits_precision_qty = precision_get('Product Unit of Measure')
         digits_precision_discount = precision_get('Discount')
-        company = self.env.user.company_id
         credit_note = self.browse(credit_note_id)
         infoNotaCredito = SubElement(node, "infoNotaCredito")
         fecha_factura = credit_note.invoice_date.strftime(util_model.get_formato_date())
@@ -1143,18 +1084,18 @@ class AccountMove(models.Model):
             credit_note.amount_untaxed, currency.decimal_places)
         SubElement(infoNotaCredito, "valorModificacion").text = util_model.formato_numero(credit_note.amount_total,
                                                                                               currency.decimal_places)
-        SubElement(infoNotaCredito, "moneda").text = credit_note.moneda or 'DOLAR'
+        SubElement(infoNotaCredito, "moneda").text = credit_note.company_id.currency_id.name or 'DOLAR'
         # Definicion de Impuestos
         totalConImpuestos = SubElement(infoNotaCredito, "totalConImpuestos")
-        if credit_note.base_iva_0 != 0:
-            self.get_total_impuestos(totalConImpuestos, '2', '0', credit_note.base_iva_0, 0.0,
+        if credit_note.l10n_ec_base_iva_0 != 0:
+            self.get_total_impuestos(totalConImpuestos, '2', '0', credit_note.l10n_ec_base_iva_0, 0.0,
                                      decimales=currency.decimal_places)
-        if credit_note.base_iva != 0:
-            self.get_total_impuestos(totalConImpuestos, '2', '2', credit_note.base_iva, credit_note.total_iva,
+        if credit_note.l10n_ec_base_iva != 0:
+            self.get_total_impuestos(totalConImpuestos, '2', '2', credit_note.l10n_ec_base_iva, credit_note.l10n_ec_iva,
                                      decimales=currency.decimal_places)
-        if credit_note.base_no_iva != 0:
-            self.get_total_impuestos(totalConImpuestos, '2', '6', credit_note.base_no_iva, 0.0,
-                                     decimales=currency.decimal_places)
+        # if credit_note.base_no_iva != 0:
+        #     self.get_total_impuestos(totalConImpuestos, '2', '6', credit_note.base_no_iva, 0.0,
+        #                              decimales=currency.decimal_places)
         SubElement(infoNotaCredito, "motivo").text = xml_model._clean_str(
             credit_note.name and credit_note.name[:300] or 'NOTA DE CREDITO')
         # Lineas de Factura
@@ -1178,15 +1119,15 @@ class AccountMove(models.Model):
             SubElement(detalle, "precioTotalSinImpuesto").text = util_model.formato_numero(subtotal,
                                                                                                currency.decimal_places)
             impuestos = SubElement(detalle, "impuestos")
-            if line.base_iva_0 != 0:
-                self.get_total_impuestos(impuestos, '2', '0', line.base_iva_0, 0.0, 'impuesto', 0,
+            if line.l10n_ec_base_iva_0 != 0:
+                self.get_total_impuestos(impuestos, '2', '0', line.l10n_ec_base_iva_0, 0.0, 'impuesto', 0,
                                          decimales=currency.decimal_places)
-            if line.base_iva != 0:
-                self.get_total_impuestos(impuestos, '2', '2', line.base_iva, line.total_iva, 'impuesto', 12,
+            if line.l10n_ec_base_iva != 0:
+                self.get_total_impuestos(impuestos, '2', '2', line.l10n_ec_base_iva, line.l10n_ec_iva, 'impuesto', 12,
                                          decimales=currency.decimal_places)
-            if line.base_no_iva != 0:
-                self.get_total_impuestos(impuestos, '2', '6', line.base_no_iva, 0.0, 'impuesto', 0,
-                                         decimales=currency.decimal_places)
+            # if line.base_no_iva != 0:
+            #     self.get_total_impuestos(impuestos, '2', '6', line.base_no_iva, 0.0, 'impuesto', 0,
+            #                              decimales=currency.decimal_places)
         infoAdicional = SubElement(node, "infoAdicional")
         campoAdicional = SubElement(infoAdicional, "campoAdicional")
         campoAdicional.set("nombre", "OtroCampo")
@@ -1197,7 +1138,6 @@ class AccountMove(models.Model):
     def get_info_debit_note(self, debit_id, node):
         util_model = self.env['l10n_ec.utils']
         xml_model = self.env['sri.xml.data']
-        partner_model = self.env['res.partner']
         company = self.env.company
         currency = company.currency_id
         debit = self.browse(debit_id)
@@ -1244,16 +1184,16 @@ class AccountMove(models.Model):
         # Definicion de Impuestos
         # xq no itero sobre los impuestos???'
         impuestos = SubElement(infoNotaDebito, "impuestos")
-        if debit.base_iva_0 != 0:
-            self.get_total_impuestos(impuestos, '2', '0', debit.base_iva_0, 0.0, 'impuesto', 0,
+        if debit.l10n_ec_base_iva_0 != 0:
+            self.get_total_impuestos(impuestos, '2', '0', debit.l10n_ec_base_iva_0, 0.0, 'impuesto', 0,
                                      decimales=currency.decimal_places)
-        if debit.base_iva != 0:
+        if debit.l10n_ec_base_iva != 0:
             # TODO: no se debe asumir que el % del iva es 12, tomar del impuesto directamente
-            self.get_total_impuestos(impuestos, '2', '2', debit.base_iva, debit.total_iva, 'impuesto', 12,
+            self.get_total_impuestos(impuestos, '2', '2', debit.l10n_ec_base_iva, debit.l10n_ec_iva, 'impuesto', 12,
                                      decimales=currency.decimal_places)
-        if debit.base_no_iva != 0:
-            self.get_total_impuestos(impuestos, '2', '6', debit.base_no_iva, 0.0, 'impuesto', 0,
-                                     decimales=currency.decimal_places)
+        # if debit.base_no_iva != 0:
+        #     self.get_total_impuestos(impuestos, '2', '6', debit.base_no_iva, 0.0, 'impuesto', 0,
+        #                              decimales=currency.decimal_places)
         SubElement(infoNotaDebito, "valorTotal").text = util_model.formato_numero(debit.amount_total,
                                                                                       currency.decimal_places)
         motivos = SubElement(node, "motivos")
@@ -1280,7 +1220,6 @@ class AccountMove(models.Model):
         address = liquidation.partner_id.street
         SubElement(infoLiquidacionCompra, "dirEstablecimiento").text = xml_model._clean_str(
             address and address[:300] or '')
-        company = self.env.user.company_id
         numero_contribuyente_especial = company.get_contribuyente_data(liquidation.invoice_date)
         SubElement(infoLiquidacionCompra, "contribuyenteEspecial").text = numero_contribuyente_especial
         SubElement(infoLiquidacionCompra, "obligadoContabilidad").text = util_model.get_obligado_contabilidad(
@@ -1309,8 +1248,8 @@ class AccountMove(models.Model):
             liquidation.partner_id.street[:300])
         SubElement(infoLiquidacionCompra, "totalSinImpuestos").text = util_model.formato_numero(
             liquidation.amount_untaxed)
-        SubElement(infoLiquidacionCompra, "totalDescuento").text = util_model.formato_numero(
-            liquidation.total_descuento)
+        # SubElement(infoLiquidacionCompra, "totalDescuento").text = util_model.formato_numero(
+        #     liquidation.total_descuento)
         if liquidation.voucher_type_id and liquidation.voucher_type_id.code == '41':
             SubElement(infoLiquidacionCompra, "codDocReembolso").text = liquidation.voucher_type_id.code
             SubElement(infoLiquidacionCompra, "totalComprobantesReembolso").text = util_model.formato_numero(
@@ -1318,21 +1257,21 @@ class AccountMove(models.Model):
             SubElement(infoLiquidacionCompra, "totalBaseImponibleReembolso").text = util_model.formato_numero(
                 sum([r.total_base_iva for r in liquidation.reembolso_ids]))
             SubElement(infoLiquidacionCompra, "totalImpuestoReembolso").text = util_model.formato_numero(
-                sum([r.total_iva for r in liquidation.reembolso_ids]) + sum(
+                sum([r.l10n_ec_iva for r in liquidation.reembolso_ids]) + sum(
                     [r.total_ice for r in liquidation.reembolso_ids]))
         # Definicion de Impuestos
         # xq no itero sobre los impuestos???'
         impuestos = SubElement(infoLiquidacionCompra, "totalConImpuestos")
-        if liquidation.base_iva_0 != 0:
-            self.get_total_impuestos(impuestos, '2', '0', liquidation.base_iva_0, 0.0, 'totalImpuesto', 0, False, True)
-        if liquidation.base_iva != 0:
+        if liquidation.l10n_ec_base_iva_0 != 0:
+            self.get_total_impuestos(impuestos, '2', '0', liquidation.l10n_ec_base_iva_0, 0.0, 'totalImpuesto', 0, False, True)
+        if liquidation.l10n_ec_base_iva != 0:
             # TODO: no se debe asumir que el % del iva es 12, tomar del impuesto directamente
-            self.get_total_impuestos(impuestos, '2', '2', liquidation.base_iva, liquidation.total_iva, 'totalImpuesto',
+            self.get_total_impuestos(impuestos, '2', '2', liquidation.l10n_ec_base_iva, liquidation.l10n_ec_iva, 'totalImpuesto',
                                      12, False, True)
-        if liquidation.base_no_iva != 0:
-            self.get_total_impuestos(impuestos, '2', '6', liquidation.base_no_iva, 0.0, 'totalImpuesto', 0, False, True)
+        # if liquidation.base_no_iva != 0:
+        #     self.get_total_impuestos(impuestos, '2', '6', liquidation.base_no_iva, 0.0, 'totalImpuesto', 0, False, True)
         SubElement(infoLiquidacionCompra, "importeTotal").text = util_model.formato_numero(
-            liquidation.total_con_impuestos)
+            liquidation.amount_total)
         SubElement(infoLiquidacionCompra, "moneda").text = liquidation.company_id.currency_id.name
         pagos_data = liquidation.get_pagos_data()
         pagos = SubElement(infoLiquidacionCompra, "pagos")
@@ -1353,16 +1292,12 @@ class AccountMove(models.Model):
                 payment_code = liquidation.commercial_partner_id.l10n_ec_sri_payment_id.code
             SubElement(pago, "formaPago").text = payment_code
             SubElement(pago, "total").text = util_model.formato_numero(liquidation.amount_total)
-            if liquidation.payment_term_id:
-                if liquidation.payment_term_id.sri_type == 'credito':
+            if liquidation.invoice_payment_term_id:
+                if liquidation.invoice_payment_term_id.sri_type == 'credito':
                     if liquidation.dias_credito > 0:
                         SubElement(pago, "plazo").text = util_model.formato_numero(liquidation.dias_credito, 0)
                         SubElement(pago, "unidadTiempo").text = 'dias'
         detalles = SubElement(node, "detalles")
-        tarifa_iva = liquidation['base_iva'] and round((liquidation['total_iva'] / liquidation['base_iva']), 2) or 0.0
-        tipo_iva = '2'
-        if tarifa_iva == 0.14:
-            tipo_iva = '3'
         for line in liquidation.invoice_line_ids:
             detalle = SubElement(detalles, "detalle")
             SubElement(detalle, "codigoPrincipal").text = xml_model._clean_str(
@@ -1379,13 +1314,13 @@ class AccountMove(models.Model):
             SubElement(detalle, "descuento").text = util_model.formato_numero(discount or 0.0, 2)
             SubElement(detalle, "precioTotalSinImpuesto").text = util_model.formato_numero(subtotal, 2)
             impuestos = SubElement(detalle, "impuestos")
-            if line.base_iva_0 != 0:
-                self.get_total_impuestos(impuestos, '2', '0', line.base_iva_0, 0.0, 'impuesto', 0, False)
-            if line.base_iva != 0:
-                self.get_total_impuestos(impuestos, '2', tipo_iva, line.base_iva, line.total_iva, 'impuesto',
-                                         int(tarifa_iva * 100), False)
-            if line.base_no_iva != 0:
-                self.get_total_impuestos(impuestos, '2', '6', line.base_no_iva, 0.0, 'impuesto', 0, False)
+            if line.l10n_ec_base_iva_0 != 0:
+                self.get_total_impuestos(impuestos, '2', '0', line.l10n_ec_base_iva_0, 0.0, 'impuesto', 0, False)
+            if line.l10n_ec_base_iva != 0:
+                self.get_total_impuestos(impuestos, '2', '2', line.l10n_ec_base_iva, line.l10n_ec_iva, 'impuesto',
+                                         12, False)
+            # if line.base_no_iva != 0:
+            #     self.get_total_impuestos(impuestos, '2', '6', line.base_no_iva, 0.0, 'impuesto', 0, False)
         if liquidation.reembolso_ids:
             reembolsos = SubElement(node, "reembolsos")
             for reembolso in liquidation.reembolso_ids:
@@ -1427,9 +1362,9 @@ class AccountMove(models.Model):
                     self.get_total_impuestos(detalleImpuestos, '2', tipo_iva, reembolso.total_base_iva,
                                              reembolso.total_iva, 'detalleImpuesto',
                                              int(tarifa_iva * 100), True, True)
-                if reembolso.total_base_no_iva != 0:
-                    self.get_total_impuestos(detalleImpuestos, '2', '6', reembolso.total_base_no_iva, 0.0,
-                                             'detalleImpuesto', 0, True)
+                # if reembolso.total_base_no_iva != 0:
+                #     self.get_total_impuestos(detalleImpuestos, '2', '6', reembolso.total_base_no_iva, 0.0,
+                #                              'detalleImpuesto', 0, True)
         infoAdicional = SubElement(node, "infoAdicional")
         # TODO: agregar infoAdicional
         campoAdicional = SubElement(infoAdicional, "campoAdicional")
