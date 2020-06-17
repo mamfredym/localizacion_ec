@@ -105,6 +105,12 @@
                             icon="fa-pencil-square-o"
                             attrs="{'invisible': ['|', '|', ('l10n_ec_withhold_count', '!=', 0), ('type', '!=', 'out_invoice'), ('state', '!=', 'posted')]}"/>
                 </div>
+                <xpath expr="//field[@name='invoice_line_ids']/tree//field[@name='tax_ids']" position="after">
+                    <field name="l10n_ec_base_iva_0" optional="hide"/>
+                    <field name="l10n_ec_base_iva" optional="hide"/>
+                    <field name="l10n_ec_iva" optional="hide"/>
+                    <field name="l10n_ec_discount_total" optional="hide"/>
+                </xpath>
             </field>
         </record>
 

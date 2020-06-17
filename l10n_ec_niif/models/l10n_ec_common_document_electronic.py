@@ -5,8 +5,8 @@ from odoo import models, api, fields
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
 
 
-class CommonDocumentElectronicEC(models.AbstractModel):
-    _name = 'ln10_ec.electronic.document.common'
+class L10nEcCommonDocumentElectronic(models.AbstractModel):
+    _name = 'ln10_ec.common.document.electronic'
     _description = 'Abstract Class for electronic documents'
 
     electronic_authorization = fields.Char('Autorizacion Electrónica',

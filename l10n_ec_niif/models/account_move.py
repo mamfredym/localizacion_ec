@@ -60,7 +60,7 @@ class L10nECIdentificationType(models.Model):
 
 
 class AccountMove(models.Model):
-    _inherit = ["account.move", "ln10_ec.electronic.document.common"]
+    _inherit = ["account.move", "ln10_ec.common.document", "ln10_ec.common.document.electronic"]
     _name = "account.move"
 
     @api.depends('type', 'l10n_ec_point_of_emission_id', 'l10n_ec_debit_note', 'l10n_ec_liquidation')
@@ -210,13 +210,9 @@ class AccountMove(models.Model):
                                                       string="Tax Support Domain",
                                                       compute='_get_l10n_ec_identification_type',
                                                       compute_sudo=True)
-
+    # replace field from Abstract class for change attributes(readonly and states)
     l10n_ec_point_of_emission_id = fields.Many2one(comodel_name="l10n_ec.point.of.emission",
-                                                   string="Point of Emission", readonly=True,
-                                                   states={'draft': [('readonly', False)]})
-    l10n_ec_agency_id = fields.Many2one(comodel_name="l10n_ec.agency",
-                                        string="Agency", related="l10n_ec_point_of_emission_id.agency_id", store=True,
-                                        readonly=True)
+        readonly=True, states={'draft': [('readonly', False)]})
     l10n_ec_authorization_line_id = fields.Many2one(comodel_name="l10n_ec.sri.authorization.line",
                                                     string="Own Ecuadorian Authorization Line")
     l10n_ec_authorization_id = fields.Many2one(comodel_name="l10n_ec.sri.authorization",
@@ -641,11 +637,15 @@ class AccountMove(models.Model):
         'currency_id'
     )
     def _compute_l10n_ec_amounts(self):
-        for rec in self:
-            l10n_ec_base_iva_0 = 0
-            l10n_ec_base_iva = 0
-            l10n_ec_iva = 0
-            for group in rec.amount_by_group:
+        for move in self:
+            move_date = move.date or fields.Date.context_today(move)
+            l10n_ec_base_iva_0 = 0.0
+            l10n_ec_base_iva = 0.0
+            l10n_ec_iva = 0.0
+            l10n_ec_discount_total = 0.0
+            for line in move.invoice_line_ids:
+                l10n_ec_discount_total += line._l10n_ec_get_discount_total()
+            for group in move.amount_by_group:
                 iva_group = self.env.ref('l10n_ec_niif.tax_group_iva')
                 if group[6] == iva_group.id:
                     if group[2] != 0 and group[1] == 0:
@@ -653,45 +653,18 @@ class AccountMove(models.Model):
                     else:
                         l10n_ec_base_iva = group[2]
                         l10n_ec_iva = group[1]
-            rec.l10n_ec_base_iva_0 = l10n_ec_base_iva_0
-            rec.l10n_ec_base_iva = l10n_ec_base_iva
-            rec.l10n_ec_iva = l10n_ec_iva
-            rec.l10n_ec_base_iva_0_currency = rec.currency_id.compute(
-                l10n_ec_base_iva_0, rec.company_id.currency_id)
-            rec.l10n_ec_base_iva_currency = rec.currency_id.compute(
-                l10n_ec_base_iva, rec.company_id.currency_id)
-            rec.l10n_ec_iva_currency = rec.currency_id.compute(
-                l10n_ec_iva, rec.company_id.currency_id)
-
-    l10n_ec_base_iva = fields.Float(
-        string='Base IVA',
-        compute="_compute_l10n_ec_amounts",
-        store=True)
-
-    l10n_ec_base_iva_0 = fields.Float(
-        string='Base IVA 0',
-        compute="_compute_l10n_ec_amounts",
-        store=True)
-
-    l10n_ec_iva = fields.Float(
-        string='IVA',
-        compute="_compute_l10n_ec_amounts",
-        store=True)
-
-    l10n_ec_base_iva_currency = fields.Float(
-        string='Base IVA',
-        compute="_compute_l10n_ec_amounts",
-        store=True)
-
-    l10n_ec_base_iva_0_currency = fields.Float(
-        string='Base IVA 0',
-        compute="_compute_l10n_ec_amounts",
-        store=True)
-
-    l10n_ec_iva_currency = fields.Float(
-        string='IVA',
-        compute="_compute_l10n_ec_amounts",
-        store=True)
+            move.l10n_ec_base_iva_0 = l10n_ec_base_iva_0
+            move.l10n_ec_base_iva = l10n_ec_base_iva
+            move.l10n_ec_iva = l10n_ec_iva
+            move.l10n_ec_discount_total = l10n_ec_discount_total
+            move.l10n_ec_base_iva_0_currency = move.currency_id._convert(
+                l10n_ec_base_iva_0, move.company_currency_id, move.company_id, move_date)
+            move.l10n_ec_base_iva_currency = move.currency_id._convert(
+                l10n_ec_base_iva, move.company_currency_id, move.company_id, move_date)
+            move.l10n_ec_iva_currency = move.currency_id._convert(
+                l10n_ec_iva, move.company_currency_id, move.company_id, move_date)
+            move.l10n_ec_discount_total_currency = move.currency_id._convert(
+                l10n_ec_discount_total, move.company_currency_id, move.company_id, move_date)
 
     l10n_ec_withhold_id = fields.Many2one(
         comodel_name="l10n_ec.withhold",
@@ -944,7 +917,7 @@ class AccountMove(models.Model):
             invoice.commercial_partner_id.name[:300])
         SubElement(infoFactura, "identificacionComprador").text = invoice.commercial_partner_id.vat
         SubElement(infoFactura, "direccionComprador").text = xml_model._clean_str(invoice.commercial_partner_id.street)[:300]
-        
+
         SubElement(infoFactura, "totalSinImpuestos").text = util_model.formato_numero(
             invoice.amount_untaxed, currency.decimal_places)
         # SubElement(infoFactura, "totalDescuento").text = util_model.formato_numero(
@@ -1376,10 +1349,58 @@ AccountMove()
 
 
 class AccountMoveLine(models.Model):
-
-    _inherit = 'account.move.line'
+    _inherit = ["account.move.line", "ln10_ec.common.document.line"]
+    _name = "account.move.line"
 
     l10n_ec_withhold_line_id = fields.Many2one(
         comodel_name='l10n_ec.withhold.line',
         string='Withhold Line',
         readonly=True)
+
+    def _l10n_ec_get_discount_total(self):
+        discount_total = self.price_unit * self.quantity * self.discount * 0.01
+        return discount_total
+
+    @api.depends(
+        'price_unit', 'product_id', 'quantity', 'discount', 'tax_ids',
+        'move_id.partner_id', 'move_id.currency_id',
+        'move_id.company_id', 'move_id.invoice_date'
+    )
+    def _compute_l10n_ec_amounts(self):
+        for move_line in self:
+            move = move_line.move_id
+            move_date = move.date or fields.Date.context_today(move)
+            l10n_ec_base_iva_0 = 0.0
+            l10n_ec_base_iva = 0.0
+            l10n_ec_iva = 0.0
+            price_unit_wo_discount = move_line.price_unit * (1 - (move_line.discount / 100.0))
+            l10n_ec_discount_total = move_line._l10n_ec_get_discount_total()
+            taxes_res = move_line.tax_ids._origin.compute_all(price_unit_wo_discount,
+                quantity=move_line.quantity, currency=move.currency_id, product=move_line.product_id,
+                partner=move.partner_id, is_refund=move.type in ('out_refund', 'in_refund'))
+            # impuestos de iva 0 no agregan reparticion de impuestos,
+            # por ahora se consideran base_iva_0, verificar esto
+            if taxes_res['taxes']:
+                for tax_data in taxes_res['taxes']:
+                    tax = self.env['account.tax'].browse(tax_data['id'])
+                    iva_group = self.env.ref('l10n_ec_niif.tax_group_iva')
+                    if tax.tax_group_id.id == iva_group.id:
+                        if tax_data['base'] != 0 and tax_data['amount'] == 0:
+                            l10n_ec_base_iva_0 = tax_data['base']
+                        else:
+                            l10n_ec_base_iva = tax_data['base']
+                            l10n_ec_iva = tax_data['amount']
+            else:
+                l10n_ec_base_iva_0 = taxes_res['total_excluded']
+            move_line.l10n_ec_base_iva_0 = l10n_ec_base_iva_0
+            move_line.l10n_ec_base_iva = l10n_ec_base_iva
+            move_line.l10n_ec_iva = l10n_ec_iva
+            move_line.l10n_ec_discount_total = l10n_ec_discount_total
+            move_line.l10n_ec_base_iva_0_currency = move.currency_id._convert(
+                l10n_ec_base_iva_0, move.company_currency_id, move.company_id, move_date)
+            move_line.l10n_ec_base_iva_currency = move.currency_id._convert(
+                l10n_ec_base_iva, move.company_currency_id, move.company_id, move_date)
+            move_line.l10n_ec_iva_currency = move.currency_id._convert(
+                l10n_ec_iva, move.company_currency_id, move.company_id, move_date)
+            move_line.l10n_ec_discount_total_currency = move.currency_id._convert(
+                l10n_ec_discount_total, move.company_currency_id, move.company_id, move_date)
