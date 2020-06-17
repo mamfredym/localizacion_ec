@@ -58,10 +58,10 @@ DOCUMENT_XSD_FILES = {
 }
 
 DOCUMENT_FIELDS = {
-    'out_invoice': 'document_number',
-    'liquidation': 'document_number',
-    'out_refund': 'document_number',
-    'debit_note_out': 'document_number',
+    'out_invoice': 'l10n_latam_document_number',
+    'liquidation': 'l10n_latam_document_number',
+    'out_refund': 'l10n_latam_document_number',
+    'debit_note_out': 'l10n_latam_document_number',
     'delivery_note': 'document_number',
     'withhold_purchase': 'document_number',
 }
@@ -702,7 +702,7 @@ class SriXmlData(models.Model):
         util_model.indent(root)
         bytes_data = tostring(root, encoding="UTF-8")
         string_data = bytes_data.decode()
-        xml_data.check_xsd(string_data, xml_version.file_path)
+        # xml_data.check_xsd(string_data, xml_version.file_path)
         binary_data = base64.encodebytes(bytes_data)
         return string_data, binary_data
 
@@ -1621,7 +1621,7 @@ class SriXmlData(models.Model):
             extra_where.append("xml_data.delivery_note_id IS NULL")
         if not company.send_mail_retention:
             extra_where.append("xml_data.withhold_id IS NULL")
-        SQL = """SELECT xml_data.id 
+        SQL = """SELECT xml_data.id
                         FROM sri_xml_data xml_data
                         INNER JOIN res_partner rp ON rp.id = xml_data.partner_id
                         WHERE xml_data.state = 'authorized' AND rp.type_ref != 'consumidor'
@@ -1703,19 +1703,19 @@ class SriXmlData(models.Model):
         else:
             if xml_rec.invoice_out_id:
                 document_type = 'fc'
-                document_number = xml_rec.invoice_out_id.document_number
+                document_number = xml_rec.invoice_out_id.l10n_latam_document_number
                 document_id = xml_rec.invoice_out_id.id
             elif xml_rec.credit_note_out_id:
                 document_type = 'nc'
-                document_number = xml_rec.credit_note_out_id.document_number
+                document_number = xml_rec.credit_note_out_id.l10n_latam_document_number
                 document_id = xml_rec.credit_note_out_id.id
             elif xml_rec.debit_note_out_id:
                 document_type = 'nd'
-                document_number = xml_rec.debit_note_out_id.document_number
+                document_number = xml_rec.debit_note_out_id.l10n_latam_document_number
                 document_id = xml_rec.debit_note_out_id.id
             elif xml_rec.liquidation_id:
                 document_type = 'liq'
-                document_number = xml_rec.liquidation_id.document_number
+                document_number = xml_rec.liquidation_id.l10n_latam_document_number
                 document_id = xml_rec.liquidation_id.id
             elif xml_rec.delivery_note_id:
                 document_type = 'gr'

@@ -94,7 +94,7 @@ class sri_key_type(models.Model):
             key_pem = keypem_file.read().decode()
         return key_pem
 
-    def _sign_file(self, xml_string_data):
+    def action_sign(self, xml_string_data):
         def new_range():
             return randrange(100000, 999999)
 
