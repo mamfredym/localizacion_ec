@@ -758,16 +758,13 @@ class SriXmlData(models.Model):
                     last_error_id = last_error_rec.id
         # una vez creado todos los mensajes, si hubo uno de error escribirlo como el ultimo error recibido
         if last_error_id:
-            xml_rec.write({'last_error_id': last_error_id})
+            values = {'last_error_id': last_error_id}
+            # si el ultimo codigo de error es codigo 43(Clave acceso registrada)
+            # cambiar el estado a En espera de autorizacion, para que la tarea cron la procese posteriormente
+            if xml_rec.state not in ('authorized', 'cancel') and last_error_rec.code == '43':
+                values['state'] = 'waiting'
+            xml_rec.write(values)
         return messages_error, raise_error
-
-    def _free_key_in_use(self):
-        # cambiar clave de acceso solo cuando la clave sea tipo contingencia
-        # si es documento externo, no cambiar clave por ninguna razon
-        if self.key_id and self.key_id.key_type == 'contingency' and not self.external_document:
-            self.key_id.write({'state': 'draft'})
-            self.write({'key_id': False, 'xml_key': ''})
-        return True
 
     @api.model
     def _send_xml_data_to_valid(self, xml_id, xml_field, client_ws, client_ws_auth):
@@ -1114,7 +1111,6 @@ class SriXmlData(models.Model):
                 # si el documento esta en espera de autorizacion no pasar a contingencia
                 if not context.get('cron_process', False) and xml_rec.state != 'waiting':
                     ctx['emission'] = '2'
-                    xml_rec._free_key_in_use()
                     xml_rec.with_context(ctx).text_write_binary()
             elif send_again:
                 # si no supera el maximo de intentos, volve a intentar
@@ -1262,7 +1258,8 @@ class SriXmlData(models.Model):
                         'signed_date': time.strftime(DTF),
                     }
                 # si esta en contingencia, no cambiar de estado, para que la tarea cron sea el que procese estos registros
-                vals['state'] = 'signed'
+                if xml_rec.state != 'contingency' or self.env.context.get('skip_contingency', False):
+                    vals['state'] = 'signed'
                 if vals:
                     xml_rec.write(vals)
             except ValidationError as ve:
@@ -1545,15 +1542,19 @@ class SriXmlData(models.Model):
         xml_recs = self.search([('state', '=', 'waiting')], limit=company.cron_process)
         # en algunas ocaciones los documentos se envian a autorizar, pero se quedan como firmados
         # buscar los documentos firmados que se hayan enviado a autorizar para verificar si fueron autorizados o no
-        xml_signed_recs = self.search([('state','=','signed')])
+        xml_signed_recs = self.search([('state', 'in', ('signed', 'rejected'))], limit=company.cron_process)
         xml_send_to_autorice = False
         for xml_signed in xml_signed_recs:
             xml_send_to_autorice = False
-            for send_try in xml_signed.try_ids:
-                # si hay un intento de envio a autorizar, verificar si el registro fue autorizado
-                if send_try.type_send == 'send':
+            # si hay un intento de envio a autorizar, verificar si el registro fue autorizado
+            if xml_signed.try_ids.filtered(lambda x: x.type_send == 'send'):
+                # cuando el estado sea rechazado(no autorizado) solo enviar a verificar si no hay mensajes informativos
+                # caso contrario se ignorara y una tarea cron lo enviara por correo notificando el error devuelto por el SRI
+                if xml_signed.state == 'rejected':
+                    if not xml_signed.message_ids:
+                        xml_send_to_autorice = True
+                else:
                     xml_send_to_autorice = True
-                    break
             # agregarlo a la lista para verificar si fue autorizado
             if xml_send_to_autorice and xml_signed not in xml_recs:
                 xml_recs += xml_signed
