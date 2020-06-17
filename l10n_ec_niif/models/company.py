@@ -42,78 +42,78 @@ class ResCompany(models.Model):
         string='Withhold Journal',
         required=False)
     # campos para facturacion electronica
-    type_environment = fields.Selection([
+    l10n_ec_type_environment = fields.Selection([
         ('test', 'Pruebas'),
         ('production', 'Producción'),
     ], string='Tipo de Ambiente de Documentos Electronicos', default='test', )
-    type_conection_sri = fields.Selection([
+    l10n_ec_type_conection_sri = fields.Selection([
         ('online', 'On-Line'),
         ('offline', 'Off-Line'),
     ], string='Tipo de conexion con SRI', default='offline')
-    key_type_id = fields.Many2one('sri.key.type', 'Tipo de Llave', ondelete="restrict")
-    ws_receipt_test = fields.Char('URL del WS de Pruebas de SRI para Recepción de Documentos',
+    l10n_ec_key_type_id = fields.Many2one('sri.key.type', 'Tipo de Llave', ondelete="restrict")
+    l10n_ec_ws_receipt_test = fields.Char('URL del WS de Pruebas de SRI para Recepción de Documentos',
         default='https://celcer.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl')
-    ws_auth_test = fields.Char('URL del WS de Pruebas de SRI para Autorización de Documentos',
+    l10n_ec_ws_auth_test = fields.Char('URL del WS de Pruebas de SRI para Autorización de Documentos',
         default='https://celcer.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl')
-    ws_receipt_production = fields.Char('URL del WS de Producción de SRI para Recepción de Documentos',
+    l10n_ec_ws_receipt_production = fields.Char('URL del WS de Producción de SRI para Recepción de Documentos',
         default='https://cel.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl')
-    ws_auth_production = fields.Char('URL del WS de Producción SRI para Autorización de Documentos',
+    l10n_ec_ws_auth_production = fields.Char('URL del WS de Producción SRI para Autorización de Documentos',
         default='https://cel.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl')
-    electronic_invoice = fields.Boolean('Autorizado Facturas?')
-    electronic_delivery_note = fields.Boolean('Autorizado Guías de Remisión?')
-    electronic_withhold = fields.Boolean('Autorizado Retenciones?')
-    electronic_credit_note = fields.Boolean('Autorizado Notas de Crédito?')
-    electronic_debit_note = fields.Boolean('Autorizado Notas de Débito?')
-    electronic_liquidation = fields.Boolean('Autorizado Liquidacion de compras?')
-    invoice_version_xml_id = fields.Many2one('l10n_ec.xml.version',
+    l10n_ec_electronic_invoice = fields.Boolean('Autorizado Facturas?')
+    l10n_ec_electronic_delivery_note = fields.Boolean('Autorizado Guías de Remisión?')
+    l10n_ec_electronic_withhold = fields.Boolean('Autorizado Retenciones?')
+    l10n_ec_electronic_credit_note = fields.Boolean('Autorizado Notas de Crédito?')
+    l10n_ec_electronic_debit_note = fields.Boolean('Autorizado Notas de Débito?')
+    l10n_ec_electronic_liquidation = fields.Boolean('Autorizado Liquidacion de compras?')
+    l10n_ec_invoice_version_xml_id = fields.Many2one('l10n_ec.xml.version',
         string='Version del XML Facturas', domain=[('document_type', '=', 'invoice')])
-    delivery_note_version_xml_id = fields.Many2one('l10n_ec.xml.version',
+    l10n_ec_delivery_note_version_xml_id = fields.Many2one('l10n_ec.xml.version',
         string='Version del XML Guias de remision', domain=[('document_type', '=', 'delivery_note')])
-    withholding_version_xml_id = fields.Many2one('l10n_ec.xml.version',
+    l10n_ec_withholding_version_xml_id = fields.Many2one('l10n_ec.xml.version',
         string='Version del XML Retencion', domain=[('document_type', '=', 'withholding')])
-    credit_note_version_xml_id = fields.Many2one('l10n_ec.xml.version',
+    l10n_ec_credit_note_version_xml_id = fields.Many2one('l10n_ec.xml.version',
         string='Version del XML Nota de Credito', domain=[('document_type', '=', 'credit_note')])
-    debit_note_version_xml_id = fields.Many2one('l10n_ec.xml.version',
+    l10n_ec_debit_note_version_xml_id = fields.Many2one('l10n_ec.xml.version',
         string='Version del XML Nota de Debito', domain=[('document_type', '=', 'debit_note')])
-    liquidation_version_xml_id = fields.Many2one('l10n_ec.xml.version',
+    l10n_ec_liquidation_version_xml_id = fields.Many2one('l10n_ec.xml.version',
         string='Version del XML Liquidacion de compras', domain=[('document_type', '=', 'liquidation')])
     # campo para la imagen que va en los documentos electronicos
-    electronic_logo = fields.Binary('Logo de Documentos electrónicos')
-    max_intentos = fields.Integer('Intentos máximos de autorización')
-    ws_timeout = fields.Integer('Timeout Web Service', default=30)
-    cron_process = fields.Integer('Number Documents Process in Cron', default=100)
-    path_files_electronic = fields.Char('Ruta para Documentos Electronicos',
-                                        default=lambda self: self._get_default_path_files_electronic())
-    send_mail_from = fields.Datetime('Enviar Mail desde', default=lambda self: fields.Datetime.now())
-    send_mail_invoice = fields.Boolean('Facturas electronicas?', default=True, )
-    send_mail_credit_note = fields.Boolean('Notas de Crédito?', default=True)
-    send_mail_debit_note = fields.Boolean('Notas de Débito?', default=True)
-    send_mail_remision = fields.Boolean('Guía de Remisión?', default=True)
-    send_mail_retention = fields.Boolean('Retenciones?', default=True)
-    send_mail_liquidation = fields.Boolean('Liquidacion de compras?', default=True)
-    create_login_for_partners = fields.Boolean('Crear Usuario para portal?', default=False, )
-    print_ride_main_code = fields.Boolean('Imprimir Codigo Principal?', default=True)
-    print_ride_aux_code = fields.Boolean('Imprimir Codigo Auxiliar?', default=False)
-    print_ride_detail1 = fields.Boolean('Imprimir Detalle Adicional 1?', default=True)
-    print_ride_detail2 = fields.Boolean('Imprimir Detalle Adicional 2?', default=False)
-    print_ride_detail3 = fields.Boolean('Imprimir Detalle Adicional 3?', default=False)
+    l10n_ec_electronic_logo = fields.Binary('Logo de Documentos electrónicos')
+    l10n_ec_max_intentos = fields.Integer('Intentos máximos de autorización')
+    l10n_ec_ws_timeout = fields.Integer('Timeout Web Service', default=30)
+    l10n_ec_cron_process = fields.Integer('Number Documents Process in Cron', default=100)
+    l10n_ec_path_files_electronic = fields.Char('Ruta para Documentos Electronicos',
+                                        default=lambda self: self._get_default_l10n_ec_path_files_electronic())
+    l10n_ec_send_mail_from = fields.Datetime('Enviar Mail desde', default=lambda self: fields.Datetime.now())
+    l10n_ec_send_mail_invoice = fields.Boolean('Facturas electronicas?', default=True, )
+    l10n_ec_send_mail_credit_note = fields.Boolean('Notas de Crédito?', default=True)
+    l10n_ec_send_mail_debit_note = fields.Boolean('Notas de Débito?', default=True)
+    l10n_ec_send_mail_remision = fields.Boolean('Guía de Remisión?', default=True)
+    l10n_ec_send_mail_retention = fields.Boolean('Retenciones?', default=True)
+    l10n_ec_send_mail_liquidation = fields.Boolean('Liquidacion de compras?', default=True)
+    l10n_ec_create_login_for_partners = fields.Boolean('Crear Usuario para portal?', default=False, )
+    l10n_ec_print_ride_main_code = fields.Boolean('Imprimir Codigo Principal?', default=True)
+    l10n_ec_print_ride_aux_code = fields.Boolean('Imprimir Codigo Auxiliar?', default=False)
+    l10n_ec_print_ride_detail1 = fields.Boolean('Imprimir Detalle Adicional 1?', default=True)
+    l10n_ec_print_ride_detail2 = fields.Boolean('Imprimir Detalle Adicional 2?', default=False)
+    l10n_ec_print_ride_detail3 = fields.Boolean('Imprimir Detalle Adicional 3?', default=False)
     l10n_ec_sri_payment_id = fields.Many2one('l10n_ec.sri.payment.method', string=u'S.R.I Payment Method')
 
-    @api.constrains('path_files_electronic', )
-    def _check_path_files_electronic(self):
+    @api.constrains('l10n_ec_path_files_electronic', )
+    def _check_l10n_ec_path_files_electronic(self):
         # validar que se puedan crear archivos en el directorio especificado
         # TODO: encontrar una mejor manera de acceder a los permisos de un directorio
-        if self.path_files_electronic:
+        if self.l10n_ec_path_files_electronic:
             # si el directorio no existe, crearlo
-            if not os.path.isdir(self.path_files_electronic):
+            if not os.path.isdir(self.l10n_ec_path_files_electronic):
                 try:
-                    os.makedirs(self.path_files_electronic)
+                    os.makedirs(self.l10n_ec_path_files_electronic)
                 except IOError:
                     raise ValidationError(
                         "Error al acceder a la ruta configurada para los documentos electronicos, por favor verifique los permisos de acceso")
             # crear un archivo temporal para hacer la prueba
             try:
-                f_name_temp = os.path.join(self.path_files_electronic, 'test.txt')
+                f_name_temp = os.path.join(self.l10n_ec_path_files_electronic, 'test.txt')
                 f_temp = open(f_name_temp, "w")
                 f_temp.close()
                 os.remove(f_name_temp)
@@ -122,18 +122,18 @@ class ResCompany(models.Model):
                     "Error al acceder a la ruta configurada para los documentos electronicos, por favor verifique los permisos de acceso")
 
     @api.model
-    def _get_default_path_files_electronic(self):
+    def _get_default_l10n_ec_path_files_electronic(self):
         # obtener la ruta del archivo de ejecucion del server
         source_folder = "files_electronics"
         home_name = "HOME"
         if os.name in ('os2', 'nt'):
             home_name = "USERPROFILE"
-        path_files_electronic = os.path.abspath(os.path.join(os.environ[home_name], source_folder))
+        l10n_ec_path_files_electronic = os.path.abspath(os.path.join(os.environ[home_name], source_folder))
         # obtener el parent del directorio, xq el archivo se ejecuta en server/bin
         # crear una carpeta files_electronics en server/files_electronics
-        if not os.path.isdir(path_files_electronic):
-            os.makedirs(path_files_electronic)
-        return path_files_electronic
+        if not os.path.isdir(l10n_ec_path_files_electronic):
+            os.makedirs(l10n_ec_path_files_electronic)
+        return l10n_ec_path_files_electronic
 
     @api.model
     def get_contribuyente_data(self, date=None):

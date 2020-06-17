@@ -31,6 +31,7 @@
         'data/bank_data.xml',
         'data/l10n_ec.xml.version.csv',
         'data/sri_error_code_data.xml',
+        'data/cron_jobs.xml',
         'report/report_withholds_pre_printed.xml',
         'report/report_withholds_auto_printer.xml',
         'report/report_withholds.xml',

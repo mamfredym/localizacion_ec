@@ -287,7 +287,7 @@ class L10EcPointOfEmission(models.Model):
         # mostrar excepcion si el punto de emision es electronico
         # pero para el tipo de documento no se esta en produccion aun(ambiente pruebas)
         force_preprint = False
-        if printer.type_emission == 'electronic' and not xml_model.is_enviroment_production(invoice_type, printer):
+        if printer.type_emission == 'electronic' and not xml_model.ln10_ec_is_enviroment_production(invoice_type, printer):
             force_preprint = True
             raise_exception = True
         if printer.type_emission in ('pre_printed', 'auto_printer') or force_preprint:
@@ -302,7 +302,7 @@ class L10EcPointOfEmission(models.Model):
             first_number_electronic = self.env.context.get(
                 'first_number_electronic', '')
             # tomar el primer numero para facturacion electronica si esta en produccion
-            if not first_number_electronic and printer and xml_model.is_enviroment_production(invoice_type):
+            if not first_number_electronic and printer and xml_model.ln10_ec_is_enviroment_production(invoice_type):
                 first_number_electronic = printer._get_first_number_electronic(
                     invoice_type, printer)
             # si tengo un secuencial y es menor al configurado como el inicio de facturacion electronica

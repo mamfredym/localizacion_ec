@@ -8,14 +8,13 @@
 				edit="false" delete="false" decoration-info="state in ('draft', 'signed', 'waiting')"
 				decoration-success="state=='authorized'" decoration-warning="state in ('returned', 'rejected')"
 				decoration-danger="state=='cancel'">
-				<field name="xml_key" />
+				<field name="ln10_ec_xml_key" />
 				<field name="xml_authorization" />
 				<field name="number_document" />
 				<field name="date_emision_document" />
 				<field name="partner_id" />
 				<field name="xml_type" invisible="1" />
-				<field name="external_document" invisible="1" />
-				<field name="type_environment" />
+				<field name="l10n_ec_type_environment" />
 				<field name="type_emision" />
 				<field name="send_mail" />
 				<field name="state" />
@@ -33,25 +32,26 @@
 			<form create="false"
 				edit="false" delete="false">
 				<header>
-					<button name="text_write_binary" string="Test XML" type="object"
+					<button name="action_create_xml_file" string="Create XML File" type="object"
 						states="draft,returned,rejected" class="oe_highlight" />
-					<button name="test_sing_xml_file" string="Test Sign XML"
+					<button name="action_sing_xml_file" string="Sign XML File"
 						type="object" class="oe_highlight fa fa-magic"
 						attrs="{'invisible': ['|',('state','in',('signed', 'waiting', 'authorized', 'cancel')), ('file_xml_path','=',False)]}" />
-					<button name="test_send_file" string="Test Send File" type="object"
-						icon="gtk-execute" class="oe_highlight"
-						attrs="{'invisible': ['|',('state','not in',('signed', 'waiting', 'contingency')), ('file_signed_path','=',False)]}" />
-					<button name="test_send_check_state" string="Test Check Auth File"
-						type="object" icon="gtk-execute" class="oe_highlight"
+					<button name="action_send_xml_file" string="Send Xml to authorize" type="object"
+						icon="fa-gear" class="oe_highlight"
+						attrs="{'invisible': ['|',('state','not in',('signed', 'waiting', 'contingency')), ('file_signed_path','=',False)]}"
+                        context="{'no_send': True}"/>
+					<button name="action_send_xml_to_check" string="Check Authorization"
+						type="object" icon="fa-gear" class="oe_highlight"
 						attrs="{'invisible': ['|',('state','not in',('signed', 'waiting', 'contingency')), ('try_ids','=',[])]}" />
-					<button name="test_send_mail_partner" string="Enviar mail a cliente"
+					<button name="action_send_mail_partner" string="Enviar mail a cliente"
 						type="object" class="oe_highlight fa fa-envelope-o"
-						attrs="{'invisible': ['|', ('state','!=', 'authorized'), ('type_environment','!=', 'production')]}" />
-					<button name="test_send_mail_partner" string="Enviar mail a cliente"
+						attrs="{'invisible': ['|', ('state','!=', 'authorized'), ('l10n_ec_type_environment','!=', 'production')]}" />
+					<button name="action_send_mail_partner" string="Enviar mail a cliente"
 						type="object" class="oe_highlight fa fa-envelope-o"
-						attrs="{'invisible': ['|', ('state','!=', 'authorized'), ('type_environment','!=', 'test')]}"
+						attrs="{'invisible': ['|', ('state','!=', 'authorized'), ('l10n_ec_type_environment','!=', 'test')]}"
 						groups="base.group_system" context="{'force_send_mail': True}" />
-					<button name="create_file_authorized" string="Crear XML autorizado"
+					<button name="action_create_file_authorized" string="Crear XML autorizado"
 						type="object" class="oe_highlight fa fa-file-code-o"
 						attrs="{'invisible': ['|',('state','!=','authorized'), ('file_authorized_path','!=',False)]}" />
 					<button
@@ -75,11 +75,11 @@
 							<field name="xml_type" />
 						</group>
 						<group>
-							<field name="type_environment" />
+							<field name="l10n_ec_type_environment" />
 								<field name="type_emision" />
 							<field name="notification_active"
 									attrs="{'invisible':[('state','!=','rejected')]}" />
-							<field name="type_conection_sri" />
+							<field name="l10n_ec_type_conection_sri" />
 							<field name="send_mail" readonly="1" />
 						</group>
 					</group>
@@ -125,7 +125,7 @@
 						<page string="Información">
 							<group>
 								<group>
-									<field name="xml_key" readonly="1" />
+									<field name="ln10_ec_xml_key" readonly="1" />
 									<field name="xml_authorization" readonly="1" />
 									<field name="signed_date" readonly="1" />
 									<field name="response_date" readonly="1" />
@@ -134,9 +134,8 @@
 									<field name="authorization_to_cancel" />
 								</group>
 								<group>
-									<field name="authorization_date" readonly="1" />
+									<field name="ln10_ec_authorization_date" readonly="1" />
 									<field name="send_date" readonly="1" />
-									<field name="external_document" readonly="1" />
 									<field name="create_date" readonly="1" />
 									<field name="cancel_date" />
 								</group>
@@ -223,9 +222,6 @@
 								</form>
 							</field>
 						</page>
-						<page string="Documento externo" name="external_data" invisible="1">
-							<field name="external_data" />
-						</page>
 					</notebook>
 				</sheet>
 				<div class="oe_chatter">
@@ -242,7 +238,7 @@
 		<field name="model">sri.xml.data</field>
 		<field name="arch" type="xml">
 			<search string="Archivo XML de Firma Electrónica">
-				<field name="xml_key" />
+				<field name="ln10_ec_xml_key" />
 				<field name="last_error_id" />
 				<field name="partner_id" />
 				<field name="invoice_out_id" />

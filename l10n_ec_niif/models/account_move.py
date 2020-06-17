@@ -64,17 +64,17 @@ class AccountMove(models.Model):
     _name = "account.move"
 
     @api.depends('type', 'l10n_ec_point_of_emission_id', 'l10n_ec_debit_note', 'l10n_ec_liquidation')
-    def _compute_is_enviroment_production(self):
+    def _compute_ln10_ec_is_enviroment_production(self):
         xml_model = self.env['sri.xml.data']
         for invoice in self:
             if invoice.is_invoice():
                 invoice_type = self.get_invoice_type(invoice.type, invoice.l10n_ec_debit_note, invoice.l10n_ec_liquidation)
-                invoice.is_enviroment_production = xml_model.is_enviroment_production(invoice_type, invoice.l10n_ec_point_of_emission_id)
+                invoice.ln10_ec_is_enviroment_production = xml_model.ln10_ec_is_enviroment_production(invoice_type, invoice.l10n_ec_point_of_emission_id)
             else:
-                invoice.is_enviroment_production =False
+                invoice.ln10_ec_is_enviroment_production =False
 
-    is_enviroment_production = fields.Boolean('Es Ambiente de Produccion?',
-                                              compute='_compute_is_enviroment_production', store=True, index=True)
+    ln10_ec_is_enviroment_production = fields.Boolean('Es Ambiente de Produccion?',
+                                              compute='_compute_ln10_ec_is_enviroment_production', store=True, index=True)
     l10n_ec_original_invoice_id = fields.Many2one(comodel_name='account.move',
                                                   string="Original Invoice")
     l10n_ec_credit_note_ids = fields.One2many(comodel_name="account.move",
@@ -769,9 +769,9 @@ class AccountMove(models.Model):
         #si por context me pasan que no cree la parte electronica
         if self.env.context.get('no_create_electronic', False):
             return True
-        type_conection_sri = self.env.company.type_conection_sri
+        l10n_ec_type_conection_sri = self.env.company.l10n_ec_type_conection_sri
         #Si ya se encuentra autorizado, no hacer nuevamente el proceso de generacion del xml
-        for invoice in self.filtered(lambda x: not x.xml_data_id):
+        for invoice in self.filtered(lambda x: not x.ln10_ec_xml_data_id):
             invoice_type = invoice.get_invoice_type(invoice.type,
                                                     invoice.l10n_ec_debit_note,
                                                     invoice.l10n_ec_liquidation)
@@ -782,7 +782,7 @@ class AccountMove(models.Model):
                     if not retention.no_number:
                         #si el documento esta habilitado, hacer el proceso electronico
                         if xml_model._is_document_authorized('withhold_purchase'):
-                            sri_xml_vals = retention._prepare_sri_xml_values(type_conection_sri)
+                            sri_xml_vals = retention._prepare_l10n_ec_sri_xml_values(l10n_ec_type_conection_sri)
                             sri_xml_vals['withhold_id'] = retention.id
                             new_xml_rec = xml_model.create(sri_xml_vals)
                             xml_recs += new_xml_rec
@@ -795,7 +795,7 @@ class AccountMove(models.Model):
                 # if not invoice.l10n_ec_sri_payment_id:
                 #     raise UserError(
                 #         f"Debe asignar la forma de pago del SRI en la factura: {invoice.document_number}, por favor verifique")
-                sri_xml_vals = invoice._prepare_sri_xml_values(type_conection_sri)
+                sri_xml_vals = invoice._prepare_l10n_ec_sri_xml_values(l10n_ec_type_conection_sri)
                 #factura
                 if invoice_type == 'out_invoice':
                     sri_xml_vals['invoice_out_id'] = invoice.id
@@ -808,7 +808,7 @@ class AccountMove(models.Model):
                     #     raise UserError(
                     #         "La Nota de Credito: %s no esta asociada a ningun documento que modifique tributariamente, por favor verifique" % invoice.document_number)
                     # # validar que la factura este autorizada electronicamente
-                    # if invoice.refund_invoice_id and not invoice.refund_invoice_id.xml_data_id:
+                    # if invoice.refund_invoice_id and not invoice.refund_invoice_id.ln10_ec_xml_data_id:
                     #     raise UserError(
                     #         "No puede generar una Nota de credito, cuya factura rectificativa no esta autorizada electronicamente!")
                     sri_xml_vals['credit_note_out_id'] = invoice.id
@@ -821,7 +821,7 @@ class AccountMove(models.Model):
             send_file = True
             #en modo offline no enviar el documento inmeditamente
             #pasarlo a cola para q se envie por debajo
-            if type_conection_sri == 'offline':
+            if l10n_ec_type_conection_sri == 'offline':
                 send_file = False
             xml_recs.process_document_electronic(send_file)
         return True
@@ -887,7 +887,7 @@ class AccountMove(models.Model):
         fecha_factura = invoice.invoice_date.strftime(util_model.get_formato_date())
         SubElement(infoFactura, "fechaEmision").text = fecha_factura
         address = company.partner_id.street
-        SubElement(infoFactura, "dirEstablecimiento").text = xml_model._clean_str(address)[:300]
+        SubElement(infoFactura, "dirEstablecimiento").text = util_model._clean_str(address)[:300]
         if invoice.l10n_ec_identification_type_id:
             tipoIdentificacionComprador = invoice.l10n_ec_identification_type_id.code
         elif invoice.commercial_partner_id:
@@ -913,10 +913,10 @@ class AccountMove(models.Model):
         SubElement(infoFactura, "tipoIdentificacionComprador").text = tipoIdentificacionComprador
         # if invoice.remision_id:
         #     SubElement(infoFactura, "guiaRemision").text = invoice.remision_id.document_number
-        SubElement(infoFactura, "razonSocialComprador").text = xml_model._clean_str(
+        SubElement(infoFactura, "razonSocialComprador").text = util_model._clean_str(
             invoice.commercial_partner_id.name[:300])
         SubElement(infoFactura, "identificacionComprador").text = invoice.commercial_partner_id.vat
-        SubElement(infoFactura, "direccionComprador").text = xml_model._clean_str(invoice.commercial_partner_id.street)[:300]
+        SubElement(infoFactura, "direccionComprador").text = util_model._clean_str(invoice.commercial_partner_id.street)[:300]
 
         SubElement(infoFactura, "totalSinImpuestos").text = util_model.formato_numero(
             invoice.amount_untaxed, currency.decimal_places)
@@ -972,10 +972,10 @@ class AccountMove(models.Model):
             if currency.is_zero(subtotal):
                 continue
             detalle = SubElement(detalles, "detalle")
-            SubElement(detalle, "codigoPrincipal").text = xml_model._clean_str(
+            SubElement(detalle, "codigoPrincipal").text = util_model._clean_str(
                 line.product_id and line.product_id.default_code and line.product_id.default_code[:25] or 'N/A')
-            #             SubElement(detalle,"codigoAdicional").text = xml_obj._clean_str(line.product_id and line.product_id.default_code and line.product_id.default_code[:25] or 'N/A')
-            SubElement(detalle, "descripcion").text = xml_model._clean_str(
+            #             SubElement(detalle,"codigoAdicional").text = util_model._clean_str(line.product_id and line.product_id.default_code and line.product_id.default_code[:25] or 'N/A')
+            SubElement(detalle, "descripcion").text = util_model._clean_str(
                 line.product_id and line.product_id.name[:300] or line.name[:300])
             # Debido a que los precios son en 2 decimales, es necesario hacer razonable el precio unitario
             SubElement(detalle, "cantidad").text = util_model.formato_numero(line.quantity, digits_precision_qty)
@@ -1018,7 +1018,7 @@ class AccountMove(models.Model):
         fecha_factura = credit_note.invoice_date.strftime(util_model.get_formato_date())
         SubElement(infoNotaCredito, "fechaEmision").text = fecha_factura
         address = credit_note.partner_id.street
-        SubElement(infoNotaCredito, "dirEstablecimiento").text = xml_model._clean_str(address and address[:300] or '')
+        SubElement(infoNotaCredito, "dirEstablecimiento").text = util_model._clean_str(address and address[:300] or '')
         if credit_note.l10n_ec_identification_type_id:
             tipoIdentificacionComprador = credit_note.l10n_ec_identification_type_id.code
         elif credit_note.commercial_partner_id:
@@ -1038,7 +1038,7 @@ class AccountMove(models.Model):
             # pero debe tener como identificacion 13 digitos 99999999999999
             tipoIdentificacionComprador = '07'
         SubElement(infoNotaCredito, "tipoIdentificacionComprador").text = tipoIdentificacionComprador
-        SubElement(infoNotaCredito, "razonSocialComprador").text = xml_model._clean_str(
+        SubElement(infoNotaCredito, "razonSocialComprador").text = util_model._clean_str(
             credit_note.commercial_partner_id.name[:300])
         SubElement(infoNotaCredito, "identificacionComprador").text = credit_note.commercial_partner_id.vat
         company = self.env.user.company_id
@@ -1069,16 +1069,16 @@ class AccountMove(models.Model):
         # if credit_note.base_no_iva != 0:
         #     self.get_total_impuestos(totalConImpuestos, '2', '6', credit_note.base_no_iva, 0.0,
         #                              decimales=currency.decimal_places)
-        SubElement(infoNotaCredito, "motivo").text = xml_model._clean_str(
+        SubElement(infoNotaCredito, "motivo").text = util_model._clean_str(
             credit_note.name and credit_note.name[:300] or 'NOTA DE CREDITO')
         # Lineas de Factura
         detalles = SubElement(node, "detalles")
         for line in credit_note.invoice_line_ids.filtered(lambda x: not x.display_type):
             detalle = SubElement(detalles, "detalle")
-            SubElement(detalle, "codigoInterno").text = xml_model._clean_str(
+            SubElement(detalle, "codigoInterno").text = util_model._clean_str(
                 line.product_id and line.product_id.default_code and line.product_id.default_code[:25] or 'N/A')
-            #             SubElement(detalle,"codigoAdicional").text = xml_obj._clean_str(line.product_id and line.product_id.default_code and line.product_id.default_code[:25] or 'N/A')
-            SubElement(detalle, "descripcion").text = xml_model._clean_str(
+            #             SubElement(detalle,"codigoAdicional").text = util_model._clean_str(line.product_id and line.product_id.default_code and line.product_id.default_code[:25] or 'N/A')
+            SubElement(detalle, "descripcion").text = util_model._clean_str(
                 line.product_id and line.product_id.name[:300] or line.name[:300])
             # Debido a que los precios son en 2 decimales, es necesario hacer razonable el precio unitario
             SubElement(detalle, "cantidad").text = util_model.formato_numero(line.quantity, digits_precision_qty)
@@ -1118,7 +1118,7 @@ class AccountMove(models.Model):
         fecha_emision = debit.invoice_date.strftime(util_model.get_formato_date())
         SubElement(infoNotaDebito, "fechaEmision").text = fecha_emision
         address = debit.partner_id.street
-        SubElement(infoNotaDebito, "dirEstablecimiento").text = xml_model._clean_str(address and address[:300] or '')
+        SubElement(infoNotaDebito, "dirEstablecimiento").text = util_model._clean_str(address and address[:300] or '')
         if debit.l10n_ec_identification_type_id:
             tipoIdentificacionComprador = debit.l10n_ec_identification_type_id.code
         elif debit.commercial_partner_id:
@@ -1138,7 +1138,7 @@ class AccountMove(models.Model):
             # pero debe tener como identificacion 13 digitos 99999999999999
             tipoIdentificacionComprador = '07'
         SubElement(infoNotaDebito, "tipoIdentificacionComprador").text = tipoIdentificacionComprador
-        SubElement(infoNotaDebito, "razonSocialComprador").text = xml_model._clean_str(
+        SubElement(infoNotaDebito, "razonSocialComprador").text = util_model._clean_str(
             debit.commercial_partner_id.name[:300])
         SubElement(infoNotaDebito, "identificacionComprador").text = debit.commercial_partner_id.vat
         company = self.env.user.company_id
@@ -1172,7 +1172,7 @@ class AccountMove(models.Model):
         motivos = SubElement(node, "motivos")
         for line in debit.invoice_line_ids.filtered(lambda x: not x.display_type):
             self.get_motives(motivos,
-                             xml_model._clean_str(line.product_id and line.product_id.name[:300] or line.name[:300]),
+                             util_model._clean_str(line.product_id and line.product_id.name[:300] or line.name[:300]),
                              line.price_subtotal)
         infoAdicional = SubElement(node, "infoAdicional")
         # TODO: agregar infoAdicional
@@ -1191,7 +1191,7 @@ class AccountMove(models.Model):
         fecha_emision = liquidation.invoice_date.strftime(util_model.get_formato_date())
         SubElement(infoLiquidacionCompra, "fechaEmision").text = fecha_emision
         address = liquidation.partner_id.street
-        SubElement(infoLiquidacionCompra, "dirEstablecimiento").text = xml_model._clean_str(
+        SubElement(infoLiquidacionCompra, "dirEstablecimiento").text = util_model._clean_str(
             address and address[:300] or '')
         numero_contribuyente_especial = company.get_contribuyente_data(liquidation.invoice_date)
         SubElement(infoLiquidacionCompra, "contribuyenteEspecial").text = numero_contribuyente_especial
@@ -1214,10 +1214,10 @@ class AccountMove(models.Model):
             # pero debe tener como identificacion 13 digitos 99999999999999
             tipoIdentificacionComprador = '07'
         SubElement(infoLiquidacionCompra, "tipoIdentificacionProveedor").text = tipoIdentificacionComprador
-        SubElement(infoLiquidacionCompra, "razonSocialProveedor").text = xml_model._clean_str(
+        SubElement(infoLiquidacionCompra, "razonSocialProveedor").text = util_model._clean_str(
             liquidation.commercial_partner_id.name[:300])
         SubElement(infoLiquidacionCompra, "identificacionProveedor").text = liquidation.commercial_partner_id.vat
-        SubElement(infoLiquidacionCompra, "direccionProveedor").text = xml_model._clean_str(
+        SubElement(infoLiquidacionCompra, "direccionProveedor").text = util_model._clean_str(
             liquidation.partner_id.street[:300])
         SubElement(infoLiquidacionCompra, "totalSinImpuestos").text = util_model.formato_numero(
             liquidation.amount_untaxed)
@@ -1273,9 +1273,9 @@ class AccountMove(models.Model):
         detalles = SubElement(node, "detalles")
         for line in liquidation.invoice_line_ids:
             detalle = SubElement(detalles, "detalle")
-            SubElement(detalle, "codigoPrincipal").text = xml_model._clean_str(
+            SubElement(detalle, "codigoPrincipal").text = util_model._clean_str(
                 line.product_id and line.product_id.default_code and line.product_id.default_code[:25] or 'N/A')
-            SubElement(detalle, "descripcion").text = xml_model._clean_str(
+            SubElement(detalle, "descripcion").text = util_model._clean_str(
                 line.product_id and line.product_id.name[:300] or line.name[:300])
             SubElement(detalle, "unidadMedida").text = line.uom_id and line.uom_id.display_name or 'N/A'
             # Debido a que los precios son en 2 decimales, es necesario hacer razonable el precio unitario

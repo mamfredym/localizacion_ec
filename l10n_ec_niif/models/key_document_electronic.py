@@ -12,25 +12,6 @@ from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
 
 
-class sri_key_type(models.Model):
-
-    _inherit = 'sri.key.type'
-
-    # metodo llamado por CRON para notificacr llaves expiradas
-
-    @api.model
-    def recompute_date_expire(self):
-        template_mail_notification_keys_expired = self.env.ref(
-            'ecua_documentos_electronicos.email_template_keys_expired')
-        company = self.env.user.company_id
-        template_mail_notification_keys_expired.send_mail(company.id)
-
-        return True
-
-
-sri_key_type()
-
-
 class res_company(models.Model):
 
     _inherit = 'res.company'

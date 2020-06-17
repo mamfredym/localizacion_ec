@@ -175,3 +175,11 @@ class sri_key_type(models.Model):
         ctx.sign(signature)
         ctx.verify(signature)
         return etree.tostring(doc, encoding="UTF-8", pretty_print=True).decode()
+
+    @api.model
+    def recompute_date_expire(self):
+        template_mail_notification_keys_expired = self.env.ref(
+            'l10n_ec_niif.email_template_keys_expired')
+        company = self.env.user.company_id
+        template_mail_notification_keys_expired.send_mail(company.id)
+        return True

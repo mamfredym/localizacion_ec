@@ -24,7 +24,7 @@
     (<i>${object.partner_id.parent_id.name}</i>)
 % endif
 ,</p>
-<p>Adjunto se encuentra su 
+<p>Adjunto se encuentra su
 % if object.number:
 documento <strong>${object.display_name}</strong>
 % else:
@@ -33,8 +33,8 @@ Documento
 % if object.origin:
 (Con referencia: ${object.origin})
 % endif
-% if object.xml_key:
-Clave de Acceso: ${object.xml_key}
+% if object.ln10_ec_xml_key:
+Clave de Acceso: ${object.ln10_ec_xml_key}
 % endif
 por un monto de <strong>${object.amount_total} ${object.currency_id.name}</strong>
 de ${object.company_id.name}.
@@ -87,8 +87,8 @@ de ${object.company_id.name}.
 						,</p>
 					<p>Adjunto se encuentra su
 						Retención <strong>${object.display_name}</strong>
-						% if object.xml_key:
-						Clave de Acceso: ${object.xml_key}
+						% if object.ln10_ec_xml_key:
+						Clave de Acceso: ${object.ln10_ec_xml_key}
 						% endif
 						por un monto de <strong>${object.total} ${object.company_id.currency_id.name}</strong>
 						de ${object.company_id.name}.

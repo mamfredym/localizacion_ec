@@ -9,26 +9,21 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
     _name = 'ln10_ec.common.document.electronic'
     _description = 'Abstract Class for electronic documents'
 
-    electronic_authorization = fields.Char('Autorizacion Electrónica',
+    ln10_ec_electronic_authorization = fields.Char('Autorizacion Electrónica',
                                            size=49, copy=False, index=True)
-    xml_data_id = fields.Many2one('sri.xml.data', 'XML electronico',
+    ln10_ec_xml_data_id = fields.Many2one('sri.xml.data', 'XML electronico',
                                   copy=False, index=True, auto_join=True)
-    xml_key = fields.Char('Clave de acceso',
+    ln10_ec_xml_key = fields.Char('Clave de acceso',
                           size=49, copy=False, index=True)
-    authorization_date = fields.Datetime('Fecha de Autorización',
+    ln10_ec_authorization_date = fields.Datetime('Fecha de Autorización',
                                          copy=False, index=True)
-    # campo para el portal
-    is_new_document = fields.Boolean('Nuevo Documento Electronico?', default=True)
 
-    def mark_as_seen(self):
-        self.write({'is_new_document': False})
-
-    def _prepare_sri_xml_values(self, type_conection_sri):
+    def _prepare_l10n_ec_sri_xml_values(self, l10n_ec_type_conection_sri):
         return {
-            'type_conection_sri': type_conection_sri
+            'l10n_ec_type_conection_sri': l10n_ec_type_conection_sri
         }
 
-    def get_printed_report_name(self):
+    def get_printed_report_name_l10n_ec(self):
         # funcion solo usada para ser llamada de manera externa
         # ya que no se puede llamar a la funcion declarada como privada
         return self._get_report_base_filename()
@@ -38,13 +33,13 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
         :return: An ir.attachment recordset
         '''
         self.ensure_one()
-        if not self.xml_key:
+        if not self.ln10_ec_xml_key:
             return []
         domain = [
             ('res_id', '=', self.id),
             ('res_model', '=', self._name),
-            ('name', '=', "%s.xml" % self.get_printed_report_name()),
-            ('description', '=', self.xml_key),
+            ('name', '=', "%s.xml" % self.get_printed_report_name_l10n_ec()),
+            ('description', '=', self.ln10_ec_xml_key),
         ]
         return self.env['ir.attachment'].search(domain)
 
@@ -58,14 +53,14 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
         ctx.pop('default_type', False)
         AttachmentModel = self.env['ir.attachment'].with_context(ctx)
         attachment = AttachmentModel.browse()
-        if self.xml_key and self.xml_data_id:
+        if self.ln10_ec_xml_key and self.ln10_ec_xml_data_id:
             attachment = self.get_attachments()
             if not attachment:
                 try:
-                    file_data = self.xml_data_id.get_file(self.xml_data_id.id, 'file_authorized')
+                    file_data = self.ln10_ec_xml_data_id.get_file(self.ln10_ec_xml_data_id.id, 'file_authorized')
                 except:
                     file_data = ""
-                file_name = self.get_printed_report_name()
+                file_name = self.get_printed_report_name_l10n_ec()
                 if file_data:
                     attachment = AttachmentModel.create({
                         'name': "%s.xml" % file_name,
@@ -73,14 +68,14 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
                         'res_model': self._name,
                         'datas': base64.encodebytes(file_data.encode()),
                         'datas_fname': "%s.xml" % file_name,
-                        'description': self.xml_key,
+                        'description': self.ln10_ec_xml_key,
                     })
         return attachment
 
-    def action_update_authorization_data(self, numeroAutorizacion, authorization_date):
+    def action_update_authorization_data(self, numeroAutorizacion, ln10_ec_authorization_date):
         self.write({
-            'electronic_authorization': str(numeroAutorizacion),
-            'authorization_date': authorization_date.strftime(DTF),
+            'ln10_ec_electronic_authorization': str(numeroAutorizacion),
+            'ln10_ec_authorization_date': ln10_ec_authorization_date.strftime(DTF),
         })
 
     def action_sent_mail(self):
@@ -102,9 +97,9 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
 
     @api.model
     def add_info_adicional(self, infoAditionalNode, info_data):
-        xml_model = self.env['sri.xml.data']
+        util_model = self.env['l10n_ec.utils']
         for line in info_data:
             campoAdicional = SubElement(infoAditionalNode, "campoAdicional")
-            campoAdicional.set("nombre", xml_model._clean_str(line.get("name", "OtroCampo")))
-            campoAdicional.text = xml_model._clean_str(line.get("description", "Otra Informacion"))
+            campoAdicional.set("nombre", util_model._clean_str(line.get("name", "OtroCampo")))
+            campoAdicional.text = util_model._clean_str(line.get("description", "Otra Informacion"))
         return True
