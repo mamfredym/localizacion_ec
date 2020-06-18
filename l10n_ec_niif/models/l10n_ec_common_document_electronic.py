@@ -67,7 +67,7 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
                         'res_id': self.id,
                         'res_model': self._name,
                         'datas': base64.encodebytes(file_data.encode()),
-                        'datas_fname': "%s.xml" % file_name,
+                        'store_fname': "%s.xml" % file_name,
                         'description': self.ln10_ec_xml_key,
                     })
         return attachment
