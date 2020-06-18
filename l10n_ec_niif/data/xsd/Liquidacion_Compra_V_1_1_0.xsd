@@ -716,12 +716,6 @@
 						</xsd:sequence>
 					</xsd:complexType>
 				</xsd:element>
-				<xsd:element ref="ds:Signature" minOccurs="0">
-					<xsd:annotation>
-						<xsd:documentation xml:lang="en"> Set of data associated with the invoice which guarantee the authorship and integrity of the message. It is defined as optional to ease the validation and transmission of the file. However, this block of electronic signature must be completed in order for an electronic invoice to be considered legally valid before third parties.</xsd:documentation>
-						<xsd:documentation xml:lang="es"> Conjunto de datos asociados a la liquidacion de compras que garantizaran la autoria y la integridad del mensaje. Se define como opcional para facilitar la verificacion y el transito del fichero. No obstante, debe cumplimentarse este bloque de firma electronica para que se considere una liquidacion de compras electronica valida legalmente frente a terceros.</xsd:documentation>
-					</xsd:annotation>
-				</xsd:element>
 			</xsd:sequence>
 			<xsd:attribute name="id">
 				<xsd:simpleType>
