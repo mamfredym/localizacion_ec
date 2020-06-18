@@ -68,7 +68,8 @@ class AccountMove(models.Model):
         xml_model = self.env['sri.xml.data']
         for invoice in self:
             if invoice.is_invoice():
-                invoice_type = self.get_invoice_type(invoice.type, invoice.l10n_ec_debit_note, invoice.l10n_ec_liquidation)
+                invoice_type = self.l10n_ec_get_invoice_type(
+                    invoice.type, invoice.l10n_ec_debit_note, invoice.l10n_ec_liquidation)
                 invoice.ln10_ec_is_enviroment_production = xml_model.ln10_ec_is_enviroment_production(invoice_type, invoice.l10n_ec_point_of_emission_id)
             else:
                 invoice.ln10_ec_is_enviroment_production =False
@@ -107,6 +108,15 @@ class AccountMove(models.Model):
         default=lambda self: self.env.context.get('default_l10n_ec_debit_note', False))
     l10n_ec_liquidation = fields.Boolean(string="Liquidation of Purchases?",
         default=lambda self: self.env.context.get('default_l10n_ec_liquidation', False))
+    l10n_ec_dias_credito = fields.Integer(string='Días Crédito', compute='_compute_l10n_ec_dias_credito', store=True)
+
+    @api.depends('invoice_date', 'invoice_date_due')
+    def _compute_l10n_ec_dias_credito(self):
+        now = fields.Date.context_today(self)
+        for invoice in self:
+            date_invoice = invoice.invoice_date or now
+            date_due = invoice.invoice_date_due or date_invoice
+            invoice.l10n_ec_dias_credito = (date_due - date_invoice).days
 
     @api.depends(
         'partner_id.l10n_ec_type_sri',
@@ -260,7 +270,7 @@ class AccountMove(models.Model):
         values = super(AccountMove, self).default_get(fields)
         type = values.get('type', self.type)
         if type in ('out_invoice', 'out_refund', 'in_invoice'):
-            invoice_type = modules_mapping.get_invoice_type(type,
+            invoice_type = modules_mapping.l10n_ec_get_invoice_type(type,
                                                             values.get(
                                                                 'l10n_ec_debit_note', self.l10n_ec_debit_note),
                                                             values.get('l10n_ec_liquidation', self.l10n_ec_liquidation))
@@ -291,7 +301,7 @@ class AccountMove(models.Model):
         if not default:
             default = {}
         if self.filtered(lambda x: x.company_id.country_id.code == 'EC'):
-            invoice_type = modules_mapping.get_invoice_type(
+            invoice_type = modules_mapping.l10n_ec_get_invoice_type(
                 self.type, self.l10n_ec_debit_note, self.l10n_ec_liquidation)
             next_number, auth_line = self.l10n_ec_point_of_emission_id.get_next_value_sequence(
                 invoice_type, False, False)
@@ -316,7 +326,7 @@ class AccountMove(models.Model):
         for move in self.filtered(lambda x: x.company_id.country_id.code == 'EC' and x.type
                                   in ('out_invoice', 'out_refund', 'in_invoice')):
             if move.l10n_ec_point_of_emission_id:
-                invoice_type = modules_mapping.get_invoice_type(move.type, move.l10n_ec_debit_note,
+                invoice_type = modules_mapping.l10n_ec_get_invoice_type(move.type, move.l10n_ec_debit_note,
                                                                 move.l10n_ec_liquidation)
                 if invoice_type in ('out_invoice', 'out_refund', 'debit_note_out', 'liquidation', 'in_invoice'):
                     if invoice_type == 'in_invoice':
@@ -371,13 +381,13 @@ class AccountMove(models.Model):
     def _check_l10n_ec_document_number_duplicity(self):
         auth_line_model = self.env['l10n_ec.sri.authorization.line']
         for move in self.filtered(lambda x: x.company_id.country_id.code == 'EC'
-                                  and modules_mapping.get_invoice_type(x.type,
+                                  and modules_mapping.l10n_ec_get_invoice_type(x.type,
                                                                        x.l10n_ec_debit_note,
                                                                        x.l10n_ec_liquidation, False)
                                   in ('out_invoice', 'out_refund', 'debit_note_out', 'liquidation')
                                   and x.l10n_ec_document_number):
             auth_line_model.with_context(from_constrain=True).validate_unique_value_document(
-                modules_mapping.get_invoice_type(
+                modules_mapping.l10n_ec_get_invoice_type(
                     move.type, move.l10n_ec_debit_note, move.l10n_ec_liquidation),
                 move.l10n_ec_document_number, move.company_id.id, move.id)
 
@@ -413,7 +423,7 @@ class AccountMove(models.Model):
     def _get_default_journal(self):
         journal_model = self.env['account.journal']
         if self.env.context.get('default_type', False) in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'):
-            invoice_type = modules_mapping.get_invoice_type(self.env.context.get('default_type', False),
+            invoice_type = modules_mapping.l10n_ec_get_invoice_type(self.env.context.get('default_type', False),
                                                             self.env.context.get(
                                                                 'default_l10n_ec_debit_note', False),
                                                             self.env.context.get('default_l10n_ec_liquidation', False))
@@ -613,7 +623,7 @@ class AccountMove(models.Model):
                     current_withhold.action_done()
                 # proceso de facturacion electronica
                 if move.is_invoice():
-                    move.generate_xml_data()
+                    move.l10n_ec_action_generate_xml_data()
         return super(AccountMove, self).action_post()
 
     def unlink(self):
@@ -760,10 +770,47 @@ class AccountMove(models.Model):
             raise UserError(_('Invoice date outside defined date range2'))
 
     @api.model
-    def get_invoice_type(self, invoice_type, debit_note=False, liquidation=False):
-        return modules_mapping.get_invoice_type(invoice_type, debit_note, liquidation)
+    def l10n_ec_get_invoice_type(self, invoice_type, debit_note=False, liquidation=False):
+        return modules_mapping.l10n_ec_get_invoice_type(invoice_type, debit_note, liquidation)
 
-    def generate_xml_data(self):
+    def l10n_ec_validate_fields_required_fe(self):
+        message_list = []
+        if not self.company_id.partner_id.vat:
+            message_list.append(
+                f"Debe asignar el RUC en la Compañia: {self.company_id.partner_id.name}, por favor verifique."
+            )
+        if not self.company_id.partner_id.street:
+            message_list.append(
+                f"Debe asignar la direccion en la Compañia: {self.company_id.partner_id.name}, por favor verifique."
+            )
+        if not self.commercial_partner_id.vat:
+            message_list.append(
+                f"Debe asignar el RUC en la Empresa: {self.commercial_partner_id.name}, por favor verifique."
+            )
+        if not self.commercial_partner_id.street:
+            message_list.append(
+                f"Debe asignar la direccion en la Empresa: {self.commercial_partner_id.name}, por favor verifique."
+            )
+        if not self.l10n_ec_sri_payment_id:
+            message_list.append(
+                f"Debe asignar la forma de pago del SRI en el documento: {self.display_name}, por favor verifique."
+            )
+        # if self.type == 'out_refund':
+        #     if not self.refund_invoice_id and not self.numero_documento:
+        #         message_list.append(
+        #             f"La Nota de Credito: {self.display_name} no esta asociada "
+        #             f"a ningun documento que modifique tributariamente, por favor verifique"
+        #         )
+        #     # validar que la factura este autorizada electronicamente
+        #     if self.refund_invoice_id and not self.refund_invoice_id.ln10_ec_xml_data_id:
+        #         message_list.append(
+        #             f"No puede generar una Nota de credito, "
+        #             f"cuya factura rectificativa: {self.refund_invoice_id.display_name} "
+        #             f"no esta autorizada electronicamente!"
+        #         )
+        return message_list
+
+    def l10n_ec_action_generate_xml_data(self):
         xml_model = self.env['sri.xml.data']
         xml_recs = self.env['sri.xml.data'].browse()
         #si por context me pasan que no cree la parte electronica
@@ -772,7 +819,7 @@ class AccountMove(models.Model):
         l10n_ec_type_conection_sri = self.env.company.l10n_ec_type_conection_sri
         #Si ya se encuentra autorizado, no hacer nuevamente el proceso de generacion del xml
         for invoice in self.filtered(lambda x: not x.ln10_ec_xml_data_id):
-            invoice_type = invoice.get_invoice_type(invoice.type,
+            invoice_type = invoice.l10n_ec_get_invoice_type(invoice.type,
                                                     invoice.l10n_ec_debit_note,
                                                     invoice.l10n_ec_liquidation)
             if invoice.type == 'in_invoice':
@@ -789,12 +836,18 @@ class AccountMove(models.Model):
             # si el documento esta habilitado, hacer el proceso electronico
             elif invoice.l10n_ec_point_of_emission_id.type_emission == 'electronic' and \
                     xml_model._is_document_authorized(invoice_type):
-                if not invoice.partner_id.street:
-                    raise UserError(
-                        f"Debe asignar la direccion en el cliente {invoice.partner_id.name}, por favor verifique")
-                # if not invoice.l10n_ec_sri_payment_id:
-                #     raise UserError(
-                #         f"Debe asignar la forma de pago del SRI en la factura: {invoice.document_number}, por favor verifique")
+                message_list = self.l10n_ec_validate_fields_required_fe()
+                if message_list:
+                    raise UserError("\n".join(message_list))
+                # asegurarse que el documento tenga fecha
+                # recien en la llamada super se haria esa asignacion
+                # pero necesitamos la fecha para crear el xml
+                # (codigo copiado del metodo post)
+                # *********************************************************************************************
+                if not invoice.invoice_date and invoice.is_invoice(include_receipts=True):
+                    invoice.invoice_date = fields.Date.context_today(invoice)
+                    invoice.with_context(check_move_validity=False)._onchange_invoice_date()
+                # *********************************************************************************************
                 sri_xml_vals = invoice._prepare_l10n_ec_sri_xml_values(l10n_ec_type_conection_sri)
                 #factura
                 if invoice_type == 'out_invoice':
@@ -804,13 +857,6 @@ class AccountMove(models.Model):
                     sri_xml_vals['debit_note_out_id'] = invoice.id
                 #nota de credito
                 elif invoice_type == 'out_refund':
-                    # if not invoice.refund_invoice_id and not invoice.numero_documento:
-                    #     raise UserError(
-                    #         "La Nota de Credito: %s no esta asociada a ningun documento que modifique tributariamente, por favor verifique" % invoice.document_number)
-                    # # validar que la factura este autorizada electronicamente
-                    # if invoice.refund_invoice_id and not invoice.refund_invoice_id.ln10_ec_xml_data_id:
-                    #     raise UserError(
-                    #         "No puede generar una Nota de credito, cuya factura rectificativa no esta autorizada electronicamente!")
                     sri_xml_vals['credit_note_out_id'] = invoice.id
                 # liquidacion de compas
                 elif invoice_type == 'liquidation':
@@ -827,7 +873,7 @@ class AccountMove(models.Model):
         return True
 
     @api.model
-    def get_total_impuestos(self, parent_node, codigo, codigo_porcentaje, base, valor, tag_name='totalImpuesto',
+    def l10n_ec_get_total_impuestos(self, parent_node, codigo, codigo_porcentaje, base, valor, tag_name='totalImpuesto',
                             tarifa=-1, reembolso=False, liquidation=False, decimales=2):
         util_model = self.env['l10n_ec.utils']
         tag = SubElement(parent_node, tag_name)
@@ -856,48 +902,40 @@ class AccountMove(models.Model):
         return tag
 
     @api.model
-    def get_motives(self, parent_node, razon="", valor=0, tag_name="motivo"):
+    def l10n_ec_get_motives(self, parent_node, razon="", valor=0, tag_name="motivo"):
         util_model = self.env['l10n_ec.utils']
         tag = SubElement(parent_node, tag_name)
         SubElement(tag, "razon").text = razon
         SubElement(tag, "valor").text = util_model.formato_numero(valor, 2)
         return tag
 
-    @api.model
-    def add_info_adicional(self, parent_node, dict_data=None):
-        # Hacer una funcion que me permita agregar los campos adicionales que deben ser pasados en un diccionario
-        return True
-
-    def get_pagos_data(self):
+    def l10n_ec_get_pagos_data(self):
         # TODO: agregar informacion de pagos, considerar para ATS
         return []
 
-    @api.model
-    def get_info_factura(self, invoice_id, node):
+    def l10n_ec_get_info_factura(self, node):
         util_model = self.env['l10n_ec.utils']
-        xml_model = self.env['sri.xml.data']
         company = self.env.company
         currency = company.currency_id
         precision_get = self.env['decimal.precision'].precision_get
         digits_precision_product = precision_get('Product Price')
         digits_precision_qty = precision_get('Product Unit of Measure')
         digits_precision_discount = precision_get('Discount')
-        invoice = self.browse(invoice_id)
         infoFactura = SubElement(node, "infoFactura")
-        fecha_factura = invoice.invoice_date.strftime(util_model.get_formato_date())
+        fecha_factura = self.invoice_date.strftime(util_model.get_formato_date())
         SubElement(infoFactura, "fechaEmision").text = fecha_factura
         address = company.partner_id.street
         SubElement(infoFactura, "dirEstablecimiento").text = util_model._clean_str(address)[:300]
-        if invoice.l10n_ec_identification_type_id:
-            tipoIdentificacionComprador = invoice.l10n_ec_identification_type_id.code
-        elif invoice.commercial_partner_id:
+        if self.l10n_ec_identification_type_id:
+            tipoIdentificacionComprador = self.l10n_ec_identification_type_id.code
+        elif self.commercial_partner_id:
             # si no hay l10n_ec_identification_type_id, se debe pasar un valor segun tabla 7 de la ficha tecnica del sri, no 00
             # buscar el tipo de identificacion del cliente, si es cedula, ruc
-            if invoice.commercial_partner_id.type_ref == 'ruc':
+            if self.commercial_partner_id.type_ref == 'ruc':
                 tipoIdentificacionComprador = '04'
-            elif invoice.commercial_partner_id.type_ref == 'cedula':
+            elif self.commercial_partner_id.type_ref == 'cedula':
                 tipoIdentificacionComprador = '05'
-            elif invoice.commercial_partner_id.type_ref == 'passport':
+            elif self.commercial_partner_id.type_ref == 'passport':
                 tipoIdentificacionComprador = '06'
             else:
                 # pasar por defecto consumidor final
@@ -906,40 +944,40 @@ class AccountMove(models.Model):
             # si no tengo informacion paso por defecto consumiro final
             # pero debe tener como identificacion 13 digitos 99999999999999
             tipoIdentificacionComprador = '07'
-        numero_contribuyente_especial = company.get_contribuyente_data(invoice.invoice_date)
+        numero_contribuyente_especial = company.get_contribuyente_data(self.invoice_date)
         SubElement(infoFactura, "contribuyenteEspecial").text = numero_contribuyente_especial
         SubElement(infoFactura, "obligadoContabilidad").text = util_model.get_obligado_contabilidad(
             company.partner_id.property_account_position_id)
         SubElement(infoFactura, "tipoIdentificacionComprador").text = tipoIdentificacionComprador
-        # if invoice.remision_id:
-        #     SubElement(infoFactura, "guiaRemision").text = invoice.remision_id.document_number
+        # if self.remision_id:
+        #     SubElement(infoFactura, "guiaRemision").text = self.remision_id.document_number
         SubElement(infoFactura, "razonSocialComprador").text = util_model._clean_str(
-            invoice.commercial_partner_id.name[:300])
-        SubElement(infoFactura, "identificacionComprador").text = invoice.commercial_partner_id.vat
-        SubElement(infoFactura, "direccionComprador").text = util_model._clean_str(invoice.commercial_partner_id.street)[:300]
+            self.commercial_partner_id.name[:300])
+        SubElement(infoFactura, "identificacionComprador").text = self.commercial_partner_id.vat
+        SubElement(infoFactura, "direccionComprador").text = util_model._clean_str(self.commercial_partner_id.street)[:300]
 
         SubElement(infoFactura, "totalSinImpuestos").text = util_model.formato_numero(
-            invoice.amount_untaxed, currency.decimal_places)
-        # SubElement(infoFactura, "totalDescuento").text = util_model.formato_numero(
-        #     invoice.total_descuento, currency.decimal_places)
+            self.amount_untaxed, currency.decimal_places)
+        SubElement(infoFactura, "totalDescuento").text = util_model.formato_numero(
+            self.l10n_ec_discount_total, currency.decimal_places)
         # Definicion de Impuestos
         totalConImpuestos = SubElement(infoFactura, "totalConImpuestos")
-        if invoice.l10n_ec_base_iva_0 != 0:
-            self.get_total_impuestos(totalConImpuestos, '2', '0', invoice.l10n_ec_base_iva_0, 0.0,
+        if self.l10n_ec_base_iva_0 != 0:
+            self.l10n_ec_get_total_impuestos(totalConImpuestos, '2', '0', self.l10n_ec_base_iva_0, 0.0,
                                      decimales=currency.decimal_places)
-        if invoice.l10n_ec_base_iva != 0:
-            self.get_total_impuestos(totalConImpuestos, '2', '2', invoice.l10n_ec_base_iva, invoice.l10n_ec_iva,
+        if self.l10n_ec_base_iva != 0:
+            self.l10n_ec_get_total_impuestos(totalConImpuestos, '2', '2', self.l10n_ec_base_iva, self.l10n_ec_iva,
                                      decimales=currency.decimal_places)
-        # if invoice.base_no_iva != 0:
-        #     self.get_total_impuestos(totalConImpuestos, '2', '6', invoice.base_no_iva, 0.0,
+        # if self.base_no_iva != 0:
+        #     self.l10n_ec_get_total_impuestos(totalConImpuestos, '2', '6', self.base_no_iva, 0.0,
         #                              decimales=currency.decimal_places)
-        # SubElement(infoFactura, "propina").text = util_model.formato_numero(invoice.propina or 0,
+        # SubElement(infoFactura, "propina").text = util_model.formato_numero(self.propina or 0,
         #                                                                         currency.decimal_places)
-        SubElement(infoFactura, "importeTotal").text = util_model.formato_numero(invoice.amount_total,
+        SubElement(infoFactura, "importeTotal").text = util_model.formato_numero(self.amount_total,
                                                                                      currency.decimal_places)
-        SubElement(infoFactura, "moneda").text = invoice.company_id.currency_id.name or 'DOLAR'
+        SubElement(infoFactura, "moneda").text = self.company_id.currency_id.name or 'DOLAR'
         # Procesamiento de los pagos
-        pagos_data = invoice.get_pagos_data()
+        pagos_data = self.l10n_ec_get_pagos_data()
         if pagos_data:
             pagos = SubElement(infoFactura, "pagos")
             for payment_code in pagos_data.keys():
@@ -953,20 +991,20 @@ class AccountMove(models.Model):
             pagos = SubElement(infoFactura, "pagos")
             pago = SubElement(pagos, "pago")
             payment_code = company.l10n_ec_sri_payment_id.code
-            if invoice.l10n_ec_sri_payment_id:
-                payment_code = invoice.l10n_ec_sri_payment_id.code
-            elif invoice.commercial_partner_id.l10n_ec_sri_payment_id:
-                payment_code = invoice.commercial_partner_id.l10n_ec_sri_payment_id.code
+            if self.l10n_ec_sri_payment_id:
+                payment_code = self.l10n_ec_sri_payment_id.code
+            elif self.commercial_partner_id.l10n_ec_sri_payment_id:
+                payment_code = self.commercial_partner_id.l10n_ec_sri_payment_id.code
             SubElement(pago, "formaPago").text = payment_code
-            SubElement(pago, "total").text = util_model.formato_numero(invoice.amount_total)
-            if invoice.invoice_payment_term_id:
-                if invoice.invoice_payment_term_id.sri_type == 'credito':
-                    if invoice.dias_credito > 0:
-                        SubElement(pago, "plazo").text = util_model.formato_numero(invoice.dias_credito, 0)
+            SubElement(pago, "total").text = util_model.formato_numero(self.amount_total)
+            if self.invoice_payment_term_id:
+                if self.invoice_payment_term_id.l10n_ec_sri_type == 'credito':
+                    if self.l10n_ec_dias_credito > 0:
+                        SubElement(pago, "plazo").text = util_model.formato_numero(self.l10n_ec_dias_credito, 0)
                         SubElement(pago, "unidadTiempo").text = 'dias'
         # Lineas de Factura
         detalles = SubElement(node, "detalles")
-        for line in invoice.invoice_line_ids.filtered(lambda x: not x.display_type):
+        for line in self.invoice_line_ids.filtered(lambda x: not x.display_type):
             discount = round(((line.price_unit * line.quantity) * ((line.discount or 0.0) / 100)), 2)
             subtotal = round(((line.price_unit * line.quantity) - discount), 2)
             if currency.is_zero(subtotal):
@@ -987,13 +1025,13 @@ class AccountMove(models.Model):
                                                                                            currency.decimal_places)
             impuestos = SubElement(detalle, "impuestos")
             if line.l10n_ec_base_iva_0 != 0:
-                self.get_total_impuestos(impuestos, '2', '0', line.l10n_ec_base_iva_0, 0.0, 'impuesto', 0,
+                self.l10n_ec_get_total_impuestos(impuestos, '2', '0', line.l10n_ec_base_iva_0, 0.0, 'impuesto', 0,
                                          decimales=currency.decimal_places)
             if line.l10n_ec_base_iva != 0:
-                self.get_total_impuestos(impuestos, '2', '2', line.l10n_ec_base_iva, line.l10n_ec_iva, 'impuesto', 12,
+                self.l10n_ec_get_total_impuestos(impuestos, '2', '2', line.l10n_ec_base_iva, line.l10n_ec_iva, 'impuesto', 12,
                                          decimales=currency.decimal_places)
             # if line.base_no_iva != 0:
-            #     self.get_total_impuestos(impuestos, '2', '6', line.base_no_iva, 0.0, 'impuesto', 0,
+            #     self.l10n_ec_get_total_impuestos(impuestos, '2', '6', line.base_no_iva, 0.0, 'impuesto', 0,
             #                              decimales=currency.decimal_places)
         # Las retenciones solo aplican para el esquema de gasolineras
         # retenciones = SubElement(node,"retenciones")
@@ -1003,32 +1041,29 @@ class AccountMove(models.Model):
         campoAdicional.text = "Otra Informacion"
         return node
 
-    @api.model
-    def get_info_credit_note(self, credit_note_id, node):
+    def l10n_ec_get_info_credit_note(self, node):
         util_model = self.env['l10n_ec.utils']
-        xml_model = self.env['sri.xml.data']
         company = self.env.company
         currency = company.currency_id
         precision_get = self.env['decimal.precision'].precision_get
         digits_precision_product = precision_get('Product Price')
         digits_precision_qty = precision_get('Product Unit of Measure')
         digits_precision_discount = precision_get('Discount')
-        credit_note = self.browse(credit_note_id)
         infoNotaCredito = SubElement(node, "infoNotaCredito")
-        fecha_factura = credit_note.invoice_date.strftime(util_model.get_formato_date())
+        fecha_factura = self.invoice_date.strftime(util_model.get_formato_date())
         SubElement(infoNotaCredito, "fechaEmision").text = fecha_factura
-        address = credit_note.partner_id.street
+        address = company.partner_id.street
         SubElement(infoNotaCredito, "dirEstablecimiento").text = util_model._clean_str(address and address[:300] or '')
-        if credit_note.l10n_ec_identification_type_id:
-            tipoIdentificacionComprador = credit_note.l10n_ec_identification_type_id.code
-        elif credit_note.commercial_partner_id:
+        if self.l10n_ec_identification_type_id:
+            tipoIdentificacionComprador = self.l10n_ec_identification_type_id.code
+        elif self.commercial_partner_id:
             # si no hay l10n_ec_identification_type_id, se debe pasar un valor segun tabla 7 de la ficha tecnica del sri, no 00
             # buscar el tipo de identificacion del cliente, si es cedula, ruc
-            if credit_note.commercial_partner_id.type_ref == 'ruc':
+            if self.commercial_partner_id.type_ref == 'ruc':
                 tipoIdentificacionComprador = '04'
-            elif credit_note.commercial_partner_id.type_ref == 'cedula':
+            elif self.commercial_partner_id.type_ref == 'cedula':
                 tipoIdentificacionComprador = '05'
-            elif credit_note.commercial_partner_id.type_ref == 'passport':
+            elif self.commercial_partner_id.type_ref == 'passport':
                 tipoIdentificacionComprador = '06'
             else:
                 # pasar por defecto consumidor final
@@ -1039,41 +1074,41 @@ class AccountMove(models.Model):
             tipoIdentificacionComprador = '07'
         SubElement(infoNotaCredito, "tipoIdentificacionComprador").text = tipoIdentificacionComprador
         SubElement(infoNotaCredito, "razonSocialComprador").text = util_model._clean_str(
-            credit_note.commercial_partner_id.name[:300])
-        SubElement(infoNotaCredito, "identificacionComprador").text = credit_note.commercial_partner_id.vat
+            self.commercial_partner_id.name[:300])
+        SubElement(infoNotaCredito, "identificacionComprador").text = self.commercial_partner_id.vat
         company = self.env.user.company_id
-        numero_contribuyente_especial = company.get_contribuyente_data(credit_note.invoice_date)
+        numero_contribuyente_especial = company.get_contribuyente_data(self.invoice_date)
         SubElement(infoNotaCredito, "contribuyenteEspecial").text = numero_contribuyente_especial
         SubElement(infoNotaCredito, "obligadoContabilidad").text = util_model.get_obligado_contabilidad(
             company.partner_id.property_account_position_id)
-        if credit_note.rise:
-            SubElement(infoNotaCredito, "rise").text = credit_note.rise
+        if self.rise:
+            SubElement(infoNotaCredito, "rise").text = self.rise
         # TODO: notas de credito solo se emitiran a facturas o a otros documentos???
         SubElement(infoNotaCredito, "codDocModificado").text = '01'
         SubElement(infoNotaCredito,
-                   "numDocModificado").text = credit_note.numero_documento or credit_note.legacy_document_number or credit_note.invoice_rectification_id.document_number
-        SubElement(infoNotaCredito, "fechaEmisionDocSustento").text = (credit_note.fecha_documento or credit_note.legacy_document_date or credit_note.invoice_rectification_id.invoice_date).strftime(util_model.get_formato_date())
+                   "numDocModificado").text = self.numero_documento or self.legacy_document_number or self.invoice_rectification_id.document_number
+        SubElement(infoNotaCredito, "fechaEmisionDocSustento").text = (self.fecha_documento or self.legacy_document_date or self.invoice_rectification_id.invoice_date).strftime(util_model.get_formato_date())
         SubElement(infoNotaCredito, "totalSinImpuestos").text = util_model.formato_numero(
-            credit_note.amount_untaxed, currency.decimal_places)
-        SubElement(infoNotaCredito, "valorModificacion").text = util_model.formato_numero(credit_note.amount_total,
+            self.amount_untaxed, currency.decimal_places)
+        SubElement(infoNotaCredito, "valorModificacion").text = util_model.formato_numero(self.amount_total,
                                                                                               currency.decimal_places)
-        SubElement(infoNotaCredito, "moneda").text = credit_note.company_id.currency_id.name or 'DOLAR'
+        SubElement(infoNotaCredito, "moneda").text = self.company_id.currency_id.name or 'DOLAR'
         # Definicion de Impuestos
         totalConImpuestos = SubElement(infoNotaCredito, "totalConImpuestos")
-        if credit_note.l10n_ec_base_iva_0 != 0:
-            self.get_total_impuestos(totalConImpuestos, '2', '0', credit_note.l10n_ec_base_iva_0, 0.0,
+        if self.l10n_ec_base_iva_0 != 0:
+            self.l10n_ec_get_total_impuestos(totalConImpuestos, '2', '0', self.l10n_ec_base_iva_0, 0.0,
                                      decimales=currency.decimal_places)
-        if credit_note.l10n_ec_base_iva != 0:
-            self.get_total_impuestos(totalConImpuestos, '2', '2', credit_note.l10n_ec_base_iva, credit_note.l10n_ec_iva,
+        if self.l10n_ec_base_iva != 0:
+            self.l10n_ec_get_total_impuestos(totalConImpuestos, '2', '2', self.l10n_ec_base_iva, self.l10n_ec_iva,
                                      decimales=currency.decimal_places)
-        # if credit_note.base_no_iva != 0:
-        #     self.get_total_impuestos(totalConImpuestos, '2', '6', credit_note.base_no_iva, 0.0,
+        # if self.base_no_iva != 0:
+        #     self.l10n_ec_get_total_impuestos(totalConImpuestos, '2', '6', self.base_no_iva, 0.0,
         #                              decimales=currency.decimal_places)
         SubElement(infoNotaCredito, "motivo").text = util_model._clean_str(
-            credit_note.name and credit_note.name[:300] or 'NOTA DE CREDITO')
+            self.name and self.name[:300] or 'NOTA DE CREDITO')
         # Lineas de Factura
         detalles = SubElement(node, "detalles")
-        for line in credit_note.invoice_line_ids.filtered(lambda x: not x.display_type):
+        for line in self.invoice_line_ids.filtered(lambda x: not x.display_type):
             detalle = SubElement(detalles, "detalle")
             SubElement(detalle, "codigoInterno").text = util_model._clean_str(
                 line.product_id and line.product_id.default_code and line.product_id.default_code[:25] or 'N/A')
@@ -1093,13 +1128,13 @@ class AccountMove(models.Model):
                                                                                                currency.decimal_places)
             impuestos = SubElement(detalle, "impuestos")
             if line.l10n_ec_base_iva_0 != 0:
-                self.get_total_impuestos(impuestos, '2', '0', line.l10n_ec_base_iva_0, 0.0, 'impuesto', 0,
+                self.l10n_ec_get_total_impuestos(impuestos, '2', '0', line.l10n_ec_base_iva_0, 0.0, 'impuesto', 0,
                                          decimales=currency.decimal_places)
             if line.l10n_ec_base_iva != 0:
-                self.get_total_impuestos(impuestos, '2', '2', line.l10n_ec_base_iva, line.l10n_ec_iva, 'impuesto', 12,
+                self.l10n_ec_get_total_impuestos(impuestos, '2', '2', line.l10n_ec_base_iva, line.l10n_ec_iva, 'impuesto', 12,
                                          decimales=currency.decimal_places)
             # if line.base_no_iva != 0:
-            #     self.get_total_impuestos(impuestos, '2', '6', line.base_no_iva, 0.0, 'impuesto', 0,
+            #     self.l10n_ec_get_total_impuestos(impuestos, '2', '6', line.base_no_iva, 0.0, 'impuesto', 0,
             #                              decimales=currency.decimal_places)
         infoAdicional = SubElement(node, "infoAdicional")
         campoAdicional = SubElement(infoAdicional, "campoAdicional")
@@ -1107,28 +1142,25 @@ class AccountMove(models.Model):
         campoAdicional.text = "Otra Informacion"
         return node
 
-    @api.model
-    def get_info_debit_note(self, debit_id, node):
+    def l10n_ec_get_info_debit_note(self, node):
         util_model = self.env['l10n_ec.utils']
-        xml_model = self.env['sri.xml.data']
         company = self.env.company
         currency = company.currency_id
-        debit = self.browse(debit_id)
         infoNotaDebito = SubElement(node, "infoNotaDebito")
-        fecha_emision = debit.invoice_date.strftime(util_model.get_formato_date())
+        fecha_emision = self.invoice_date.strftime(util_model.get_formato_date())
         SubElement(infoNotaDebito, "fechaEmision").text = fecha_emision
-        address = debit.partner_id.street
+        address = company.partner_id.street
         SubElement(infoNotaDebito, "dirEstablecimiento").text = util_model._clean_str(address and address[:300] or '')
-        if debit.l10n_ec_identification_type_id:
-            tipoIdentificacionComprador = debit.l10n_ec_identification_type_id.code
-        elif debit.commercial_partner_id:
+        if self.l10n_ec_identification_type_id:
+            tipoIdentificacionComprador = self.l10n_ec_identification_type_id.code
+        elif self.commercial_partner_id:
             # si no hay l10n_ec_identification_type_id, se debe pasar un valor segun tabla 7 de la ficha tecnica del sri, no 00
             # buscar el tipo de identificacion del cliente, si es cedula, ruc
-            if debit.commercial_partner_id.type_ref == 'ruc':
+            if self.commercial_partner_id.type_ref == 'ruc':
                 tipoIdentificacionComprador = '04'
-            elif debit.commercial_partner_id.type_ref == 'cedula':
+            elif self.commercial_partner_id.type_ref == 'cedula':
                 tipoIdentificacionComprador = '05'
-            elif debit.commercial_partner_id.type_ref == 'passport':
+            elif self.commercial_partner_id.type_ref == 'passport':
                 tipoIdentificacionComprador = '06'
             else:
                 # pasar por defecto consumidor final
@@ -1139,39 +1171,39 @@ class AccountMove(models.Model):
             tipoIdentificacionComprador = '07'
         SubElement(infoNotaDebito, "tipoIdentificacionComprador").text = tipoIdentificacionComprador
         SubElement(infoNotaDebito, "razonSocialComprador").text = util_model._clean_str(
-            debit.commercial_partner_id.name[:300])
-        SubElement(infoNotaDebito, "identificacionComprador").text = debit.commercial_partner_id.vat
+            self.commercial_partner_id.name[:300])
+        SubElement(infoNotaDebito, "identificacionComprador").text = self.commercial_partner_id.vat
         company = self.env.user.company_id
-        numero_contribuyente_especial = company.get_contribuyente_data(debit.invoice_date)
+        numero_contribuyente_especial = company.get_contribuyente_data(self.invoice_date)
         SubElement(infoNotaDebito, "contribuyenteEspecial").text = numero_contribuyente_especial
         SubElement(infoNotaDebito, "obligadoContabilidad").text = util_model.get_obligado_contabilidad(
             company.partner_id.property_account_position_id)
-        if debit.rise:
-            SubElement(infoNotaDebito, "rise").text = debit.rise
+        if self.rise:
+            SubElement(infoNotaDebito, "rise").text = self.rise
         # TODO: notas de debito solo se emitiran a facturas o a otros documentos???
         SubElement(infoNotaDebito, "codDocModificado").text = '01'
         SubElement(infoNotaDebito,
-                   "numDocModificado").text = debit.numero_documento or debit.legacy_document_number or debit.invoice_rectification_id.document_number
-        SubElement(infoNotaDebito, "fechaEmisionDocSustento").text = (debit.fecha_documento or debit.legacy_document_date or debit.invoice_rectification_id.invoice_date).strftime(util_model.get_formato_date())
-        SubElement(infoNotaDebito, "totalSinImpuestos").text = util_model.formato_numero(debit.amount_untaxed)
+                   "numDocModificado").text = self.numero_documento or self.legacy_document_number or self.invoice_rectification_id.document_number
+        SubElement(infoNotaDebito, "fechaEmisionDocSustento").text = (self.fecha_documento or self.legacy_document_date or self.invoice_rectification_id.invoice_date).strftime(util_model.get_formato_date())
+        SubElement(infoNotaDebito, "totalSinImpuestos").text = util_model.formato_numero(self.amount_untaxed)
         # Definicion de Impuestos
         # xq no itero sobre los impuestos???'
         impuestos = SubElement(infoNotaDebito, "impuestos")
-        if debit.l10n_ec_base_iva_0 != 0:
-            self.get_total_impuestos(impuestos, '2', '0', debit.l10n_ec_base_iva_0, 0.0, 'impuesto', 0,
+        if self.l10n_ec_base_iva_0 != 0:
+            self.l10n_ec_get_total_impuestos(impuestos, '2', '0', self.l10n_ec_base_iva_0, 0.0, 'impuesto', 0,
                                      decimales=currency.decimal_places)
-        if debit.l10n_ec_base_iva != 0:
+        if self.l10n_ec_base_iva != 0:
             # TODO: no se debe asumir que el % del iva es 12, tomar del impuesto directamente
-            self.get_total_impuestos(impuestos, '2', '2', debit.l10n_ec_base_iva, debit.l10n_ec_iva, 'impuesto', 12,
+            self.l10n_ec_get_total_impuestos(impuestos, '2', '2', self.l10n_ec_base_iva, self.l10n_ec_iva, 'impuesto', 12,
                                      decimales=currency.decimal_places)
-        # if debit.base_no_iva != 0:
-        #     self.get_total_impuestos(impuestos, '2', '6', debit.base_no_iva, 0.0, 'impuesto', 0,
+        # if self.base_no_iva != 0:
+        #     self.l10n_ec_get_total_impuestos(impuestos, '2', '6', self.base_no_iva, 0.0, 'impuesto', 0,
         #                              decimales=currency.decimal_places)
-        SubElement(infoNotaDebito, "valorTotal").text = util_model.formato_numero(debit.amount_total,
+        SubElement(infoNotaDebito, "valorTotal").text = util_model.formato_numero(self.amount_total,
                                                                                       currency.decimal_places)
         motivos = SubElement(node, "motivos")
-        for line in debit.invoice_line_ids.filtered(lambda x: not x.display_type):
-            self.get_motives(motivos,
+        for line in self.invoice_line_ids.filtered(lambda x: not x.display_type):
+            self.l10n_ec_get_motives(motivos,
                              util_model._clean_str(line.product_id and line.product_id.name[:300] or line.name[:300]),
                              line.price_subtotal)
         infoAdicional = SubElement(node, "infoAdicional")
@@ -1181,30 +1213,27 @@ class AccountMove(models.Model):
         campoAdicional.text = "Otra Informacion"
         return node
 
-    @api.model
-    def get_info_liquidation(self, liquidation_id, node):
+    def l10n_ec_get_info_liquidation(self, node):
         util_model = self.env['l10n_ec.utils']
-        xml_model = self.env['sri.xml.data']
         company = self.env.user.company_id
-        liquidation = self.browse(liquidation_id)
         infoLiquidacionCompra = SubElement(node, "infoLiquidacionCompra")
-        fecha_emision = liquidation.invoice_date.strftime(util_model.get_formato_date())
+        fecha_emision = self.invoice_date.strftime(util_model.get_formato_date())
         SubElement(infoLiquidacionCompra, "fechaEmision").text = fecha_emision
-        address = liquidation.partner_id.street
+        address = company.partner_id.street
         SubElement(infoLiquidacionCompra, "dirEstablecimiento").text = util_model._clean_str(
             address and address[:300] or '')
-        numero_contribuyente_especial = company.get_contribuyente_data(liquidation.invoice_date)
+        numero_contribuyente_especial = company.get_contribuyente_data(self.invoice_date)
         SubElement(infoLiquidacionCompra, "contribuyenteEspecial").text = numero_contribuyente_especial
         SubElement(infoLiquidacionCompra, "obligadoContabilidad").text = util_model.get_obligado_contabilidad(
             company.partner_id.property_account_position_id)
-        if liquidation.commercial_partner_id:
+        if self.commercial_partner_id:
             # si no hay l10n_ec_identification_type_id, se debe pasar un valor segun tabla 7 de la ficha tecnica del sri, no 00
             # buscar el tipo de identificacion del cliente, si es cedula, ruc
-            if liquidation.commercial_partner_id.type_ref == 'ruc':
+            if self.commercial_partner_id.type_ref == 'ruc':
                 tipoIdentificacionComprador = '04'
-            elif liquidation.commercial_partner_id.type_ref == 'cedula':
+            elif self.commercial_partner_id.type_ref == 'cedula':
                 tipoIdentificacionComprador = '05'
-            elif liquidation.commercial_partner_id.type_ref == 'passport':
+            elif self.commercial_partner_id.type_ref == 'passport':
                 tipoIdentificacionComprador = '06'
             else:
                 # pasar por defecto consumidor final
@@ -1215,38 +1244,38 @@ class AccountMove(models.Model):
             tipoIdentificacionComprador = '07'
         SubElement(infoLiquidacionCompra, "tipoIdentificacionProveedor").text = tipoIdentificacionComprador
         SubElement(infoLiquidacionCompra, "razonSocialProveedor").text = util_model._clean_str(
-            liquidation.commercial_partner_id.name[:300])
-        SubElement(infoLiquidacionCompra, "identificacionProveedor").text = liquidation.commercial_partner_id.vat
+            self.commercial_partner_id.name[:300])
+        SubElement(infoLiquidacionCompra, "identificacionProveedor").text = self.commercial_partner_id.vat
         SubElement(infoLiquidacionCompra, "direccionProveedor").text = util_model._clean_str(
-            liquidation.partner_id.street[:300])
+            self.commercial_partner_id.street[:300])
         SubElement(infoLiquidacionCompra, "totalSinImpuestos").text = util_model.formato_numero(
-            liquidation.amount_untaxed)
-        # SubElement(infoLiquidacionCompra, "totalDescuento").text = util_model.formato_numero(
-        #     liquidation.total_descuento)
-        if liquidation.voucher_type_id and liquidation.voucher_type_id.code == '41':
-            SubElement(infoLiquidacionCompra, "codDocReembolso").text = liquidation.voucher_type_id.code
+            self.amount_untaxed)
+        SubElement(infoLiquidacionCompra, "totalDescuento").text = util_model.formato_numero(
+            self.l10n_ec_discount_total)
+        if self.voucher_type_id and self.voucher_type_id.code == '41':
+            SubElement(infoLiquidacionCompra, "codDocReembolso").text = self.voucher_type_id.code
             SubElement(infoLiquidacionCompra, "totalComprobantesReembolso").text = util_model.formato_numero(
-                sum([r.total_invoice for r in liquidation.reembolso_ids]))
+                sum([r.total_invoice for r in self.reembolso_ids]))
             SubElement(infoLiquidacionCompra, "totalBaseImponibleReembolso").text = util_model.formato_numero(
-                sum([r.total_base_iva for r in liquidation.reembolso_ids]))
+                sum([r.total_base_iva for r in self.reembolso_ids]))
             SubElement(infoLiquidacionCompra, "totalImpuestoReembolso").text = util_model.formato_numero(
-                sum([r.l10n_ec_iva for r in liquidation.reembolso_ids]) + sum(
-                    [r.total_ice for r in liquidation.reembolso_ids]))
+                sum([r.l10n_ec_iva for r in self.reembolso_ids]) + sum(
+                    [r.total_ice for r in self.reembolso_ids]))
         # Definicion de Impuestos
         # xq no itero sobre los impuestos???'
         impuestos = SubElement(infoLiquidacionCompra, "totalConImpuestos")
-        if liquidation.l10n_ec_base_iva_0 != 0:
-            self.get_total_impuestos(impuestos, '2', '0', liquidation.l10n_ec_base_iva_0, 0.0, 'totalImpuesto', 0, False, True)
-        if liquidation.l10n_ec_base_iva != 0:
+        if self.l10n_ec_base_iva_0 != 0:
+            self.l10n_ec_get_total_impuestos(impuestos, '2', '0', self.l10n_ec_base_iva_0, 0.0, 'totalImpuesto', 0, False, True)
+        if self.l10n_ec_base_iva != 0:
             # TODO: no se debe asumir que el % del iva es 12, tomar del impuesto directamente
-            self.get_total_impuestos(impuestos, '2', '2', liquidation.l10n_ec_base_iva, liquidation.l10n_ec_iva, 'totalImpuesto',
+            self.l10n_ec_get_total_impuestos(impuestos, '2', '2', self.l10n_ec_base_iva, self.l10n_ec_iva, 'totalImpuesto',
                                      12, False, True)
-        # if liquidation.base_no_iva != 0:
-        #     self.get_total_impuestos(impuestos, '2', '6', liquidation.base_no_iva, 0.0, 'totalImpuesto', 0, False, True)
+        # if self.base_no_iva != 0:
+        #     self.l10n_ec_get_total_impuestos(impuestos, '2', '6', self.base_no_iva, 0.0, 'totalImpuesto', 0, False, True)
         SubElement(infoLiquidacionCompra, "importeTotal").text = util_model.formato_numero(
-            liquidation.amount_total)
-        SubElement(infoLiquidacionCompra, "moneda").text = liquidation.company_id.currency_id.name
-        pagos_data = liquidation.get_pagos_data()
+            self.amount_total)
+        SubElement(infoLiquidacionCompra, "moneda").text = self.company_id.currency_id.name
+        pagos_data = self.l10n_ec_get_pagos_data()
         pagos = SubElement(infoLiquidacionCompra, "pagos")
         if pagos_data:
             for payment_code in pagos_data.keys():
@@ -1259,19 +1288,19 @@ class AccountMove(models.Model):
                     u'Debe configurar la forma de pago por defecto esto lo encuentra en Contabilidad / SRI / Configuración'))
             pago = SubElement(pagos, "pago")
             payment_code = company.l10n_ec_sri_payment_id.code
-            if liquidation.l10n_ec_sri_payment_id:
-                payment_code = liquidation.l10n_ec_sri_payment_id.code
-            elif liquidation.commercial_partner_id.l10n_ec_sri_payment_id:
-                payment_code = liquidation.commercial_partner_id.l10n_ec_sri_payment_id.code
+            if self.l10n_ec_sri_payment_id:
+                payment_code = self.l10n_ec_sri_payment_id.code
+            elif self.commercial_partner_id.l10n_ec_sri_payment_id:
+                payment_code = self.commercial_partner_id.l10n_ec_sri_payment_id.code
             SubElement(pago, "formaPago").text = payment_code
-            SubElement(pago, "total").text = util_model.formato_numero(liquidation.amount_total)
-            if liquidation.invoice_payment_term_id:
-                if liquidation.invoice_payment_term_id.sri_type == 'credito':
-                    if liquidation.dias_credito > 0:
-                        SubElement(pago, "plazo").text = util_model.formato_numero(liquidation.dias_credito, 0)
+            SubElement(pago, "total").text = util_model.formato_numero(self.amount_total)
+            if self.invoice_payment_term_id:
+                if self.invoice_payment_term_id.l10n_ec_sri_type == 'credito':
+                    if self.l10n_ec_dias_credito > 0:
+                        SubElement(pago, "plazo").text = util_model.formato_numero(self.l10n_ec_dias_credito, 0)
                         SubElement(pago, "unidadTiempo").text = 'dias'
         detalles = SubElement(node, "detalles")
-        for line in liquidation.invoice_line_ids:
+        for line in self.invoice_line_ids:
             detalle = SubElement(detalles, "detalle")
             SubElement(detalle, "codigoPrincipal").text = util_model._clean_str(
                 line.product_id and line.product_id.default_code and line.product_id.default_code[:25] or 'N/A')
@@ -1288,15 +1317,15 @@ class AccountMove(models.Model):
             SubElement(detalle, "precioTotalSinImpuesto").text = util_model.formato_numero(subtotal, 2)
             impuestos = SubElement(detalle, "impuestos")
             if line.l10n_ec_base_iva_0 != 0:
-                self.get_total_impuestos(impuestos, '2', '0', line.l10n_ec_base_iva_0, 0.0, 'impuesto', 0, False)
+                self.l10n_ec_get_total_impuestos(impuestos, '2', '0', line.l10n_ec_base_iva_0, 0.0, 'impuesto', 0, False)
             if line.l10n_ec_base_iva != 0:
-                self.get_total_impuestos(impuestos, '2', '2', line.l10n_ec_base_iva, line.l10n_ec_iva, 'impuesto',
+                self.l10n_ec_get_total_impuestos(impuestos, '2', '2', line.l10n_ec_base_iva, line.l10n_ec_iva, 'impuesto',
                                          12, False)
             # if line.base_no_iva != 0:
-            #     self.get_total_impuestos(impuestos, '2', '6', line.base_no_iva, 0.0, 'impuesto', 0, False)
-        if liquidation.reembolso_ids:
+            #     self.l10n_ec_get_total_impuestos(impuestos, '2', '6', line.base_no_iva, 0.0, 'impuesto', 0, False)
+        if self.reembolso_ids:
             reembolsos = SubElement(node, "reembolsos")
-            for reembolso in liquidation.reembolso_ids:
+            for reembolso in self.reembolso_ids:
                 tipoIdentificacionComprador = '07'
                 # buscar el tipo de identificacion del cliente, si es cedula, ruc
                 if reembolso.partner_id.commecial_partner_id.type_ref == 'ruc':
@@ -1329,14 +1358,14 @@ class AccountMove(models.Model):
                 if tarifa_iva == 0.14:
                     tipo_iva = '3'
                 if reembolso.total_base_iva_0 != 0:
-                    self.get_total_impuestos(detalleImpuestos, '2', '0', reembolso.total_base_iva_0, 0.0,
+                    self.l10n_ec_get_total_impuestos(detalleImpuestos, '2', '0', reembolso.total_base_iva_0, 0.0,
                                              'detalleImpuesto', 0, True)
                 if reembolso.total_base_iva != 0:
-                    self.get_total_impuestos(detalleImpuestos, '2', tipo_iva, reembolso.total_base_iva,
+                    self.l10n_ec_get_total_impuestos(detalleImpuestos, '2', tipo_iva, reembolso.total_base_iva,
                                              reembolso.total_iva, 'detalleImpuesto',
                                              int(tarifa_iva * 100), True, True)
                 # if reembolso.total_base_no_iva != 0:
-                #     self.get_total_impuestos(detalleImpuestos, '2', '6', reembolso.total_base_no_iva, 0.0,
+                #     self.l10n_ec_get_total_impuestos(detalleImpuestos, '2', '6', reembolso.total_base_no_iva, 0.0,
                 #                              'detalleImpuesto', 0, True)
         infoAdicional = SubElement(node, "infoAdicional")
         # TODO: agregar infoAdicional

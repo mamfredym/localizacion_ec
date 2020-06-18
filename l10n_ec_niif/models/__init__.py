@@ -4,6 +4,7 @@ from . import authorization_supplier
 from . import res_partner
 from . import account_chart_template
 from . import account_fiscal_position
+from . import account_payment_term
 from . import tax_support
 from . import l10n_latam_document_type
 from . import l10n_ec_company_resolution

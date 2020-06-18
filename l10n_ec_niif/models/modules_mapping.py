@@ -35,10 +35,10 @@ def get_document_type(invoice_type):
     return document_type
 
 
-def get_invoice_type(invoice_type, debit_note=False, liquidation=False, raise_exception=True):
+def l10n_ec_get_invoice_type(invoice_type, debit_note=False, liquidation=False, raise_exception=True):
     """
     Devolver el tipo de factura
-    con el concepto de notas de debito y liquidacion de compras, 
+    con el concepto de notas de debito y liquidacion de compras,
     las facturas de clientes pueden ser notas de debito
     y las facturas de proveedor pueden ser liquidacion de compras
     @param invoice_type: para facturas, el tipo de factura(out_invoice. out_refund, in_invoice, in_refund)
@@ -70,14 +70,14 @@ def get_invoice_type(invoice_type, debit_note=False, liquidation=False, raise_ex
         document_type = 'debit_note_out'
     if not document_type and raise_exception:
         raise Warning(
-            _("Tipo de Factura/Documento: %s no es válido, por favor verique, get_invoice_type") % (invoice_type))
+            _("Tipo de Factura/Documento: %s no es válido, por favor verique, l10n_ec_get_invoice_type") % (invoice_type))
     return document_type
 
 
 def get_invoice_type_reverse(invoice_type):
     """
     Devolver el tipo de factura como esta en el campo que se guarda en la BD indicando si son ND o liquidacion
-    con el concepto de notas de debito y liquidacion de compras, 
+    con el concepto de notas de debito y liquidacion de compras,
     las facturas de clientes pueden ser notas de debito
     y las facturas de proveedor pueden ser liquidacion de compras
     @param invoice_type: para facturas, el tipo de factura(out_invoice. out_refund, in_invoice, in_refund, debit_note_in, debit_note_out, liquidacion)
@@ -128,7 +128,7 @@ def get_invoice_type_reverse(invoice_type):
 def get_invoice_field_report(invoice_type):
     """
     Devolver el nombre del campo que tiene el reporte del documento
-    con el concepto de notas de debito y liquidacion de compras, 
+    con el concepto de notas de debito y liquidacion de compras,
     las facturas de clientes pueden ser notas de debito
     y las facturas de proveedor pueden ser liquidacion de compras
     @param invoice_type: para facturas, el tipo de factura(out_invoice. out_refund, in_invoice, in_refund)
@@ -260,7 +260,7 @@ def get_domain(invoice_type, include_state=True):
     """
     Devolver un domain para usarse en busquedas segun el tipo de documento(el que usa los documentos de autorizaciones de clientes)
     @param invoice_type: el tipo de documento(el que usa los documentos de autorizaciones de clientes)
-    @return: lista de tuplas con domain valido para hacer busquedas con ORM 
+    @return: lista de tuplas con domain valido para hacer busquedas con ORM
     """
     invoice_type_bd, debit_note, liquidation = get_invoice_type_reverse(
         invoice_type)
