@@ -113,11 +113,6 @@
 										domain="[('state','=','approved'), ('type','=','purchase')]"
 										context="{'form_view_ref':'ecua_retenciones.view_account_retention_purchase_form'}"
 										options="{'no_create': True}" />
-									<field name="delivery_note_id"
-										attrs="{'invisible': [('delivery_note_id', '=', False)]}"
-										domain="[('delivery_note_type','=','sales'),('state','=','done')]"
-										context="{'form_view_ref':'l10n_ec_delivery_note.view_delivery_note_form'}"
-										options="{'no_create': True}" />
 									<field name="date_emision_document" />
 								</group>
 							</group>
@@ -246,7 +241,6 @@
 				<field name="credit_note_out_id" />
 				<field name="debit_note_out_id" />
 				<field name="withhold_id" />
-				<field name="delivery_note_id" />
 				<field name="state" />
 				<field name="date_emision_document" />
 				<group name="filter_by" string="Filtros">
@@ -261,8 +255,6 @@
 						domain="[('debit_note_out_id', '!=', False)]" />
 					<filter name="filter_withhold" string="Retenciones"
 						domain="[('withhold_id', '!=', False)]" />
-					<filter name="filter_delivery_note" string="Guias de Remision"
-						domain="[('delivery_note_id', '!=', False)]" />
 					<filter name="filter_liquidation" string="Liquidacion de Compras"
 						domain="[('liquidation_id', '!=', False)]" />
 					<separator />

@@ -55,8 +55,6 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.l10n_ec_ws_auth_production', readonly=False)
     l10n_ec_electronic_invoice = fields.Boolean('Autorizado Facturas?',
         related='company_id.l10n_ec_electronic_invoice', readonly=False)
-    l10n_ec_electronic_delivery_note = fields.Boolean('Autorizado Guías de Remisión?',
-        related='company_id.l10n_ec_electronic_delivery_note', readonly=False)
     l10n_ec_electronic_withhold = fields.Boolean('Autorizado Retenciones?',
         related='company_id.l10n_ec_electronic_withhold', readonly=False)
     l10n_ec_electronic_credit_note = fields.Boolean('Autorizado Notas de Crédito?',
@@ -84,8 +82,6 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.l10n_ec_send_mail_credit_note', readonly=False)
     l10n_ec_send_mail_debit_note = fields.Boolean('Notas de Débito?',
         related='company_id.l10n_ec_send_mail_debit_note', readonly=False)
-    l10n_ec_send_mail_remision = fields.Boolean('Guía de Remisión?',
-        related='company_id.l10n_ec_send_mail_remision', readonly=False)
     l10n_ec_send_mail_retention = fields.Boolean('Retenciones?',
         related='company_id.l10n_ec_send_mail_retention', readonly=False)
     l10n_ec_send_mail_liquidation = fields.Boolean('Retenciones?',
@@ -96,10 +92,6 @@ class ResConfigSettings(models.TransientModel):
         string='Version del XML Facturas',
         domain=[('document_type', '=', 'invoice')],
         related='company_id.l10n_ec_invoice_version_xml_id', readonly=False)
-    l10n_ec_delivery_note_version_xml_id = fields.Many2one('l10n_ec.xml.version',
-        string='Version del XML Guias de remision',
-        domain=[('document_type', '=', 'delivery_note')],
-        related='company_id.l10n_ec_delivery_note_version_xml_id', readonly=False)
     l10n_ec_withholding_version_xml_id = fields.Many2one('l10n_ec.xml.version',
         string='Version del XML Retencion',
         domain=[('document_type', '=', 'withholding')],

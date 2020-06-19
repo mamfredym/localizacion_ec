@@ -2,7 +2,6 @@ import pytz
 import io
 import os
 import time
-import base64
 import logging
 import traceback
 from lxml import etree
@@ -25,37 +24,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
 import base64
 
-from ..models import modules_mapping
-
 _logger = logging.getLogger(__name__)
-
-DOCUMENT_TYPES = {
-    'out_invoice': '01',
-    'out_refund': '04',
-    'debit_note_out': '05',
-    'delivery_note': '06',
-    'withhold_purchase': '07',
-    'liquidation': '03',
-}
-
-DOCUMENT_FIELDS_DATE = {
-    'out_invoice': 'invoice_date',
-    'out_refund': 'invoice_date',
-    'debit_note_out': 'invoice_date',
-    'liquidation': 'invoice_date',
-    'delivery_note': 'transfer_date',
-    'withhold_purchase': 'issue_date',
-}
-
-FIELD_FOR_SEND_MAIL_DOCUMENT = {
-    'out_invoice': 'l10n_ec_send_mail_invoice',
-    'out_refund': 'l10n_ec_send_mail_credit_note',
-    'debit_note_out': 'l10n_ec_send_mail_debit_note',
-    'liquidation': 'l10n_ec_send_mail_liquidation',
-    'delivery_note': 'l10n_ec_send_mail_remision',
-    'withhold_purchase': 'l10n_ec_send_mail_retention',
-}
-
 
 class SriXmlData(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
@@ -78,7 +47,7 @@ class SriXmlData(models.Model):
     logging.getLogger('suds.xsd.schema').setLevel(suds_log_level)
     logging.getLogger('suds.wsdl').setLevel(suds_log_level)
 
-    @api.depends('invoice_out_id', 'credit_note_out_id', 'debit_note_out_id', 'withhold_id', 'delivery_note_id',
+    @api.depends('invoice_out_id', 'credit_note_out_id', 'debit_note_out_id', 'withhold_id',
                  'liquidation_id',
                  'invoice_out_id.invoice_date', 'credit_note_out_id.invoice_date', 'debit_note_out_id.invoice_date',
                  'liquidation_id.invoice_date',
@@ -104,10 +73,6 @@ class SriXmlData(models.Model):
                 number = 'RET: %s' % xml_data.withhold_id.display_name
                 date_emision_document = xml_data.withhold_id.issue_date
                 point_emission = xml_data.withhold_id.point_of_emission_id
-            elif xml_data.delivery_note_id:
-                number = 'GR: %s' % xml_data.delivery_note_id.display_name
-                date_emision_document = xml_data.delivery_note_id.transfer_date
-                point_emission = xml_data.delivery_note_id.l10n_ec_point_of_emission_id
             elif xml_data.liquidation_id:
                 number = 'LIQ: %s' % xml_data.with_context(only_number=True).liquidation_id.display_name
                 date_emision_document = xml_data.liquidation_id.invoice_date
@@ -133,7 +98,6 @@ class SriXmlData(models.Model):
     debit_note_out_id = fields.Many2one('account.move', 'Nota de Débito', index=True, auto_join=True)
     liquidation_id = fields.Many2one('account.move', 'Liquidacion de compras', index=True, auto_join=True)
     withhold_id = fields.Many2one('l10n_ec.withhold', 'Retención', index=True, auto_join=True)
-    delivery_note_id = fields.Many2one('l10n_ec.delivery.note', 'Guia de Remision', index=True, auto_join=True)
     company_id = fields.Many2one('res.company', string='Compañía')
     partner_id = fields.Many2one('res.partner', 'Cliente', index=True, auto_join=True)
     create_uid = fields.Many2one('res.users', 'Creado por', readonly=True)
@@ -183,12 +147,11 @@ class SriXmlData(models.Model):
     cancel_user_id = fields.Many2one('res.users', 'Usuario que canceló', readonly=True)
 
     _sql_constraints = [
-        ('invoice_out_id_uniq', 'unique (invoice_out_id)', 'Ya existe una factura con el mismo numero!'),
-        ('credit_note_out_id_uniq', 'unique (credit_note_out_id)', 'Ya existe una Nota de credito con el mismo numero!'),
-        ('debit_note_out_id_uniq', 'unique (debit_note_out_id)', 'Ya existe una Nota de debito con el mismo numero!'),
-        ('liquidation_id_uniq', 'unique (liquidation_id)', 'Ya existe una Liquidacion de compras con el mismo numero!'),
-        ('withhold_id_uniq', 'unique (withhold_id)', 'Ya existe una Retencion con el mismo numero!'),
-        ('delivery_note_id_uniq', 'unique (delivery_note_id)', 'Ya existe una Guia de remision con el mismo numero!'),
+        ('invoice_out_id_uniq', 'unique (invoice_out_id, company_id)', 'Ya existe una factura con el mismo numero!'),
+        ('credit_note_out_id_uniq', 'unique (credit_note_out_id, company_id)', 'Ya existe una Nota de credito con el mismo numero!'),
+        ('debit_note_out_id_uniq', 'unique (debit_note_out_id, company_id)', 'Ya existe una Nota de debito con el mismo numero!'),
+        ('liquidation_id_uniq', 'unique (liquidation_id, company_id)', 'Ya existe una Liquidacion de compras con el mismo numero!'),
+        ('withhold_id_uniq', 'unique (withhold_id, company_id)', 'Ya existe una Retencion con el mismo numero!'),
     ]
 
     @api.model
@@ -240,12 +203,10 @@ class SriXmlData(models.Model):
             document = self.liquidation_id
         if not document and self.withhold_id:
             document = self.withhold_id
-        if not document and self.delivery_note_id:
-            document = self.delivery_note_id
         return document
 
     @api.model
-    def get_sequence(self, l10n_ec_point_of_emission_id, number):
+    def get_sequence(self, number):
         res = None
         try:
             number_splited = number.split('-')
@@ -316,15 +277,13 @@ class SriXmlData(models.Model):
 
     @api.model
     def _is_document_authorized(self, invoice_type):
-        company = self.env.user.company_id
+        company = self.company_id or self.env.company
         document_active = False
         if invoice_type == 'out_invoice' and company.l10n_ec_electronic_invoice:
             document_active = True
         elif invoice_type == 'out_refund' and company.l10n_ec_electronic_credit_note:
             document_active = True
         elif invoice_type == 'debit_note_out' and company.l10n_ec_electronic_debit_note:
-            document_active = True
-        elif invoice_type == 'delivery_note' and company.l10n_ec_electronic_delivery_note:
             document_active = True
         elif invoice_type == 'withhold_purchase' and company.l10n_ec_electronic_withhold:
             document_active = True
@@ -383,10 +342,10 @@ class SriXmlData(models.Model):
         return check_digit
 
     @api.model
-    def get_single_key(self, type_voucher, environment, printer_point_id, sequence, emission, xml_type='individual',
+    def get_single_key(self, document_code_sri, environment, printer_point, sequence, emission, xml_type='individual',
                        date_document=None):
         """Devuelve la clave para archivo xml a enviar a firmar en comprobantes unicos
-        :param type_voucher: Puede ser los siguientes tipos :
+        :param document_code_sri: Puede ser los siguientes tipos :
             01 : Factura
             04 : Nota de Credito
             05 : Nota de Debito
@@ -395,7 +354,7 @@ class SriXmlData(models.Model):
         :param environment: Puede ser los siguientes ambientes :
             1 : Pruebas
             2 : Produccion
-        :param printer_point_id: Punto de Emision del Documento, con esto se obtendra la serie del documento p.e. 001001
+        :param printer_point: Punto de Emision del Documento, con esto se obtendra la serie del documento p.e. 001001
         :param sequence: El secuencial del Documento debe ser tipo numerico
         :param emission: El tipo de emision puede ser:
             1 : Emision Normal
@@ -405,35 +364,25 @@ class SriXmlData(models.Model):
             2 : grouped Agrupado varios xml mas
         :rtype: clave para adjuntar al xml a ser firmado
         """
-        printer_model = self.env['l10n_ec.point.of.emission']
         company = self.env.user.company_id
-        printer = printer_model.browse(printer_point_id)
         if not date_document:
             date_document = fields.Date.context_today(self)
         now_date = date_document.strftime('%d%m%Y')
-        serie = printer.agency_id.number + printer.number
+        serie = printer_point.agency_id.number + printer_point.number
         sequencial = str(sequence).rjust(9, '0')
         prenumber = '0'
         if xml_type == 'individual' and emission == '1':
             code_numeric = randint(1, 99999999)
             code_numeric = str(code_numeric).rjust(8, '0')
-            prenumber = now_date + type_voucher + company.partner_id.vat + environment + serie + sequencial + code_numeric + emission
+            prenumber = now_date + document_code_sri + company.partner_id.vat + environment + serie + sequencial + code_numeric + emission
         check_digit = '%s' % self.get_check_digit(prenumber)
         key_value = prenumber + check_digit
         return key_value
 
-    def generate_info_tributaria(self, node, document_type, environment, emission, company, printer_id,
-                                 sequence, date_document):
+    def generate_info_tributaria(self, node, document, environment, emission, company):
         """Asigna al nodo raiz la informacion tributaria que es comun en todos los documentos, asigna clave interna
         al documento para ser firmado posteriormente
         :param node: tipo Element
-        :param document_type: Puede ser los tipos :
-            01 : Factura
-            03 : Liquidacion de Compras
-            04 : Nota de Credito
-            05 : Nota de Debito
-            06 : Guia de Remision
-            07 : Comprobante de Retencion
         :param environment: Puede ser los siguientes ambientes :
             1 : Pruebas
             2 : Produccion
@@ -441,14 +390,17 @@ class SriXmlData(models.Model):
             1 : Emision Normal
             2 : Emision por Indisponibilidad del Sistema
         :param company: compania emisora
-        :param printer_id: Punto de Emision
-        :param sequence: Numero de Documento
         :rtype: objeto root agregado con info tributaria
 
         """
         util_model = self.env['l10n_ec.utils']
-        printer_model = self.env['l10n_ec.point.of.emission']
-        printer = printer_model.browse(printer_id)
+        document_code_sri = document.l10n_ec_get_document_code_sri()
+        document_number = document.l10n_ec_get_document_number()
+        date_document = document.l10n_ec_get_document_date()
+        printer = self.l10n_ec_point_of_emission_id
+        sequence = ''
+        if self.xml_type == 'individual':
+            sequence = self.get_sequence(document_number)
         infoTributaria = SubElement(node, "infoTributaria")
         SubElement(infoTributaria, "ambiente").text = environment
         # emision para 1 pruebas, 2 produccion, 3 contingencia
@@ -464,10 +416,10 @@ class SriXmlData(models.Model):
         SubElement(infoTributaria, "ruc").text = company.partner_id.vat
         clave_acceso = self.ln10_ec_xml_key
         if not clave_acceso:
-            clave_acceso = self.get_single_key(document_type, environment, printer_id, sequence, emission,
+            clave_acceso = self.get_single_key(document_code_sri, environment, printer, sequence, emission,
                                                self.xml_type, date_document)
         SubElement(infoTributaria, "claveAcceso").text = clave_acceso
-        SubElement(infoTributaria, "codDoc").text = document_type
+        SubElement(infoTributaria, "codDoc").text = document_code_sri
         SubElement(infoTributaria, "estab").text = printer.agency_id.number
         SubElement(infoTributaria, "ptoEmi").text = printer.number
         SubElement(infoTributaria, "secuencial").text = str(sequence).rjust(9, '0')
@@ -494,16 +446,9 @@ class SriXmlData(models.Model):
                 raise UserError('XML Mal Creado, faltan datos, verifique: \n%s' % tools.ustr(e))
         return True
 
-    def action_generate_xml_file(self, document, invoice_type):
+    def action_generate_xml_file(self, document):
         """Genera estructura xml del archivo a ser firmado
         :param document: documento a firmar
-        :param invoice_type: Puede ser los tipos :
-            out_invoice : Factura
-            out_refund : Nota de Credito
-            debit_note_out : Nota de Debito
-            delivery_note : Guia de Remision
-            withhold_purchase : Comprobante de Retencion
-            lote_masivo : Lote Masivo
         :rtype: objeto root agregado con info tributaria
         """
         # Cuando se encuentre en un ambiente de pruebas el sistema se debera usar para la razon social
@@ -511,23 +456,15 @@ class SriXmlData(models.Model):
         util_model = self.env['l10n_ec.utils']
         company = self.env.user.company_id
         sign_now = self.env.context.get('sign_now', True)
-        document_type = modules_mapping.get_document_type(invoice_type)
-        field_name = modules_mapping.get_field_name(document_type)
         environment = self._get_environment(company)
-        xml_version = company[f"l10n_ec_{document_type}_version_xml_id"]
+        xml_version = document.l10n_ec_get_document_version_xml()
         # cuando fallo el envio o la autorizacion, puedo pasar el modo de emision
         # para continuar el proceso segun ese modo de emision
         # si no tengo emision, verificar el webservice para saber el modo de emision
         emission = self.env.context.get('emission', "1")
         partner_id = document.partner_id
-        printer_id = document.l10n_ec_point_of_emission_id.id
-        sequence = ''
-        if self.xml_type == 'individual':
-            sequence = self.get_sequence(printer_id, document[field_name])
         root = Element(xml_version.xml_header_name, id="comprobante", version=xml_version.version_file)
-        clave_acceso, root = self.generate_info_tributaria(root, DOCUMENT_TYPES.get(invoice_type),
-                                                           environment, emission, company, printer_id, sequence,
-                                                           document[DOCUMENT_FIELDS_DATE.get(invoice_type)])
+        clave_acceso, root = self.generate_info_tributaria(root, document, environment, emission, company)
         state = self.state
         l10n_ec_type_environment = ''
         if environment == '1':
@@ -556,21 +493,7 @@ class SriXmlData(models.Model):
         # si estoy con un documento externo, y no debo hacer el proceso electronico en ese momento
         # no tomar la info de los documentos, la tarea cron debe encargarse de eso
         if sign_now:
-            if invoice_type == 'out_invoice':
-                document.l10n_ec_get_info_factura(root)
-            # nota de credito
-            elif invoice_type == 'out_refund':
-                document.l10n_ec_get_info_credit_note(root)
-            # nota de debito
-            elif invoice_type == 'debit_note_out':
-                document.l10n_ec_get_info_debit_note(root)
-            # liquidacion de compras
-            elif invoice_type == 'liquidation':
-                document.l10n_ec_get_info_liquidation(root)
-            elif invoice_type == 'withhold_purchase':
-                document.get_info_withhold(root)
-            elif invoice_type == 'delivery_note':
-                document.get_info_delivery_note(root)
+            document.l10n_ec_action_generate_xml_data()
         # Se identa con propositos de revision, no debe ser asi al enviar el documento
         util_model.indent(root)
         bytes_data = tostring(root, encoding="UTF-8")
@@ -842,7 +765,7 @@ class SriXmlData(models.Model):
                 # escribir en los objetos relacionados, la autorizacion y fecha de autorizacion
                 document = self.get_current_document()
                 if document:
-                    document.action_update_authorization_data(numeroAutorizacion, ln10_ec_authorization_date)
+                    document.l10n_ec_action_update_electronic_authorization(numeroAutorizacion, ln10_ec_authorization_date)
             else:
                 # si no fue autorizado, validar que no sea clave 70
                 ok = False
@@ -907,7 +830,7 @@ class SriXmlData(models.Model):
                 xml_data.write({'file_authorized_path': file_authorized_path, })
                 # crear el adjunto
                 document = xml_data.get_current_document()
-                document.create_attachments()
+                document.l10n_ec_action_create_attachments_electronic()
         return True
 
     @api.model
@@ -1041,7 +964,7 @@ class SriXmlData(models.Model):
         fp.close()
         return base64.encodebytes(data)
 
-    def _get_messages_before_sent_sri(self, res_document, document_type):
+    def _get_messages_before_sent_sri(self, res_document):
         '''
         Validar ciertos campos y devolver una lista de mensajes si no es cumple alguna validacion de datos
         '''
@@ -1054,23 +977,14 @@ class SriXmlData(models.Model):
             res_document = xml_rec.get_current_document()
             if not res_document:
                 continue
-            # procesar los modelos que son de account.invoice(facturas, NC, ND)
-            invoice_type = ""
-            if res_document._name == 'account.move':
-                invoice_type = res_document.l10n_ec_get_invoice_type(res_document.type, res_document.l10n_ec_debit_note,
-                                                             res_document.l10n_ec_liquidation)
-            elif res_document._name == 'account.retention':
-                invoice_type = 'withhold_purchase'
-            elif res_document._name == 'stock.picking':
-                invoice_type = 'delivery_note'
             if res_document and invoice_type:
                 if self.env.context.get('l10n_ec_xml_call_from_cron', False):
-                    message_list = xml_rec._get_messages_before_sent_sri(res_document, invoice_type)
+                    message_list = xml_rec._get_messages_before_sent_sri(res_document)
                     if message_list:
                         xml_to_notify[xml_rec] = message_list
                         continue
                 xml_to_sign |= xml_rec
-                string_data, binary_data = xml_rec.action_generate_xml_file(res_document, invoice_type)
+                string_data, binary_data = xml_rec.action_generate_xml_file(res_document)
                 file_xml_path = xml_rec.write_file('file_xml', string_data)
                 xml_rec.write({'file_xml_path': file_xml_path})
         return xml_to_sign, xml_to_notify
@@ -1123,10 +1037,23 @@ class SriXmlData(models.Model):
     #         return True
     #     return False
 
-    def action_send_mail_partner(self):
-        documents_sended = {}
-        documents_no_sended = {}
-        company = self.env.user.company_id
+    def _is_document_enabled_for_send_mail(self):
+        company = self.company_id or self.env.company
+        is_enabled = False
+        if self.invoice_out_id and company.l10n_ec_send_mail_invoice:
+            is_enabled = True
+        elif self.credit_note_out_id and company.l10n_ec_send_mail_credit_note:
+            is_enabled = True
+        elif self.debit_note_out_id and company.l10n_ec_send_mail_debit_note:
+            is_enabled = True
+        elif self.liquidation_id and company.l10n_ec_send_mail_liquidation:
+            is_enabled = True
+        elif self.withhold_id and company.l10n_ec_send_mail_retention:
+            is_enabled = True
+        return is_enabled
+
+    def _action_send_mail_partner(self):
+        documents_sended = self.browse()
         counter = 1
         total = len(self)
         for xml_rec in self:
@@ -1135,63 +1062,34 @@ class SriXmlData(models.Model):
             document = xml_rec.get_current_document()
             # cuando hay xml que se elimino el documento principal, ignorarlos
             if not document:
-                documents_sended[xml_rec.id] = True
+                documents_sended |= xml_rec
                 continue
-            partner = document.partner_id
-            invoice_type = ""
-            # procesar los modelos que son de account.invoice(facturas, NC, ND)
-            if document._name == 'account.move':
-                invoice_type = document.l10n_ec_get_invoice_type(document.type,
-                                                         document.l10n_ec_debit_note,
-                                                         document.l10n_ec_liquidation)
-            elif document._name == 'account.retention':
-                invoice_type = 'withhold_purchase'
-            elif document._name == 'stock.picking':
-                invoice_type = 'delivery_note'
-            elif xml_rec.xml_type == 'grouped':
-                invoice_type = 'lote_masivo'
-            # if document:
-            #     retencion_asumida = self.check_retention_asumida(
-            #         document, invoice_type)
-            #     if retencion_asumida:
-            #         if self.env.context.get('from_function'):
-            #             documents_sended[xml_rec.id] = True
-            #             continue
-            #         else:
-            #             return True
+            # retencion_asumida = self.check_retention_asumida(document, invoice_type)
+            # if retencion_asumida:
+            #     documents_sended |= xml_rec
+            #     continue
             try:
-                # al consumidor final no se debe enviar mail, pero marcarlo como enviado
-                if xml_rec.partner_id and xml_rec.partner_id.type_ref == 'consumidor':
-                    documents_sended[xml_rec.id] = True
-                    continue
-                send_mail_for_document = FIELD_FOR_SEND_MAIL_DOCUMENT[invoice_type] and getattr(company,
-                                                                                                FIELD_FOR_SEND_MAIL_DOCUMENT[
-                                                                                                    invoice_type],
-                                                                                                False) or False
-                if not send_mail_for_document:
-                    documents_no_sended[xml_rec.id] = True
-                    if self.env.context.get('from_function', False):
-                        _logger.info(
-                            "No esta habilitado el envio de correos para los documentos tipo: %s, verifique su configuracion",
-                            document.get_document_string())
-                    else:
-                        raise UserError(
-                            "No esta habilitado el envio de correos para los documentos tipo: %s, verifique su configuracion" % document.get_document_string())
-                    continue
-                if document.action_sent_mail():
-                    documents_sended[xml_rec.id] = True
-                else:
-                    documents_no_sended[xml_rec.id] = True
+                if document.l10n_ec_action_sent_mail_electronic():
+                    documents_sended |= xml_rec
             except Exception as e:
-                documents_no_sended[xml_rec.id] = True
                 if self.env.context.get('from_function', False):
                     _logger.warning("Error send mail to partner. ERROR: %s", tools.ustr(e))
                 else:
                     raise
-        if self.env.context.get('from_function', False):
-            return list(documents_sended.keys()), list(documents_no_sended.keys())
-        else:
-            return True
+        return documents_sended
+
+    def action_send_mail_partner(self):
+        self.ensure_one()
+        document = self.get_current_document()
+        # al consumidor final no se debe enviar mail, pero marcarlo como enviado
+        if self.partner_id and self.partner_id.type_ref == 'consumidor':
+            raise UserError(_("No esta permitido el envio de correos a consumidor final"))
+        if not self._is_document_enabled_for_send_mail():
+            raise UserError(
+                "No esta habilitado el envio de correos para los documentos tipo: %s, verifique su configuracion" %
+                (document.get_document_string()))
+        self._action_send_mail_partner()
+        return True
 
     def process_document_electronic(self, send_file=True):
         """
@@ -1275,12 +1173,12 @@ class SriXmlData(models.Model):
         #     ctx['xml_to_notify'] = xml_to_notify_no_autorize
         #     ctx['title'] = "Los siguientes Documentos no se han podido autorizar con el SRI, " \
         #                    "es necesario que los revise, corrija y envie manualmente de lo contrario no se autorizaran:"
-        #     template.with_context(ctx).action_sent_mail(company)
+        #     template.with_context(ctx).l10n_ec_action_sent_mail_electronic(company)
         # if xml_to_notify:
         #     template = self.env.ref('ecua_documentos_electronicos.et_documents_electronics_no_valid')
         #     ctx = self.env.context.copy()
         #     ctx['xml_to_notify'] = xml_to_notify
-        #     template.with_context(ctx).action_sent_mail(company)
+        #     template.with_context(ctx).l10n_ec_action_sent_mail_electronic(company)
         return True
 
     @api.model
@@ -1306,7 +1204,7 @@ class SriXmlData(models.Model):
             ctx['xml_to_notify'] = xml_rejected
             ctx[
                 'title'] = "Los siguientes Documentos presentan problemas y han sido rechazados por el SRI, reviselos y corrija manualmente:"
-            template.with_context(ctx).action_sent_mail(company)
+            template.with_context(ctx).l10n_ec_action_sent_mail_electronic(company)
         return True
 
     @api.model
@@ -1396,8 +1294,29 @@ class SriXmlData(models.Model):
             ctx['xml_to_notify'] = xml_to_notify
             ctx['title'] = "Los siguientes Documentos no se han podido autorizar con el SRI, " \
                            "es necesario que los revise, corrija y envie manualmente de lo contrario no se autorizaran:"
-            template.with_context(ctx).action_sent_mail(company)
+            template.with_context(ctx).l10n_ec_action_sent_mail_electronic(company)
         return True
+
+    @api.model
+    def _prepare_domain_for_send_mail(self, company, date_from):
+        domain = [
+            ('company_id', '=', company.id),
+            ('state', '=', 'authorized'),
+            ('partner_id.type_ref', '!=', 'consumidor'),
+            ('send_mail', '=', False),
+            ('ln10_ec_authorization_date', '=', date_from),
+        ]
+        if not company.l10n_ec_send_mail_invoice:
+            domain.append(('invoice_out_id', '=', False))
+        if not company.l10n_ec_send_mail_credit_note:
+            domain.append(('credit_note_out_id', '=', False))
+        if not company.l10n_ec_send_mail_debit_note:
+            domain.append(('debit_note_out_id', '=', False))
+        if not company.l10n_ec_send_mail_liquidation:
+            domain.append(('liquidation_id', '=', False))
+        if not company.l10n_ec_send_mail_retention:
+            domain.append(('withhold_id', '=', False))
+        return domain
 
     @api.model
     def send_mail_to_partner(self):
@@ -1409,47 +1328,14 @@ class SriXmlData(models.Model):
         date_from = company.l10n_ec_send_mail_from
         if not date_from:
             date_from = fields.Datetime.now()
-        ctx = self.env.context.copy()
-        ctx['from_function'] = True
-        extra_where = []
-        if not company.l10n_ec_send_mail_invoice:
-            extra_where.append("xml_data.invoice_out_id IS NULL")
-        if not company.l10n_ec_send_mail_credit_note:
-            extra_where.append("xml_data.credit_note_out_id IS NULL")
-        if not company.l10n_ec_send_mail_debit_note:
-            extra_where.append("xml_data.debit_note_out_id IS NULL")
-        if not company.l10n_ec_send_mail_liquidation:
-            extra_where.append("xml_data.liquidation_id IS NULL")
-        if not company.l10n_ec_send_mail_remision:
-            extra_where.append("xml_data.delivery_note_id IS NULL")
-        if not company.l10n_ec_send_mail_retention:
-            extra_where.append("xml_data.withhold_id IS NULL")
-        SQL = """SELECT xml_data.id
-                        FROM sri_xml_data xml_data
-                        INNER JOIN res_partner rp ON rp.id = xml_data.partner_id
-                        WHERE xml_data.state = 'authorized' AND rp.type_ref != 'consumidor'
-                            AND (xml_data.send_mail=false OR xml_data.send_mail IS NULL) """ \
-              + (extra_where and " AND " + " AND ".join(extra_where) or ' ') + """
-                            AND xml_data.ln10_ec_authorization_date >= %(date_from)s
-                        ORDER BY xml_data.id
-                        LIMIT %(max_limit)s"""
-        self.env.cr.execute(SQL, {
-            'date_from': date_from,
-            'max_limit': company.l10n_ec_cron_process,
-        })
-        xml_ids = [x[0] for x in self.env.cr.fetchall()]
-        if xml_ids:
-            documents_sended, documents_no_sended = self.with_context(
-                ctx).browse(xml_ids).action_send_mail_partner()
-            if documents_sended:
-                SQL = "UPDATE sri_xml_data SET send_mail=true WHERE id IN %(xml_ids)s"
-                self.env.cr.execute(SQL, {'xml_ids': tuple(documents_sended)})
+        domain = self._prepare_domain_for_send_mail(company, date_from)
+        xml_to_send = self.search(domain, limit=company.l10n_ec_cron_process)
+        if xml_to_send:
+            documents_send = xml_to_send.with_context(from_function=True)._action_send_mail_partner()
+            if documents_send:
+                documents_send.write({'send_mail': True})
                 # enviar a crear usuario de los que aun no tienen
-                self.browse(documents_sended).create_login_for_partner()
-            if documents_no_sended:
-                SQL = "UPDATE sri_xml_data SET send_mail=false WHERE id IN %(xml_ids)s"
-                self.env.cr.execute(
-                    SQL, {'xml_ids': tuple(documents_no_sended)})
+                documents_send.create_login_for_partner()
         return True
 
     def create_login_for_partner(self):
@@ -1484,7 +1370,7 @@ class SriXmlData(models.Model):
         """
         # la estructura para el nombre seria asi
         # id del sri_xml_data
-        # tipo de documento(fc->facturas, nc->Notas de credito, nd->Notas de debito, re->Retenciones, gr->Guias de remision)
+        # prefijo de documento(fc->facturas, nc->Notas de credito, nd->Notas de debito, re->Retenciones, gr->Guias de remision)
         # numero del documento
         # signed o authorized, segun el file_type
         # extension xml
@@ -1498,31 +1384,8 @@ class SriXmlData(models.Model):
         if field_name in self._fields and self[field_name] and not self.env.context.get('only_file', False):
             file_name = self[field_name]
         else:
-            if self.invoice_out_id:
-                document_type = 'fc'
-                document_number = self.invoice_out_id.l10n_latam_document_number
-                document_id = self.invoice_out_id.id
-            elif self.credit_note_out_id:
-                document_type = 'nc'
-                document_number = self.credit_note_out_id.l10n_latam_document_number
-                document_id = self.credit_note_out_id.id
-            elif self.debit_note_out_id:
-                document_type = 'nd'
-                document_number = self.debit_note_out_id.l10n_latam_document_number
-                document_id = self.debit_note_out_id.id
-            elif self.liquidation_id:
-                document_type = 'liq'
-                document_number = self.liquidation_id.l10n_latam_document_number
-                document_id = self.liquidation_id.id
-            elif self.delivery_note_id:
-                document_type = 'gr'
-                document_number = self.delivery_note_id.document_number
-                document_id = self.delivery_note_id.id
-            elif self.withhold_id:
-                document_type = 're'
-                document_number = self.withhold_id.document_number
-                document_id = self.withhold_id.id
-            file_name = "%s_%s_%s_%s.xml" % (document_id, document_type, document_number, file_type)
+            document = self.get_current_document()
+            file_name = f"{document.l10n_ec_get_document_filename_xml()}_{file_type}.xml"
         return file_name
 
     def get_file(self, file_type):

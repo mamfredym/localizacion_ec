@@ -245,19 +245,6 @@
 									attrs="{'required': [('l10n_ec_electronic_debit_note', '=', True)], 'invisible': [('l10n_ec_electronic_debit_note', '=', False)]}"/>
 							</div>
 						</div>
-						<div id="document_delivery_note" class="col-12 col-md-6 o_setting_box">
-							<div class="o_setting_left_pane">
-								<field name="l10n_ec_electronic_delivery_note" />
-							</div>
-							<div class="o_setting_right_pane">
-								<label for="l10n_ec_electronic_delivery_note" string="Guías de Remision" />
-								<label for="l10n_ec_delivery_note_version_xml_id" string="Version"
-									attrs="{'invisible': [('l10n_ec_electronic_delivery_note', '=', False)]}"/>
-								<field name="l10n_ec_delivery_note_version_xml_id" class="oe_in_line"
-									options="{'no_quick_create': True}" context="{'default_document_type': 'delivery_note'}"
-									attrs="{'required': [('l10n_ec_electronic_delivery_note', '=', True)], 'invisible': [('l10n_ec_electronic_delivery_note', '=', False)]}"/>
-							</div>
-						</div>
 						<div id="document_liquidation" class="col-12 col-md-6 o_setting_box">
 							<div class="o_setting_left_pane">
 								<field name="l10n_ec_electronic_liquidation" />
@@ -325,14 +312,6 @@
 							</div>
 							<div class="o_setting_right_pane">
 								<label for="l10n_ec_send_mail_debit_note" string="Notas de Débito" />
-							</div>
-						</div>
-						<div id="email_delivery_note" class="col-12 col-md-6 o_setting_box">
-							<div class="o_setting_left_pane">
-								<field name="l10n_ec_send_mail_remision" />
-							</div>
-							<div class="o_setting_right_pane">
-								<label for="l10n_ec_send_mail_remision" string="Guías de Remision" />
 							</div>
 						</div>
 						<div id="email_liquidation" class="col-12 col-md-6 o_setting_box">

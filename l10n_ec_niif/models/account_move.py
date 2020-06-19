@@ -68,8 +68,7 @@ class AccountMove(models.Model):
         xml_model = self.env['sri.xml.data']
         for invoice in self:
             if invoice.is_invoice():
-                invoice_type = self.l10n_ec_get_invoice_type(
-                    invoice.type, invoice.l10n_ec_debit_note, invoice.l10n_ec_liquidation)
+                invoice_type = invoice.l10n_ec_get_invoice_type()
                 invoice.ln10_ec_is_enviroment_production = xml_model.ln10_ec_is_enviroment_production(invoice_type, invoice.l10n_ec_point_of_emission_id)
             else:
                 invoice.ln10_ec_is_enviroment_production =False
@@ -301,8 +300,7 @@ class AccountMove(models.Model):
         if not default:
             default = {}
         if self.filtered(lambda x: x.company_id.country_id.code == 'EC'):
-            invoice_type = modules_mapping.l10n_ec_get_invoice_type(
-                self.type, self.l10n_ec_debit_note, self.l10n_ec_liquidation)
+            invoice_type = self.l10n_ec_get_invoice_type()
             next_number, auth_line = self.l10n_ec_point_of_emission_id.get_next_value_sequence(
                 invoice_type, False, False)
             default['l10n_latam_document_number'] = next_number
@@ -326,8 +324,7 @@ class AccountMove(models.Model):
         for move in self.filtered(lambda x: x.company_id.country_id.code == 'EC' and x.type
                                   in ('out_invoice', 'out_refund', 'in_invoice')):
             if move.l10n_ec_point_of_emission_id:
-                invoice_type = modules_mapping.l10n_ec_get_invoice_type(move.type, move.l10n_ec_debit_note,
-                                                                move.l10n_ec_liquidation)
+                invoice_type = move.l10n_ec_get_invoice_type()
                 if invoice_type in ('out_invoice', 'out_refund', 'debit_note_out', 'liquidation', 'in_invoice'):
                     if invoice_type == 'in_invoice':
                         next_number, auth_line = move.l10n_ec_point_of_emission_id.get_next_value_sequence(
@@ -380,15 +377,12 @@ class AccountMove(models.Model):
     )
     def _check_l10n_ec_document_number_duplicity(self):
         auth_line_model = self.env['l10n_ec.sri.authorization.line']
-        for move in self.filtered(lambda x: x.company_id.country_id.code == 'EC'
-                                  and modules_mapping.l10n_ec_get_invoice_type(x.type,
-                                                                       x.l10n_ec_debit_note,
-                                                                       x.l10n_ec_liquidation, False)
-                                  in ('out_invoice', 'out_refund', 'debit_note_out', 'liquidation')
-                                  and x.l10n_ec_document_number):
+        for move in self.filtered(
+            lambda x: x.company_id.country_id.code == 'EC'
+                    and x.l10n_ec_get_invoice_type() in ('out_invoice', 'out_refund', 'debit_note_out', 'liquidation')
+                    and x.l10n_ec_document_number):
             auth_line_model.with_context(from_constrain=True).validate_unique_value_document(
-                modules_mapping.l10n_ec_get_invoice_type(
-                    move.type, move.l10n_ec_debit_note, move.l10n_ec_liquidation),
+                move.l10n_ec_get_invoice_type(),
                 move.l10n_ec_document_number, move.company_id.id, move.id)
 
     @api.depends(
@@ -769,9 +763,10 @@ class AccountMove(models.Model):
                and outside_expiration.invoice_date > outside_expiration.l10n_ec_expiration_date):
             raise UserError(_('Invoice date outside defined date range2'))
 
-    @api.model
-    def l10n_ec_get_invoice_type(self, invoice_type, debit_note=False, liquidation=False):
-        return modules_mapping.l10n_ec_get_invoice_type(invoice_type, debit_note, liquidation)
+    def l10n_ec_get_invoice_type(self):
+        self.ensure_one()
+        return modules_mapping.l10n_ec_get_invoice_type(
+            self.type, self.l10n_ec_debit_note, self.l10n_ec_liquidation, False)
 
     def l10n_ec_validate_fields_required_fe(self):
         message_list = []
@@ -819,9 +814,7 @@ class AccountMove(models.Model):
         l10n_ec_type_conection_sri = self.env.company.l10n_ec_type_conection_sri
         #Si ya se encuentra autorizado, no hacer nuevamente el proceso de generacion del xml
         for invoice in self.filtered(lambda x: not x.ln10_ec_xml_data_id):
-            invoice_type = invoice.l10n_ec_get_invoice_type(invoice.type,
-                                                    invoice.l10n_ec_debit_note,
-                                                    invoice.l10n_ec_liquidation)
+            invoice_type = invoice.l10n_ec_get_invoice_type()
             if invoice.type == 'in_invoice':
                 for retention in invoice.l10n_ec_withhold_ids:
                     if retention.point_of_emission_id.type_emission != 'electronic':
@@ -912,6 +905,60 @@ class AccountMove(models.Model):
     def l10n_ec_get_pagos_data(self):
         # TODO: agregar informacion de pagos, considerar para ATS
         return []
+
+    def l10n_ec_get_document_code_sri(self):
+        # 01 : Factura
+        # 03 : Liquidacion de Compras
+        # 04 : Nota de Credito
+        # 05 : Nota de Debito
+        # lo ideal seria tomar este dato del tipo de documento(campo l10n_latam_document_type_id)
+        # pero no tiene los mismos codigos
+        document_code_sri = ""
+        invoice_type = self.l10n_ec_get_invoice_type()
+        if invoice_type == 'out_invoice':
+            document_code_sri = '01'
+        elif invoice_type == 'liquidation':
+            document_code_sri = '03'
+        elif invoice_type == 'out_refund':
+            document_code_sri = '04'
+        elif invoice_type == 'debit_note_out':
+            document_code_sri = '05'
+        return document_code_sri
+
+    def l10n_ec_get_document_number(self):
+        # esta funcion debe devolver el numero de documento
+        return self.l10n_latam_document_number
+
+    def l10n_ec_get_document_date(self):
+        # esta funcion debe devolver la fecha de emision del documento
+        raise self.invoice_date
+
+    def l10n_ec_get_document_version_xml(self):
+        # esta funcion debe devolver la version del xml que se debe usar
+        company = self.company_id or self.env.company
+        invoice_type = self.l10n_ec_get_invoice_type()
+        document_type = modules_mapping.get_document_type(invoice_type)
+        return company[f"l10n_ec_{document_type}_version_xml_id"]
+
+    def l10n_ec_get_document_filename_xml(self):
+        # esta funcion debe devolver el nombre del archivo xml sin la extension
+        # algo como: id, prefijo, secuencial
+        return f"{self.id}_{self.l10n_latam_document_type_id.doc_code_prefix}_{self.l10n_ec_get_document_number()}"
+
+    def l10n_ec_action_generate_xml_data(self, node_root):
+        invoice_type = self.l10n_ec_get_invoice_type()
+        if invoice_type == 'out_invoice':
+            self.l10n_ec_get_info_factura(node_root)
+        # nota de credito
+        elif invoice_type == 'out_refund':
+            self.l10n_ec_get_info_credit_note(node_root)
+        # nota de debito
+        elif invoice_type == 'debit_note_out':
+            self.l10n_ec_get_info_debit_note(node_root)
+        # liquidacion de compras
+        elif invoice_type == 'liquidation':
+            self.l10n_ec_get_info_liquidation(node_root)
+        return True
 
     def l10n_ec_get_info_factura(self, node):
         util_model = self.env['l10n_ec.utils']

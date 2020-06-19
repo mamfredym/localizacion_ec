@@ -2,6 +2,7 @@ import base64
 from xml.etree.ElementTree import SubElement
 
 from odoo import models, api, fields
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
 
 
@@ -28,7 +29,7 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
         # ya que no se puede llamar a la funcion declarada como privada
         return self._get_report_base_filename()
 
-    def get_attachments(self):
+    def l10n_ec_get_attachments_electronic(self):
         '''
         :return: An ir.attachment recordset
         '''
@@ -43,7 +44,7 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
         ]
         return self.env['ir.attachment'].search(domain)
 
-    def create_attachments(self):
+    def l10n_ec_action_create_attachments_electronic(self):
         '''
         :return: An ir.attachment recordset
         '''
@@ -54,7 +55,7 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
         AttachmentModel = self.env['ir.attachment'].with_context(ctx)
         attachment = AttachmentModel.browse()
         if self.ln10_ec_xml_key and self.ln10_ec_xml_data_id:
-            attachment = self.get_attachments()
+            attachment = self.l10n_ec_get_attachments_electronic()
             if not attachment:
                 try:
                     file_data = self.ln10_ec_xml_data_id.get_file('file_authorized')
@@ -72,15 +73,53 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
                     })
         return attachment
 
-    def action_update_authorization_data(self, numeroAutorizacion, ln10_ec_authorization_date):
+    def l10n_ec_action_update_electronic_authorization(self, numeroAutorizacion, ln10_ec_authorization_date):
         self.write({
             'ln10_ec_electronic_authorization': str(numeroAutorizacion),
             'ln10_ec_authorization_date': ln10_ec_authorization_date.strftime(DTF),
         })
 
-    def action_sent_mail(self):
-        # funcion usada para envio del mail al cliente, mdelos deben reemplazarla
-        return True
+    def l10n_ec_action_sent_mail_electronic(self):
+        # funcion debe ser reemplazada en cada clase heredada
+        # es usada para envio del mail al cliente
+        raise UserError("Debe reemplazar esta funcion l10n_ec_action_sent_mail_electronic en su clase heredada")
+
+    def l10n_ec_get_document_code_sri(self):
+        # funcion debe ser reemplazada en cada clase heredada
+        # esta funcion debe devolver el tipo de documento SRI que va en el xml electronico
+        # 01 : Factura
+        # 03 : Liquidacion de Compras
+        # 04 : Nota de Credito
+        # 05 : Nota de Debito
+        # 06 : Guia de Remision
+        # 07 : Comprobante de Retencion
+        raise UserError("Debe reemplazar esta funcion l10n_ec_get_document_code_sri en su clase heredada")
+
+    def l10n_ec_get_document_number(self):
+        # funcion debe ser reemplazada en cada clase heredada
+        # esta funcion debe devolver el numero de documento
+        raise UserError("Debe reemplazar esta funcion l10n_ec_get_document_number en su clase heredada")
+
+    def l10n_ec_get_document_date(self):
+        # funcion debe ser reemplazada en cada clase heredada
+        # esta funcion debe devolver la fecha de emision del documento
+        raise UserError("Debe reemplazar esta funcion l10n_ec_get_document_date en su clase heredada")
+
+    def l10n_ec_get_document_version_xml(self):
+        # funcion debe ser reemplazada en cada clase heredada
+        # esta funcion debe devolver la version del xml que se debe usar
+        raise UserError("Debe reemplazar esta funcion l10n_ec_get_document_version_xml en su clase heredada")
+
+    def l10n_ec_get_document_filename_xml(self):
+        # funcion debe ser reemplazada en cada clase heredada
+        # esta funcion debe devolver el nombre del archivo xml sin la extension
+        # algo como: id, prefijo, secuencial
+        raise UserError("Debe reemplazar esta funcion l10n_ec_get_document_filename_xml en su clase heredada")
+
+    def l10n_ec_action_generate_xml_data(self, node_root):
+        # funcion debe ser reemplazada en cada clase heredada
+        # esta funcion debe crear la data del documento en el xml(node_root)
+        raise UserError("Debe reemplazar esta funcion l10n_ec_action_generate_xml_data en su clase heredada")
 
     def _get_info_aditional(self, field_name, record_id):
         SQL = """SELECT info.name,

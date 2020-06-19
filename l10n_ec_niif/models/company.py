@@ -60,15 +60,12 @@ class ResCompany(models.Model):
     l10n_ec_ws_auth_production = fields.Char('URL del WS de Producción SRI para Autorización de Documentos',
         default='https://cel.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl')
     l10n_ec_electronic_invoice = fields.Boolean('Autorizado Facturas?')
-    l10n_ec_electronic_delivery_note = fields.Boolean('Autorizado Guías de Remisión?')
     l10n_ec_electronic_withhold = fields.Boolean('Autorizado Retenciones?')
     l10n_ec_electronic_credit_note = fields.Boolean('Autorizado Notas de Crédito?')
     l10n_ec_electronic_debit_note = fields.Boolean('Autorizado Notas de Débito?')
     l10n_ec_electronic_liquidation = fields.Boolean('Autorizado Liquidacion de compras?')
     l10n_ec_invoice_version_xml_id = fields.Many2one('l10n_ec.xml.version',
         string='Version del XML Facturas', domain=[('document_type', '=', 'invoice')])
-    l10n_ec_delivery_note_version_xml_id = fields.Many2one('l10n_ec.xml.version',
-        string='Version del XML Guias de remision', domain=[('document_type', '=', 'delivery_note')])
     l10n_ec_withholding_version_xml_id = fields.Many2one('l10n_ec.xml.version',
         string='Version del XML Retencion', domain=[('document_type', '=', 'withholding')])
     l10n_ec_credit_note_version_xml_id = fields.Many2one('l10n_ec.xml.version',
@@ -88,7 +85,6 @@ class ResCompany(models.Model):
     l10n_ec_send_mail_invoice = fields.Boolean('Facturas electronicas?', default=True, )
     l10n_ec_send_mail_credit_note = fields.Boolean('Notas de Crédito?', default=True)
     l10n_ec_send_mail_debit_note = fields.Boolean('Notas de Débito?', default=True)
-    l10n_ec_send_mail_remision = fields.Boolean('Guía de Remisión?', default=True)
     l10n_ec_send_mail_retention = fields.Boolean('Retenciones?', default=True)
     l10n_ec_send_mail_liquidation = fields.Boolean('Liquidacion de compras?', default=True)
     l10n_ec_create_login_for_partners = fields.Boolean('Crear Usuario para portal?', default=False, )
