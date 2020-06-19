@@ -10,13 +10,13 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
     _description = 'Abstract Class for electronic documents'
 
     ln10_ec_electronic_authorization = fields.Char('Autorizacion Electrónica',
-                                           size=49, copy=False, index=True)
+        size=49, copy=False, index=True, readonly=True)
     ln10_ec_xml_data_id = fields.Many2one('sri.xml.data', 'XML electronico',
-                                  copy=False, index=True, auto_join=True)
+        copy=False, index=True, auto_join=True, readonly=True)
     ln10_ec_xml_key = fields.Char('Clave de acceso',
-                          size=49, copy=False, index=True)
+        size=49, copy=False, index=True, readonly=True)
     ln10_ec_authorization_date = fields.Datetime('Fecha de Autorización',
-                                         copy=False, index=True)
+        copy=False, index=True, readonly=True)
 
     def _prepare_l10n_ec_sri_xml_values(self, l10n_ec_type_conection_sri):
         return {

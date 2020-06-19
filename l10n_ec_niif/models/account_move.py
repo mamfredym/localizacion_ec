@@ -1425,11 +1425,19 @@ class AccountMoveLine(models.Model):
             move_line.l10n_ec_base_iva = l10n_ec_base_iva
             move_line.l10n_ec_iva = l10n_ec_iva
             move_line.l10n_ec_discount_total = l10n_ec_discount_total
-            move_line.l10n_ec_base_iva_0_currency = move.currency_id._convert(
-                l10n_ec_base_iva_0, move.company_currency_id, move.company_id, move_date)
-            move_line.l10n_ec_base_iva_currency = move.currency_id._convert(
-                l10n_ec_base_iva, move.company_currency_id, move.company_id, move_date)
-            move_line.l10n_ec_iva_currency = move.currency_id._convert(
-                l10n_ec_iva, move.company_currency_id, move.company_id, move_date)
-            move_line.l10n_ec_discount_total_currency = move.currency_id._convert(
-                l10n_ec_discount_total, move.company_currency_id, move.company_id, move_date)
+            # FIXME: cuando se crean lineas desde una NC, en el onchange de la factura a rectificar
+            # no se tiene aun referencia a la moneda, asi que no hacer conversion de moneda
+            if move.currency_id:
+                move_line.l10n_ec_base_iva_0_currency = move.currency_id._convert(
+                    l10n_ec_base_iva_0, move.company_currency_id, move.company_id, move_date)
+                move_line.l10n_ec_base_iva_currency = move.currency_id._convert(
+                    l10n_ec_base_iva, move.company_currency_id, move.company_id, move_date)
+                move_line.l10n_ec_iva_currency = move.currency_id._convert(
+                    l10n_ec_iva, move.company_currency_id, move.company_id, move_date)
+                move_line.l10n_ec_discount_total_currency = move.currency_id._convert(
+                    l10n_ec_discount_total, move.company_currency_id, move.company_id, move_date)
+            else:
+                move_line.l10n_ec_base_iva_0_currency = l10n_ec_base_iva_0
+                move_line.l10n_ec_base_iva_currency = l10n_ec_base_iva
+                move_line.l10n_ec_iva_currency = l10n_ec_iva
+                move_line.l10n_ec_discount_total_currency = l10n_ec_discount_total
