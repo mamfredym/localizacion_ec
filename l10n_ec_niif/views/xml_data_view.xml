@@ -90,23 +90,23 @@
 									<field name="partner_id" readonly="1" />
 									<field name="invoice_out_id"
 										attrs="{'invisible': [('invoice_out_id', '=', False)]}"
-										domain="[('l10n_ec_debit_note','=', False),('type','=','out_invoice'),('state', 'in', ('open','paid'))]"
-										context="{'form_view_ref':'account.invoice_form', 'type':'out_invoice', 'journal_type': 'sale'}"
+										domain="[('l10n_ec_debit_note','=', False),('type','=','out_invoice'),('state', '=', 'posted')]"
+										context="{'form_view_ref':'account.view_move_form', 'type':'out_invoice', 'journal_type': 'sale'}"
 										options="{'no_create': True}" />
 									<field name="credit_note_out_id"
 										attrs="{'invisible': [('credit_note_out_id', '=', False)]}"
-										domain="[('type','=','out_refund'),('state', 'in', ('open','paid'))]"
-										context="{'form_view_ref':'ecua_documentos_sri.invoice_customer_credit_note_form', 'type':'out_refund', 'journal_type':'sale_refund'}"
+										domain="[('type','=','out_refund'), ('state', '=', 'posted')]"
+										context="{'form_view_ref':'account.view_move_form', 'type':'out_refund', 'journal_type':'sale_refund'}"
 										options="{'no_create': True}" />
 									<field name="debit_note_out_id"
 										attrs="{'invisible': [('debit_note_out_id', '=', False)]}"
-										domain="[('l10n_ec_debit_note','=', True),('type','=','out_invoice'),('state', 'in', ('open','paid'))]"
-										context="{'form_view_ref':'ecua_documentos_sri.invoice_debit_note_form', 'type':'out_invoice', 'journal_type': 'sale','default_l10n_ec_debit_note':True}"
+										domain="[('l10n_ec_debit_note','=', True),('type','=','out_invoice'), ('state', '=', 'posted')]"
+										context="{'form_view_ref':'account.view_move_form', 'type':'out_invoice', 'journal_type': 'sale','default_l10n_ec_debit_note':True}"
 										options="{'no_create': True}" />
 									<field name="liquidation_id"
 										attrs="{'invisible': [('liquidation_id', '=', False)]}"
-										domain="[('l10n_ec_liquidation','=', True),('type','=','in_invoice'),('state', 'in', ('open','paid'))]"
-										context="{'form_view_ref':'ecua_account.account_invoice_liquidation_form', 'type':'in_invoice', 'journal_type': 'purchase','default_l10n_ec_liquidation':True}"
+										domain="[('l10n_ec_liquidation','=', True),('type','=','in_invoice'), ('state', '=', 'posted')]"
+										context="{'form_view_ref':'account.view_move_form', 'type':'in_invoice', 'journal_type': 'purchase','default_l10n_ec_liquidation':True}"
 										options="{'no_create': True}" />
 									<field name="withhold_id"
 										attrs="{'invisible': [('withhold_id', '=', False)]}"

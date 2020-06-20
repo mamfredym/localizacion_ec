@@ -264,13 +264,13 @@ def get_domain(invoice_type, include_state=True):
     """
     invoice_type_bd, debit_note, liquidation = get_invoice_type_reverse(
         invoice_type)
-    domain_state_data = {'out_invoice': [('state', 'in', ('open', 'paid', 'cancel'))],
-                         'out_refund': [('state', 'in', ('open', 'paid', 'cancel'))],
-                         'in_refund': [('state', 'in', ('open', 'paid', 'cancel'))],
-                         'debit_note_out': [('state', 'in', ('open', 'paid', 'cancel'))],
-                         'debit_note_in': [('state', 'in', ('open', 'paid', 'cancel'))],
-                         'liquidation': [],
-                         'in_invoice': [('state', 'in', ('open', 'paid', 'cancel'))],
+    domain_state_data = {'out_invoice': [('state', '=', 'posted')],
+                         'out_refund': [('state', '=', 'posted')],
+                         'in_refund': [('state', '=', 'posted')],
+                         'debit_note_out': [('state', '=', 'posted')],
+                         'debit_note_in': [('state', '=', 'posted')],
+                         'liquidation': [('state', '=', 'posted')],
+                         'in_invoice': [('state', '=', 'posted')],
                          'withhold_sale': [],
                          'withhold_purchase': [],
                          }
