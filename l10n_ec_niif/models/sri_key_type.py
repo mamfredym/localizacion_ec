@@ -31,7 +31,7 @@ class sri_key_type(models.Model):
     password = fields.Char('Clave de firma', readonly=True, states=STATES)
     private_key = fields.Text(string='Private Key', readonly=True)
     active = fields.Boolean('Activo?', default=True)
-    company_id = fields.Many2one('res.company', 'Compañia', default=lambda self: self.env.user.company_id)
+    company_id = fields.Many2one('res.company', 'Compañia', default=lambda self: self.env.company)
     state = fields.Selection([
         ('unverified', 'Sin Verificar'),
         ('valid', 'Firma Valida'),
@@ -180,6 +180,6 @@ class sri_key_type(models.Model):
     def recompute_date_expire(self):
         template_mail_notification_keys_expired = self.env.ref(
             'l10n_ec_niif.email_template_keys_expired')
-        company = self.env.user.company_id
+        company = self.env.company
         template_mail_notification_keys_expired.send_mail(company.id)
         return True

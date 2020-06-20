@@ -121,24 +121,23 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
         # esta funcion debe crear la data del documento en el xml(node_root)
         raise UserError("Debe reemplazar esta funcion l10n_ec_action_generate_xml_data en su clase heredada")
 
-    def _get_info_aditional(self, field_name, record_id):
-        SQL = """SELECT info.name,
-                        info.description
-                    FROM xml_info_aditional info
-                    WHERE info.""" + field_name + """ = %(record_id)s
-            """
-        self.env.cr.execute(SQL, {
-            'field_name': field_name,
-            'record_id': record_id,
-        })
-        info_data = self.env.cr.dictfetchall()
+    def _l10n_ec_get_info_aditional(self):
+        # TODO: implementar modelo para informacion adicional
+        info_data = []
         return info_data
 
     @api.model
-    def add_info_adicional(self, infoAditionalNode, info_data):
+    def l10n_ec_add_info_adicional(self, NodeRoot):
         util_model = self.env['l10n_ec.utils']
+        infoAdicional = SubElement(NodeRoot, "infoAdicional")
+        info_data = self._l10n_ec_get_info_aditional()
+        if not info_data:
+            info_data = [{
+                'name': 'OtroCampo',
+                'description': 'Otra Informacion',
+            }]
         for line in info_data:
-            campoAdicional = SubElement(infoAditionalNode, "campoAdicional")
+            campoAdicional = SubElement(infoAdicional, "campoAdicional")
             campoAdicional.set("nombre", util_model._clean_str(line.get("name", "OtroCampo")))
             campoAdicional.text = util_model._clean_str(line.get("description", "Otra Informacion"))
         return True

@@ -64,17 +64,17 @@ class AccountMove(models.Model):
     _name = "account.move"
 
     @api.depends('type', 'l10n_ec_point_of_emission_id', 'l10n_ec_debit_note', 'l10n_ec_liquidation')
-    def _compute_ln10_ec_is_enviroment_production(self):
+    def _compute_ln10_ec_is_environment_production(self):
         xml_model = self.env['sri.xml.data']
         for invoice in self:
             if invoice.is_invoice():
                 invoice_type = invoice.l10n_ec_get_invoice_type()
-                invoice.ln10_ec_is_enviroment_production = xml_model.ln10_ec_is_enviroment_production(invoice_type, invoice.l10n_ec_point_of_emission_id)
+                invoice.ln10_ec_is_environment_production = xml_model.ln10_ec_is_environment_production(invoice_type, invoice.l10n_ec_point_of_emission_id)
             else:
-                invoice.ln10_ec_is_enviroment_production =False
+                invoice.ln10_ec_is_environment_production =False
 
-    ln10_ec_is_enviroment_production = fields.Boolean('Es Ambiente de Produccion?',
-                                              compute='_compute_ln10_ec_is_enviroment_production', store=True, index=True)
+    ln10_ec_is_environment_production = fields.Boolean('Es Ambiente de Produccion?',
+                                              compute='_compute_ln10_ec_is_environment_production', store=True, index=True)
     l10n_ec_original_invoice_id = fields.Many2one(comodel_name='account.move',
                                                   string="Original Invoice")
     l10n_ec_credit_note_ids = fields.One2many(comodel_name="account.move",
@@ -617,7 +617,7 @@ class AccountMove(models.Model):
                     current_withhold.action_done()
                 # proceso de facturacion electronica
                 if move.is_invoice():
-                    move.l10n_ec_action_generate_xml_data()
+                    move.l10n_ec_action_create_xml_data()
         return super(AccountMove, self).action_post()
 
     def unlink(self):
@@ -805,13 +805,12 @@ class AccountMove(models.Model):
         #         )
         return message_list
 
-    def l10n_ec_action_generate_xml_data(self):
+    def l10n_ec_action_create_xml_data(self):
         xml_model = self.env['sri.xml.data']
         xml_recs = self.env['sri.xml.data'].browse()
         #si por context me pasan que no cree la parte electronica
         if self.env.context.get('no_create_electronic', False):
             return True
-        l10n_ec_type_conection_sri = self.env.company.l10n_ec_type_conection_sri
         #Si ya se encuentra autorizado, no hacer nuevamente el proceso de generacion del xml
         for invoice in self.filtered(lambda x: not x.ln10_ec_xml_data_id):
             invoice_type = invoice.l10n_ec_get_invoice_type()
@@ -822,14 +821,15 @@ class AccountMove(models.Model):
                     if not retention.no_number:
                         #si el documento esta habilitado, hacer el proceso electronico
                         if xml_model._is_document_authorized('withhold_purchase'):
-                            sri_xml_vals = retention._prepare_l10n_ec_sri_xml_values(l10n_ec_type_conection_sri)
+                            company = retention.company_id or self.env.company
+                            sri_xml_vals = retention._prepare_l10n_ec_sri_xml_values(company.l10n_ec_type_conection_sri)
                             sri_xml_vals['withhold_id'] = retention.id
                             new_xml_rec = xml_model.create(sri_xml_vals)
                             xml_recs += new_xml_rec
             # si el documento esta habilitado, hacer el proceso electronico
             elif invoice.l10n_ec_point_of_emission_id.type_emission == 'electronic' and \
                     xml_model._is_document_authorized(invoice_type):
-                message_list = self.l10n_ec_validate_fields_required_fe()
+                message_list = invoice.l10n_ec_validate_fields_required_fe()
                 if message_list:
                     raise UserError("\n".join(message_list))
                 # asegurarse que el documento tenga fecha
@@ -841,7 +841,8 @@ class AccountMove(models.Model):
                     invoice.invoice_date = fields.Date.context_today(invoice)
                     invoice.with_context(check_move_validity=False)._onchange_invoice_date()
                 # *********************************************************************************************
-                sri_xml_vals = invoice._prepare_l10n_ec_sri_xml_values(l10n_ec_type_conection_sri)
+                company = invoice.company_id or self.env.company
+                sri_xml_vals = invoice._prepare_l10n_ec_sri_xml_values(company.l10n_ec_type_conection_sri)
                 #factura
                 if invoice_type == 'out_invoice':
                     sri_xml_vals['invoice_out_id'] = invoice.id
@@ -857,12 +858,7 @@ class AccountMove(models.Model):
                 new_xml_rec = xml_model.create(sri_xml_vals)
                 xml_recs += new_xml_rec
         if xml_recs:
-            send_file = True
-            #en modo offline no enviar el documento inmeditamente
-            #pasarlo a cola para q se envie por debajo
-            if l10n_ec_type_conection_sri == 'offline':
-                send_file = False
-            xml_recs.process_document_electronic(send_file)
+            xml_recs.process_document_electronic()
         return True
 
     @api.model
@@ -931,7 +927,7 @@ class AccountMove(models.Model):
 
     def l10n_ec_get_document_date(self):
         # esta funcion debe devolver la fecha de emision del documento
-        raise self.invoice_date
+        return self.invoice_date
 
     def l10n_ec_get_document_version_xml(self):
         # esta funcion debe devolver la version del xml que se debe usar
@@ -1082,10 +1078,7 @@ class AccountMove(models.Model):
             #                              decimales=currency.decimal_places)
         # Las retenciones solo aplican para el esquema de gasolineras
         # retenciones = SubElement(node,"retenciones")
-        infoAdicional = SubElement(node, "infoAdicional")
-        campoAdicional = SubElement(infoAdicional, "campoAdicional")
-        campoAdicional.set("nombre", "OtroCampo")
-        campoAdicional.text = "Otra Informacion"
+        self.l10n_ec_add_info_adicional(node)
         return node
 
     def l10n_ec_get_info_credit_note(self, node):
@@ -1123,7 +1116,7 @@ class AccountMove(models.Model):
         SubElement(infoNotaCredito, "razonSocialComprador").text = util_model._clean_str(
             self.commercial_partner_id.name[:300])
         SubElement(infoNotaCredito, "identificacionComprador").text = self.commercial_partner_id.vat
-        company = self.env.user.company_id
+        company = self.env.company
         numero_contribuyente_especial = company.get_contribuyente_data(self.invoice_date)
         SubElement(infoNotaCredito, "contribuyenteEspecial").text = numero_contribuyente_especial
         SubElement(infoNotaCredito, "obligadoContabilidad").text = util_model.get_obligado_contabilidad(
@@ -1183,10 +1176,7 @@ class AccountMove(models.Model):
             # if line.base_no_iva != 0:
             #     self.l10n_ec_get_total_impuestos(impuestos, '2', '6', line.base_no_iva, 0.0, 'impuesto', 0,
             #                              decimales=currency.decimal_places)
-        infoAdicional = SubElement(node, "infoAdicional")
-        campoAdicional = SubElement(infoAdicional, "campoAdicional")
-        campoAdicional.set("nombre", "OtroCampo")
-        campoAdicional.text = "Otra Informacion"
+        self.l10n_ec_add_info_adicional(node)
         return node
 
     def l10n_ec_get_info_debit_note(self, node):
@@ -1220,7 +1210,7 @@ class AccountMove(models.Model):
         SubElement(infoNotaDebito, "razonSocialComprador").text = util_model._clean_str(
             self.commercial_partner_id.name[:300])
         SubElement(infoNotaDebito, "identificacionComprador").text = self.commercial_partner_id.vat
-        company = self.env.user.company_id
+        company = self.env.company
         numero_contribuyente_especial = company.get_contribuyente_data(self.invoice_date)
         SubElement(infoNotaDebito, "contribuyenteEspecial").text = numero_contribuyente_especial
         SubElement(infoNotaDebito, "obligadoContabilidad").text = util_model.get_obligado_contabilidad(
@@ -1253,16 +1243,12 @@ class AccountMove(models.Model):
             self.l10n_ec_get_motives(motivos,
                              util_model._clean_str(line.product_id and line.product_id.name[:300] or line.name[:300]),
                              line.price_subtotal)
-        infoAdicional = SubElement(node, "infoAdicional")
-        # TODO: agregar infoAdicional
-        campoAdicional = SubElement(infoAdicional, "campoAdicional")
-        campoAdicional.set("nombre", "OtroCampo")
-        campoAdicional.text = "Otra Informacion"
+        self.l10n_ec_add_info_adicional(node)
         return node
 
     def l10n_ec_get_info_liquidation(self, node):
         util_model = self.env['l10n_ec.utils']
-        company = self.env.user.company_id
+        company = self.env.company
         infoLiquidacionCompra = SubElement(node, "infoLiquidacionCompra")
         fecha_emision = self.invoice_date.strftime(util_model.get_formato_date())
         SubElement(infoLiquidacionCompra, "fechaEmision").text = fecha_emision
@@ -1414,11 +1400,7 @@ class AccountMove(models.Model):
                 # if reembolso.total_base_no_iva != 0:
                 #     self.l10n_ec_get_total_impuestos(detalleImpuestos, '2', '6', reembolso.total_base_no_iva, 0.0,
                 #                              'detalleImpuesto', 0, True)
-        infoAdicional = SubElement(node, "infoAdicional")
-        # TODO: agregar infoAdicional
-        campoAdicional = SubElement(infoAdicional, "campoAdicional")
-        campoAdicional.set("nombre", "OtroCampo")
-        campoAdicional.text = "Otra Informacion"
+        self.l10n_ec_add_info_adicional(node)
         return node
 
 AccountMove()

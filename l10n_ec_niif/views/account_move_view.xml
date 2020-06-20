@@ -61,7 +61,7 @@
                             attrs="{'invisible':[('ln10_ec_xml_data_id','=',False)]}" />
                         <field name="ln10_ec_xml_data_id"
                             attrs="{'invisible':[('ln10_ec_xml_data_id','=',False)]}" />
-                        <field name="ln10_ec_is_enviroment_production" invisible="1" />
+                        <field name="ln10_ec_is_environment_production" invisible="1" />
                         <field name="l10n_ec_withhold_required" invisible="1"/>
                     </group>
                 </xpath>

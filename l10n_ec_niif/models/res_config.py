@@ -120,16 +120,3 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.l10n_ec_print_ride_detail3', readonly=False)
     l10n_ec_sri_payment_id = fields.Many2one('l10n_ec.sri.payment.method', string=u'S.R.I Payment Method',
         related='company_id.l10n_ec_sri_payment_id', readonly=False)
-
-    @api.onchange('l10n_ec_type_conection_sri', )
-    def onchange_l10n_ec_type_conection_sri(self):
-        if self.l10n_ec_type_conection_sri == 'online':
-            self.l10n_ec_ws_receipt_test = "https://celcer.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantes?wsdl"
-            self.l10n_ec_ws_auth_test = "https://celcer.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantes?wsdl"
-            self.l10n_ec_ws_receipt_production = "https://cel.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantes?wsdl"
-            self.l10n_ec_ws_auth_production = "https://cel.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantes?wsdl"
-        else:
-            self.l10n_ec_ws_receipt_test = "https://celcer.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl"
-            self.l10n_ec_ws_auth_test = "https://celcer.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl"
-            self.l10n_ec_ws_receipt_production = "https://cel.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl"
-            self.l10n_ec_ws_auth_production = "https://cel.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl"

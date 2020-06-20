@@ -166,6 +166,7 @@ class L10EcPointOfEmission(models.Model):
         '''
         self.ensure_one()
         auth_line_model = self.env['l10n_ec.sri.authorization.line']
+        xml_model = self.env['sri.xml.data']
         if company is None:
             company = self.env.company
         if not emission_date:
@@ -194,7 +195,12 @@ class L10EcPointOfEmission(models.Model):
                 ('authorization_id.start_date', '<=', emission_date),
                 ('authorization_id.expiration_date', '>=', emission_date),
             ], order="first_sequence", limit=1)
-        if self.type_emission in ('pre_printed', 'auto_printer'):
+        # mostrar excepcion si el punto de emision es electronico
+        # pero para el tipo de documento no se esta en produccion aun(ambiente pruebas)
+        force_preprint = False
+        if self.type_emission == 'electronic' and not xml_model.ln10_ec_is_environment_production(invoice_type, self):
+            force_preprint = True
+        if self.type_emission in ('pre_printed', 'auto_printer') or force_preprint:
             if not doc_find:
                 raise Warning(_(
                     "It is not possible to find authorization for the document type %s "
@@ -287,7 +293,7 @@ class L10EcPointOfEmission(models.Model):
         # mostrar excepcion si el punto de emision es electronico
         # pero para el tipo de documento no se esta en produccion aun(ambiente pruebas)
         force_preprint = False
-        if printer.type_emission == 'electronic' and not xml_model.ln10_ec_is_enviroment_production(invoice_type, printer):
+        if printer.type_emission == 'electronic' and not xml_model.ln10_ec_is_environment_production(invoice_type, printer):
             force_preprint = True
             raise_exception = True
         if printer.type_emission in ('pre_printed', 'auto_printer') or force_preprint:
@@ -302,7 +308,7 @@ class L10EcPointOfEmission(models.Model):
             first_number_electronic = self.env.context.get(
                 'first_number_electronic', '')
             # tomar el primer numero para facturacion electronica si esta en produccion
-            if not first_number_electronic and printer and xml_model.ln10_ec_is_enviroment_production(invoice_type):
+            if not first_number_electronic and printer and xml_model.ln10_ec_is_environment_production(invoice_type):
                 first_number_electronic = printer._get_first_number_electronic(
                     invoice_type, printer)
             # si tengo un secuencial y es menor al configurado como el inicio de facturacion electronica

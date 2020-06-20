@@ -21,7 +21,7 @@ class res_company(models.Model):
         #expiration_dates = False
         keys_expired = self.env['sri.key.type'].search([])
         notification = []
-        company = self.env.user.company_id
+        company = self.env.company
         authorization_days = company.authorization_expired_days
         if authorization_days <= 0:
             authorization_days = 20
