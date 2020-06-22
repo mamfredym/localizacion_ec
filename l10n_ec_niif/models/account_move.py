@@ -107,15 +107,15 @@ class AccountMove(models.Model):
         default=lambda self: self.env.context.get('default_l10n_ec_debit_note', False))
     l10n_ec_liquidation = fields.Boolean(string="Liquidation of Purchases?",
         default=lambda self: self.env.context.get('default_l10n_ec_liquidation', False))
-    l10n_ec_dias_credito = fields.Integer(string='Días Crédito', compute='_compute_l10n_ec_dias_credito', store=True)
+    l10n_ec_credit_days = fields.Integer(string='Días Crédito', compute='_compute_l10n_ec_credit_days', store=True)
 
     @api.depends('invoice_date', 'invoice_date_due')
-    def _compute_l10n_ec_dias_credito(self):
+    def _compute_l10n_ec_credit_days(self):
         now = fields.Date.context_today(self)
         for invoice in self:
             date_invoice = invoice.invoice_date or now
             date_due = invoice.invoice_date_due or date_invoice
-            invoice.l10n_ec_dias_credito = (date_due - date_invoice).days
+            invoice.l10n_ec_credit_days = (date_due - date_invoice).days
 
     @api.depends(
         'partner_id.l10n_ec_type_sri',
@@ -1042,8 +1042,8 @@ class AccountMove(models.Model):
             SubElement(pago, "total").text = util_model.formato_numero(self.amount_total)
             if self.invoice_payment_term_id:
                 if self.invoice_payment_term_id.l10n_ec_sri_type == 'credito':
-                    if self.l10n_ec_dias_credito > 0:
-                        SubElement(pago, "plazo").text = util_model.formato_numero(self.l10n_ec_dias_credito, 0)
+                    if self.l10n_ec_credit_days > 0:
+                        SubElement(pago, "plazo").text = util_model.formato_numero(self.l10n_ec_credit_days, 0)
                         SubElement(pago, "unidadTiempo").text = 'dias'
         # Lineas de Factura
         detalles = SubElement(node, "detalles")
@@ -1335,8 +1335,8 @@ class AccountMove(models.Model):
             SubElement(pago, "total").text = util_model.formato_numero(self.amount_total)
             if self.invoice_payment_term_id:
                 if self.invoice_payment_term_id.l10n_ec_sri_type == 'credito':
-                    if self.l10n_ec_dias_credito > 0:
-                        SubElement(pago, "plazo").text = util_model.formato_numero(self.l10n_ec_dias_credito, 0)
+                    if self.l10n_ec_credit_days > 0:
+                        SubElement(pago, "plazo").text = util_model.formato_numero(self.l10n_ec_credit_days, 0)
                         SubElement(pago, "unidadTiempo").text = 'dias'
         detalles = SubElement(node, "detalles")
         for line in self.invoice_line_ids:
