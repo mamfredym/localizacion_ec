@@ -1,6 +1,6 @@
 
 from odoo.tests import common
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 import datetime
 
 
@@ -146,15 +146,23 @@ class TestModule(common.TransactionCase):
                 'expiration_date': '2020-8-20',
             })
 
+    def test_check_logic_dates_authorization(self):
+        with self.assertRaises(ValidationError):
+            self.test_auth2.write({
+                'start_date': '2020-8-20',
+                'expiration_date': '2020-8-1',
+            })
+
     def test_invoice_date_range_outside(self):
         with self.assertRaises(UserError):
             self.test_invoice1.write({
                 'invoice_date': '2020-9-1',
             })
 
-    def test_sequence_duplicated(self):
-        with self.assertRaises(UserError):
+    def test_check_duplicate_sequence(self):
+        with self.assertRaises(ValidationError):
             self.test_doc2.write({
                 'first_sequence': '1',
                 'last_sequence': '100',
+                'point_of_emission_id': self.test_pofe1.id,
             })

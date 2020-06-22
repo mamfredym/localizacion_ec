@@ -123,20 +123,6 @@ class L10nECSriAuthorizationLine(models.Model):
                 raise ValidationError(_("The first sequence %s must be lower than last sequence %s") % (
                     line.first_sequence, line.last_sequence))
 
-    @api.constrains('first_sequence', 'last_sequence')
-    def _check_sequence_duplicated(self):
-        for sequence in self.filtered('document_type'):
-            domain = [
-                ('first_sequence', '<', sequence.last_sequence),
-                ('last_sequence', '>', sequence.first_sequence),
-                ('document_type', '=', sequence.document_type),
-                ('id', '!=', sequence.id),
-            ]
-            nsequence = self.search_count(domain)
-            if nsequence:
-                raise UserError(
-                    _('You cannot set one sequence to overlap another.'))
-
     @api.constrains(
         'padding',
     )
