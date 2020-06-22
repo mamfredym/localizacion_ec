@@ -46,13 +46,13 @@ class ResConfigSettings(models.TransientModel):
     l10n_ec_key_type_id = fields.Many2one('sri.key.type', 'Tipo de Llave',
         related='company_id.l10n_ec_key_type_id', readonly=False)
     l10n_ec_ws_receipt_test = fields.Char('URL del WS de Pruebas de SRI para Recepción de Documentos',
-        related='company_id.l10n_ec_ws_receipt_test', readonly=False)
+        config_parameter='l10n_ec_ws_receipt_test')
     l10n_ec_ws_auth_test = fields.Char('URL del WS de Pruebas de SRI para Autorización de Documentos',
-        related='company_id.l10n_ec_ws_auth_test', readonly=False)
+        config_parameter='l10n_ec_ws_auth_test')
     l10n_ec_ws_receipt_production = fields.Char('URL del WS de Producción de SRI para Recepción de Documentos',
-        related='company_id.l10n_ec_ws_receipt_production', readonly=False)
+        config_parameter='l10n_ec_ws_receipt_production')
     l10n_ec_ws_auth_production = fields.Char('URL del WS de Producción SRI para Autorización de Documentos',
-        related='company_id.l10n_ec_ws_auth_production', readonly=False)
+        config_parameter='l10n_ec_ws_auth_production')
     l10n_ec_electronic_invoice = fields.Boolean('Autorizado Facturas?',
         related='company_id.l10n_ec_electronic_invoice', readonly=False)
     l10n_ec_electronic_withhold = fields.Boolean('Autorizado Retenciones?',

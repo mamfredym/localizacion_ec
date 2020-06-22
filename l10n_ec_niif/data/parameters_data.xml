@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+    <record id="l10n_ec_ws_receipt_test_parameter"
+            model="ir.config_parameter">
+        <field name="key">l10n_ec_ws_receipt_test</field>
+        <field name="value">https://celcer.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl</field>
+    </record>
+
+    <record id="l10n_ec_ws_auth_test_parameter"
+            model="ir.config_parameter">
+        <field name="key">l10n_ec_ws_auth_test</field>
+        <field name="value">https://celcer.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl</field>
+    </record>
+
+    <record id="l10n_ec_ws_receipt_production_parameter"
+            model="ir.config_parameter">
+        <field name="key">l10n_ec_ws_receipt_production</field>
+        <field name="value">https://cel.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl</field>
+    </record>
+
+    <record id="l10n_ec_ws_auth_production_parameter"
+            model="ir.config_parameter">
+        <field name="key">l10n_ec_ws_auth_production</field>
+        <field name="value">https://cel.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl</field>
+    </record>
+</odoo>

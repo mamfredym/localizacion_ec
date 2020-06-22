@@ -17,6 +17,7 @@
     'data': [
         'security/ir.model.access.csv',
         'security/security.xml',
+        'data/parameters_data.xml',
         'data/l10n_latam.document.type.csv',
         'data/l10n_latam_identification_type_data.xml',
         'data/l10n_ec_identification_type_data.xml',

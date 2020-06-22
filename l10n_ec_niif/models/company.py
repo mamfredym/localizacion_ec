@@ -51,14 +51,6 @@ class ResCompany(models.Model):
         ('offline', 'Off-Line'),
     ], string='Tipo de conexion con SRI', default='offline')
     l10n_ec_key_type_id = fields.Many2one('sri.key.type', 'Tipo de Llave', ondelete="restrict")
-    l10n_ec_ws_receipt_test = fields.Char('URL del WS de Pruebas de SRI para Recepción de Documentos',
-        default='https://celcer.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl')
-    l10n_ec_ws_auth_test = fields.Char('URL del WS de Pruebas de SRI para Autorización de Documentos',
-        default='https://celcer.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl')
-    l10n_ec_ws_receipt_production = fields.Char('URL del WS de Producción de SRI para Recepción de Documentos',
-        default='https://cel.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl')
-    l10n_ec_ws_auth_production = fields.Char('URL del WS de Producción SRI para Autorización de Documentos',
-        default='https://cel.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl')
     l10n_ec_electronic_invoice = fields.Boolean('Autorizado Facturas?')
     l10n_ec_electronic_withhold = fields.Boolean('Autorizado Retenciones?')
     l10n_ec_electronic_credit_note = fields.Boolean('Autorizado Notas de Crédito?')

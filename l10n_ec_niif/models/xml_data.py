@@ -155,41 +155,53 @@ class SriXmlData(models.Model):
     ]
 
     @api.model
-    def get_current_wsClient(self, conection_type):
+    def get_current_wsClient(self, environment, url_type):
+        '''
+
+        :param environment: tipo de ambiente, puede ser:
+            1: Pruebas
+            2: Produccion
+        :param url_type: el tipo de url a solicitar, puede ser:
+            reception: url para recepcion de documentos
+            authorization: url para autorizacion de documentos
+        :return:
+        '''
         # Debido a que el servidor me esta rechazando las conexiones contantemente, es necesario que se cree una sola instancia
         # Para conexion y asi evitar un reinicio constante de la comunicacion
         wsClient = None
         company = self.env.company
+        ws_url = self._get_url_ws(environment, url_type)
         try:
-            if conection_type == 'ws_receipt_test':
-                if self._ws_receipt_test and self._ws_receipt_test.wsdl.url == company.l10n_ec_ws_receipt_test:
-                    wsClient = self._ws_receipt_test
-                else:
-                    wsClient = Client(company.l10n_ec_ws_receipt_test, timeout=company.l10n_ec_ws_timeout)
-                    self._ws_receipt_test = wsClient
-            if conection_type == 'ws_auth_test':
-                if self._ws_auth_test and self._ws_auth_test.wsdl.url == company.l10n_ec_ws_auth_test:
-                    wsClient = self._ws_auth_test
-                else:
-                    wsClient = Client(company.l10n_ec_ws_auth_test, timeout=company.l10n_ec_ws_timeout)
-                    self._ws_auth_test = wsClient
-            if conection_type == 'ws_receipt_production':
-                if self._ws_receipt_production and self._ws_receipt_production.wsdl.url == company.l10n_ec_ws_receipt_production:
-                    wsClient = self._ws_receipt_production
-                else:
-                    wsClient = Client(company.l10n_ec_ws_receipt_production,
-                                      timeout=company.l10n_ec_ws_timeout)
-                    self._ws_receipt_production = wsClient
-            if conection_type == 'ws_auth_production':
-                if self._ws_auth_production and self._ws_auth_production.wsdl.url == company.l10n_ec_ws_auth_production:
-                    wsClient = self._ws_auth_production
-                else:
-                    wsClient = Client(company.l10n_ec_ws_auth_production,
-                                      timeout=company.l10n_ec_ws_timeout)
-                    self._ws_auth_production = wsClient
+            if environment == '1':
+                if url_type == 'reception':
+                    if self._ws_receipt_test and self._ws_receipt_test.wsdl.url == ws_url:
+                        wsClient = self._ws_receipt_test
+                    else:
+                        wsClient = Client(ws_url, timeout=company.l10n_ec_ws_timeout)
+                        self._ws_receipt_test = wsClient
+                elif url_type == 'authorization':
+                    if self._ws_auth_test and self._ws_auth_test.wsdl.url == ws_url:
+                        wsClient = self._ws_auth_test
+                    else:
+                        wsClient = Client(ws_url, timeout=company.l10n_ec_ws_timeout)
+                        self._ws_auth_test = wsClient
+            elif environment == '1':
+                if url_type == 'reception':
+                    if self._ws_receipt_production and self._ws_receipt_production.wsdl.url == ws_url:
+                        wsClient = self._ws_receipt_production
+                    else:
+                        wsClient = Client(ws_url, timeout=company.l10n_ec_ws_timeout)
+                        self._ws_receipt_production = wsClient
+                if url_type == 'authorization':
+                    if self._ws_auth_production and self._ws_auth_production.wsdl.url == ws_url:
+                        wsClient = self._ws_auth_production
+                    else:
+                        wsClient = Client(ws_url, timeout=company.l10n_ec_ws_timeout)
+                        self._ws_auth_production = wsClient
         except Exception as e:
             _logger.warning(
-                u"Error in Conection with web services of SRI, set in contingency mode. Error: %s", tools.ustr(e))
+                "Error in Connection with web services of SRI: %s. Error: %s",
+                ws_url, tools.ustr(e))
         return wsClient
 
     def get_current_document(self):
@@ -221,58 +233,6 @@ class SriXmlData(models.Model):
         res = '1'
         if company.l10n_ec_type_environment == 'production':
             res = '2'
-        return res
-
-    @api.model
-    def check_emision(self, environment):
-        """Este metodo debera verificar la conexion con el ws del SRI
-        :param environment: Puede ser los siguientes ambientes :
-            1 : Emision normal
-            2 : emision en Contingencia
-        :rtype: Devuelve el tipo de emision que esta disponible en este momento
-        """
-        company = self.env.company
-        if not company.l10n_ec_ws_receipt_test:
-            raise UserError(
-                _("Debe configurar la direccion del webservice de pruebas del SRI"))
-        if not company.l10n_ec_ws_receipt_production:
-            raise UserError(
-                _("Debe configurar la direccion del webservice de produccion del SRI"))
-        # Durante pruebas solo enviar 1
-        res = '1'
-        # CHECKME: se debe asumir que hay conexion en la creacion de los datos
-        if 'sign_now' in self.env.context and not self.env.context.get('sign_now', False):
-            return res
-        if environment == '1':
-            try:
-                code = urllib.request.urlopen(company.l10n_ec_ws_receipt_test).getcode()
-                _logger.info("Conection Succesful with %s. Code %s",
-                             company.l10n_ec_ws_receipt_test, code)
-                if code == 200:
-                    res = '1'
-                else:
-                    res = '2'
-            except Exception as e:
-                _logger.warning(
-                    "Error in Conection with %s, set in contingency mode. ERROR: %s",
-                    company.l10n_ec_ws_receipt_test, tools.ustr(e))
-                # no pasar que es contingencia
-                res = '1'
-        elif environment == '2':
-            try:
-                code = urllib.request.urlopen(
-                    company.l10n_ec_ws_receipt_production).getcode()
-                _logger.info("Conection Succesful with %s. Code %s",
-                             company.l10n_ec_ws_receipt_production, code)
-                if code == 200:
-                    res = '1'
-                else:
-                    res = '2'
-            except Exception as e:
-                _logger.warning("Error in Conection with %s, set in contingency mode. ERROR: %s",
-                                company.l10n_ec_ws_receipt_production, tools.ustr(e))
-                # no pasar que es contingencia
-                res = '1'
         return res
 
     @api.model
@@ -834,26 +794,28 @@ class SriXmlData(models.Model):
         return True
 
     @api.model
-    def _ger_url_ws(self, environment, url_type):
+    def _get_url_ws(self, environment, url_type):
         """
         Retorna la url para pruebas o produccion segun el tipo de ambiente
+        @:param environment: tipo de ambiente, puede ser:
+            1: Pruebas
+            2: Produccion
         @param url_type: el tipo de url a solicitar, puede ser:
             reception: url para recepcion de documentos
             authorization: url para autorizacion de documentos
         """
-        company = self.env.company
+        ICPSudo = self.env['ir.config_parameter'].sudo()
         url_data = ""
-        # pruebas
         if environment == '1':
             if url_type == 'reception':
-                url_data = company.l10n_ec_ws_receipt_test
+                url_data = ICPSudo.get_param('l10n_ec_ws_receipt_test')
             elif url_type == 'authorization':
-                url_data = company.l10n_ec_ws_auth_test
+                url_data = ICPSudo.get_param('l10n_ec_ws_auth_test')
         elif environment == '2':
             if url_type == 'reception':
-                url_data = company.l10n_ec_ws_receipt_production
+                url_data = ICPSudo.get_param('l10n_ec_ws_receipt_production')
             elif url_type == 'authorization':
-                url_data = company.l10n_ec_ws_auth_production
+                url_data = ICPSudo.get_param('l10n_ec_ws_auth_production')
         return url_data
 
     def action_send_xml_to_check(self):
@@ -902,42 +864,38 @@ class SriXmlData(models.Model):
         # si esta esperando autorizacion, una tarea cron debe encargarse de eso
         if self.state == 'waiting' and not self.env.context.get('no_send', False):
             return True
-        ws_receipt = self._ger_url_ws(environment, 'reception')
-        type_url = environment == '1' and 'test' or 'production'
-        if ws_receipt:
-            try:
-                receipt_client = self.get_current_wsClient(
-                    'ws_receipt_' + type_url)
-                auth_client = self.get_current_wsClient('ws_auth_' + type_url)
-                response = self._send_xml_data_to_valid(xml_field, receipt_client, auth_client)
-                res_ws_valid, msj, raise_error, previous_authorized = self._process_response_check(response)
-                message_data.extend(msj)
-                # si no hay respuesta, el webservice no esta respondiendo, la tarea cron se debe encargar de este proceso
-                # solo cuando no hay errores, si hay errores el webservice esta respondiendo y debo mostrar los msj al usuario
-                if not res_ws_valid and not raise_error:
-                    send_again = True
-                elif res_ws_valid and not previous_authorized:
-                    response_auth = self._send_xml_data_to_autorice(xml_field, auth_client)
-                    # si el sri no me respondio o no es la respuesta que esperaba
-                    # verificar si quedo en procesamiento antes de volver a autorizar
-                    if not response_auth or isinstance(response_auth.autorizaciones, str):
-                        response_check = self._send_xml_data_to_valid(xml_field, receipt_client, auth_client)
-                        res_ws_valid, msj, raise_error, previous_authorized = self._process_response_check(
-                            response_check)
-                        # si se intento una vez mas y no se pudo autorizar , dejar el documento en espera de autorizacion para que la tarea cron se encargue de eso
-                        if not res_ws_valid and not previous_authorized:
-                            self.write({'state': 'waiting'})
-                    else:
-                        authorized, msj = self._process_response_autorization(response_auth)
-                        message_data.extend(msj)
-                messages_error, raise_error = self._create_messaje_response(
-                    message_data, authorized, raise_error)
-            except Exception as e:
-                self.write({'state': 'rejected'})
-                # FIX: pasar a unicode para evitar problemas
-                _logger.warning(
-                    "Error send xml to server %s. ERROR: %s", ws_receipt, tools.ustr(e))
+        try:
+            receipt_client = self.get_current_wsClient(environment, 'reception')
+            auth_client = self.get_current_wsClient(environment, 'authorization')
+            response = self._send_xml_data_to_valid(xml_field, receipt_client, auth_client)
+            res_ws_valid, msj, raise_error, previous_authorized = self._process_response_check(response)
+            message_data.extend(msj)
+            # si no hay respuesta, el webservice no esta respondiendo, la tarea cron se debe encargar de este proceso
+            # solo cuando no hay errores, si hay errores el webservice esta respondiendo y debo mostrar los msj al usuario
+            if not res_ws_valid and not raise_error:
                 send_again = True
+            elif res_ws_valid and not previous_authorized:
+                response_auth = self._send_xml_data_to_autorice(xml_field, auth_client)
+                # si el sri no me respondio o no es la respuesta que esperaba
+                # verificar si quedo en procesamiento antes de volver a autorizar
+                if not response_auth or isinstance(response_auth.autorizaciones, str):
+                    response_check = self._send_xml_data_to_valid(xml_field, receipt_client, auth_client)
+                    res_ws_valid, msj, raise_error, previous_authorized = self._process_response_check(
+                        response_check)
+                    # si se intento una vez mas y no se pudo autorizar , dejar el documento en espera de autorizacion para que la tarea cron se encargue de eso
+                    if not res_ws_valid and not previous_authorized:
+                        self.write({'state': 'waiting'})
+                else:
+                    authorized, msj = self._process_response_autorization(response_auth)
+                    message_data.extend(msj)
+            messages_error, raise_error = self._create_messaje_response(
+                message_data, authorized, raise_error)
+        except Exception as e:
+            self.write({'state': 'rejected'})
+            # FIX: pasar a unicode para evitar problemas
+            _logger.warning(
+                "Error send xml to server. ERROR: %s", tools.ustr(e))
+            send_again = True
         if send_again:
             return _check_intentos(self.env.context)
         # si llamo de tarea cron, no mostrar excepcion para que se creen los mensajes
@@ -1131,9 +1089,9 @@ class SriXmlData(models.Model):
         if not xml_recs:
             return True
         xml_field = 'file_signed'
-        l10n_ec_type_environment = self._get_environment(company) == '1' and 'test' or 'production'
-        receipt_client = self.get_current_wsClient('ws_receipt_' + l10n_ec_type_environment)
-        auth_client = self.get_current_wsClient('ws_auth_' + l10n_ec_type_environment)
+        environment = self._get_environment(company)
+        receipt_client = self.get_current_wsClient(environment, 'reception')
+        auth_client = self.get_current_wsClient(environment, 'authorization')
         counter = 1
         total = len(xml_recs)
         xml_to_notify_no_autorize = self.browse()
@@ -1257,9 +1215,9 @@ class SriXmlData(models.Model):
         ctx = self.env.context.copy()
         # pasar flag para que en caso de no autorizar, no me cambie estado del documento y seguir intentado
         ctx['no_change_state'] = True
-        l10n_ec_type_environment = self._get_environment(company) == '1' and 'test' or 'production'
-        receipt_client = self.get_current_wsClient('ws_receipt_' + l10n_ec_type_environment)
-        auth_client = self.get_current_wsClient('ws_auth_' + l10n_ec_type_environment)
+        environment = self._get_environment(company)
+        receipt_client = self.get_current_wsClient(environment, 'reception')
+        auth_client = self.get_current_wsClient(environment, 'authorization')
         counter = 1
         total = len(xml_recs)
         xml_to_notify = self.browse()
