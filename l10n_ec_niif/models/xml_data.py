@@ -410,7 +410,7 @@ class SriXmlData(models.Model):
         nombreComercial = 'PRUEBAS SERVICIO DE RENTAS INTERNAS'
         if environment == '2':
             razonSocial = util_model._clean_str(company.partner_id.name)
-            nombreComercial = util_model._clean_str(company.partner_id.business_name or razonSocial)
+            nombreComercial = util_model._clean_str(company.partner_id.l10n_ec_business_name or razonSocial)
         SubElement(infoTributaria, "razonSocial").text = razonSocial
         SubElement(infoTributaria, "nombreComercial").text = nombreComercial
         SubElement(infoTributaria, "ruc").text = company.partner_id.vat
