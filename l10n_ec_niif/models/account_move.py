@@ -1248,7 +1248,12 @@ class AccountMove(models.Model):
 
     def l10n_ec_get_info_liquidation(self, node):
         util_model = self.env['l10n_ec.utils']
-        company = self.env.company
+        company = self.company_id or self.env.company
+        currency = company.currency_id
+        precision_get = self.env['decimal.precision'].precision_get
+        digits_precision_product = precision_get('Product Price')
+        digits_precision_qty = precision_get('Product Unit of Measure')
+        digits_precision_discount = precision_get('Discount')
         infoLiquidacionCompra = SubElement(node, "infoLiquidacionCompra")
         fecha_emision = self.invoice_date.strftime(util_model.get_formato_date())
         SubElement(infoLiquidacionCompra, "fechaEmision").text = fecha_emision
@@ -1282,31 +1287,32 @@ class AccountMove(models.Model):
         SubElement(infoLiquidacionCompra, "direccionProveedor").text = util_model._clean_str(
             self.commercial_partner_id.street[:300])
         SubElement(infoLiquidacionCompra, "totalSinImpuestos").text = util_model.formato_numero(
-            self.amount_untaxed)
+            self.amount_untaxed, decimales=currency.decimal_places)
         SubElement(infoLiquidacionCompra, "totalDescuento").text = util_model.formato_numero(
-            self.l10n_ec_discount_total)
+            self.l10n_ec_discount_total, decimales=currency.decimal_places)
         if self.voucher_type_id and self.voucher_type_id.code == '41':
             SubElement(infoLiquidacionCompra, "codDocReembolso").text = self.voucher_type_id.code
             SubElement(infoLiquidacionCompra, "totalComprobantesReembolso").text = util_model.formato_numero(
-                sum([r.total_invoice for r in self.reembolso_ids]))
+                sum([r.total_invoice for r in self.reembolso_ids]), decimales=currency.decimal_places)
             SubElement(infoLiquidacionCompra, "totalBaseImponibleReembolso").text = util_model.formato_numero(
-                sum([r.total_base_iva for r in self.reembolso_ids]))
+                sum([r.total_base_iva for r in self.reembolso_ids]), decimales=currency.decimal_places)
             SubElement(infoLiquidacionCompra, "totalImpuestoReembolso").text = util_model.formato_numero(
                 sum([r.l10n_ec_iva for r in self.reembolso_ids]) + sum(
-                    [r.total_ice for r in self.reembolso_ids]))
+                    [r.total_ice for r in self.reembolso_ids]), decimales=currency.decimal_places)
         # Definicion de Impuestos
         # xq no itero sobre los impuestos???'
         impuestos = SubElement(infoLiquidacionCompra, "totalConImpuestos")
         if self.l10n_ec_base_iva_0 != 0:
-            self.l10n_ec_get_total_impuestos(impuestos, '2', '0', self.l10n_ec_base_iva_0, 0.0, 'totalImpuesto', 0, False, True)
+            self.l10n_ec_get_total_impuestos(impuestos, '2', '0', self.l10n_ec_base_iva_0, 0.0, 'totalImpuesto', 0,
+                                             False, True, decimales=currency.decimal_places)
         if self.l10n_ec_base_iva != 0:
             # TODO: no se debe asumir que el % del iva es 12, tomar del impuesto directamente
             self.l10n_ec_get_total_impuestos(impuestos, '2', '2', self.l10n_ec_base_iva, self.l10n_ec_iva, 'totalImpuesto',
-                                     12, False, True)
+                                     12, False, True, decimales=currency.decimal_places)
         # if self.base_no_iva != 0:
         #     self.l10n_ec_get_total_impuestos(impuestos, '2', '6', self.base_no_iva, 0.0, 'totalImpuesto', 0, False, True)
         SubElement(infoLiquidacionCompra, "importeTotal").text = util_model.formato_numero(
-            self.amount_total)
+            self.amount_total, decimales=currency.decimal_places)
         SubElement(infoLiquidacionCompra, "moneda").text = self.company_id.currency_id.name
         pagos_data = self.l10n_ec_get_pagos_data()
         pagos = SubElement(infoLiquidacionCompra, "pagos")
@@ -1341,21 +1347,27 @@ class AccountMove(models.Model):
                 line.product_id and line.product_id.name[:300] or line.name[:300])
             SubElement(detalle, "unidadMedida").text = line.uom_id and line.uom_id.display_name or 'N/A'
             # Debido a que los precios son en 2 decimales, es necesario hacer razonable el precio unitario
-            SubElement(detalle, "cantidad").text = util_model.formato_numero(line.quantity, 6)
-            SubElement(detalle, "precioUnitario").text = util_model.formato_numero(line.price_unit, 6)
+            SubElement(detalle, "cantidad").text = util_model.formato_numero(line.quantity,
+                                                                             decimales=digits_precision_qty)
+            SubElement(detalle, "precioUnitario").text = util_model.formato_numero(line.price_unit,
+                                                                                   decimales=digits_precision_product)
             discount = round(((line.price_unit * line.quantity) * ((line.discount or 0.0) / 100)), 2)
             # TODO: hacer un redondeo con las utilidades del sistema
             subtotal = round(((line.price_unit * line.quantity) - discount), 2)
-            SubElement(detalle, "descuento").text = util_model.formato_numero(discount or 0.0, 2)
-            SubElement(detalle, "precioTotalSinImpuesto").text = util_model.formato_numero(subtotal, 2)
+            SubElement(detalle, "descuento").text = util_model.formato_numero(discount or 0.0,
+                                                                              decimales=digits_precision_discount)
+            SubElement(detalle, "precioTotalSinImpuesto").text = util_model.formato_numero(subtotal,
+                                                                                           decimales=currency.decimal_places)
             impuestos = SubElement(detalle, "impuestos")
             if line.l10n_ec_base_iva_0 != 0:
-                self.l10n_ec_get_total_impuestos(impuestos, '2', '0', line.l10n_ec_base_iva_0, 0.0, 'impuesto', 0, False)
+                self.l10n_ec_get_total_impuestos(impuestos, '2', '0', line.l10n_ec_base_iva_0, 0.0, 'impuesto', 0,
+                                                 False, decimales=currency.decimal_places)
             if line.l10n_ec_base_iva != 0:
                 self.l10n_ec_get_total_impuestos(impuestos, '2', '2', line.l10n_ec_base_iva, line.l10n_ec_iva, 'impuesto',
-                                         12, False)
+                                         12, False, decimales=currency.decimal_places)
             # if line.base_no_iva != 0:
-            #     self.l10n_ec_get_total_impuestos(impuestos, '2', '6', line.base_no_iva, 0.0, 'impuesto', 0, False)
+            #     self.l10n_ec_get_total_impuestos(impuestos, '2', '6', line.base_no_iva, 0.0, 'impuesto', 0,
+            #     False, decimales=currency.decimal_places)
         if self.reembolso_ids:
             reembolsos = SubElement(node, "reembolsos")
             for reembolso in self.reembolso_ids:
@@ -1392,14 +1404,14 @@ class AccountMove(models.Model):
                     tipo_iva = '3'
                 if reembolso.total_base_iva_0 != 0:
                     self.l10n_ec_get_total_impuestos(detalleImpuestos, '2', '0', reembolso.total_base_iva_0, 0.0,
-                                             'detalleImpuesto', 0, True)
+                                             'detalleImpuesto', 0, True, decimales=currency.decimal_places)
                 if reembolso.total_base_iva != 0:
                     self.l10n_ec_get_total_impuestos(detalleImpuestos, '2', tipo_iva, reembolso.total_base_iva,
                                              reembolso.total_iva, 'detalleImpuesto',
-                                             int(tarifa_iva * 100), True, True)
+                                             int(tarifa_iva * 100), True, True, decimales=currency.decimal_places)
                 # if reembolso.total_base_no_iva != 0:
                 #     self.l10n_ec_get_total_impuestos(detalleImpuestos, '2', '6', reembolso.total_base_no_iva, 0.0,
-                #                              'detalleImpuesto', 0, True)
+                #                              'detalleImpuesto', 0, True, decimales=currency.decimal_places)
         self.l10n_ec_add_info_adicional(node)
         return node
 
