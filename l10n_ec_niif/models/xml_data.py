@@ -11,9 +11,8 @@ from datetime import datetime
 from random import randint
 from collections import OrderedDict
 
-import urllib.request
-from suds import WebFault
-from suds.client import Client
+from zeep import Client
+from zeep.transports import Transport
 import barcode
 from barcode.writer import ImageWriter
 from pprint import pformat
@@ -36,16 +35,6 @@ class SriXmlData(models.Model):
         'ln10_ec_xml_key': 49,
         'xml_authorization': 49,
     }
-
-    _ws_receipt_test = None
-    _ws_auth_test = None
-    _ws_receipt_production = None
-    _ws_auth_production = None
-    suds_log_level = logging.INFO
-    logging.getLogger('suds.client').setLevel(suds_log_level)
-    logging.getLogger('suds.transport').setLevel(suds_log_level)
-    logging.getLogger('suds.xsd.schema').setLevel(suds_log_level)
-    logging.getLogger('suds.wsdl').setLevel(suds_log_level)
 
     @api.depends('invoice_out_id', 'credit_note_out_id', 'debit_note_out_id', 'withhold_id',
                  'liquidation_id',
@@ -172,32 +161,8 @@ class SriXmlData(models.Model):
         company = self.env.company
         ws_url = self._get_url_ws(environment, url_type)
         try:
-            if environment == '1':
-                if url_type == 'reception':
-                    if self._ws_receipt_test and self._ws_receipt_test.wsdl.url == ws_url:
-                        wsClient = self._ws_receipt_test
-                    else:
-                        wsClient = Client(ws_url, timeout=company.l10n_ec_ws_timeout)
-                        self._ws_receipt_test = wsClient
-                elif url_type == 'authorization':
-                    if self._ws_auth_test and self._ws_auth_test.wsdl.url == ws_url:
-                        wsClient = self._ws_auth_test
-                    else:
-                        wsClient = Client(ws_url, timeout=company.l10n_ec_ws_timeout)
-                        self._ws_auth_test = wsClient
-            elif environment == '1':
-                if url_type == 'reception':
-                    if self._ws_receipt_production and self._ws_receipt_production.wsdl.url == ws_url:
-                        wsClient = self._ws_receipt_production
-                    else:
-                        wsClient = Client(ws_url, timeout=company.l10n_ec_ws_timeout)
-                        self._ws_receipt_production = wsClient
-                if url_type == 'authorization':
-                    if self._ws_auth_production and self._ws_auth_production.wsdl.url == ws_url:
-                        wsClient = self._ws_auth_production
-                    else:
-                        wsClient = Client(ws_url, timeout=company.l10n_ec_ws_timeout)
-                        self._ws_auth_production = wsClient
+            transport = Transport(timeout=company.l10n_ec_ws_timeout)
+            wsClient = Client(ws_url, transport=transport)
         except Exception as e:
             _logger.warning(
                 "Error in Connection with web services of SRI: %s. Error: %s",
@@ -272,9 +237,6 @@ class SriXmlData(models.Model):
         if printer_emission.type_emission != 'electronic':
             return False
         environment = self._get_environment(company)
-        # verificar si el tipo de documento esta configurado como autorizado para emitir
-        # antes de verificar si el webservice responde,
-        # para no hacer peticion al webservice en vano, si el documento no esta autorizado a emitir
         if environment == '2' and self._is_document_authorized(invoice_type):
             res = True
         return res
@@ -363,8 +325,6 @@ class SriXmlData(models.Model):
             sequence = self.get_sequence(document_number)
         infoTributaria = SubElement(node, "infoTributaria")
         SubElement(infoTributaria, "ambiente").text = environment
-        # emision para 1 pruebas, 2 produccion, 3 contingencia
-        # pero webservice solo acepta 1 emision normal, 2 emision por contingencia
         SubElement(infoTributaria, "tipoEmision").text = emission
         razonSocial = 'PRUEBAS SERVICIO DE RENTAS INTERNAS'
         nombreComercial = 'PRUEBAS SERVICIO DE RENTAS INTERNAS'
@@ -418,9 +378,6 @@ class SriXmlData(models.Model):
         sign_now = self.env.context.get('sign_now', True)
         environment = self._get_environment(company)
         xml_version = document.l10n_ec_get_document_version_xml()
-        # cuando fallo el envio o la autorizacion, puedo pasar el modo de emision
-        # para continuar el proceso segun ese modo de emision
-        # si no tengo emision, verificar el webservice para saber el modo de emision
         emission = self.env.context.get('emission', "1")
         partner_id = document.partner_id
         root = Element(xml_version.xml_header_name, id="comprobante", version=xml_version.version_file)
@@ -525,7 +482,7 @@ class SriXmlData(models.Model):
         Enviar a validar el comprobante con la clave de acceso
         :param xml_field: este debe ser
             xml_signed_file : Archivo Firmado
-        :param client_ws: direccion del webservice para realizar el proceso
+        :param client_ws: instancia del webservice para realizar el proceso
         """
         try_model = self.env['sri.xml.data.send.try']
         self.write({'send_date': time.strftime(DTF)})
@@ -551,7 +508,7 @@ class SriXmlData(models.Model):
                     response = {'estado': 'RECIBIDA'}
                     # Si ya fue recibida y autorizada, no tengo que volver a enviarla
                     send = False
-            if self.env.context.get('no_send'):
+            if self.env.context.get('no_send') and self.try_ids:
                 send = False
             if send:
                 try_rec = try_model.create({
@@ -559,16 +516,23 @@ class SriXmlData(models.Model):
                     'send_date': time.strftime(DTF),
                     'type_send': 'send',
                 })
+                # el parametro xml del webservice espera recibir xs:base64Binary
+                # con suds nosotros haciamos la conversion
+                # pero con zeep la libreria se encarga de hacer la conversion
+                # tenerlo presente cuando se use adjuntos en lugar del sistema de archivos
                 response = client_ws.service.validarComprobante(
-                    xml=base64.encodebytes(self.get_file(xml_field).encode()).decode())
+                    xml=self.get_file(xml_field).encode())
                 try_model.write({'response_date': time.strftime(DTF)})
                 _logger.info("Send file succesful, claveAcceso %s. %s", self.ln10_ec_xml_key,
                              str(response.estado) if hasattr(response, 'estado') else 'SIN RESPUESTA')
             self.write({'response_date': time.strftime(DTF)})
-        except WebFault as ex:
+        except Exception as e:
+            _logger.info("can\'t validate document in %s, claveAcceso %s. ERROR: %s", str(client_ws), self.ln10_ec_xml_key,
+                         tools.ustr(e))
+            _logger.info("can\'t validate document in %s, claveAcceso %s. TRACEBACK: %s", str(client_ws),
+                         self.ln10_ec_xml_key, tools.ustr(traceback.format_exc()))
             self.write({'state': 'waiting'})
             ok = False
-            _logger.info("Error de servidor. %s", tools.ustr(ex))
             messajes = [{
                 'identificador': '50',
                 'informacionAdicional': 'Cuando ocurre un error inesperado en el servidor.',
@@ -576,14 +540,6 @@ class SriXmlData(models.Model):
                 'tipo': 'ERROR DE SERVIDOR',
             }]
             self._create_messaje_response(messajes, ok, False)
-        except Exception as e:
-            _logger.info("can\'t validate document in %s, claveAcceso %s. ERROR: %s", str(client_ws), self.ln10_ec_xml_key,
-                         tools.ustr(e))
-            _logger.info("can\'t validate document in %s, claveAcceso %s. TRACEBACK: %s", str(client_ws),
-                         self.ln10_ec_xml_key, tools.ustr(traceback.format_exc()))
-            response = False
-            self.write({'state': 'waiting'})
-            ok = False
         return response
 
     def _process_response_check(self, response):
@@ -615,6 +571,7 @@ class SriXmlData(models.Model):
                         # si el mensaje es error, se debe mostrar el msj al usuario
                         if hasattr(msj, 'tipo') and msj.tipo == 'ERROR':
                             error = True
+                            ok = False
             except Exception as e:
                 _logger.info("can\'t validate document, claveAcceso %s. ERROR: %s",
                              self.ln10_ec_xml_key, tools.ustr(e))
@@ -636,10 +593,10 @@ class SriXmlData(models.Model):
         try:
             response = client_ws.service.autorizacionComprobante(
                 claveAccesoComprobante=self.ln10_ec_xml_key)
-        except WebFault as ex:
+        except Exception as e:
             response = False
             self.write({'state': 'waiting'})
-            _logger.info("Error de servidor: %s", tools.ustr(ex))
+            _logger.warning("Error send xml to server %s. ERROR: %s", client_ws, tools.ustr(e))
             messajes = [{
                 'identificador': '50',
                 'informacionAdicional': 'Cuando ocurre un error inesperado en el servidor.',
@@ -647,11 +604,6 @@ class SriXmlData(models.Model):
                 'tipo': 'ERROR DE SERVIDOR',
             }]
             self._create_messaje_response(messajes, False, False)
-        except Exception as e:
-            response = False
-            self.write({'state': 'waiting'})
-            # FIX: pasar a unicode para evitar problemas
-            _logger.warning("Error send xml to server %s. ERROR: %s", client_ws, tools.ustr(e))
         return response
 
     def _process_response_autorization(self, response):
@@ -687,15 +639,16 @@ class SriXmlData(models.Model):
         autorizacion_list = []
         list_aux = []
         ln10_ec_authorization_date = False
-        if isinstance(response.autorizaciones, str):
-            _logger.warning("Authorization data error, reponse message is not correct. %s",
-                            str(response.autorizaciones))
-            dump(response)
-            return ok, msj_res
-        if not isinstance(response.autorizaciones.autorizacion, list):
-            list_aux = [response.autorizaciones.autorizacion]
-        else:
-            list_aux = response.autorizaciones.autorizacion
+        if hasattr(response, 'autorizaciones') and not response.autorizaciones is None:
+            if isinstance(response.autorizaciones, str):
+                _logger.warning("Authorization data error, reponse message is not correct. %s",
+                                str(response.autorizaciones))
+                dump(response)
+                return ok, msj_res
+            if not isinstance(response.autorizaciones.autorizacion, list):
+                list_aux = [response.autorizaciones.autorizacion]
+            else:
+                list_aux = response.autorizaciones.autorizacion
         for doc in list_aux:
             estado = doc.estado
             if estado == 'AUTORIZADO':
@@ -871,7 +824,6 @@ class SriXmlData(models.Model):
             res_ws_valid, msj, raise_error, previous_authorized = self._process_response_check(response)
             message_data.extend(msj)
             # si no hay respuesta, el webservice no esta respondiendo, la tarea cron se debe encargar de este proceso
-            # solo cuando no hay errores, si hay errores el webservice esta respondiendo y debo mostrar los msj al usuario
             if not res_ws_valid and not raise_error:
                 send_again = True
             elif res_ws_valid and not previous_authorized:
@@ -950,7 +902,6 @@ class SriXmlData(models.Model):
         company = self.env.company
         if tools.config.get('no_electronic_documents') and company.l10n_ec_type_environment == 'production':
             return True
-        #        ws_signer = Client(company.ws_signer)
         for xml_rec in self:
             vals = {}
             try:
@@ -1092,6 +1043,9 @@ class SriXmlData(models.Model):
         environment = self._get_environment(company)
         receipt_client = self.get_current_wsClient(environment, 'reception')
         auth_client = self.get_current_wsClient(environment, 'authorization')
+        if receipt_client is None or auth_client is None:
+            _logger.error("No se puede conectar con el SRI, por favor verifique su conexion o intente luego")
+            return False
         counter = 1
         total = len(xml_recs)
         xml_to_notify_no_autorize = self.browse()
@@ -1218,6 +1172,9 @@ class SriXmlData(models.Model):
         environment = self._get_environment(company)
         receipt_client = self.get_current_wsClient(environment, 'reception')
         auth_client = self.get_current_wsClient(environment, 'authorization')
+        if receipt_client is None or auth_client is None:
+            _logger.error("No se puede conectar con el SRI, por favor verifique su conexion o intente luego")
+            return False
         counter = 1
         total = len(xml_recs)
         xml_to_notify = self.browse()
