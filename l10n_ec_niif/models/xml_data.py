@@ -651,9 +651,9 @@ class SriXmlData(models.Model):
                     vals['state'] = 'rejected'
             if vals and not no_write:
                 self.write(vals)
-                # si fue autorizado, enviar a crear el xml
-                if 'state' in vals and vals['state'] == 'authorized':
-                    self.action_create_file_authorized()
+                # # si fue autorizado, enviar a crear el xml
+                # if 'state' in vals and vals['state'] == 'authorized':
+                #     self.action_create_file_authorized()
             try:
                 # el webservice en mensajes a veces devuelve un texto vacio
                 if doc.mensajes:
