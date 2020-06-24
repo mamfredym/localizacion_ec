@@ -170,11 +170,6 @@
 									<field name="l10n_ec_key_type_id" domain="[('state', '=', 'valid')]" options="{'no_quick_create': True}"
 										class="o_light_label" />
 								</div>
-								<div class="row">
-									<label for="l10n_ec_path_files_electronic" string="Ruta para guardar Documentos"
-										class="col-5" />
-									<field name="l10n_ec_path_files_electronic" class="o_light_label" />
-								</div>
 							</div>
 						</div>
 					</div>

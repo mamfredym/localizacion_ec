@@ -58,7 +58,7 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
             attachment = self.l10n_ec_get_attachments_electronic()
             if not attachment:
                 try:
-                    file_data = self.ln10_ec_xml_data_id.get_file('file_authorized')
+                    file_data = self.ln10_ec_xml_data_id.get_file()
                 except:
                     file_data = ""
                 file_name = self.get_printed_report_name_l10n_ec()

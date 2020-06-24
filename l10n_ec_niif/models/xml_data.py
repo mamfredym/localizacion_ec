@@ -1,6 +1,5 @@
 import pytz
 import io
-import os
 import time
 import logging
 import traceback
@@ -75,9 +74,8 @@ class SriXmlData(models.Model):
     l10n_ec_point_of_emission_id = fields.Many2one('l10n_ec.point.of.emission', string='Punto de Emisión',
         compute='_compute_document_datas', store=True, index=True)
     agency_id = fields.Many2one('l10n_ec.agency', string='Agencia', related="l10n_ec_point_of_emission_id.agency_id", store=True)
-    file_xml_path = fields.Char('Ruta de Archivo XML')
-    file_signed_path = fields.Char('Ruta de Archivo Firmado')
-    file_authorized_path = fields.Char('Ruta de Archivo Autorizado')
+    xml_file = fields.Binary(readonly=False, copy=False)
+    xml_filename = fields.Char(string="Nombre de archivo xml", readonly=False, copy=False)
     xml_file_version = fields.Char('Version XML')
     ln10_ec_xml_key = fields.Char('Clave de Acceso', size=49, readonly=True, index=True)
     xml_authorization = fields.Char('Autorización SRI', size=49, readonly=True, index=True)
@@ -488,7 +486,7 @@ class SriXmlData(models.Model):
                 # pero con zeep la libreria se encarga de hacer la conversion
                 # tenerlo presente cuando se use adjuntos en lugar del sistema de archivos
                 response = client_ws.service.validarComprobante(
-                    xml=self.get_file(xml_field).encode())
+                    xml=self.get_file().encode())
                 try_model.write({'response_date': time.strftime(DTF)})
                 _logger.info("Send file succesful, claveAcceso %s. %s", self.ln10_ec_xml_key,
                              str(response.estado) if hasattr(response, 'estado') else 'SIN RESPUESTA')
@@ -686,8 +684,8 @@ class SriXmlData(models.Model):
         for xml_data in self:
             # el xml debe estar autorizado, tener fecha de autorizacion
             # si tengo xml firmado, a ese anexarle la autorizacion
-            if xml_data.state == 'authorized' and xml_data.xml_authorization and xml_data.file_signed_path:
-                tree = ET.parse(xml_data.generate_file_name('file_signed'))
+            if xml_data.state == 'authorized' and xml_data.xml_authorization and xml_data.xml_file:
+                tree = ET.parse(xml_data.generate_file_name())
                 root = Element("RespuestaAutorizacion")
                 authorizacion_ele = Element('estado')
                 authorizacion_ele.text = "AUTORIZADO"
@@ -706,8 +704,7 @@ class SriXmlData(models.Model):
                 # agregar el resto del xml
                 root.append(tree.getroot())
                 xml_authorized = tostring(root).decode()
-                file_authorized_path = xml_data.write_file('file_authorized', xml_authorized)
-                xml_data.write({'file_authorized_path': file_authorized_path, })
+                xml_data.write_file(xml_authorized)
                 # crear el adjunto
                 document = xml_data.get_current_document()
                 document.l10n_ec_action_create_attachments_electronic()
@@ -856,8 +853,7 @@ class SriXmlData(models.Model):
                     continue
             xml_to_sign |= xml_rec
             string_data, binary_data = xml_rec.action_generate_xml_file(res_document)
-            file_xml_path = xml_rec.write_file('file_xml', string_data)
-            xml_rec.write({'file_xml_path': file_xml_path})
+            xml_rec.write_file(string_data)
         return xml_to_sign, xml_to_notify
 
     def action_sing_xml_file(self):
@@ -870,15 +866,14 @@ class SriXmlData(models.Model):
                 if not company.l10n_ec_key_type_id:
                     raise UserError(
                         "Es obligatorio seleccionar el tipo de llave o archivo de cifrado usa para la firma de los documentos electrónicos, verificar la configuración de la compañia")
-                if xml_rec.file_xml_path:
-                    xml_string_data = xml_rec.get_file('file_xml')
+                if xml_rec.xml_file:
+                    xml_string_data = xml_rec.get_file()
                     xml_signed = company.l10n_ec_key_type_id.action_sign(xml_string_data)
                     if not xml_signed:
                         raise UserError("No se pudo firmar el documento, " \
                                         "por favor verifique que la configuracion de firma electronica este correcta")
-                    file_signed_path = xml_rec.write_file('file_signed', xml_signed)
+                    xml_rec.write_file(xml_signed)
                     vals = {
-                        'file_signed_path': file_signed_path,
                         'signed_date': time.strftime(DTF),
                         'state': 'signed',
                     }
@@ -1212,110 +1207,44 @@ class SriXmlData(models.Model):
                 _logger.info(tools.ustr(e))
         return True
 
-    def generate_file_name(self, file_type):
+    def generate_file_name(self):
         """
-        Genera el nombre del archivo, segun el tipo de documento y el tipo de archivo
-        @param file_type: str, tipo de documento, se permiten(file_xml, file_signed, file_authorized)
-        @return: str, el nombre del archivo segun el tipo de documento
+        Genera el nombre del archivo
+        @return: str, el nombre del archivo
         """
         # la estructura para el nombre seria asi
         # id del sri_xml_data
+        # id del documento
         # prefijo de documento(fc->facturas, nc->Notas de credito, nd->Notas de debito, re->Retenciones, gr->Guias de remision)
         # numero del documento
-        # signed o authorized, segun el file_type
         # extension xml
-        document_type, document_number = "", ""
-        if file_type not in ('file_xml', 'file_signed', 'file_authorized'):
-            raise UserError(
-                "Tipo de archivo no valido, se permite signed, authorized. Por favor verifique")
-        # al nombre sumarle el _path para obtener el nombre del campo en el modelo
-        field_name = file_type + "_path"
-        # si el registro ya tiene path tomar ese, o crearlo cada vez??
-        if field_name in self._fields and self[field_name] and not self.env.context.get('only_file', False):
-            file_name = self[field_name]
+        # 123_456_fc_001-001-0123456789.xml
+        if self.xml_filename:
+            file_name = self.xml_filename
         else:
             document = self.get_current_document()
-            file_name = f"{document.l10n_ec_get_document_filename_xml()}_{file_type}.xml"
+            file_name = f"{self.id}_{document.l10n_ec_get_document_filename_xml()}.xml"
         return file_name
 
-    def get_file(self, file_type):
+    def get_file(self):
         """Permite obtener un archivo desde el sistema de archivo
-        @param file_type: str, tipo de documento, se permiten(file_xml, file_signed, file_authorized)
-        @return: El archivo en codificacion base64
+        @return: El archivo xml en str
         """
-        # obtener el nombre del archivo
-        file_name = self.generate_file_name(file_type)
-        # buscar el archivo en la ruta configurada en la compañia
-        company = self.env.company
-        root_path = company.l10n_ec_path_files_electronic
-        if not root_path:
-            raise UserError(
-                "Debe configurar la ruta para guardar los documentos electronicos. Por favor verifique en la configuracion de compañia")
-        file_data = ""
-        full_path = os.path.join(root_path, file_name)
-        full_path = os.path.normpath(full_path)
-        if os.path.isfile(full_path):
-            try:
-                file_save = open(full_path, "r")
-                file_data = file_save.read()
-                file_save.close()
-            except IOError:
-                print(("No se puede leer el archivo %s, verifique permisos en la ruta %s!" % (file_name, root_path)))
-        else:
-            raise UserError("Archivo %s no encontrado." % (file_name))
+        file_data = base64.decodebytes(self.xml_file).decode()
         return file_data
 
-    def write_file(self, file_type, file_content):
+    def write_file(self, file_content):
         """Permite crear un archivo firmado o autorizado
-        @param file_type: str, tipo de documento, se permiten(file_xml, file_signed, file_authorized)
-        @param file_content: el contenido del archivo, codificado en base64
-        @return: la ruta completa del archivo creado
+        @param file_content: el contenido del archivo, en str
+        @return: el nombre del archivo generado
         """
         # obtener el nombre del archivo
-        file_name = self.generate_file_name(file_type)
-        # buscar el archivo en la ruta configurada en la compañia
-        company = self.env.company
-        root_path = company.l10n_ec_path_files_electronic
-        if not root_path:
-            raise UserError(
-                "Debe configurar la ruta para guardar los documentos electronicos. Por favor verifique en la configuracion de compañia")
-        full_path = os.path.join(root_path, file_name)
-        full_path = os.path.normpath(full_path)
-        # TODO: si el archivo ya existe, sobreescribirlo completamente
-        try:
-            file_save = open(full_path, "w")
-            file_save.write(file_content)
-            file_save.close()
-        except IOError:
-            _logger.warning(_("No se puede escribir en el archivo %s, verifique permisos en la ruta %s!" % (
-                file_name, root_path)))
-        return full_path
-
-    def get_file_to_wizard(self):
-        '''
-        @param file_type: str, tipo de documento, se permiten(file_xml, file_signed, file_authorized)
-        '''
-        self.ensure_one()
-        wizard_model = self.env['wizard.xml.get.file']
-        util_model = self.env['odoo.utils']
-        file_type = self.env.context.get('file_type', 'file_xml')
-        file_data = base64.encodebytes(self.get_file(file_type).encode())
-        ctx = self.env.context.copy()
-        ctx['active_model'] = self._name
-        ctx['active_ids'] = self.ids
-        ctx['active_id'] = self.ids and self.ids[0] or False
-        if not file_data:
-            raise UserError("No existe el fichero, no puede ser mostrado")
-        else:
-            wizard_rec = wizard_model.create({
-                'name': "%s_%s.xml" % (self.number_document, file_type),
-                'file_data': file_data,
-                'file_type': file_type,
-            })
-            res = util_model.with_context(ctx).show_wizard(wizard_model._name, 'wizard_xml_get_file_form_view',
-                                                           'Descargar Archivo')
-            res['res_id'] = wizard_rec.id
-            return res
+        file_name = self.generate_file_name()
+        self.write({
+            'xml_file': base64.encodebytes(file_content.encode()),
+            'xml_filename': file_name,
+        })
+        return file_name
 
     def unlink(self):
         for xml_data in self:

@@ -34,10 +34,10 @@
 						states="draft,returned,rejected" class="oe_highlight" />
 					<button name="action_sing_xml_file" string="Sign XML File"
 						type="object" class="oe_highlight fa fa-magic"
-						attrs="{'invisible': ['|',('state','in',('signed', 'waiting', 'authorized', 'cancel')), ('file_xml_path','=',False)]}" />
+						attrs="{'invisible': [('state','in',('signed', 'waiting', 'authorized', 'cancel'))]}" />
 					<button name="action_send_xml_file" string="Send Xml to authorize" type="object"
 						icon="fa-gear" class="oe_highlight"
-						attrs="{'invisible': ['|',('state','not in',('signed', 'waiting')), ('file_signed_path','=',False)]}"
+						attrs="{'invisible': [('state','not in',('signed', 'waiting'))]}"
                         context="{'no_send': True}"/>
 					<button name="action_send_xml_to_check" string="Check Authorization"
 						type="object" icon="fa-gear" class="oe_highlight"
@@ -51,7 +51,7 @@
 						groups="base.group_system" context="{'force_send_mail': True}" />
 					<button name="action_create_file_authorized" string="Crear XML autorizado"
 						type="object" class="oe_highlight fa fa-file-code-o"
-						attrs="{'invisible': ['|',('state','!=','authorized'), ('file_authorized_path','!=',False)]}" />
+						attrs="{'invisible': [('state','!=','authorized')]}" />
 					<button
                         name="action_desactive_notification_documents_no_autorization"
                         string="Desactivar Notificación" type="object" icon="fa-gear"
@@ -132,30 +132,8 @@
 								</group>
 							</group>
 							<group string="Archivos">
-								<label for="file_xml_path" />
-								<div>
-									<field name="file_xml_path" readonly="1" class="oe_inline" />
-									<button name="get_file_to_wizard" string="Descargar Archivo"
-										type="object" icon="fa-download" context="{'file_type': 'file_xml'}"
-										attrs="{'invisible': [('file_xml_path','=',False)]}" class="oe_link oe_inline" />
-								</div>
-								<label for="file_signed_path" />
-								<div>
-									<field name="file_signed_path" readonly="1" class="oe_inline" />
-									<button name="get_file_to_wizard" string="Descargar Archivo"
-										type="object" icon="fa-download" context="{'file_type': 'file_signed'}"
-										attrs="{'invisible': [('file_signed_path','=',False)]}"
-										class="oe_link oe_inline" />
-								</div>
-								<label for="file_authorized_path" />
-								<div>
-									<field name="file_authorized_path" readonly="1" class="oe_inline" />
-									<button name="get_file_to_wizard" string="Descargar Archivo"
-										type="object" icon="fa-download" context="{'file_type': 'file_authorized'}"
-										attrs="{'invisible': [('file_authorized_path','=',False)]}"
-										class="oe_link oe_inline" />
-									<newline />
-								</div>
+                                <field name="xml_file" filename="xml_filename" />
+                                <field name="xml_filename" invisible="1" />
 							</group>
 						</page>
 						<page string="Mensajes Informativos">

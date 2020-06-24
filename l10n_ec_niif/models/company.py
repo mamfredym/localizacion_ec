@@ -71,8 +71,6 @@ class ResCompany(models.Model):
     l10n_ec_max_intentos = fields.Integer('Intentos máximos de autorización')
     l10n_ec_ws_timeout = fields.Integer('Timeout Web Service', default=30)
     l10n_ec_cron_process = fields.Integer('Number Documents Process in Cron', default=100)
-    l10n_ec_path_files_electronic = fields.Char('Ruta para Documentos Electronicos',
-                                        default=lambda self: self._get_default_l10n_ec_path_files_electronic())
     l10n_ec_send_mail_from = fields.Datetime('Enviar Mail desde', default=lambda self: fields.Datetime.now())
     l10n_ec_send_mail_invoice = fields.Boolean('Facturas electronicas?', default=True, )
     l10n_ec_send_mail_credit_note = fields.Boolean('Notas de Crédito?', default=True)
@@ -86,42 +84,6 @@ class ResCompany(models.Model):
     l10n_ec_print_ride_detail2 = fields.Boolean('Imprimir Detalle Adicional 2?', default=False)
     l10n_ec_print_ride_detail3 = fields.Boolean('Imprimir Detalle Adicional 3?', default=False)
     l10n_ec_sri_payment_id = fields.Many2one('l10n_ec.sri.payment.method', string=u'S.R.I Payment Method')
-
-    @api.constrains('l10n_ec_path_files_electronic', )
-    def _check_l10n_ec_path_files_electronic(self):
-        # validar que se puedan crear archivos en el directorio especificado
-        # TODO: encontrar una mejor manera de acceder a los permisos de un directorio
-        if self.l10n_ec_path_files_electronic:
-            # si el directorio no existe, crearlo
-            if not os.path.isdir(self.l10n_ec_path_files_electronic):
-                try:
-                    os.makedirs(self.l10n_ec_path_files_electronic)
-                except IOError:
-                    raise ValidationError(
-                        "Error al acceder a la ruta configurada para los documentos electronicos, por favor verifique los permisos de acceso")
-            # crear un archivo temporal para hacer la prueba
-            try:
-                f_name_temp = os.path.join(self.l10n_ec_path_files_electronic, 'test.txt')
-                f_temp = open(f_name_temp, "w")
-                f_temp.close()
-                os.remove(f_name_temp)
-            except IOError:
-                raise ValidationError(
-                    "Error al acceder a la ruta configurada para los documentos electronicos, por favor verifique los permisos de acceso")
-
-    @api.model
-    def _get_default_l10n_ec_path_files_electronic(self):
-        # obtener la ruta del archivo de ejecucion del server
-        source_folder = "files_electronics"
-        home_name = "HOME"
-        if os.name in ('os2', 'nt'):
-            home_name = "USERPROFILE"
-        l10n_ec_path_files_electronic = os.path.abspath(os.path.join(os.environ[home_name], source_folder))
-        # obtener el parent del directorio, xq el archivo se ejecuta en server/bin
-        # crear una carpeta files_electronics en server/files_electronics
-        if not os.path.isdir(l10n_ec_path_files_electronic):
-            os.makedirs(l10n_ec_path_files_electronic)
-        return l10n_ec_path_files_electronic
 
     @api.model
     def get_contribuyente_data(self, date=None):

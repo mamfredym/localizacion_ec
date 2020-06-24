@@ -72,8 +72,6 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.l10n_ec_ws_timeout', readonly=False)
     l10n_ec_cron_process = fields.Integer('Number Documents Process in Cron',
         related='company_id.l10n_ec_cron_process', readonly=False)
-    l10n_ec_path_files_electronic = fields.Char('Ruta para Documentos Electronicos',
-        related='company_id.l10n_ec_path_files_electronic', readonly=False)
     l10n_ec_send_mail_from = fields.Datetime('Enviar Mail desde',
         related='company_id.l10n_ec_send_mail_from', readonly=False)
     l10n_ec_send_mail_invoice = fields.Boolean('Facturas electronicas?',
