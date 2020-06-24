@@ -97,18 +97,12 @@ class SriXmlData(models.Model):
     ln10_ec_authorization_date = fields.Datetime('Fecha de Autorización', readonly=True, index=True)
     notification_active = fields.Boolean(string='Notificación de Documentos Electrónicos no Autorizados?', default=True,
         help="Esto permite activar o desactivar las notificaciones del presente documento")
-    xml_type = fields.Selection([
-        ('individual', 'Individual'),
-        ('grouped', 'Agrupado / Lote Masivo'),
-    ], string='Tipo', index=True, readonly=True, default='individual')
     l10n_ec_type_conection_sri = fields.Selection([
         ('online', 'On-Line'),
         ('offline', 'Off-Line'),
     ], string=u'Tipo de conexion con SRI', default='offline')
     state = fields.Selection([
         ('draft', 'Creado'),
-        # emitido en contingencia no es igual a esperar autorizacion(clave 70)
-        ('contingency', 'Emitido en contingencia'),
         ('signed', 'Firmado'),
         # Emitido x Contingencia, en espera de autorizacion
         ('waiting', 'En Espera de Autorización'),
@@ -121,10 +115,6 @@ class SriXmlData(models.Model):
         ('test', 'Pruebas'),
         ('production', 'Producción'),
     ], string='Tipo de Ambiente', index=True, readonly=True)
-    type_emision = fields.Selection([
-        ('normal', 'Normal'),
-        ('contingency', 'Contingencia'),
-    ], string='Tipo de Emisión', index=True, readonly=True)
     last_error_id = fields.Many2one('sri.error.code', 'Ultimo Mensaje de error', readonly=True, index=True)
     sri_message_ids = fields.One2many('sri.xml.data.message.line', 'xml_id', 'Mensajes Informativos', auto_join=True)
     try_ids = fields.One2many('sri.xml.data.send.try', 'xml_id', 'Send Logs', auto_join=True)
@@ -264,8 +254,7 @@ class SriXmlData(models.Model):
         return check_digit
 
     @api.model
-    def get_single_key(self, document_code_sri, environment, printer_point, sequence, emission, xml_type='individual',
-                       date_document=None):
+    def get_single_key(self, document_code_sri, environment, printer_point, sequence, date_document=None):
         """Devuelve la clave para archivo xml a enviar a firmar en comprobantes unicos
         :param document_code_sri: Puede ser los siguientes tipos :
             01 : Factura
@@ -278,39 +267,29 @@ class SriXmlData(models.Model):
             2 : Produccion
         :param printer_point: Punto de Emision del Documento, con esto se obtendra la serie del documento p.e. 001001
         :param sequence: El secuencial del Documento debe ser tipo numerico
-        :param emission: El tipo de emision puede ser:
-            1 : Emision Normal
-            2 : Emision por Indisponibilidad del Sistema
-        :param xml_type: El tipo de xml:
-            1 : individual Individual un solo documento
-            2 : grouped Agrupado varios xml mas
         :rtype: clave para adjuntar al xml a ser firmado
         """
         company = self.env.company
         if not date_document:
             date_document = fields.Date.context_today(self)
+        emission = "1"  # emision normal, ya no se admite contingencia(2)
         now_date = date_document.strftime('%d%m%Y')
         serie = printer_point.agency_id.number + printer_point.number
         sequencial = str(sequence).rjust(9, '0')
-        prenumber = '0'
-        if xml_type == 'individual' and emission == '1':
-            code_numeric = randint(1, 99999999)
-            code_numeric = str(code_numeric).rjust(8, '0')
-            prenumber = now_date + document_code_sri + company.partner_id.vat + environment + serie + sequencial + code_numeric + emission
+        code_numeric = randint(1, 99999999)
+        code_numeric = str(code_numeric).rjust(8, '0')
+        prenumber = now_date + document_code_sri + company.partner_id.vat + environment + serie + sequencial + code_numeric + emission
         check_digit = '%s' % self.get_check_digit(prenumber)
         key_value = prenumber + check_digit
         return key_value
 
-    def generate_info_tributaria(self, node, document, environment, emission, company):
+    def generate_info_tributaria(self, node, document, environment, company):
         """Asigna al nodo raiz la informacion tributaria que es comun en todos los documentos, asigna clave interna
         al documento para ser firmado posteriormente
         :param node: tipo Element
         :param environment: Puede ser los siguientes ambientes :
             1 : Pruebas
             2 : Produccion
-        :param emission: El tipo de emision puede ser:
-            1 : Emision Normal
-            2 : Emision por Indisponibilidad del Sistema
         :param company: compania emisora
         :rtype: objeto root agregado con info tributaria
 
@@ -320,12 +299,10 @@ class SriXmlData(models.Model):
         document_number = document.l10n_ec_get_document_number()
         date_document = document.l10n_ec_get_document_date()
         printer = self.l10n_ec_point_of_emission_id
-        sequence = ''
-        if self.xml_type == 'individual':
-            sequence = self.get_sequence(document_number)
+        sequence = self.get_sequence(document_number)
         infoTributaria = SubElement(node, "infoTributaria")
         SubElement(infoTributaria, "ambiente").text = environment
-        SubElement(infoTributaria, "tipoEmision").text = emission
+        SubElement(infoTributaria, "tipoEmision").text = '1'  # emision normal
         razonSocial = 'PRUEBAS SERVICIO DE RENTAS INTERNAS'
         nombreComercial = 'PRUEBAS SERVICIO DE RENTAS INTERNAS'
         if environment == '2':
@@ -336,8 +313,7 @@ class SriXmlData(models.Model):
         SubElement(infoTributaria, "ruc").text = company.partner_id.vat
         clave_acceso = self.ln10_ec_xml_key
         if not clave_acceso:
-            clave_acceso = self.get_single_key(document_code_sri, environment, printer, sequence, emission,
-                                               self.xml_type, date_document)
+            clave_acceso = self.get_single_key(document_code_sri, environment, printer, sequence, date_document)
         SubElement(infoTributaria, "claveAcceso").text = clave_acceso
         SubElement(infoTributaria, "codDoc").text = document_code_sri
         SubElement(infoTributaria, "estab").text = printer.agency_id.number
@@ -378,26 +354,17 @@ class SriXmlData(models.Model):
         sign_now = self.env.context.get('sign_now', True)
         environment = self._get_environment(company)
         xml_version = document.l10n_ec_get_document_version_xml()
-        emission = self.env.context.get('emission', "1")
         partner_id = document.partner_id
         root = Element(xml_version.xml_header_name, id="comprobante", version=xml_version.version_file)
-        clave_acceso, root = self.generate_info_tributaria(root, document, environment, emission, company)
+        clave_acceso, root = self.generate_info_tributaria(root, document, environment, company)
         state = self.state
         l10n_ec_type_environment = ''
         if environment == '1':
             l10n_ec_type_environment = 'test'
         elif environment == '2':
             l10n_ec_type_environment = 'production'
-        type_emision = ''
-        if emission == '1':
-            type_emision = 'normal'
-        else:
-            type_emision = 'contingency'
-            # pasar el estado de contingencia para que la tarea cron se encargue de procesarla
-            state = 'contingency'
         self.write({
             'l10n_ec_type_environment': l10n_ec_type_environment,
-            'type_emision': type_emision,
             'state': state,
             'ln10_ec_xml_key': clave_acceso,
             'partner_id': partner_id and partner_id.id or False,
@@ -799,8 +766,7 @@ class SriXmlData(models.Model):
                 # pasar por context que el modo de emision es contingencia
                 # si el documento esta en espera de autorizacion no pasar a contingencia
                 if not context.get('l10n_ec_xml_call_from_cron', False) and self.state != 'waiting':
-                    ctx['emission'] = '2'
-                    self.with_context(ctx).action_create_xml_file()
+                    self.action_create_xml_file()
             elif send_again:
                 # si no supera el maximo de intentos, volve a intentar
                 return self.send_xml_data_to_check(environment, xml_field, l10n_ec_max_intentos=l10n_ec_max_intentos + 1)
@@ -810,10 +776,6 @@ class SriXmlData(models.Model):
         ctx = self.env.context.copy()
         send_again, authorized, raise_error = False, False, True
         messages_error, message_data = [], []
-        # TODO: si es emitido por contingencia, no puedo enviarlo,
-        # la tarea cron debe encargarse de eso
-        if self.state == 'contingency' and not self.env.context.get('no_send', False):
-            return True
         # si esta esperando autorizacion, una tarea cron debe encargarse de eso
         if self.state == 'waiting' and not self.env.context.get('no_send', False):
             return True
@@ -918,10 +880,8 @@ class SriXmlData(models.Model):
                     vals = {
                         'file_signed_path': file_signed_path,
                         'signed_date': time.strftime(DTF),
+                        'state': 'signed',
                     }
-                # si esta en contingencia, no cambiar de estado, para que la tarea cron sea el que procese estos registros
-                if xml_rec.state != 'contingency' or self.env.context.get('skip_contingency', False):
-                    vals['state'] = 'signed'
                 if vals:
                     xml_rec.write(vals)
             except Exception as ex:
@@ -1115,23 +1075,6 @@ class SriXmlData(models.Model):
             ctx[
                 'title'] = "Los siguientes Documentos presentan problemas y han sido rechazados por el SRI, reviselos y corrija manualmente:"
             template.with_context(ctx).l10n_ec_action_sent_mail_electronic(company)
-        return True
-
-    @api.model
-    def send_documents_contingency(self):
-        """
-        Procesar los documentos emitidos en modo contingencia
-        """
-        ctx = self.env.context.copy()
-        company = self.env.company
-        # pasar flag para que al firmar el documento, y estaba en contingencia, me cambie el estado
-        ctx['skip_contingency'] = True
-        ctx['l10n_ec_xml_call_from_cron'] = True
-        # No se debe verificar constantemente en que estado esta
-        ctx['emission'] = '1'
-        xml_recs = self.search([('state', '=', 'contingency')], limit=company.l10n_ec_cron_process)
-        if xml_recs:
-            xml_recs.with_context(ctx).process_document_electronic(force_send_now=True)
         return True
 
     @api.model

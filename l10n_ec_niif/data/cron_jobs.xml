@@ -16,22 +16,6 @@
         <field name="code">model.send_documents_offline()</field>
     </record>
 
-    <!-- tarea para las emisiones por contingencia -->
-    <record forcecreate="True" id="ir_cron_xml_per_contingence"
-            model="ir.cron">
-        <field name="name">Documentos emitidos en contingecia</field>
-        <field name="interval_number">1</field>
-        <field name="interval_type">hours</field>
-        <field name="numbercall">-1</field>
-        <field name="doall" eval="False"/>
-        <field name="nextcall"
-               eval="(datetime.now() + relativedelta(days=1, hour=13, minute=20, second=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
-        <field name="model_id"
-               ref="l10n_ec_niif.model_sri_xml_data"/>
-        <field name="state">code</field>
-        <field name="code">model.send_documents_contingency()</field>
-    </record>
-
     <!-- tarea para los documentos que no han sido autorizados, pero que no
         debo volver a autorizarlos -->
     <record forcecreate="True" id="ir_cron_xml_no_authorizated"

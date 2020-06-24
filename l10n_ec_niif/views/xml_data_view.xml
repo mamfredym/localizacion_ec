@@ -13,14 +13,12 @@
 				<field name="number_document" />
 				<field name="date_emision_document" />
 				<field name="partner_id" />
-				<field name="xml_type" invisible="1" />
-				<field name="l10n_ec_type_environment" />
-				<field name="type_emision" />
-				<field name="send_mail" />
+				<field name="l10n_ec_type_environment" optional="hide" />
+				<field name="send_mail" optional="hide"/>
 				<field name="state" />
 				<field name="last_error_id" />
-				<field name="create_date" />
-				<field name="create_uid" />
+				<field name="create_date" optional="hide"/>
+				<field name="create_uid" optional="hide"/>
 			</tree>
 		</field>
 	</record>
@@ -39,11 +37,11 @@
 						attrs="{'invisible': ['|',('state','in',('signed', 'waiting', 'authorized', 'cancel')), ('file_xml_path','=',False)]}" />
 					<button name="action_send_xml_file" string="Send Xml to authorize" type="object"
 						icon="fa-gear" class="oe_highlight"
-						attrs="{'invisible': ['|',('state','not in',('signed', 'waiting', 'contingency')), ('file_signed_path','=',False)]}"
+						attrs="{'invisible': ['|',('state','not in',('signed', 'waiting')), ('file_signed_path','=',False)]}"
                         context="{'no_send': True}"/>
 					<button name="action_send_xml_to_check" string="Check Authorization"
 						type="object" icon="fa-gear" class="oe_highlight"
-						attrs="{'invisible': ['|',('state','not in',('signed', 'waiting', 'contingency')), ('try_ids','=',[])]}" />
+						attrs="{'invisible': ['|',('state','not in',('signed', 'waiting')), ('try_ids','=',[])]}" />
 					<button name="action_send_mail_partner" string="Enviar mail a cliente"
 						type="object" class="oe_highlight fa fa-envelope-o"
 						attrs="{'invisible': ['|', ('state','!=', 'authorized'), ('l10n_ec_type_environment','!=', 'production')]}" />
@@ -72,11 +70,9 @@
 									options="{'no_create': True}" />
 							<field name="l10n_ec_point_of_emission_id" />
 							<field name="agency_id" />
-							<field name="xml_type" />
 						</group>
 						<group>
 							<field name="l10n_ec_type_environment" />
-								<field name="type_emision" />
 							<field name="notification_active"
 									attrs="{'invisible':[('state','!=','rejected')]}" />
 							<field name="l10n_ec_type_conection_sri" />
@@ -84,7 +80,7 @@
 						</group>
 					</group>
 					<notebook colspan="4">
-						<page string="Documento" attrs="{'invisible': [('xml_type','=','grouped')]}">
+						<page string="Documento">
 							<group>
 								<group colspan="2">
 									<field name="partner_id" readonly="1" />
