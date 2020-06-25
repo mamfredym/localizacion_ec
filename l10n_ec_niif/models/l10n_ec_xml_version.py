@@ -1,7 +1,7 @@
 from odoo import api, fields, models
 
 
-class L10n_ecXmlVersion(models.Model):
+class L10nEcXmlVersion(models.Model):
     _name = "l10n_ec.xml.version"
     _description = "Xml Version"
 

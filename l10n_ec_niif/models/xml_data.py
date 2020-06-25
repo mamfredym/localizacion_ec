@@ -17,7 +17,7 @@ from lxml import etree
 from zeep import Client
 from zeep.transports import Transport
 
-from odoo import api, fields, models, tools
+from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
 
@@ -463,7 +463,7 @@ class SriXmlData(models.Model):
                 )
             else:
                 raise UserError(
-                    "XML Mal Creado, faltan datos, verifique: \n%s" % tools.ustr(e)
+                    _("XML Mal Creado, faltan datos, verifique: \n%s") % tools.ustr(e)
                 )
         return True
 
@@ -922,7 +922,7 @@ class SriXmlData(models.Model):
                 _logger.warning(
                     "Can't process messages %s. ERROR: %s", doc.mensajes, tools.ustr(e)
                 )
-                print(traceback.format_exc())
+                _logger.debug(traceback.format_exc())
         return ok, msj_res
 
     def _action_create_file_authorized(self):
@@ -1148,7 +1148,9 @@ class SriXmlData(models.Model):
             try:
                 if not company.l10n_ec_key_type_id:
                     raise UserError(
-                        "Es obligatorio seleccionar el tipo de llave o archivo de cifrado usa para la firma de los documentos electrónicos, verificar la configuración de la compañia"
+                        _(
+                            "Es obligatorio seleccionar el tipo de llave o archivo de cifrado usa para la firma de los documentos electrónicos, verificar la configuración de la compañia"
+                        )
                     )
                 if xml_rec.xml_file:
                     xml_string_data = xml_rec.get_file()
@@ -1157,8 +1159,10 @@ class SriXmlData(models.Model):
                     )
                     if not xml_signed:
                         raise UserError(
-                            "No se pudo firmar el documento, "
-                            "por favor verifique que la configuracion de firma electronica este correcta"
+                            _(
+                                "No se pudo firmar el documento, "
+                                "por favor verifique que la configuracion de firma electronica este correcta"
+                            )
                         )
                     xml_rec.write_file(xml_signed)
                     vals = {
@@ -1241,7 +1245,9 @@ class SriXmlData(models.Model):
             )
         if not self._is_document_enabled_for_send_mail():
             raise UserError(
-                "No esta habilitado el envio de correos para los documentos tipo: %s, verifique su configuracion"
+                _(
+                    "No esta habilitado el envio de correos para los documentos tipo: %s, verifique su configuracion"
+                )
                 % (document.get_document_string())
             )
         self._action_send_mail_partner()
@@ -1609,7 +1615,9 @@ class SriXmlData(models.Model):
                 if xml_data.state == "cancel" and not xml_data.authorization_to_cancel:
                     continue
                 raise UserError(
-                    "No puede eliminar registros a menos que esten en estado borrador"
+                    _(
+                        "No puede eliminar registros a menos que esten en estado borrador"
+                    )
                 )
         res = super(SriXmlData, self).unlink()
         return res

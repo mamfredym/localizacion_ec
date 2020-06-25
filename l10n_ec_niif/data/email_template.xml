@@ -20,56 +20,57 @@
             <field name="lang">${object.partner_id.lang}</field>
             <field name="body_html" type="xml">
                 <div>
-<p>Estimado ${object.partner_id.name}
-% set access_action = object.with_context(force_website=True).get_access_action()
-% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'
-% set access_url = object.get_mail_url()
+                    <p>Estimado ${object.partner_id.name}
+                        % set access_action = object.with_context(force_website=True).get_access_action()
+                        % set is_online = access_action and access_action['type'] == 'ir.actions.act_url'
+                        % set access_url = object.get_mail_url()
 
-% if object.partner_id.parent_id:
-    (<i>${object.partner_id.parent_id.name}</i>)
-% endif
-,</p>
-<p>Adjunto se encuentra su
-% if object.number:
-documento <strong>${object.display_name}</strong>
-% else:
-Documento
-% endif
-% if object.origin:
-(Con referencia: ${object.origin})
-% endif
-% if object.ln10_ec_xml_key:
-Clave de Acceso: ${object.ln10_ec_xml_key}
-% endif
-por un monto de <strong>${object.amount_total} ${object.currency_id.name}</strong>
-de ${object.company_id.name}.
-</p>
+                        % if object.partner_id.parent_id:
+                        (<i>${object.partner_id.parent_id.name}</i>)
+                        % endif
+                        ,</p>
+                    <p>Adjunto se encuentra su
+                        % if object.number:
+                        documento <strong>${object.display_name}</strong>
+                        % else:
+                        Documento
+                        % endif
+                        % if object.origin:
+                        (Con referencia: ${object.origin})
+                        % endif
+                        % if object.ln10_ec_xml_key:
+                        Clave de Acceso: ${object.ln10_ec_xml_key}
+                        % endif
+                        por un monto de <strong
+                        >${object.amount_total} ${object.currency_id.name}</strong>
+                        de ${object.company_id.name}.
+                    </p>
 
-% if is_online:
-    <br /><br />
-    <center>
+                    % if is_online:
+                    <br /><br />
+                    <center>
                         <a
                             href="${access_url}"
                             style="background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;"
                             class="o_default_snippet_text"
                         >Ver Documento</a>
                     </center>
-% endif
-    <br /><br />
+                    % endif
+                    <br /><br />
 
-% if object.state=='paid':
-    <p>Este documento se en encuentra pagado.</p>
-% else:
-    <p>Por favor remitanos su pago en brevedad.</p>
-% endif
+                    % if object.state=='paid':
+                    <p>Este documento se en encuentra pagado.</p>
+                    % else:
+                    <p>Por favor remitanos su pago en brevedad.</p>
+                    % endif
 
-<p>Gracias,</p>
-<p style="color:#888888">
-% if object.user_id and object.user_id.signature:
-    ${object.user_id.signature | safe}
-% endif
-</p>
-</div>
+                    <p>Gracias,</p>
+                    <p style="color:#888888">
+                        % if object.user_id and object.user_id.signature:
+                        ${object.user_id.signature | safe}
+                        % endif
+                    </p>
+                </div>
             </field>
         </record>
         <record id="email_template_edi_withhold" model="mail.template">
@@ -96,43 +97,44 @@ de ${object.company_id.name}.
             <field name="lang">${object.partner_id.lang}</field>
             <field name="body_html" type="xml">
                 <div>
-					<p>Estimado ${object.partner_id.name}
-						% set access_action = object.with_context(force_website=True).get_access_action()
-						% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'
-						% set access_url = object.get_mail_url()
+                    <p>Estimado ${object.partner_id.name}
+                        % set access_action = object.with_context(force_website=True).get_access_action()
+                        % set is_online = access_action and access_action['type'] == 'ir.actions.act_url'
+                        % set access_url = object.get_mail_url()
 
-						% if object.partner_id.parent_id:
-						(<i>${object.partner_id.parent_id.name}</i>)
-						% endif
-						,</p>
-					<p>Adjunto se encuentra su
-						Retención <strong>${object.display_name}</strong>
-						% if object.ln10_ec_xml_key:
-						Clave de Acceso: ${object.ln10_ec_xml_key}
-						% endif
-						por un monto de <strong>${object.total} ${object.company_id.currency_id.name}</strong>
-						de ${object.company_id.name}.
-					</p>
+                        % if object.partner_id.parent_id:
+                        (<i>${object.partner_id.parent_id.name}</i>)
+                        % endif
+                        ,</p>
+                    <p>Adjunto se encuentra su
+                        Retención <strong>${object.display_name}</strong>
+                        % if object.ln10_ec_xml_key:
+                        Clave de Acceso: ${object.ln10_ec_xml_key}
+                        % endif
+                        por un monto de <strong
+                        >${object.total} ${object.company_id.currency_id.name}</strong>
+                        de ${object.company_id.name}.
+                    </p>
 
-					% if is_online:
-					<br /><br />
-					<center>
+                    % if is_online:
+                    <br /><br />
+                    <center>
                         <a
                             href="${access_url}"
                             style="background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;"
                             class="o_default_snippet_text"
                         >Ver Documento</a>
                     </center>
-					% endif
-					<br /><br />
+                    % endif
+                    <br /><br />
 
-					<p>Gracias,</p>
-					<p style="color:#888888">
-						% if object.invoice_id.user_id and object.invoice_id.user_id.signature:
-						${object.invoice_id.user_id.signature | safe}
-						% endif
-					</p>
-				</div>
+                    <p>Gracias,</p>
+                    <p style="color:#888888">
+                        % if object.invoice_id.user_id and object.invoice_id.user_id.signature:
+                        ${object.invoice_id.user_id.signature | safe}
+                        % endif
+                    </p>
+                </div>
             </field>
         </record>
         <!--Default Notification Email template for invoices-->
@@ -148,9 +150,9 @@ de ${object.company_id.name}.
             <field name="auto_delete" eval="True" />
             <field name="body_html" type="html">
                 <div>
-					% set record = ctx.get('record')
-					% set company = record and record.company_id or user.company_id
-					<table
+                    % set record = ctx.get('record')
+                    % set company = record and record.company_id or user.company_id
+                    <table
                         border="0"
                         width="100%"
                         cellpadding="0"
@@ -174,8 +176,8 @@ de ${object.company_id.name}.
                                                 <span
                                                     style="font-size:20px; color:white; font-weight: bold;"
                                                 >
-													Retención ${object.record_name}
-												</span>
+                                                    Retención ${object.record_name}
+                                                </span>
                                             </td>
                                             <td valign="middle" align="right">
                                                 <img
@@ -203,8 +205,8 @@ de ${object.company_id.name}.
                                                 valign="top"
                                                 style="font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;"
                                             >
-												${object.body | safe}
-											</td>
+                                                ${object.body | safe}
+                                            </td>
                                         </tbody>
                                     </table>
                                 </td>
@@ -225,38 +227,44 @@ de ${object.company_id.name}.
                                                 align="left"
                                                 style="color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;"
                                             >
-												${company.name}<br />
-												${company.phone or ''}
-											</td>
+                                                ${company.name}<br />
+                                                ${company.phone or ''}
+                                            </td>
                                             <td
                                                 valign="middle"
                                                 align="right"
                                                 style="color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;"
                                             >
-												% if company.email:
-												<a
+                                                % if company.email:
+                                                <a
                                                     href="mailto:${company.email}"
                                                     style="text-decoration:none; color: white;"
                                                 >${company.email}</a><br />
-												% endif
-												% if company.website:
-												<a href="${company.website}" style="text-decoration:none; color: white;">
-													${company.website}
-												</a>
-												% endif
-											</td>
+                                                % endif
+                                                % if company.website:
+                                                <a
+                                                    href="${company.website}"
+                                                    style="text-decoration:none; color: white;"
+                                                >
+                                                    ${company.website}
+                                                </a>
+                                                % endif
+                                            </td>
                                         </tr>
                                     </table>
                                 </td>
                             </tr>
                             <tr>
                                 <td align="center">
-									Powered by <a target="_blank" href="https://www.vision-estrategica.com">Odoo</a>.
-								</td>
+                                    Powered by <a
+                                        target="_blank"
+                                        href="https://www.vision-estrategica.com"
+                                    >Odoo</a>.
+                                </td>
                             </tr>
                         </tbody>
                     </table>
-				</div>
+                </div>
             </field>
         </record>
         <record id="mail_documents_no_autorization" model="mail.template">
@@ -271,17 +279,17 @@ de ${object.company_id.name}.
             <field name="body_html" type="xml">
                 <div style="max-width:600px; height:auto; margin-left:30px;">
                     <div style="margin-left:30px;align=center;">
-							Notificacion:
-							<br />
-							% set documents = object.get_documents_electonic_no_autorization()
-							<p
+                        Notificacion:
+                        <br />
+                        % set documents = object.get_documents_electonic_no_autorization()
+                        <p
                             class="text-center"
                             style="font-weight: bold"
                         >Documentos Electrónicos no Autorizadas</p>
-							<div style="display:table;margin-left: 6%;width:95%">
+                        <div style="display:table;margin-left: 6%;width:95%">
                             <div style="display:table-row-group;">
-						        % for doc in documents:
-						        	<div style="display:table-row;">
+                                % for doc in documents:
+                                <div style="display:table-row;">
                                     <div
                                         style="display:table-cell;width:65%;text-align:center;border:solid;border-width: 1px 1px 1px 1px;"
                                     >${doc.display_name}</div>
@@ -298,11 +306,11 @@ de ${object.company_id.name}.
                                         </span>
                                     </div>
                                 </div>
-						        % endfor
-						        </div>
+                                % endfor
+                            </div>
                         </div>
 
-						</div>
+                    </div>
                 </div>
             </field>
         </record>
@@ -317,15 +325,15 @@ de ${object.company_id.name}.
             <field name="body_html" type="xml">
                 <div style="max-width:600px; height:auto; margin-left:30px;">
                     <div style="margin-left:30px;align=center;">
-						Este es una notificación de llaves expiradas:
-						<br />
-						% set noti=NULL
-						% set notification = object.date_expire_send_mail()
-						% for noti in notification:
-							${noti}<br />
-						% endfor
+                        Este es una notificación de llaves expiradas:
+                        <br />
+                        % set noti=NULL
+                        % set notification = object.date_expire_send_mail()
+                        % for noti in notification:
+                        ${noti}<br />
+                        % endfor
 
-					</div>
+                    </div>
                 </div>
             </field>
         </record>

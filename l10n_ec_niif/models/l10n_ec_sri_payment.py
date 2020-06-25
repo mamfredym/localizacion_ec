@@ -1,7 +1,7 @@
 from odoo import api, fields, models
 
 
-class L10n_ecSriPaymentMethod(models.Model):
+class L10nEcSriPaymentMethod(models.Model):
 
     _name = "l10n_ec.sri.payment.method"
     _description = "SRI Payment method"

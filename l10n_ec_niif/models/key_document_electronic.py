@@ -13,7 +13,7 @@ from odoo.tools.translate import _
 import odoo.addons.decimal_precision as dp
 
 
-class res_company(models.Model):
+class ResCompany(models.Model):
 
     _inherit = "res.company"
 

@@ -156,7 +156,7 @@ class L10nEcWithhold(models.Model):
     @api.depends(
         "line_ids.type", "line_ids.tax_amount",
     )
-    def _get_tax_amount(self):
+    def _compute_tax_amount(self):
         for rec in self:
             rec.tax_iva = sum(
                 i.tax_amount_currency
@@ -168,13 +168,13 @@ class L10nEcWithhold(models.Model):
             )
 
     tax_iva = fields.Monetary(
-        string="Withhold IVA", compute="_get_tax_amount", store=True, readonly=True
+        string="Withhold IVA", compute="_compute_tax_amount", store=True, readonly=True
     )
     tax_rent = fields.Monetary(
-        string="Withhold Rent", compute="_get_tax_amount", store=True, readonly=True
+        string="Withhold Rent", compute="_compute_tax_amount", store=True, readonly=True
     )
     l10n_ec_related_document = fields.Boolean(
-        string="Have related document?", compute="is_related_document"
+        string="Have related document?", compute="_compute_is_related_document"
     )
     l10n_ec_is_create_from_invoice = fields.Boolean(string="Is created from invoice?")
     move_ids = fields.One2many(
@@ -183,11 +183,11 @@ class L10nEcWithhold(models.Model):
         string="Accounting entries",
     )
     move_count = fields.Integer(
-        string="Move Count", compute="_get_l10n_ec_withhold_ids", store=False
+        string="Move Count", compute="_compute_l10n_ec_withhold_ids", store=False
     )
 
     @api.depends("invoice_id")
-    def is_related_document(self):
+    def _compute_is_related_document(self):
         for rec in self:
             rec.l10n_ec_related_document = False
             if rec.invoice_id:
@@ -326,7 +326,7 @@ class L10nEcWithhold(models.Model):
         return True
 
     @api.depends("move_ids",)
-    def _get_l10n_ec_withhold_ids(self):
+    def _compute_l10n_ec_withhold_ids(self):
         for rec in self:
             rec.move_count = len(rec.move_ids)
 

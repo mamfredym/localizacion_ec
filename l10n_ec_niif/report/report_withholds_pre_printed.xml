@@ -81,14 +81,6 @@
                                             <span t-field="o.tax_rent" />
                                         </td>
                                     </tr>
-                                    <!--<tr>
-										<td colspan="5" class="text-right">
-											<strong>Total Retenido</strong>
-										</td>
-										<td class="text-right">
-											<span t-field="o.total" />
-										</td>
-									</tr>-->
                                 </tfoot>
                             </table>
                             <p t-if="o.note">

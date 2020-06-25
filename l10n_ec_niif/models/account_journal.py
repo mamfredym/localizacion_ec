@@ -13,7 +13,7 @@ class AccountJournal(models.Model):
     @api.depends(
         "type", "l10n_ec_debit_note", "l10n_ec_liquidation",
     )
-    def _get_l10n_ec_extended_type(self):
+    def _compute_l10n_ec_extended_type(self):
         for journal in self:
             if not journal.l10n_ec_debit_note and not journal.l10n_ec_liquidation:
                 journal.l10n_ec_extended_type = journal.type
@@ -32,7 +32,7 @@ class AccountJournal(models.Model):
     l10n_ec_extended_type = fields.Char(
         string="Extended Type",
         required=False,
-        compute="_get_l10n_ec_extended_type",
+        compute="_compute_l10n_ec_extended_type",
         store=True,
     )
 

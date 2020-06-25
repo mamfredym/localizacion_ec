@@ -4,7 +4,7 @@ from odoo.tools.translate import _
 import odoo.addons.decimal_precision as dp
 
 
-class sri_error_code(models.Model):
+class SriErrorCode(models.Model):
 
     _name = "sri.error.code"
     _description = "Errores SRI"

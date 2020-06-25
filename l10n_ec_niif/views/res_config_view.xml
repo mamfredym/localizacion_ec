@@ -17,12 +17,12 @@
                         <h2>Invoice</h2>
                         <div class="col-12 col-lg-6 o_setting_box" id="sri_invoice">
                             <div class="o_setting_left_pane">
-                        </div>
+                            </div>
                             <div class="o_setting_right_pane">
                                 <span class="o_form_label">Final Consumer</span>
                                 <div class="text-muted">
-                                Limit for billing in sales for final consumer, total amount
-                            </div>
+                                    Limit for billing in sales for final consumer, total amount
+                                </div>
                                 <div class="content-group">
                                     <div class="row mt16">
                                         <label
@@ -41,12 +41,12 @@
                         <h2>Withhold</h2>
                         <div class="col-12 col-lg-6 o_setting_box" id="sri_withhold">
                             <div class="o_setting_left_pane">
-                        </div>
+                            </div>
                             <div class="o_setting_right_pane">
                                 <span class="o_form_label">Withhold Sales</span>
                                 <div class="text-muted">
-                                Accounting config for withhold on sales
-                            </div>
+                                    Accounting config for withhold on sales
+                                </div>
                                 <div class="content-group">
                                     <div class="row mt16">
                                         <label
@@ -98,7 +98,7 @@
                                 class="col-12 col-md-6 o_setting_box"
                             >
                                 <div class="o_setting_left_pane">
-							</div>
+                                </div>
                                 <div class="o_setting_right_pane">
                                     <field
                                         name="l10n_ec_electronic_logo"
@@ -108,8 +108,8 @@
                                         class="text-muted"
                                         attrs="{'invisible' : [('l10n_ec_electronic_logo','!=',False)]}"
                                     >
-									Use un tamaño de 450x150 píxeles aprox.
-								</div>
+                                        Use un tamaño de 450x150 píxeles aprox.
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -117,7 +117,7 @@
                         <div class="row mt16 o_settings_container">
                             <div id="conection" class="col-12 col-md-6 o_setting_box">
                                 <div class="o_setting_left_pane">
-							</div>
+                                </div>
                                 <div class="o_setting_right_pane">
                                     <label
                                         for="l10n_ec_type_environment"
@@ -132,20 +132,20 @@
                                     <div class="text-muted">
                                         <ul>
                                             <li>
-											<b>Pruebas:</b>
-											Los documentos no tienen validez Tributaria
-										</li>
+                                                <b>Pruebas:</b>
+                                                Los documentos no tienen validez Tributaria
+                                            </li>
                                             <li>
-											<b>Producción:</b>
-											Los documentos tienen validez Tributaria
-										</li>
+                                                <b>Producción:</b>
+                                                Los documentos tienen validez Tributaria
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-12 col-md-6 o_setting_box">
                                 <div class="o_setting_left_pane">
-							</div>
+                                </div>
                                 <div class="o_setting_right_pane">
                                     <div class="row">
                                         <label
@@ -169,7 +169,7 @@
                             </div>
                             <div class="col-12 col-md-12 o_setting_box">
                                 <div class="o_setting_left_pane">
-							</div>
+                                </div>
                                 <div class="o_setting_right_pane">
                                     <label
                                         for="l10n_ec_type_conection_sri"
@@ -184,13 +184,13 @@
                                     <div class="text-muted">
                                         <ul>
                                             <li>
-											<b>On-Line:</b>
-											Los documentos se autorizan en linea con el SRI
-										</li>
+                                                <b>On-Line:</b>
+                                                Los documentos se autorizan en linea con el SRI
+                                            </li>
                                             <li>
-											<b>Off-Line:</b>
-											Los documentos se autorizan en un maximo de 24 horas con el SRI
-										</li>
+                                                <b>Off-Line:</b>
+                                                Los documentos se autorizan en un maximo de 24 horas con el SRI
+                                            </li>
                                         </ul>
                                     </div>
                                     <span
@@ -247,7 +247,7 @@
                         <div class="row mt16 o_settings_container">
                             <div id="signer" class="col-12 col-md-6 o_setting_box">
                                 <div class="o_setting_left_pane">
-							</div>
+                                </div>
                                 <div class="o_setting_right_pane">
                                     <div class="row">
                                         <label
@@ -271,7 +271,7 @@
                                 class="col-12 col-md-6 o_setting_box"
                             >
                                 <div class="o_setting_left_pane">
-							</div>
+                                </div>
                                 <div class="o_setting_right_pane">
                                     <div class="row">
                                         <label
@@ -423,7 +423,7 @@
                                 class="col-12 col-md-6 o_setting_box"
                             >
                                 <div class="o_setting_left_pane">
-							</div>
+                                </div>
                                 <div class="o_setting_right_pane">
                                     <div class="row">
                                         <label
@@ -443,7 +443,7 @@
                             >
                                 <div class="o_setting_left_pane">
 
-							</div>
+                                </div>
                                 <div class="o_setting_right_pane">
                                     <div>
                                         <button
@@ -542,8 +542,8 @@
                                         string="Crear Usuarios para portal?"
                                     />
                                     <div class="text-muted">
-									Marque esta opcion si desea crear automaticamente un usuario por cada cliente para que puedan ver sus documentos en el portal.
-								</div>
+                                        Marque esta opcion si desea crear automaticamente un usuario por cada cliente para que puedan ver sus documentos en el portal.
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -73,14 +73,14 @@ class ResPartner(models.Model):
     )
     l10n_ec_related_part = fields.Boolean("Related Part?", readonly=False, help="",)
     l10n_ec_is_ecuadorian_company = fields.Boolean(
-        string="is Ecuadorian Company?", compute="_get_ecuadorian_company"
+        string="is Ecuadorian Company?", compute="_compute_ecuadorian_company"
     )
     l10n_ec_sri_payment_id = fields.Many2one(
         "l10n_ec.sri.payment.method", "SRI Payment Method"
     )
 
     @api.depends("company_id.country_id")
-    def _get_ecuadorian_company(self):
+    def _compute_ecuadorian_company(self):
         for rec in self:
             l10n_ec_is_ecuadorian_company = False
             if rec.company_id and rec.company_id.country_id.code == "EC":
@@ -151,7 +151,7 @@ class ResPartner(models.Model):
             return True
 
     @api.depends("vat", "country_id")
-    def _get_l10n_ec_type_sri(self):
+    def _compute_l10n_ec_type_sri(self):
         vat_type = ""
         for partner in self:
             if partner.vat:
@@ -165,7 +165,7 @@ class ResPartner(models.Model):
         "SRI Identification Type",
         store=True,
         readonly=True,
-        compute="_get_l10n_ec_type_sri",
+        compute="_compute_l10n_ec_type_sri",
     )
 
     def write(self, values):

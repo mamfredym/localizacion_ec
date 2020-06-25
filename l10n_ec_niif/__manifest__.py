@@ -61,5 +61,7 @@
     "demo": ["demo/agency_data.xml", "demo/partner_data.xml",],
     "installable": True,
     "auto_install": False,
-    "external_dependencies": {"python": ["stdnum"],},
+    "external_dependencies": {
+        "python": ["stdnum", "xmlsig", "OpenSSL", "xades", "barcode", "zeep", "Crypto"],
+    },
 }

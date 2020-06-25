@@ -1,7 +1,7 @@
 import base64
 from xml.etree.ElementTree import SubElement
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
 
@@ -109,7 +109,9 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
         # funcion debe ser reemplazada en cada clase heredada
         # es usada para envio del mail al cliente
         raise UserError(
-            "Debe reemplazar esta funcion l10n_ec_action_sent_mail_electronic en su clase heredada"
+            _(
+                "Debe reemplazar esta funcion l10n_ec_action_sent_mail_electronic en su clase heredada"
+            )
         )
 
     def l10n_ec_get_document_code_sri(self):
@@ -122,28 +124,36 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
         # 06 : Guia de Remision
         # 07 : Comprobante de Retencion
         raise UserError(
-            "Debe reemplazar esta funcion l10n_ec_get_document_code_sri en su clase heredada"
+            _(
+                "Debe reemplazar esta funcion l10n_ec_get_document_code_sri en su clase heredada"
+            )
         )
 
     def l10n_ec_get_document_number(self):
         # funcion debe ser reemplazada en cada clase heredada
         # esta funcion debe devolver el numero de documento
         raise UserError(
-            "Debe reemplazar esta funcion l10n_ec_get_document_number en su clase heredada"
+            _(
+                "Debe reemplazar esta funcion l10n_ec_get_document_number en su clase heredada"
+            )
         )
 
     def l10n_ec_get_document_date(self):
         # funcion debe ser reemplazada en cada clase heredada
         # esta funcion debe devolver la fecha de emision del documento
         raise UserError(
-            "Debe reemplazar esta funcion l10n_ec_get_document_date en su clase heredada"
+            _(
+                "Debe reemplazar esta funcion l10n_ec_get_document_date en su clase heredada"
+            )
         )
 
     def l10n_ec_get_document_version_xml(self):
         # funcion debe ser reemplazada en cada clase heredada
         # esta funcion debe devolver la version del xml que se debe usar
         raise UserError(
-            "Debe reemplazar esta funcion l10n_ec_get_document_version_xml en su clase heredada"
+            _(
+                "Debe reemplazar esta funcion l10n_ec_get_document_version_xml en su clase heredada"
+            )
         )
 
     def l10n_ec_get_document_filename_xml(self):
@@ -151,14 +161,18 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
         # esta funcion debe devolver el nombre del archivo xml sin la extension
         # algo como: id, prefijo, secuencial
         raise UserError(
-            "Debe reemplazar esta funcion l10n_ec_get_document_filename_xml en su clase heredada"
+            _(
+                "Debe reemplazar esta funcion l10n_ec_get_document_filename_xml en su clase heredada"
+            )
         )
 
     def l10n_ec_action_generate_xml_data(self, node_root):
         # funcion debe ser reemplazada en cada clase heredada
         # esta funcion debe crear la data del documento en el xml(node_root)
         raise UserError(
-            "Debe reemplazar esta funcion l10n_ec_action_generate_xml_data en su clase heredada"
+            _(
+                "Debe reemplazar esta funcion l10n_ec_action_generate_xml_data en su clase heredada"
+            )
         )
 
     def _l10n_ec_get_info_aditional(self):

@@ -24,7 +24,7 @@ KEY_TO_PEM_CMD = (
 STATES = {"unverified": [("readonly", False),]}
 
 
-class sri_key_type(models.Model):
+class SriKeyType(models.Model):
     _name = "sri.key.type"
     _description = "Tipo de Llave electronica"
 
@@ -67,7 +67,9 @@ class sri_key_type(models.Model):
         except Exception as ex:
             _logger.warning(tools.ustr(ex))
             raise UserError(
-                "Error al abrir la firma, posiblmente ha ingresado mal la clave de la firma o el archivo no es compatible."
+                _(
+                    "Error al abrir la firma, posiblmente ha ingresado mal la clave de la firma o el archivo no es compatible."
+                )
             )
 
         private_key = self.convert_key_cer_to_pem(filecontent, self.password)
@@ -136,7 +138,9 @@ class sri_key_type(models.Model):
         except Exception as ex:
             _logger.warning(tools.ustr(ex))
             raise UserError(
-                "Error al abrir la firma, posiblmente ha ingresado mal la clave de la firma o el archivo no es compatible."
+                _(
+                    "Error al abrir la firma, posiblmente ha ingresado mal la clave de la firma o el archivo no es compatible."
+                )
             )
         doc = etree.fromstring(xml_string_data)
         signature_id = f"Signature{new_range()}"
