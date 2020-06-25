@@ -1,124 +1,122 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-<data noupdate="1">
-<!--Ecuadorian Banks -->
-
+    <data noupdate="1">
+        <!--Ecuadorian Banks -->
         <record id="amazonas" model="res.bank">
             <field name="name">BANCO AMAZONAS</field>
-            <field name="country" ref="base.ec"/>
-        </record> 
+            <field name="country" ref="base.ec" />
+        </record>
         <record id="bolivariano" model="res.bank">
             <field name="name">BANCO BOLIVARIANO</field>
-            <field name="country" ref="base.ec"/>
-        </record> 
+            <field name="country" ref="base.ec" />
+        </record>
         <record id="capital" model="res.bank">
             <field name="name">BANCO CAPITAL</field>
-            <field name="country" ref="base.ec"/>
-        </record> 
+            <field name="country" ref="base.ec" />
+        </record>
         <record id="central" model="res.bank">
             <field name="name">BANCO CENTRAL</field>
-            <field name="country" ref="base.ec"/>
-        </record> 
+            <field name="country" ref="base.ec" />
+        </record>
         <record id="cofiec" model="res.bank">
             <field name="name">BANCO COFIEC</field>
-            <field name="country" ref="base.ec"/>
-        </record> 
+            <field name="country" ref="base.ec" />
+        </record>
         <record id="manabi" model="res.bank">
             <field name="name">BANCO COMERCIAL DE MANABI</field>
-            <field name="country" ref="base.ec"/>
-        </record> 
+            <field name="country" ref="base.ec" />
+        </record>
         <record id="bguayaquil" model="res.bank">
             <field name="name">BANCO DE GUAYAQUIL</field>
-            <field name="country" ref="base.ec"/>
-        </record> 
+            <field name="country" ref="base.ec" />
+        </record>
         <record id="produbanco" model="res.bank">
             <field name="name">PRODUBANCO</field>
-            <field name="country" ref="base.ec"/>
-        </record> 
+            <field name="country" ref="base.ec" />
+        </record>
         <record id="loja" model="res.bank">
             <field name="name">BANCO DE LOJA</field>
-            <field name="country" ref="base.ec"/>
-        </record> 
+            <field name="country" ref="base.ec" />
+        </record>
         <record id="machala" model="res.bank">
             <field name="name">BANCO DE MACHALA</field>
-            <field name="country" ref="base.ec"/>
-        </record> 
+            <field name="country" ref="base.ec" />
+        </record>
         <record id="austro" model="res.bank">
             <field name="name">BANCO DEL AUSTRO</field>
-            <field name="country" ref="base.ec"/>
-        </record> 
+            <field name="country" ref="base.ec" />
+        </record>
         <record id="estado" model="res.bank">
             <field name="name">BANCO DEL ESTADO</field>
-            <field name="country" ref="base.ec"/>
-        </record> 
+            <field name="country" ref="base.ec" />
+        </record>
         <record id="litoral" model="res.bank">
             <field name="name">BANCO DEL LITORAL</field>
-            <field name="country" ref="base.ec"/>
-        </record> 
+            <field name="country" ref="base.ec" />
+        </record>
         <record id="pacifico" model="res.bank">
             <field name="name">BANCO DEL PACIFICO</field>
-            <field name="country" ref="base.ec"/>
-        </record> 
+            <field name="country" ref="base.ec" />
+        </record>
         <record id="bev" model="res.bank">
             <field name="name">BANCO ECUATORIANO DE LA VIVIENDA BEV</field>
-            <field name="country" ref="base.ec"/>
-        </record> 
+            <field name="country" ref="base.ec" />
+        </record>
         <record id="ruminahui" model="res.bank">
             <field name="name">BANCO GENERAL RUMIÑAHUI</field>
-            <field name="country" ref="base.ec"/>
-        </record> 
+            <field name="country" ref="base.ec" />
+        </record>
         <record id="internacional" model="res.bank">
             <field name="name">BANCO INTERNACIONAL</field>
-            <field name="country" ref="base.ec"/>
-        </record> 
+            <field name="country" ref="base.ec" />
+        </record>
         <record id="bnf" model="res.bank">
             <field name="name">BANCO NACIONAL DE FOMENTO</field>
-            <field name="country" ref="base.ec"/>
-        </record> 
+            <field name="country" ref="base.ec" />
+        </record>
         <record id="pichincha" model="res.bank">
             <field name="name">BANCO PICHINCHA</field>
-            <field name="country" ref="base.ec"/>
-        </record> 
+            <field name="country" ref="base.ec" />
+        </record>
         <record id="procredit" model="res.bank">
             <field name="name">BANCO PROCREDIT</field>
-            <field name="country" ref="base.ec"/>
-        </record> 
+            <field name="country" ref="base.ec" />
+        </record>
         <record id="promerica" model="res.bank">
             <field name="name">BANCO PROMERICA</field>
-            <field name="country" ref="base.ec"/>
-        </record> 
+            <field name="country" ref="base.ec" />
+        </record>
         <record id="solidario" model="res.bank">
             <field name="name">BANCO SOLIDARIO</field>
-            <field name="country" ref="base.ec"/>
-        </record> 
+            <field name="country" ref="base.ec" />
+        </record>
         <record id="sudamericano" model="res.bank">
             <field name="name">BANCO SUDAMERICANO</field>
-            <field name="country" ref="base.ec"/>
-        </record> 
+            <field name="country" ref="base.ec" />
+        </record>
         <record id="territorial" model="res.bank">
             <field name="name">BANCO TERRITORIAL</field>
-            <field name="country" ref="base.ec"/>
-        </record> 
+            <field name="country" ref="base.ec" />
+        </record>
         <record id="unibanco" model="res.bank">
             <field name="name">UNIBANCO</field>
-            <field name="country" ref="base.ec"/>
-        </record> 
+            <field name="country" ref="base.ec" />
+        </record>
         <record id="citibank" model="res.bank">
             <field name="name">CITIBANK</field>
-            <field name="country" ref="base.ec"/>
-        </record> 
+            <field name="country" ref="base.ec" />
+        </record>
         <record id="lloyds" model="res.bank">
             <field name="name">LLOYDS</field>
-            <field name="country" ref="base.ec"/>
-        </record> 
+            <field name="country" ref="base.ec" />
+        </record>
         <record id="delbank" model="res.bank">
             <field name="name">DELBANK</field>
-            <field name="country" ref="base.ec"/>
-        </record> 
+            <field name="country" ref="base.ec" />
+        </record>
         <record id="banecuador" model="res.bank">
             <field name="name">BANECUADOR</field>
-            <field name="country" ref="base.ec"/>
+            <field name="country" ref="base.ec" />
         </record>
     </data>
 </odoo>
-

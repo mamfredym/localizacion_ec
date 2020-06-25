@@ -257,7 +257,7 @@
 			<xsd:totalDigits value="14"/>
 			<xsd:fractionDigits value="2"/>
 		</xsd:restriction>
-	</xsd:simpleType>		
+	</xsd:simpleType>
 	<xsd:simpleType name="codigoPorcentaje">
 		<xsd:restriction base="xsd:string">
 			<xsd:pattern value="[0-9]+"/>

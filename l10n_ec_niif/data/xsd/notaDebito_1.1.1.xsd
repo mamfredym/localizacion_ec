@@ -404,7 +404,7 @@
 							</xsd:element>
 						</xsd:sequence>
 					</xsd:complexType>
-				</xsd:element>				
+				</xsd:element>
 			</xsd:sequence>
 			<xsd:attribute name="id">
 				<xsd:simpleType>

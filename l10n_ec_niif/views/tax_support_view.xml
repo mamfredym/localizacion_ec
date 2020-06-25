@@ -1,19 +1,17 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-	<data>
-
+    <data>
         <record id="l10n_ec_tax_support_tree_view" model="ir.ui.view">
             <field name="name">l10n_ec.tax.support.tree</field>
             <field name="model">l10n_ec.tax.support</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="code"/>
-                    <field name="name"/>
-                    <field name="document_type_ids" widget="many2many_tags"/>
+                    <field name="code" />
+                    <field name="name" />
+                    <field name="document_type_ids" widget="many2many_tags" />
                 </tree>
             </field>
         </record>
-
         <record id="l10n_ec_tax_support_form_view" model="ir.ui.view">
             <field name="name">l10n_ec.tax.support.form</field>
             <field name="model">l10n_ec.tax.support</field>
@@ -21,28 +19,26 @@
                 <form string="Ecuadorian Tax Support">
                     <sheet>
                         <group>
-                            <field name="code"/>
-                            <field name="name"/>
-                            <field name="document_type_ids" widget="many2many_tags"/>
+                            <field name="code" />
+                            <field name="name" />
+                            <field name="document_type_ids" widget="many2many_tags" />
                         </group>
                     </sheet>
                 </form>
             </field>
         </record>
-
         <record id="l10n_ec_tax_support_search_view" model="ir.ui.view">
             <field name="name">l10n_ec.tax.support.tree</field>
             <field name="model">l10n_ec.tax.support</field>
             <field name="arch" type="xml">
                 <form string="Ecuadorian Tax Supports">
                     <search>
-                        <field name="code"/>
-                        <field name="name"/>
+                        <field name="code" />
+                        <field name="name" />
                     </search>
                 </form>
             </field>
         </record>
-
         <record id="action_l10n_ec_tax_support_tree_view" model="ir.actions.act_window">
             <field name="name">Ecuadorian Tax Supports</field>
             <field name="type">ir.actions.act_window</field>
@@ -50,11 +46,12 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="l10n_ec_tax_support_tree_view" />
         </record>
-
-        <menuitem id="menu_action_l10n_ec_tax_support_tree_view"
-                  name="Ecuadorian Tax Supports"
-                  parent="account.account_account_menu"
-                  action="action_l10n_ec_tax_support_tree_view" sequence="30"/>
-
+        <menuitem
+            id="menu_action_l10n_ec_tax_support_tree_view"
+            name="Ecuadorian Tax Supports"
+            parent="account.account_account_menu"
+            action="action_l10n_ec_tax_support_tree_view"
+            sequence="30"
+        />
     </data>
 </odoo>

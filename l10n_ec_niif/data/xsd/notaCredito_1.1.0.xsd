@@ -252,13 +252,13 @@
 							<xsd:element name="razonSocialComprador" type="razonSocialComprador"/>
 							<xsd:element name="identificacionComprador" minOccurs="1" type="identificacionComprador"/>
 							<xsd:element name="contribuyenteEspecial" minOccurs="0"	type="contribuyenteEspecial"/>
-							<xsd:element name="obligadoContabilidad" minOccurs="0"	type="obligadoContabilidad"/> 
+							<xsd:element name="obligadoContabilidad" minOccurs="0"	type="obligadoContabilidad"/>
 							<xsd:element name="rise" minOccurs="0" type="rise"/>
 							<xsd:element name="codDocModificado" type="codDocModificado"/>
 							<xsd:element name="numDocModificado" type="numDocModificado"/>
 							<xsd:element name="fechaEmisionDocSustento"	type="fechaEmisionDocSustento" minOccurs="1"/>
 							<xsd:element name="totalSinImpuestos" type="totalSinImpuestos"/>
-							<xsd:element name="valorModificacion" minOccurs="1"	type="valorModificacion"/> 
+							<xsd:element name="valorModificacion" minOccurs="1"	type="valorModificacion"/>
 							<xsd:element name="moneda" minOccurs="0" type="moneda"/>
 							<xsd:element ref="totalConImpuestos"/>
 							<xsd:element name="motivo" type="motivo"/>

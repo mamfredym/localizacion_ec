@@ -1,14 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <data noupdate="1">
-    	
-    	<record model="sri.key.type" id="bce_ng_token">
-    		<field name="name">BCE NG TOKEN</field>
-    		<field name="path">/usr/local/lib/libeTPkcs11.so</field>
-    		<field name="key_type">token</field>
-    		<field name="expiration_date">2017-01-01</field>
-			<field name="password">12345</field>
-    	</record>
-    
+        <record model="sri.key.type" id="bce_ng_token">
+            <field name="name">BCE NG TOKEN</field>
+            <field name="path">/usr/local/lib/libeTPkcs11.so</field>
+            <field name="key_type">token</field>
+            <field name="expiration_date">2017-01-01</field>
+            <field name="password">12345</field>
+        </record>
     </data>
 </odoo>

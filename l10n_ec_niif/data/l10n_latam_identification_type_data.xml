@@ -1,24 +1,24 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <data noupdate="False">
         <record model='l10n_latam.identification.type' id='it_ruc'>
             <field name='name'>RUC</field>
             <field name='description'>RUC</field>
             <field name='sequence'>11</field>
-            <field name='is_vat' eval='True'/>
-            <field name='country_id' ref="base.ec"/>
+            <field name='is_vat' eval='True' />
+            <field name='country_id' ref="base.ec" />
         </record>
         <record model='l10n_latam.identification.type' id='it_cedula'>
             <field name='name'>Cédula</field>
             <field name='description'>Cédula</field>
             <field name='sequence'>12</field>
-            <field name='country_id' ref="base.ec"/>
+            <field name='country_id' ref="base.ec" />
         </record>
         <record model='l10n_latam.identification.type' id='it_pasaporte'>
             <field name='name'>Pasaporte</field>
             <field name='description'>Pasaporte</field>
             <field name='sequence'>13</field>
-            <field name='country_id' ref="base.ec"/>
+            <field name='country_id' ref="base.ec" />
         </record>
     </data>
 </odoo>

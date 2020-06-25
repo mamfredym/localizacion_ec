@@ -1,9 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <data>
-        <template id="assets_niif" name="l10n_ec_niif pdf assets" inherit_id="web.report_assets_common">
+        <template
+            id="assets_niif"
+            name="l10n_ec_niif pdf assets"
+            inherit_id="web.report_assets_common"
+        >
             <xpath expr="." position="inside">
-                <link rel="stylesheet" type="text/scss" href="/l10n_ec_niif/static/src/scss/report_withholds.scss"/>
+                <link
+                    rel="stylesheet"
+                    type="text/scss"
+                    href="/l10n_ec_niif/static/src/scss/report_withholds.scss"
+                />
             </xpath>
         </template>
     </data>

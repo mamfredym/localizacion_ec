@@ -1,14 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-	<data>
-
+    <data>
         <record id="res_users_form_view" model="ir.ui.view">
             <field name="name">res.users.form</field>
             <field name="model">res.users</field>
-            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="inherit_id" ref="base.view_users_form" />
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='preferences']/../.." position="after">
-                    <page string="Ecuadorian Localization" name="ecuadorian_localization">
+                    <page
+                        string="Ecuadorian Localization"
+                        name="ecuadorian_localization"
+                    >
                         <group>
                             <field name="l10n_ec_printer_default_id" />
                         </group>
@@ -17,6 +19,5 @@
                 </xpath>
             </field>
         </record>
-
     </data>
 </odoo>

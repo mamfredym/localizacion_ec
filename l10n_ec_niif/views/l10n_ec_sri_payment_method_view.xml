@@ -1,67 +1,74 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-
     <record model="ir.ui.view" id="l10n_ec_sri_payment_method_tree_view">
         <field name="name">l10n_ec.sri.payment.method.tree</field>
         <field name="model">l10n_ec.sri.payment.method</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="name"/>
-                <field name="code"/>
+                <field name="name" />
+                <field name="code" />
             </tree>
         </field>
     </record>
-
     <record model="ir.ui.view" id="l10n_ec_sri_payment_method_form_view">
         <field name="name">l10n_ec.sri.payment.method.form</field>
         <field name="model">l10n_ec.sri.payment.method</field>
         <field name="arch" type="xml">
             <form>
                 <sheet>
-                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger"
-                            attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="bg-danger"
+                        attrs="{'invisible': [('active', '=', True)]}"
+                    />
                     <group>
                         <group>
-                            <field name="name"/>
+                            <field name="name" />
                         </group>
                         <group>
-                            <field name="code"/>
-                            <field name="active"/>
+                            <field name="code" />
+                            <field name="active" />
                         </group>
                     </group>
-
                 </sheet>
             </form>
         </field>
     </record>
-
     <record model="ir.ui.view" id="l10n_ec_sri_payment_method_search_view">
         <field name="name">l10n_ec.sri.payment.method.search</field>
         <field name="model">l10n_ec.sri.payment.method</field>
         <field name="arch" type="xml">
             <search>
-                <field name="name"/>
-                <field name="code"/>
-                <newline/>
+                <field name="name" />
+                <field name="code" />
+                <newline />
                 <group name="filters" string="Filters">
-                    <filter name="filter_inactive" string="Inactive"
-                            domain="[('active','=',False)]"/>
+                    <filter
+                        name="filter_inactive"
+                        string="Inactive"
+                        domain="[('active','=',False)]"
+                    />
                 </group>
             </search>
         </field>
     </record>
-
-    <record model="ir.actions.act_window" id="action_l10n_ec_sri_payment_method_tree_view">
+    <record
+        model="ir.actions.act_window"
+        id="action_l10n_ec_sri_payment_method_tree_view"
+    >
         <field name="name">S.R.I. Payments Method</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">l10n_ec.sri.payment.method</field>
         <field name="view_mode">tree,form</field>
-        <field name="view_id" ref="l10n_ec_sri_payment_method_tree_view"/>
-        <field name="search_view_id" ref="l10n_ec_sri_payment_method_search_view"/>
+        <field name="view_id" ref="l10n_ec_sri_payment_method_tree_view" />
+        <field name="search_view_id" ref="l10n_ec_sri_payment_method_search_view" />
     </record>
-
-    <menuitem id="l10n_ec_sri_payment_method_menu" name="S.R.I. Payments Method"
-              parent="sri_config_menu" sequence="40"
-              action="action_l10n_ec_sri_payment_method_tree_view"/>
-
+    <menuitem
+        id="l10n_ec_sri_payment_method_menu"
+        name="S.R.I. Payments Method"
+        parent="sri_config_menu"
+        sequence="40"
+        action="action_l10n_ec_sri_payment_method_tree_view"
+    />
 </odoo>

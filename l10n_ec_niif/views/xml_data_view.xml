@@ -1,267 +1,375 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-	<record model="ir.ui.view" id="sri_xml_data_tree_view">
-		<field name="name">sri.xml.data.tree</field>
-		<field name="model">sri.xml.data</field>
-		<field name="arch" type="xml">
-			<tree create="false"
-				edit="false" delete="false" decoration-info="state in ('draft', 'signed', 'waiting')"
-				decoration-success="state=='authorized'" decoration-warning="state in ('returned', 'rejected')"
-				decoration-danger="state=='cancel'">
-				<field name="ln10_ec_xml_key" />
-				<field name="xml_authorization" />
-				<field name="number_document" />
-				<field name="date_emision_document" />
-				<field name="partner_id" />
-				<field name="l10n_ec_type_environment" optional="hide" />
-				<field name="send_mail" optional="hide"/>
-				<field name="state" />
-				<field name="last_error_id" />
-				<field name="create_date" optional="hide"/>
-				<field name="create_uid" optional="hide"/>
-			</tree>
-		</field>
-	</record>
-
-	<record model="ir.ui.view" id="sri_xml_data_form_view">
-		<field name="name">sri.xml.data.form</field>
-		<field name="model">sri.xml.data</field>
-		<field name="arch" type="xml">
-			<form create="false"
-				edit="false" delete="false">
-				<header>
-					<button name="action_create_xml_file" string="Create XML File" type="object"
-						states="draft,returned,rejected" class="oe_highlight" />
-					<button name="action_sing_xml_file" string="Sign XML File"
-						type="object" class="oe_highlight fa fa-magic"
-						attrs="{'invisible': [('state','in',('signed', 'waiting', 'authorized', 'cancel'))]}" />
-					<button name="action_send_xml_file" string="Send Xml to authorize" type="object"
-						icon="fa-gear" class="oe_highlight"
-						attrs="{'invisible': [('state','not in',('signed', 'waiting'))]}"
-                        context="{'no_send': True}"/>
-					<button name="action_send_xml_to_check" string="Check Authorization"
-						type="object" icon="fa-gear" class="oe_highlight"
-						attrs="{'invisible': ['|',('state','not in',('signed', 'waiting')), ('try_ids','=',[])]}" />
-					<button name="action_send_mail_partner" string="Enviar mail a cliente"
-						type="object" class="oe_highlight fa fa-envelope-o"
-						attrs="{'invisible': ['|', ('state','!=', 'authorized'), ('l10n_ec_type_environment','!=', 'production')]}" />
-					<button name="action_send_mail_partner" string="Enviar mail a cliente"
-						type="object" class="oe_highlight fa fa-envelope-o"
-						attrs="{'invisible': ['|', ('state','!=', 'authorized'), ('l10n_ec_type_environment','!=', 'test')]}"
-						groups="base.group_system" context="{'force_send_mail': True}" />
-					<button name="action_create_file_authorized" string="Crear XML autorizado"
-						type="object" class="oe_highlight fa fa-file-code-o"
-						attrs="{'invisible': [('state','!=','authorized')]}" />
-					<button
+    <record model="ir.ui.view" id="sri_xml_data_tree_view">
+        <field name="name">sri.xml.data.tree</field>
+        <field name="model">sri.xml.data</field>
+        <field name="arch" type="xml">
+            <tree
+                create="false"
+                edit="false"
+                delete="false"
+                decoration-info="state in ('draft', 'signed', 'waiting')"
+                decoration-success="state=='authorized'"
+                decoration-warning="state in ('returned', 'rejected')"
+                decoration-danger="state=='cancel'"
+            >
+                <field name="ln10_ec_xml_key" />
+                <field name="xml_authorization" />
+                <field name="number_document" />
+                <field name="date_emision_document" />
+                <field name="partner_id" />
+                <field name="l10n_ec_type_environment" optional="hide" />
+                <field name="send_mail" optional="hide" />
+                <field name="state" />
+                <field name="last_error_id" />
+                <field name="create_date" optional="hide" />
+                <field name="create_uid" optional="hide" />
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="sri_xml_data_form_view">
+        <field name="name">sri.xml.data.form</field>
+        <field name="model">sri.xml.data</field>
+        <field name="arch" type="xml">
+            <form create="false" edit="false" delete="false">
+                <header>
+                    <button
+                        name="action_create_xml_file"
+                        string="Create XML File"
+                        type="object"
+                        states="draft,returned,rejected"
+                        class="oe_highlight"
+                    />
+                    <button
+                        name="action_sing_xml_file"
+                        string="Sign XML File"
+                        type="object"
+                        class="oe_highlight fa fa-magic"
+                        attrs="{'invisible': [('state','in',('signed', 'waiting', 'authorized', 'cancel'))]}"
+                    />
+                    <button
+                        name="action_send_xml_file"
+                        string="Send Xml to authorize"
+                        type="object"
+                        icon="fa-gear"
+                        class="oe_highlight"
+                        attrs="{'invisible': [('state','not in',('signed', 'waiting'))]}"
+                        context="{'no_send': True}"
+                    />
+                    <button
+                        name="action_send_xml_to_check"
+                        string="Check Authorization"
+                        type="object"
+                        icon="fa-gear"
+                        class="oe_highlight"
+                        attrs="{'invisible': ['|',('state','not in',('signed', 'waiting')), ('try_ids','=',[])]}"
+                    />
+                    <button
+                        name="action_send_mail_partner"
+                        string="Enviar mail a cliente"
+                        type="object"
+                        class="oe_highlight fa fa-envelope-o"
+                        attrs="{'invisible': ['|', ('state','!=', 'authorized'), ('l10n_ec_type_environment','!=', 'production')]}"
+                    />
+                    <button
+                        name="action_send_mail_partner"
+                        string="Enviar mail a cliente"
+                        type="object"
+                        class="oe_highlight fa fa-envelope-o"
+                        attrs="{'invisible': ['|', ('state','!=', 'authorized'), ('l10n_ec_type_environment','!=', 'test')]}"
+                        groups="base.group_system"
+                        context="{'force_send_mail': True}"
+                    />
+                    <button
+                        name="action_create_file_authorized"
+                        string="Crear XML autorizado"
+                        type="object"
+                        class="oe_highlight fa fa-file-code-o"
+                        attrs="{'invisible': [('state','!=','authorized')]}"
+                    />
+                    <button
                         name="action_desactive_notification_documents_no_autorization"
-                        string="Desactivar Notificación" type="object" icon="fa-gear"
-                        attrs="{'invisible':['|',('notification_active','=',False),('state','not in',('rejected', 'returned', 'waiting'))]}" />
+                        string="Desactivar Notificación"
+                        type="object"
+                        icon="fa-gear"
+                        attrs="{'invisible':['|',('notification_active','=',False),('state','not in',('rejected', 'returned', 'waiting'))]}"
+                    />
                     <button
                         name="action_active_notification_documents_no_autorization"
-                        string="Activar Notificación" type="object" icon="fa-gear"
-                        attrs="{'invisible':['|',('notification_active','!=',False),('state','not in',('rejected', 'returned', 'waiting'))]}" />
-                    <field name="state" colspan="4" widget="statusbar"
-						statusbar_visible="draft,signed,authorized" statusbar_colors="{'cancel':'red'}" />
-				</header>
-				<sheet>
-					<group>
-						<group>
-							<field name="company_id" groups="base.group_multi_company"
-									options="{'no_create': True}" />
-							<field name="l10n_ec_point_of_emission_id" />
-							<field name="agency_id" />
-						</group>
-						<group>
-							<field name="l10n_ec_type_environment" />
-							<field name="notification_active"
-									attrs="{'invisible':[('state','!=','rejected')]}" />
-							<field name="l10n_ec_type_conection_sri" />
-							<field name="send_mail" readonly="1" />
-						</group>
-					</group>
-					<notebook colspan="4">
-						<page string="Documento">
-							<group>
-								<group colspan="2">
-									<field name="partner_id" readonly="1" />
-									<field name="invoice_out_id"
-										attrs="{'invisible': [('invoice_out_id', '=', False)]}"
-										domain="[('l10n_ec_debit_note','=', False),('type','=','out_invoice'),('state', '=', 'posted')]"
-										context="{'form_view_ref':'account.view_move_form', 'type':'out_invoice', 'journal_type': 'sale'}"
-										options="{'no_create': True}" />
-									<field name="credit_note_out_id"
-										attrs="{'invisible': [('credit_note_out_id', '=', False)]}"
-										domain="[('type','=','out_refund'), ('state', '=', 'posted')]"
-										context="{'form_view_ref':'account.view_move_form', 'type':'out_refund', 'journal_type':'sale_refund'}"
-										options="{'no_create': True}" />
-									<field name="debit_note_out_id"
-										attrs="{'invisible': [('debit_note_out_id', '=', False)]}"
-										domain="[('l10n_ec_debit_note','=', True),('type','=','out_invoice'), ('state', '=', 'posted')]"
-										context="{'form_view_ref':'account.view_move_form', 'type':'out_invoice', 'journal_type': 'sale','default_l10n_ec_debit_note':True}"
-										options="{'no_create': True}" />
-									<field name="liquidation_id"
-										attrs="{'invisible': [('liquidation_id', '=', False)]}"
-										domain="[('l10n_ec_liquidation','=', True),('type','=','in_invoice'), ('state', '=', 'posted')]"
-										context="{'form_view_ref':'account.view_move_form', 'type':'in_invoice', 'journal_type': 'purchase','default_l10n_ec_liquidation':True}"
-										options="{'no_create': True}" />
-									<field name="withhold_id"
-										attrs="{'invisible': [('withhold_id', '=', False)]}"
-										domain="[('state','=','approved'), ('type','=','purchase')]"
-										context="{'form_view_ref':'ecua_retenciones.view_account_retention_purchase_form'}"
-										options="{'no_create': True}" />
-									<field name="date_emision_document" />
-								</group>
-							</group>
-						</page>
-						<page string="Información">
-							<group>
-								<group>
-									<field name="ln10_ec_xml_key" readonly="1" />
-									<field name="xml_authorization" readonly="1" />
-									<field name="signed_date" readonly="1" />
-									<field name="response_date" readonly="1" />
-									<field name="create_uid" readonly="1" />
-									<field name="cancel_user_id" />
-									<field name="authorization_to_cancel" />
-								</group>
-								<group>
-									<field name="ln10_ec_authorization_date" readonly="1" />
-									<field name="send_date" readonly="1" />
-									<field name="create_date" readonly="1" />
-									<field name="cancel_date" />
-								</group>
-							</group>
-							<group string="Archivos">
+                        string="Activar Notificación"
+                        type="object"
+                        icon="fa-gear"
+                        attrs="{'invisible':['|',('notification_active','!=',False),('state','not in',('rejected', 'returned', 'waiting'))]}"
+                    />
+                    <field
+                        name="state"
+                        colspan="4"
+                        widget="statusbar"
+                        statusbar_visible="draft,signed,authorized"
+                        statusbar_colors="{'cancel':'red'}"
+                    />
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company"
+                                options="{'no_create': True}"
+                            />
+                            <field name="l10n_ec_point_of_emission_id" />
+                            <field name="agency_id" />
+                        </group>
+                        <group>
+                            <field name="l10n_ec_type_environment" />
+                            <field
+                                name="notification_active"
+                                attrs="{'invisible':[('state','!=','rejected')]}"
+                            />
+                            <field name="l10n_ec_type_conection_sri" />
+                            <field name="send_mail" readonly="1" />
+                        </group>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Documento">
+                            <group>
+                                <group colspan="2">
+                                    <field name="partner_id" readonly="1" />
+                                    <field
+                                        name="invoice_out_id"
+                                        attrs="{'invisible': [('invoice_out_id', '=', False)]}"
+                                        domain="[('l10n_ec_debit_note','=', False),('type','=','out_invoice'),('state', '=', 'posted')]"
+                                        context="{'form_view_ref':'account.view_move_form', 'type':'out_invoice', 'journal_type': 'sale'}"
+                                        options="{'no_create': True}"
+                                    />
+                                    <field
+                                        name="credit_note_out_id"
+                                        attrs="{'invisible': [('credit_note_out_id', '=', False)]}"
+                                        domain="[('type','=','out_refund'), ('state', '=', 'posted')]"
+                                        context="{'form_view_ref':'account.view_move_form', 'type':'out_refund', 'journal_type':'sale_refund'}"
+                                        options="{'no_create': True}"
+                                    />
+                                    <field
+                                        name="debit_note_out_id"
+                                        attrs="{'invisible': [('debit_note_out_id', '=', False)]}"
+                                        domain="[('l10n_ec_debit_note','=', True),('type','=','out_invoice'), ('state', '=', 'posted')]"
+                                        context="{'form_view_ref':'account.view_move_form', 'type':'out_invoice', 'journal_type': 'sale','default_l10n_ec_debit_note':True}"
+                                        options="{'no_create': True}"
+                                    />
+                                    <field
+                                        name="liquidation_id"
+                                        attrs="{'invisible': [('liquidation_id', '=', False)]}"
+                                        domain="[('l10n_ec_liquidation','=', True),('type','=','in_invoice'), ('state', '=', 'posted')]"
+                                        context="{'form_view_ref':'account.view_move_form', 'type':'in_invoice', 'journal_type': 'purchase','default_l10n_ec_liquidation':True}"
+                                        options="{'no_create': True}"
+                                    />
+                                    <field
+                                        name="withhold_id"
+                                        attrs="{'invisible': [('withhold_id', '=', False)]}"
+                                        domain="[('state','=','approved'), ('type','=','purchase')]"
+                                        context="{'form_view_ref':'ecua_retenciones.view_account_retention_purchase_form'}"
+                                        options="{'no_create': True}"
+                                    />
+                                    <field name="date_emision_document" />
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Información">
+                            <group>
+                                <group>
+                                    <field name="ln10_ec_xml_key" readonly="1" />
+                                    <field name="xml_authorization" readonly="1" />
+                                    <field name="signed_date" readonly="1" />
+                                    <field name="response_date" readonly="1" />
+                                    <field name="create_uid" readonly="1" />
+                                    <field name="cancel_user_id" />
+                                    <field name="authorization_to_cancel" />
+                                </group>
+                                <group>
+                                    <field
+                                        name="ln10_ec_authorization_date"
+                                        readonly="1"
+                                    />
+                                    <field name="send_date" readonly="1" />
+                                    <field name="create_date" readonly="1" />
+                                    <field name="cancel_date" />
+                                </group>
+                            </group>
+                            <group string="Archivos">
                                 <field name="xml_file" filename="xml_filename" />
                                 <field name="xml_filename" invisible="1" />
-							</group>
-						</page>
-						<page string="Mensajes Informativos">
-							<group>
-								<group>
-									<field name="last_error_id" />
+                            </group>
+                        </page>
+                        <page string="Mensajes Informativos">
+                            <group>
+                                <group>
+                                    <field name="last_error_id" />
+                                </group>
+                                <group>
 								</group>
-								<group>
-								</group>
-							</group>
-							<field name="sri_message_ids" readonly="1">
-								<tree>
-									<field name="message_code_id" />
-									<field name="message_type" />
-									<field name="message" />
-									<field name="other_info" />
-									<field name="create_date" />
-									<field name="write_date" />
-								</tree>
-								<form>
-									<group>
-										<group>
-											<field name="message_code_id" />
-											<field name="message_type" />
-										</group>
-										<group>
-											<field name="create_date" />
-											<field name="write_date" />
-										</group>
-									</group>
-									<separator string="Mensaje" colspan="2" />
-									<field name="message" colspan="2" />
-									<separator string="Otra Información" colspan="2" />
-									<field name="other_info" colspan="2" />
-								</form>
-							</field>
-						</page>
-						<page string="Intentos de Envío">
-							<field name="try_ids" colspan="4" readonly="1">
-								<tree>
-									<field name="send_date" />
-									<field name="response_date" />
-									<field name="type_send" />
-								</tree>
-								<form>
-									<group>
-										<group>
-											<field name="send_date" />
-											<field name="type_send" />
-										</group>
-										<group>
-											<field name="response_date" />
-										</group>
-									</group>
-								</form>
-							</field>
-						</page>
-					</notebook>
-				</sheet>
-				<div class="oe_chatter">
-					<field name="message_follower_ids" widget="mail_followers" />
-					<field name="activity_ids" widget="mail_activity" />
-					<field name="message_ids" widget="mail_thread" />
-				</div>
-			</form>
-		</field>
-	</record>
-
-	<record model="ir.ui.view" id="sri_xml_data_search_view">
-		<field name="name">sri.xml.data.search</field>
-		<field name="model">sri.xml.data</field>
-		<field name="arch" type="xml">
-			<search string="Archivo XML de Firma Electrónica">
-				<field name="ln10_ec_xml_key" />
-				<field name="last_error_id" />
-				<field name="partner_id" />
-				<field name="invoice_out_id" />
-				<field name="liquidation_id" />
-				<field name="credit_note_out_id" />
-				<field name="debit_note_out_id" />
-				<field name="withhold_id" />
-				<field name="state" />
-				<field name="date_emision_document" />
-				<group name="filter_by" string="Filtros">
-					<filter name="this_month" string="Fecha Emision" date="date_emision_document" />
-					<filter name="this_month_create" string="Fecha Creacion" date="create_date" />
-					<separator />
-					<filter name="filter_out_invoice" string="Facturas"
-						domain="[('invoice_out_id', '!=', False)]" />
-					<filter name="filter_out_refund" string="Notas de Credito"
-						domain="[('credit_note_out_id', '!=', False)]" />
-					<filter name="filter_debit_note_out" string="Notas de Debito"
-						domain="[('debit_note_out_id', '!=', False)]" />
-					<filter name="filter_withhold" string="Retenciones"
-						domain="[('withhold_id', '!=', False)]" />
-					<filter name="filter_liquidation" string="Liquidacion de Compras"
-						domain="[('liquidation_id', '!=', False)]" />
-					<separator />
-					<filter name="filter_no_sent_mail" string="Sin Enviar Correo al cliente"
-						domain="[('state', '=', 'authorized'), ('send_mail', '=', False)]" />
-				</group>
-				<group name="group_by" string="Agrupar por">
-					<filter string="Cliente" name="group_by_partner_id"
-						context="{'group_by':'partner_id'}" />
-					<filter string="Ultimo Error" name="group_by_last_error_id"
-						context="{'group_by':'last_error_id'}" />
-					<filter string="Estado" name="group_by_state"
-						context="{'group_by':'state'}" />
-					<separator/>
-					<filter string="Fecha de Emision" name="group_by_date_emision_document"
-						context="{'group_by': 'date_emision_document'}" />
-					<filter string="Fecha de Creacion" name="create_date"
-						context="{'group_by':'create_date'}" />
-				</group>
-			</search>
-		</field>
-	</record>
-
-	<record model="ir.actions.act_window" id="action_sri_xml_data_tree_view">
-		<field name="name">XML de Firma Electrónica</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">sri.xml.data</field>
-		<field name="view_mode">tree,form</field>
-		<field name="context">{'show_number':True, 'search_default_group_by_state': 1}</field>
-		<field name="view_id" ref="sri_xml_data_tree_view" />
-	</record>
-
-	<menuitem id="sri_xml_data_menu" name="XML de Firma Electrónica"
-		sequence="15" parent="sri_electronic_documents_menu" action="action_sri_xml_data_tree_view" />
-
+                            </group>
+                            <field name="sri_message_ids" readonly="1">
+                                <tree>
+                                    <field name="message_code_id" />
+                                    <field name="message_type" />
+                                    <field name="message" />
+                                    <field name="other_info" />
+                                    <field name="create_date" />
+                                    <field name="write_date" />
+                                </tree>
+                                <form>
+                                    <group>
+                                        <group>
+                                            <field name="message_code_id" />
+                                            <field name="message_type" />
+                                        </group>
+                                        <group>
+                                            <field name="create_date" />
+                                            <field name="write_date" />
+                                        </group>
+                                    </group>
+                                    <separator string="Mensaje" colspan="2" />
+                                    <field name="message" colspan="2" />
+                                    <separator string="Otra Información" colspan="2" />
+                                    <field name="other_info" colspan="2" />
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Intentos de Envío">
+                            <field name="try_ids" colspan="4" readonly="1">
+                                <tree>
+                                    <field name="send_date" />
+                                    <field name="response_date" />
+                                    <field name="type_send" />
+                                </tree>
+                                <form>
+                                    <group>
+                                        <group>
+                                            <field name="send_date" />
+                                            <field name="type_send" />
+                                        </group>
+                                        <group>
+                                            <field name="response_date" />
+                                        </group>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="activity_ids" widget="mail_activity" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="sri_xml_data_search_view">
+        <field name="name">sri.xml.data.search</field>
+        <field name="model">sri.xml.data</field>
+        <field name="arch" type="xml">
+            <search string="Archivo XML de Firma Electrónica">
+                <field name="ln10_ec_xml_key" />
+                <field name="last_error_id" />
+                <field name="partner_id" />
+                <field name="invoice_out_id" />
+                <field name="liquidation_id" />
+                <field name="credit_note_out_id" />
+                <field name="debit_note_out_id" />
+                <field name="withhold_id" />
+                <field name="state" />
+                <field name="date_emision_document" />
+                <group name="filter_by" string="Filtros">
+                    <filter
+                        name="this_month"
+                        string="Fecha Emision"
+                        date="date_emision_document"
+                    />
+                    <filter
+                        name="this_month_create"
+                        string="Fecha Creacion"
+                        date="create_date"
+                    />
+                    <separator />
+                    <filter
+                        name="filter_out_invoice"
+                        string="Facturas"
+                        domain="[('invoice_out_id', '!=', False)]"
+                    />
+                    <filter
+                        name="filter_out_refund"
+                        string="Notas de Credito"
+                        domain="[('credit_note_out_id', '!=', False)]"
+                    />
+                    <filter
+                        name="filter_debit_note_out"
+                        string="Notas de Debito"
+                        domain="[('debit_note_out_id', '!=', False)]"
+                    />
+                    <filter
+                        name="filter_withhold"
+                        string="Retenciones"
+                        domain="[('withhold_id', '!=', False)]"
+                    />
+                    <filter
+                        name="filter_liquidation"
+                        string="Liquidacion de Compras"
+                        domain="[('liquidation_id', '!=', False)]"
+                    />
+                    <separator />
+                    <filter
+                        name="filter_no_sent_mail"
+                        string="Sin Enviar Correo al cliente"
+                        domain="[('state', '=', 'authorized'), ('send_mail', '=', False)]"
+                    />
+                </group>
+                <group name="group_by" string="Agrupar por">
+                    <filter
+                        string="Cliente"
+                        name="group_by_partner_id"
+                        context="{'group_by':'partner_id'}"
+                    />
+                    <filter
+                        string="Ultimo Error"
+                        name="group_by_last_error_id"
+                        context="{'group_by':'last_error_id'}"
+                    />
+                    <filter
+                        string="Estado"
+                        name="group_by_state"
+                        context="{'group_by':'state'}"
+                    />
+                    <separator />
+                    <filter
+                        string="Fecha de Emision"
+                        name="group_by_date_emision_document"
+                        context="{'group_by': 'date_emision_document'}"
+                    />
+                    <filter
+                        string="Fecha de Creacion"
+                        name="create_date"
+                        context="{'group_by':'create_date'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_sri_xml_data_tree_view">
+        <field name="name">XML de Firma Electrónica</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sri.xml.data</field>
+        <field name="view_mode">tree,form</field>
+        <field
+            name="context"
+        >{'show_number':True, 'search_default_group_by_state': 1}</field>
+        <field name="view_id" ref="sri_xml_data_tree_view" />
+    </record>
+    <menuitem
+        id="sri_xml_data_menu"
+        name="XML de Firma Electrónica"
+        sequence="15"
+        parent="sri_electronic_documents_menu"
+        action="action_sri_xml_data_tree_view"
+    />
 </odoo>

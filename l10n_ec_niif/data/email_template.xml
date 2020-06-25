@@ -1,20 +1,25 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-	<data noupdate="0">
-
-		<!--Email template -->
-		<record id="account.email_template_edi_invoice" model="mail.template">
-			<field name="name">Enviar Documento Electrónico por Correo</field>
-			<field name="email_from">${(object.user_id.email and '%s &lt;%s&gt;' % (object.user_id.name, object.user_id.email) or '')|safe}</field>
-			<field name="subject">${object.company_id.name} Documento (Ref ${object.display_name or 'n/a'})</field>
-			<field name="partner_to">${object.partner_id.id}</field>
-			<field name="model_id" ref="account.model_account_move" />
-			<field name="auto_delete" eval="True" />
-			<field name="report_template" ref="account.account_invoices" />
-			<field name="report_name">Documento _${(object.display_name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}</field>
-			<field name="lang">${object.partner_id.lang}</field>
-			<field name="body_html" type="xml">
-<div>
+    <data noupdate="0">
+        <!--Email template -->
+        <record id="account.email_template_edi_invoice" model="mail.template">
+            <field name="name">Enviar Documento Electrónico por Correo</field>
+            <field
+                name="email_from"
+            >${(object.user_id.email and '%s &lt;%s&gt;' % (object.user_id.name, object.user_id.email) or '')|safe}</field>
+            <field
+                name="subject"
+            >${object.company_id.name} Documento (Ref ${object.display_name or 'n/a'})</field>
+            <field name="partner_to">${object.partner_id.id}</field>
+            <field name="model_id" ref="account.model_account_move" />
+            <field name="auto_delete" eval="True" />
+            <field name="report_template" ref="account.account_invoices" />
+            <field
+                name="report_name"
+            >Documento _${(object.display_name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="body_html" type="xml">
+                <div>
 <p>Estimado ${object.partner_id.name}
 % set access_action = object.with_context(force_website=True).get_access_action()
 % set is_online = access_action and access_action['type'] == 'ir.actions.act_url'
@@ -41,12 +46,16 @@ de ${object.company_id.name}.
 </p>
 
 % if is_online:
-    <br/><br/>
+    <br /><br />
     <center>
-      <a href="${access_url}" style="background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;" class="o_default_snippet_text">Ver Documento</a>
-    </center>
+                        <a
+                            href="${access_url}"
+                            style="background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;"
+                            class="o_default_snippet_text"
+                        >Ver Documento</a>
+                    </center>
 % endif
-    <br/><br/>
+    <br /><br />
 
 % if object.state=='paid':
     <p>Este documento se en encuentra pagado.</p>
@@ -60,22 +69,33 @@ de ${object.company_id.name}.
     ${object.user_id.signature | safe}
 % endif
 </p>
-</div></field>
+</div>
+            </field>
         </record>
-
-
-		<record id="email_template_edi_withhold" model="mail.template">
-			<field name="name">Enviar Retención por Correo</field>
-			<field name="email_from">${(object.invoice_id.user_id.email and '%s &lt;%s&gt;' % (object.invoice_id.user_id.name, object.invoice_id.user_id.email) or '')|safe}</field>
-			<field name="subject">${object.company_id.name} Retención (Ref ${object.display_name or 'n/a'})</field>
-			<field name="partner_to">${object.partner_id.id}</field>
-			<field name="model_id" ref="ecua_retenciones_manual.model_account_retention" />
-			<field name="auto_delete" eval="True" />
-			<field name="report_template" ref="ecua_documentos_electronicos.e_retention_qweb" />
-			<field name="report_name">Retención _${(object.display_name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}</field>
-			<field name="lang">${object.partner_id.lang}</field>
-			<field name="body_html" type="xml">
-				<div>
+        <record id="email_template_edi_withhold" model="mail.template">
+            <field name="name">Enviar Retención por Correo</field>
+            <field
+                name="email_from"
+            >${(object.invoice_id.user_id.email and '%s &lt;%s&gt;' % (object.invoice_id.user_id.name, object.invoice_id.user_id.email) or '')|safe}</field>
+            <field
+                name="subject"
+            >${object.company_id.name} Retención (Ref ${object.display_name or 'n/a'})</field>
+            <field name="partner_to">${object.partner_id.id}</field>
+            <field
+                name="model_id"
+                ref="ecua_retenciones_manual.model_account_retention"
+            />
+            <field name="auto_delete" eval="True" />
+            <field
+                name="report_template"
+                ref="ecua_documentos_electronicos.e_retention_qweb"
+            />
+            <field
+                name="report_name"
+            >Retención _${(object.display_name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="body_html" type="xml">
+                <div>
 					<p>Estimado ${object.partner_id.name}
 						% set access_action = object.with_context(force_website=True).get_access_action()
 						% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'
@@ -95,12 +115,16 @@ de ${object.company_id.name}.
 					</p>
 
 					% if is_online:
-					<br/><br/>
+					<br /><br />
 					<center>
-						<a href="${access_url}" style="background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;" class="o_default_snippet_text">Ver Documento</a>
-					</center>
+                        <a
+                            href="${access_url}"
+                            style="background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;"
+                            class="o_default_snippet_text"
+                        >Ver Documento</a>
+                    </center>
 					% endif
-					<br/><br/>
+					<br /><br />
 
 					<p>Gracias,</p>
 					<p style="color:#888888">
@@ -108,62 +132,112 @@ de ${object.company_id.name}.
 						${object.invoice_id.user_id.signature | safe}
 						% endif
 					</p>
-				</div></field>
-		</record>
-
-		<!--Default Notification Email template for invoices-->
-		<record id="mail_template_data_notification_email_account_withhold" model="mail.template">
-			<field name="name">Contabilidad: Cabecera de Notificacion de Retencion</field>
-			<field name="subject">${object.subject}</field>
-			<field name="model_id" ref="mail.model_mail_message"/>
-			<field name="auto_delete" eval="True"/>
-			<field name="body_html" type="html">
-				<div>
+				</div>
+            </field>
+        </record>
+        <!--Default Notification Email template for invoices-->
+        <record
+            id="mail_template_data_notification_email_account_withhold"
+            model="mail.template"
+        >
+            <field
+                name="name"
+            >Contabilidad: Cabecera de Notificacion de Retencion</field>
+            <field name="subject">${object.subject}</field>
+            <field name="model_id" ref="mail.model_mail_message" />
+            <field name="auto_delete" eval="True" />
+            <field name="body_html" type="html">
+                <div>
 					% set record = ctx.get('record')
 					% set company = record and record.company_id or user.company_id
-					<table border="0" width="100%" cellpadding="0" bgcolor="#ededed" style="padding: 20px; background-color: #ededed; border-collapse:separate;" summary="o_mail_notification">
-						<tbody>
-							<!-- HEADER -->
-							<tr>
-								<td align="center" style="min-width: 590px;">
-									<table width="590" border="0" cellpadding="0" bgcolor="#875A7B" style="min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;">
-										<tr>
-											<td valign="middle">
-												<span style="font-size:20px; color:white; font-weight: bold;">
+					<table
+                        border="0"
+                        width="100%"
+                        cellpadding="0"
+                        bgcolor="#ededed"
+                        style="padding: 20px; background-color: #ededed; border-collapse:separate;"
+                        summary="o_mail_notification"
+                    >
+                        <tbody>
+                            <!-- HEADER -->
+                            <tr>
+                                <td align="center" style="min-width: 590px;">
+                                    <table
+                                        width="590"
+                                        border="0"
+                                        cellpadding="0"
+                                        bgcolor="#875A7B"
+                                        style="min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;"
+                                    >
+                                        <tr>
+                                            <td valign="middle">
+                                                <span
+                                                    style="font-size:20px; color:white; font-weight: bold;"
+                                                >
 													Retención ${object.record_name}
 												</span>
-											</td>
-											<td valign="middle" align="right">
-												<img src="/logo.png?company=${company.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${company.name}"/>
-											</td>
-										</tr>
-									</table>
-								</td>
-							</tr>
-							<!-- CONTENT -->
-							<tr>
-								<td align="center" style="min-width: 590px;">
-									<table width="590" border="0" cellpadding="0" bgcolor="#ffffff" style="min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px; border-collapse:separate;">
-										<tbody>
-											<td valign="top" style="font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;">
+                                            </td>
+                                            <td valign="middle" align="right">
+                                                <img
+                                                    src="/logo.png?company=${company.id}"
+                                                    style="padding: 0px; margin: 0px; height: auto; width: 80px;"
+                                                    alt="${company.name}"
+                                                />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <!-- CONTENT -->
+                            <tr>
+                                <td align="center" style="min-width: 590px;">
+                                    <table
+                                        width="590"
+                                        border="0"
+                                        cellpadding="0"
+                                        bgcolor="#ffffff"
+                                        style="min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px; border-collapse:separate;"
+                                    >
+                                        <tbody>
+                                            <td
+                                                valign="top"
+                                                style="font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;"
+                                            >
 												${object.body | safe}
 											</td>
-										</tbody>
-									</table>
-								</td>
-							</tr>
-							<!-- FOOTER -->
-							<tr>
-								<td align="center" style="min-width: 590px;">
-									<table width="590" border="0" cellpadding="0" bgcolor="#875A7B" style="min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;">
-										<tr>
-											<td valign="middle" align="left" style="color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;">
-												${company.name}<br/>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <!-- FOOTER -->
+                            <tr>
+                                <td align="center" style="min-width: 590px;">
+                                    <table
+                                        width="590"
+                                        border="0"
+                                        cellpadding="0"
+                                        bgcolor="#875A7B"
+                                        style="min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;"
+                                    >
+                                        <tr>
+                                            <td
+                                                valign="middle"
+                                                align="left"
+                                                style="color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;"
+                                            >
+												${company.name}<br />
 												${company.phone or ''}
 											</td>
-											<td valign="middle" align="right" style="color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;">
+                                            <td
+                                                valign="middle"
+                                                align="right"
+                                                style="color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;"
+                                            >
 												% if company.email:
-												<a href="mailto:${company.email}" style="text-decoration:none; color: white;">${company.email}</a><br/>
+												<a
+                                                    href="mailto:${company.email}"
+                                                    style="text-decoration:none; color: white;"
+                                                >${company.email}</a><br />
 												% endif
 												% if company.website:
 												<a href="${company.website}" style="text-decoration:none; color: white;">
@@ -171,62 +245,78 @@ de ${object.company_id.name}.
 												</a>
 												% endif
 											</td>
-										</tr>
-									</table>
-								</td>
-							</tr>
-							<tr>
-								<td align="center">
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center">
 									Powered by <a target="_blank" href="https://www.vision-estrategica.com">Odoo</a>.
 								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div></field>
-		</record>
-
-		<record id="mail_documents_no_autorization" model="mail.template">
-	            <field name="name">Enviar Mail de Documentos no autorizada</field>
-	            <field name="email_from">${object.email}</field>
-	            <field name="subject">${object.name} - Documentos Electrónico no Autorizado</field>
-	            <field name="model_id" ref="base.model_res_company"/>
-	            <field name="email_to">${object.email}</field>
-	            <field name="auto_delete" eval="True"/>
-	            <field name="body_html" type="xml">
-	            <div style="max-width:600px; height:auto; margin-left:30px;">
-						<div style="margin-left:30px;align=center;">
+                            </tr>
+                        </tbody>
+                    </table>
+				</div>
+            </field>
+        </record>
+        <record id="mail_documents_no_autorization" model="mail.template">
+            <field name="name">Enviar Mail de Documentos no autorizada</field>
+            <field name="email_from">${object.email}</field>
+            <field
+                name="subject"
+            >${object.name} - Documentos Electrónico no Autorizado</field>
+            <field name="model_id" ref="base.model_res_company" />
+            <field name="email_to">${object.email}</field>
+            <field name="auto_delete" eval="True" />
+            <field name="body_html" type="xml">
+                <div style="max-width:600px; height:auto; margin-left:30px;">
+                    <div style="margin-left:30px;align=center;">
 							Notificacion:
 							<br />
 							% set documents = object.get_documents_electonic_no_autorization()
-							<p class="text-center" style="font-weight: bold">Documentos Electrónicos no Autorizadas</p>
+							<p
+                            class="text-center"
+                            style="font-weight: bold"
+                        >Documentos Electrónicos no Autorizadas</p>
 							<div style="display:table;margin-left: 6%;width:95%">
-								<div style="display:table-row-group;">
+                            <div style="display:table-row-group;">
 						        % for doc in documents:
 						        	<div style="display:table-row;">
-						            	<div style="display:table-cell;width:65%;text-align:center;border:solid;border-width: 1px 1px 1px 1px;">${doc.display_name}</div>
-						            	<div style="display:table-cell;width:65%;text-align:center;border:solid;border-width: 1px 1px 1px 1px;">${doc.last_error_id.display_name}</div>
-						            	<div style="display:table-cell;width:65%;text-align:center;border:solid;border-width: 1px 1px 1px 1px;"><span> <a href="${doc.get_mail_url()}">Ver Documento</a> </span></div>
-						        	</div>
+                                    <div
+                                        style="display:table-cell;width:65%;text-align:center;border:solid;border-width: 1px 1px 1px 1px;"
+                                    >${doc.display_name}</div>
+                                    <div
+                                        style="display:table-cell;width:65%;text-align:center;border:solid;border-width: 1px 1px 1px 1px;"
+                                    >${doc.last_error_id.display_name}</div>
+                                    <div
+                                        style="display:table-cell;width:65%;text-align:center;border:solid;border-width: 1px 1px 1px 1px;"
+                                    >
+                                        <span>
+                                            <a
+                                                href="${doc.get_mail_url()}"
+                                            >Ver Documento</a>
+                                        </span>
+                                    </div>
+                                </div>
 						        % endfor
 						        </div>
-						    </div>
+                        </div>
 
 						</div>
-				</div>
-				</field>
-		</record>
-
-		<!--Email template -->
-		<record id="email_template_keys_expired" model="mail.template">
-			<field name="name">Notificaciones de llaves electrónicas expiradas</field>
-			<field name="email_from">${object.email}</field>
-			<field name="subject">${object.company_id} Llaves expiradas</field>
-			<field name="model_id" ref="base.model_res_company" />
-			<field name="email_to" >${object.email}</field>
-			<field name="auto_delete" eval="True" />
-			<field name="body_html" type="xml">
-				<div style="max-width:600px; height:auto; margin-left:30px;">
-					<div style="margin-left:30px;align=center;">
+                </div>
+            </field>
+        </record>
+        <!--Email template -->
+        <record id="email_template_keys_expired" model="mail.template">
+            <field name="name">Notificaciones de llaves electrónicas expiradas</field>
+            <field name="email_from">${object.email}</field>
+            <field name="subject">${object.company_id} Llaves expiradas</field>
+            <field name="model_id" ref="base.model_res_company" />
+            <field name="email_to">${object.email}</field>
+            <field name="auto_delete" eval="True" />
+            <field name="body_html" type="xml">
+                <div style="max-width:600px; height:auto; margin-left:30px;">
+                    <div style="margin-left:30px;align=center;">
 						Este es una notificación de llaves expiradas:
 						<br />
 						% set noti=NULL
@@ -236,8 +326,8 @@ de ${object.company_id.name}.
 						% endfor
 
 					</div>
-					</div>
-			</field>
-		</record>
-	</data>
+                </div>
+            </field>
+        </record>
+    </data>
 </odoo>

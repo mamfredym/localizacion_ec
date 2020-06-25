@@ -1,73 +1,80 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-	<data>
-		<record model="ir.ui.view" id="l10n_ec_sri_authorization_supplier_tree_view">
-			<field name="name">l10n_ec.sri.authorization.supplier.tree</field>
-			<field name="model">l10n_ec.sri.authorization.supplier</field>
-			<field name="arch" type="xml">
-				<tree string="Third Party Authorizations">
-					<field name="number" />
-					<field name="autoprinter" />
-					<field name="document_type" />
-					<field name="autoprinter" />
-					<field name="start_date" />
-					<field name="expiration_date" />
-					<field name="agency" />
-					<field name="printer_point" />
-					<field name="first_sequence" />
-					<field name="last_sequence" />
-					<field name="padding" />
-				</tree>
-			</field>
-		</record>
-
-		<record model="ir.ui.view" id="l10n_ec_sri_authorization_supplier_form_view">
-			<field name="name">l10n_ec.sri.authorization.supplier.form</field>
-			<field name="model">l10n_ec.sri.authorization.supplier</field>
-			<field name="arch" type="xml">
-				<form string="Third Party Authorization">
-					<group col="4">
-						<field name="autoprinter" colspan="4"/>
-						<field name="number" placeholder="0123456789"/>
-						<field name="document_type" />
-						<field name="start_date" />
-						<field name="expiration_date" />
-						<field name="agency" placeholder="00X"/>
-						<field name="printer_point" placeholder="00X"/>
-						<field name="first_sequence"
-							attrs="{'invisible': [('autoprinter', '=', True)], 'required': [('autoprinter', '=', False)]}" />
-						<field name="last_sequence"
-							attrs="{'invisible': [('autoprinter', '=', True)], 'required': [('autoprinter', '=', False)]}" />
-						<field name="padding" />
-					</group>
-				</form>
-			</field>
-		</record>
-
-		<record model="ir.ui.view" id="l10n_ec_sri_authorization_supplier_documents_form_view">
-			<field name="name">l10n_ec.sri.authorization.supplier.form</field>
-			<field name="model">l10n_ec.sri.authorization.supplier</field>
-			<field name="priority">17</field>
-			<field name="arch" type="xml">
-				<form string="Third Party Authorizations">
-					<group col="4">
-						<field name="partner_id" invisible="1" colspan="4"/>
-						<field name="autoprinter" />
-						<field name="document_type" />
-						<field name="number" colspan="4"/>
-						<field name="start_date" />
-						<field name="expiration_date" />
-						<field name="agency" placeholder="00X"/>
-						<field name="printer_point" placeholder="00X"/>
-						<field name="first_sequence"
-							attrs="{'invisible': [('autoprinter', '=', True)], 'required': [('autoprinter', '=', False)]}" />
-						<field name="last_sequence"
-							attrs="{'invisible': [('autoprinter', '=', True)], 'required': [('autoprinter', '=', False)]}" />
-						<field name="padding" />
-					</group>
-				</form>
-			</field>
-		</record>
-
-	</data>
+    <data>
+        <record model="ir.ui.view" id="l10n_ec_sri_authorization_supplier_tree_view">
+            <field name="name">l10n_ec.sri.authorization.supplier.tree</field>
+            <field name="model">l10n_ec.sri.authorization.supplier</field>
+            <field name="arch" type="xml">
+                <tree string="Third Party Authorizations">
+                    <field name="number" />
+                    <field name="autoprinter" />
+                    <field name="document_type" />
+                    <field name="start_date" />
+                    <field name="expiration_date" />
+                    <field name="agency" />
+                    <field name="printer_point" />
+                    <field name="first_sequence" />
+                    <field name="last_sequence" />
+                    <field name="padding" />
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="l10n_ec_sri_authorization_supplier_form_view">
+            <field name="name">l10n_ec.sri.authorization.supplier.form</field>
+            <field name="model">l10n_ec.sri.authorization.supplier</field>
+            <field name="arch" type="xml">
+                <form string="Third Party Authorization">
+                    <group col="4">
+                        <field name="autoprinter" colspan="4" />
+                        <field name="number" placeholder="0123456789" />
+                        <field name="document_type" />
+                        <field name="start_date" />
+                        <field name="expiration_date" />
+                        <field name="agency" placeholder="00X" />
+                        <field name="printer_point" placeholder="00X" />
+                        <field
+                            name="first_sequence"
+                            attrs="{'invisible': [('autoprinter', '=', True)], 'required': [('autoprinter', '=', False)]}"
+                        />
+                        <field
+                            name="last_sequence"
+                            attrs="{'invisible': [('autoprinter', '=', True)], 'required': [('autoprinter', '=', False)]}"
+                        />
+                        <field name="padding" />
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record
+            model="ir.ui.view"
+            id="l10n_ec_sri_authorization_supplier_documents_form_view"
+        >
+            <field name="name">l10n_ec.sri.authorization.supplier.form</field>
+            <field name="model">l10n_ec.sri.authorization.supplier</field>
+            <field name="priority">17</field>
+            <field name="arch" type="xml">
+                <form string="Third Party Authorizations">
+                    <group col="4">
+                        <field name="partner_id" invisible="1" colspan="4" />
+                        <field name="autoprinter" />
+                        <field name="document_type" />
+                        <field name="number" colspan="4" />
+                        <field name="start_date" />
+                        <field name="expiration_date" />
+                        <field name="agency" placeholder="00X" />
+                        <field name="printer_point" placeholder="00X" />
+                        <field
+                            name="first_sequence"
+                            attrs="{'invisible': [('autoprinter', '=', True)], 'required': [('autoprinter', '=', False)]}"
+                        />
+                        <field
+                            name="last_sequence"
+                            attrs="{'invisible': [('autoprinter', '=', True)], 'required': [('autoprinter', '=', False)]}"
+                        />
+                        <field name="padding" />
+                    </group>
+                </form>
+            </field>
+        </record>
+    </data>
 </odoo>

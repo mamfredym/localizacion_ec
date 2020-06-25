@@ -1,38 +1,48 @@
- #
+#
 
-from odoo import models, api, fields
-import odoo.addons.decimal_precision as dp
+from odoo import api, fields, models
+from odoo.exceptions import RedirectWarning, UserError, ValidationError, Warning
 from odoo.tools.translate import _
-from odoo.exceptions import UserError, Warning, RedirectWarning, ValidationError
+
+import odoo.addons.decimal_precision as dp
+
 from ..models import modules_mapping
 
 
 class L10nEcAgency(models.Model):
 
-    _name = 'l10n_ec.agency'
-    _description = 'Agencia'
+    _name = "l10n_ec.agency"
+    _description = "Agencia"
 
-    name = fields.Char('Agency Name', required=True, readonly=False, index=True)
+    name = fields.Char("Agency Name", required=True, readonly=False, index=True)
     count_invoice = fields.Integer(
-        string='Count Invoice', compute='_compute_count_invoice')
-    number = fields.Char(string='S.R.I. Number', size=3,
-                         required=True, readonly=False, index=True)
+        string="Count Invoice", compute="_compute_count_invoice"
+    )
+    number = fields.Char(
+        string="S.R.I. Number", size=3, required=True, readonly=False, index=True
+    )
     printer_point_ids = fields.One2many(
-        'l10n_ec.point.of.emission', 'agency_id', 'Points of Emission')
+        "l10n_ec.point.of.emission", "agency_id", "Points of Emission"
+    )
     user_ids = fields.Many2many(
-        'res.users', string='Allowed Users', help="", domain=[('share', '=', False)])
-    address_id = fields.Many2one(
-        'res.partner', 'Address', required=False, help="", )
-    company_id = fields.Many2one('res.company', 'Company', required=False, help="",
-                                 default=lambda self: self.env.company)
-    partner_id = fields.Many2one('res.partner', string="Company's Partner",
-                                 related="company_id.partner_id")
+        "res.users", string="Allowed Users", help="", domain=[("share", "=", False)]
+    )
+    address_id = fields.Many2one("res.partner", "Address", required=False, help="",)
+    company_id = fields.Many2one(
+        "res.company",
+        "Company",
+        required=False,
+        help="",
+        default=lambda self: self.env.company,
+    )
+    partner_id = fields.Many2one(
+        "res.partner", string="Company's Partner", related="company_id.partner_id"
+    )
     active = fields.Boolean(string="Active?", default=True)
 
     def _compute_count_invoice(self):
-        count = self.env['account.move']
-        search = count.search_count(
-            [('l10n_ec_agency_id', 'in', [a.id for a in self])])
+        count = self.env["account.move"]
+        search = count.search_count([("l10n_ec_agency_id", "in", [a.id for a in self])])
         self.count_invoice = search
 
     def unlink(self):
@@ -40,12 +50,15 @@ class L10nEcAgency(models.Model):
         for agency in self.with_context(active_test=False):
             if agency.count_invoice > 0:
                 raise UserError(
-                    _('You cannot delete an agency that contains an invoice. You can only archive the agency.'))
+                    _(
+                        "You cannot delete an agency that contains an invoice. You can only archive the agency."
+                    )
+                )
         # Delete the empty agency
         result = super(L10nEcAgency, self).unlink()
         return result
 
-    @api.constrains('number')
+    @api.constrains("number")
     def _check_number(self):
         for agency in self:
             if agency.number:
@@ -53,14 +66,17 @@ class L10nEcAgency(models.Model):
                     number_int = int(agency.number)
                     if number_int < 1 or number_int > 999:
                         raise ValidationError(
-                            _("Number of agency must be between 1 and 999"))
+                            _("Number of agency must be between 1 and 999")
+                        )
                 except ValueError as e:
-                    raise ValidationError(
-                        _("Number of agency must be only numbers"))
+                    raise ValidationError(_("Number of agency must be only numbers"))
 
     _sql_constraints = [
-        ('number_uniq', 'unique (number, company_id)', _(
-            'Number of Agency must be unique by company!')),
+        (
+            "number_uniq",
+            "unique (number, company_id)",
+            _("Number of Agency must be unique by company!"),
+        ),
     ]
 
 
@@ -69,60 +85,77 @@ L10nEcAgency()
 
 class L10EcPointOfEmission(models.Model):
 
-    _name = 'l10n_ec.point.of.emission'
+    _name = "l10n_ec.point.of.emission"
 
-    name = fields.Char("Point of emission's name",
-                       required=True, readonly=False, index=True)
+    name = fields.Char(
+        "Point of emission's name", required=True, readonly=False, index=True
+    )
     agency_id = fields.Many2one(
-        'l10n_ec.agency', 'Agency', required=False, index=True, auto_join=True)
+        "l10n_ec.agency", "Agency", required=False, index=True, auto_join=True
+    )
     company_id = fields.Many2one(
-        comodel_name="res.company", string="Company", related="agency_id.company_id")
-    number = fields.Char('S.R.I. Number', size=3,
-                         required=True, readonly=False, index=True)
-    active = fields.Boolean(
-        string="Active?", related='agency_id.active', default=True)
+        comodel_name="res.company", string="Company", related="agency_id.company_id"
+    )
+    number = fields.Char(
+        "S.R.I. Number", size=3, required=True, readonly=False, index=True
+    )
+    active = fields.Boolean(string="Active?", related="agency_id.active", default=True)
     count_invoice = fields.Integer(
-        string='Count Invoice', related='agency_id.count_invoice')
-    type_emission = fields.Selection(string="Type Emission",
-                                     selection=[
-                                         ('electronic', 'Electronic'),
-                                         ('pre_printed', 'Pre Printed'),
-                                         ('auto_printer', 'Auto Printer'),
-                                     ],
-                                     required=True, default='electronic')
-    sequence_ids = fields.One2many(comodel_name="l10n_ec.point.of.emission.document.sequence",
-                                   inverse_name="printer_id", string="Initial Sequences", required=False, )
+        string="Count Invoice", related="agency_id.count_invoice"
+    )
+    type_emission = fields.Selection(
+        string="Type Emission",
+        selection=[
+            ("electronic", "Electronic"),
+            ("pre_printed", "Pre Printed"),
+            ("auto_printer", "Auto Printer"),
+        ],
+        required=True,
+        default="electronic",
+    )
+    sequence_ids = fields.One2many(
+        comodel_name="l10n_ec.point.of.emission.document.sequence",
+        inverse_name="printer_id",
+        string="Initial Sequences",
+        required=False,
+    )
 
     @api.model
     def default_get(self, fields):
         values = super(L10EcPointOfEmission, self).default_get(fields)
-        values['sequence_ids'] = [
-            (0, 0, {'document_type': 'invoice', 'initial_sequence': 1}),
-            (0, 0, {'document_type': 'withholding', 'initial_sequence': 1}),
-            (0, 0, {'document_type': 'liquidation', 'initial_sequence': 1}),
-            (0, 0, {'document_type': 'credit_note', 'initial_sequence': 1}),
-            (0, 0, {'document_type': 'debit_note', 'initial_sequence': 1}),
-            (0, 0, {'document_type': 'delivery_note', 'initial_sequence': 1}),
+        values["sequence_ids"] = [
+            (0, 0, {"document_type": "invoice", "initial_sequence": 1}),
+            (0, 0, {"document_type": "withholding", "initial_sequence": 1}),
+            (0, 0, {"document_type": "liquidation", "initial_sequence": 1}),
+            (0, 0, {"document_type": "credit_note", "initial_sequence": 1}),
+            (0, 0, {"document_type": "debit_note", "initial_sequence": 1}),
+            (0, 0, {"document_type": "delivery_note", "initial_sequence": 1}),
         ]
         return values
 
     def name_get(self):
         res = []
-        full_name = self.env.context.get('full_name', True)
+        full_name = self.env.context.get("full_name", True)
         for printer in self:
-            name = "%s-%s %s" % (printer.agency_id and printer.agency_id.number or '', printer.number,
-                                 full_name and printer.agency_id and printer.agency_id.name or '')
-            res.append((printer['id'], name))
+            name = "{}-{} {}".format(
+                printer.agency_id and printer.agency_id.number or "",
+                printer.number,
+                full_name and printer.agency_id and printer.agency_id.name or "",
+            )
+            res.append((printer["id"], name))
         return res
 
     _sql_constraints = [
-        ('number_uniq', 'unique (number, agency_id)', _(
-            'The number of point of emission must be unique by Agency!')),
+        (
+            "number_uniq",
+            "unique (number, agency_id)",
+            _("The number of point of emission must be unique by Agency!"),
+        ),
     ]
 
     @api.model
     def fill_padding(self, number, padding):
-        return str(number).rjust(padding, '0')
+        return str(number).rjust(padding, "0")
 
     def create_number(self, number):
         self.ensure_one()
@@ -132,7 +165,7 @@ class L10EcPointOfEmission(models.Model):
         self.ensure_one()
         document_format = number
         if number:
-            aux = number.split('-')
+            aux = number.split("-")
             seq = ""
             try:
                 if len(aux) == 3:
@@ -153,8 +186,10 @@ class L10EcPointOfEmission(models.Model):
                 break
         return first_number_electronic
 
-    def get_authorization_for_number(self, invoice_type, document_number, emission_date=None, company=None):
-        '''
+    def get_authorization_for_number(
+        self, invoice_type, document_number, emission_date=None, company=None
+    ):
+        """
         Search a authorization for document type and document_number requested
         :param invoice_type: Options available are:
                 out_invoice, in_invoice, out_refund, in_refund, debit_note_in, debit_note_out
@@ -163,10 +198,10 @@ class L10EcPointOfEmission(models.Model):
         :param emission_date, Optional: Date emission of document
         :param company, Optional: Company for current document
         :return: browse_record(l10n_ec.sri.authorization.line)
-        '''
+        """
         self.ensure_one()
-        auth_line_model = self.env['l10n_ec.sri.authorization.line']
-        xml_model = self.env['sri.xml.data']
+        auth_line_model = self.env["l10n_ec.sri.authorization.line"]
+        xml_model = self.env["sri.xml.data"]
         if company is None:
             company = self.env.company
         if not emission_date:
@@ -177,7 +212,7 @@ class L10EcPointOfEmission(models.Model):
         number = False
         is_number_valid = True
         try:
-            number_shop, number_printer, number = document_number.split('-')
+            number_shop, number_printer, number = document_number.split("-")
             number = int(number)
             if self.agency_id.number != number_shop:
                 is_number_valid = False
@@ -186,30 +221,46 @@ class L10EcPointOfEmission(models.Model):
         except Exception as e:
             is_number_valid = False
         if is_number_valid and number:
-            doc_find = auth_line_model.search([
-                ('document_type', '=', document_type),
-                ('point_of_emission_id', '=', self.id),
-                ('first_sequence', '<=', number),
-                ('last_sequence', '>=', number),
-                ('authorization_id.company_id', '=', company.id),
-                ('authorization_id.start_date', '<=', emission_date),
-                ('authorization_id.expiration_date', '>=', emission_date),
-            ], order="first_sequence", limit=1)
+            doc_find = auth_line_model.search(
+                [
+                    ("document_type", "=", document_type),
+                    ("point_of_emission_id", "=", self.id),
+                    ("first_sequence", "<=", number),
+                    ("last_sequence", ">=", number),
+                    ("authorization_id.company_id", "=", company.id),
+                    ("authorization_id.start_date", "<=", emission_date),
+                    ("authorization_id.expiration_date", ">=", emission_date),
+                ],
+                order="first_sequence",
+                limit=1,
+            )
         # mostrar excepcion si el punto de emision es electronico
         # pero para el tipo de documento no se esta en produccion aun(ambiente pruebas)
         force_preprint = False
-        if self.type_emission == 'electronic' and not xml_model.ln10_ec_is_environment_production(invoice_type, self):
+        if (
+            self.type_emission == "electronic"
+            and not xml_model.ln10_ec_is_environment_production(invoice_type, self)
+        ):
             force_preprint = True
-        if self.type_emission in ('pre_printed', 'auto_printer') or force_preprint:
+        if self.type_emission in ("pre_printed", "auto_printer") or force_preprint:
             if not doc_find:
-                raise Warning(_(
-                    "It is not possible to find authorization for the document type %s "
-                    "at the point of emission %s for the agency %s with date %s on company: %s") %
-                    (model_description, self.number, self.agency_id.number, emission_date, company.name))
+                raise Warning(
+                    _(
+                        "It is not possible to find authorization for the document type %s "
+                        "at the point of emission %s for the agency %s with date %s on company: %s"
+                    )
+                    % (
+                        model_description,
+                        self.number,
+                        self.agency_id.number,
+                        emission_date,
+                        company.name,
+                    )
+                )
         return doc_find
 
     def get_next_value_sequence(self, invoice_type, date, raise_exception=False):
-        '''
+        """
         Search and return next number available for document type requested
         :param invoice_type: Options available are:
                 out_invoice, in_invoice, out_refund, in_refund, debit_note_in, debit_note_out
@@ -217,10 +268,10 @@ class L10EcPointOfEmission(models.Model):
         :param date: Date emission of document
         :param raise_exception: If True, and not documents are find raise exception
         :return: tuple(str, browse_record(l10n_ec.sri.authorization.line))
-        '''
+        """
         self.ensure_one()
-        auth_line_model = self.env['l10n_ec.sri.authorization.line']
-        xml_model = self.env['sri.xml.data']
+        auth_line_model = self.env["l10n_ec.sri.authorization.line"]
+        xml_model = self.env["sri.xml.data"]
         if not date:
             date = fields.Date.context_today(self)
         document_type = modules_mapping.get_document_type(invoice_type)
@@ -228,18 +279,20 @@ class L10EcPointOfEmission(models.Model):
         field_name = modules_mapping.get_field_name(document_type)
         model_description = modules_mapping.get_document_name(document_type)
         res_model = self.env[model_name]
-        doc_recs = auth_line_model.search([
-            ('document_type', '=', document_type),
-            ('point_of_emission_id', '=', self.id),
-            ('authorization_id.start_date', '<=', date),
-            ('authorization_id.expiration_date', '>=', date),
-        ], order="first_sequence")
-        start_doc_number = "%s-%s-%s" % (self.agency_id.number,
-                                         self.number, '%')
+        doc_recs = auth_line_model.search(
+            [
+                ("document_type", "=", document_type),
+                ("point_of_emission_id", "=", self.id),
+                ("authorization_id.start_date", "<=", date),
+                ("authorization_id.expiration_date", ">=", date),
+            ],
+            order="first_sequence",
+        )
+        start_doc_number = "{}-{}-{}".format(self.agency_id.number, self.number, "%")
         domain = modules_mapping.get_domain(invoice_type, include_state=False) + [
-            (field_name, 'like', start_doc_number)]
-        recs_finded = res_model.search(
-            domain, order=field_name + ' DESC', limit=1)
+            (field_name, "like", start_doc_number)
+        ]
+        recs_finded = res_model.search(domain, order=field_name + " DESC", limit=1)
         doc_finded = auth_line_model.browse()
         next_seq = False
         seq = False
@@ -247,40 +300,44 @@ class L10EcPointOfEmission(models.Model):
             next_seq = recs_finded[0][field_name]
         try:
             if next_seq:
-                seq = int(next_seq.split('-')[2])
-            if self.env.context.get('numbers_skip', []):
-                seq = int(sorted(self.env.context.get(
-                    'numbers_skip', []))[-1].split('-')[2])
+                seq = int(next_seq.split("-")[2])
+            if self.env.context.get("numbers_skip", []):
+                seq = int(
+                    sorted(self.env.context.get("numbers_skip", []))[-1].split("-")[2]
+                )
         except Exception as e:
             seq = False
         if doc_recs:
             for doc in doc_recs:
                 if date >= doc.authorization_id.start_date:
                     if seq and doc.first_sequence <= seq < doc.last_sequence:
-                        next_seq = doc.point_of_emission_id.create_number(
-                            seq + 1)
+                        next_seq = doc.point_of_emission_id.create_number(seq + 1)
                         doc_finded = doc
                         break
                     elif seq and seq == doc.last_sequence:
-                        next_seq = "%s-%s-" % (self.agency_id.number,
-                                               self.number)
+                        next_seq = "{}-{}-".format(self.agency_id.number, self.number)
                         doc_finded = doc
                         break
                     elif not seq:
                         next_seq = doc.point_of_emission_id.create_number(
-                            doc.first_sequence)
+                            doc.first_sequence
+                        )
                         doc_finded = doc
                         break
             if not doc_finded and recs_finded:
                 try:
-                    seq = int(next_seq.split('-')[2])
+                    seq = int(next_seq.split("-")[2])
                 except Exception as e:
                     seq = False
                 if seq:
                     for doc in doc_recs:
-                        if doc.first_sequence > seq and date >= doc.authorization_id.start_date:
+                        if (
+                            doc.first_sequence > seq
+                            and date >= doc.authorization_id.start_date
+                        ):
                             next_seq = doc.point_of_emission_id.create_number(
-                                doc.first_sequence)
+                                doc.first_sequence
+                            )
                             doc_finded = doc
                             break
                     if not doc_finded:
@@ -292,33 +349,45 @@ class L10EcPointOfEmission(models.Model):
         # mostrar excepcion si el punto de emision es electronico
         # pero para el tipo de documento no se esta en produccion aun(ambiente pruebas)
         force_preprint = False
-        if self.type_emission == 'electronic' and not xml_model.ln10_ec_is_environment_production(invoice_type, self):
+        if (
+            self.type_emission == "electronic"
+            and not xml_model.ln10_ec_is_environment_production(invoice_type, self)
+        ):
             force_preprint = True
             raise_exception = True
-        if self.type_emission in ('pre_printed', 'auto_printer') or force_preprint:
+        if self.type_emission in ("pre_printed", "auto_printer") or force_preprint:
             if not doc_finded and raise_exception:
-                raise Warning(_(
-                    "It is not possible to find authorization for the document type %s "
-                    "at the point of issue %s for the agency %s with date %s") %
-                    (model_description, self.number, self.agency_id.number, date))
+                raise Warning(
+                    _(
+                        "It is not possible to find authorization for the document type %s "
+                        "at the point of issue %s for the agency %s with date %s"
+                    )
+                    % (model_description, self.number, self.agency_id.number, date)
+                )
             return next_seq, doc_finded
-        elif self.type_emission == 'electronic':
-            xml_model = self.env['sri.xml.data']
+        elif self.type_emission == "electronic":
+            xml_model = self.env["sri.xml.data"]
             first_number_electronic = self.env.context.get(
-                'first_number_electronic', '')
+                "first_number_electronic", ""
+            )
             # tomar el primer numero para facturacion electronica si esta en produccion
-            if not first_number_electronic and self and xml_model.ln10_ec_is_environment_production(invoice_type, self):
+            if (
+                not first_number_electronic
+                and self
+                and xml_model.ln10_ec_is_environment_production(invoice_type, self)
+            ):
                 first_number_electronic = self._get_first_number_electronic(
-                    invoice_type)
+                    invoice_type
+                )
             # si tengo un secuencial y es menor al configurado como el inicio de facturacion electronica
             # devolver el numero configurado
             # cuando el secuencial obtenido sea mayor, devolver ese secuencial
             if next_seq and first_number_electronic:
-                if '-' in next_seq:
+                if "-" in next_seq:
                     # obtener el secuencial solamente
-                    if len(next_seq.split('-')[-1]) == 0:
-                        next_seq = '%s-%s' % (next_seq, first_number_electronic)
-                    next_seq_temp = next_seq.split('-')[-1]
+                    if len(next_seq.split("-")[-1]) == 0:
+                        next_seq = "{}-{}".format(next_seq, first_number_electronic)
+                    next_seq_temp = next_seq.split("-")[-1]
                     # validar que sean numeros
                     try:
                         next_seq_temp = int(next_seq_temp)
@@ -340,26 +409,30 @@ class L10EcPointOfEmission(models.Model):
                 next_seq = self.create_number(first_number_electronic)
                 # todos los documentos de account.move se guardan en la misma tabla y con el mismo nombre de campo
                 # obtener el domain segun el tipo de documento
-                domain = modules_mapping.get_domain(
-                    invoice_type, include_state=False)
-                domain.append((field_name, '!=', False))
-                domain.append((field_name, '>=', next_seq))
-                domain.append(('company_id', '=', self.company_id.id))
-                recs = res_model.with_context(
-                    skip_picking_type_filter=True).search(domain)
+                domain = modules_mapping.get_domain(invoice_type, include_state=False)
+                domain.append((field_name, "!=", False))
+                domain.append((field_name, ">=", next_seq))
+                domain.append(("company_id", "=", self.company_id.id))
+                recs = res_model.with_context(skip_picking_type_filter=True).search(
+                    domain
+                )
                 number_in_use = []
                 if recs:
-                    SQL = 'SELECT ' + field_name + \
-                          ' FROM ' + res_model._table + \
-                          ' WHERE id IN %s' + \
-                          ' ORDER BY ' + field_name
-                    self.env.cr.execute(SQL, (tuple(recs.ids),))
+                    query = (
+                        "SELECT "
+                        + field_name
+                        + " FROM "
+                        + " %s "
+                        + " WHERE id IN %s"
+                        + " ORDER BY "
+                        + field_name
+                    )
+                    self.env.cr.execute(query, (res_model._table, tuple(recs.ids),))
                     number_in_use = map(lambda x: x[0], self.env.cr.fetchall())
                 count = 0
                 while next_seq in number_in_use:
                     count += 1
-                    next_seq = self.create_number(
-                        first_number_electronic + count)
+                    next_seq = self.create_number(first_number_electronic + count)
             return next_seq, doc_finded
 
 
@@ -368,20 +441,26 @@ L10EcPointOfEmission()
 
 class L10EcPointOfEmissionDocumentSequence(models.Model):
 
-    _name = 'l10n_ec.point.of.emission.document.sequence'
+    _name = "l10n_ec.point.of.emission.document.sequence"
 
-    printer_id = fields.Many2one(comodel_name="l10n_ec.point.of.emission",
-                                 string="Printer", required=True, )
+    printer_id = fields.Many2one(
+        comodel_name="l10n_ec.point.of.emission", string="Printer", required=True,
+    )
     initial_sequence = fields.Integer(
-        string="Initial Sequence", required=True, default=1)
-    document_type = fields.Selection(string="Document Type", selection=[
-        ('invoice', _('Invoice')),
-        ('withholding', _('Withhold')),
-        ('liquidation', _('Liquidation of Purchases')),
-        ('credit_note', _('Credit Note')),
-        ('debit_note', _('Debit Note')),
-        ('delivery_note', _('Delivery Note')),
-    ], required=True, )
+        string="Initial Sequence", required=True, default=1
+    )
+    document_type = fields.Selection(
+        string="Document Type",
+        selection=[
+            ("invoice", _("Invoice")),
+            ("withholding", _("Withhold")),
+            ("liquidation", _("Liquidation of Purchases")),
+            ("credit_note", _("Credit Note")),
+            ("debit_note", _("Debit Note")),
+            ("delivery_note", _("Delivery Note")),
+        ],
+        required=True,
+    )
 
 
 L10EcPointOfEmissionDocumentSequence()

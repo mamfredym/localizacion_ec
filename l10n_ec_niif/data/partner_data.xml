@@ -1,15 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <data noupdate="False">
-
         <record id="consumidor_final" model="res.partner">
-			<field name="name">Consumidor Final</field>
-			<field name="vat">9999999999999</field>
-			<field name="phone">9999999999</field>
+            <field name="name">Consumidor Final</field>
+            <field name="vat">9999999999999</field>
+            <field name="phone">9999999999</field>
             <field name="country_id" ref="base.ec" />
             <field name="l10n_latam_identification_type_id" ref="l10n_ec_niif.it_ruc" />
-			<field name="street">ECUADOR</field>
-		</record>
-
+            <field name="street">ECUADOR</field>
+        </record>
     </data>
 </odoo>
