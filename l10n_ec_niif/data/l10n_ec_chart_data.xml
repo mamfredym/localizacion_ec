@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <record id="l10n_ec_niif.ec_chart_template" model="account.chart.template">
+    <record id="ec_chart_template" model="account.chart.template">
         <field name="name">Ecuador - Chart of Accounts based on NIIF</field>
         <field name="currency_id" ref="base.USD" />
         <field name="bank_account_code_prefix">10101</field>
