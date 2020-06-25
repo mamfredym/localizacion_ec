@@ -44,7 +44,7 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
         ]
         return self.env['ir.attachment'].search(domain)
 
-    def l10n_ec_action_create_attachments_electronic(self):
+    def l10n_ec_action_create_attachments_electronic(self, file_data=None):
         '''
         :return: An ir.attachment recordset
         '''
@@ -57,10 +57,8 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
         if self.ln10_ec_xml_key and self.ln10_ec_xml_data_id:
             attachment = self.l10n_ec_get_attachments_electronic()
             if not attachment:
-                try:
-                    file_data = self.ln10_ec_xml_data_id.get_file()
-                except:
-                    file_data = ""
+                if file_data is None:
+                    file_data = self.ln10_ec_xml_data_id._action_create_file_authorized()
                 file_name = self.get_printed_report_name_l10n_ec()
                 if file_data:
                     attachment = AttachmentModel.create({

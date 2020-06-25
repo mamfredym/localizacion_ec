@@ -32,6 +32,7 @@ class L10nEcWithhold(models.Model):
         readonly=True,
         states=_STATES,
         tracking=True)
+    no_number = fields.Boolean('Withholding  without Number?')
     state = fields.Selection(
         string='State',
         selection=[
@@ -299,6 +300,13 @@ class L10nEcWithhold(models.Model):
         self.write({
             'state': 'done',
         })
+
+    def action_cancel(self):
+        for withholding in self:
+            # TODO: realizar proceso de anulacion de una retencion en ventas
+            if withholding.type == 'purchase':
+                withholding.write({'state': 'cancel'})
+        return True
 
     @api.depends(
         'move_ids',

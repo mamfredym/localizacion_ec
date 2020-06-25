@@ -121,7 +121,7 @@
                 </kanban>
             </field>
         </record>
-        
+
         <record id="l10n_ec_withhold_line_purchases_action" model="ir.actions.act_window">
             <field name="name">Purchase Withhold Lines</field>
             <field name="type">ir.actions.act_window</field>
@@ -181,6 +181,7 @@
                                 <field name="electronic_authorization"
                                        attrs="{'invisible': ['|', ('document_type', '!=', 'electronic'), '&amp;', ('type', '=', 'purchase'), ('electronic_authorization', '=', False)], 'required': [('document_type', '=', 'electronic'), ('type', '=', 'sale')]}"/>
                                 <field name="type" invisible="1"/>
+                                <field name="no_number" invisible="1"/>
                             </group>
                             <label for="concept" />
                             <field name="concept" />

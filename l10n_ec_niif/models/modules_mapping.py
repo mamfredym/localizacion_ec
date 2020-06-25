@@ -201,7 +201,7 @@ def get_model_name(document_type):
                   'liquidation': 'account.move',
                   'withholding': 'l10n_ec.withhold',
                   'delivery_note': 'l10n_ec.delivery.note',
-                  'invoice_reembolso': 'account.invoice.reembolso'
+                  'invoice_reembolso': 'l10n_ec.account.invoice.reembolso'
                   }
     return model_name.get(document_type, '')
 
@@ -218,7 +218,7 @@ def get_field_name(document_type):
                   'liquidation': 'l10n_ec_document_number',
                   'withholding': 'number',
                   'delivery_note': 'document_number',
-                  'invoice_reembolso': 'number',
+                  'invoice_reembolso': 'document_number',
                   }
     return field_name.get(document_type, '')
 

@@ -40,3 +40,5 @@
 "access_model_sri_xml_data_message_line_group_account_invoice","access_model_sri_xml_data_message_line_group_account_invoice","model_sri_xml_data_message_line","account.group_account_invoice",1,1,1,1
 "access_model_try_lines_group_account_invoice","access_model_try_lines_group_account_invoice","model_sri_xml_data_send_try","account.group_account_invoice",1,1,1,1
 "access_model_sri_key_type_group_system","access_model_sri_key_type_group_system","model_sri_key_type","base.group_system",1,1,1,0
+"access_model_l10n_ec_account_invoice_reembolso_group_user","access_model_l10n_ec_account_invoice_reembolso_group_user","model_l10n_ec_account_invoice_reembolso","base.group_user",1,0,0,0
+"access_model_l10n_ec_account_invoice_reembolso_group_account_invoice","access_model_l10n_ec_account_invoice_reembolso_group_account_invoice","model_l10n_ec_account_invoice_reembolso","account.group_account_invoice",1,1,1,1

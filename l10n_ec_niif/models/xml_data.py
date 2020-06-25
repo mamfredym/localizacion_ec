@@ -680,34 +680,37 @@ class SriXmlData(models.Model):
                 print((traceback.format_exc()))
         return ok, msj_res
 
+    def _action_create_file_authorized(self):
+        xml_authorized = ""
+        # el xml debe estar autorizado, tener fecha de autorizacion
+        # si tengo xml firmado, a ese anexarle la autorizacion
+        if self.state == 'authorized' and self.xml_authorization and self.xml_file:
+            tree = ET.fromstring(self.get_file())
+            root = Element("RespuestaAutorizacion")
+            authorizacion_ele = Element('estado')
+            authorizacion_ele.text = "AUTORIZADO"
+            root.append(authorizacion_ele)
+            # anexar la fecha y numero de autorizacion
+            authorizacion_ele = Element('numeroAutorizacion')
+            authorizacion_ele.text = self.xml_authorization
+            root.append(authorizacion_ele)
+            authorizacion_ele = Element('fechaAutorizacion')
+            authorizacion_ele.text = fields.Datetime.context_timestamp(self, self.ln10_ec_authorization_date).strftime(DTF)
+            root.append(authorizacion_ele)
+            authorizacion_ele = Element('ambiente')
+            authorizacion_ele.text = "PRODUCCION" if self.l10n_ec_type_environment == 'production' else 'PRUEBAS'
+            root.append(authorizacion_ele)
+            # agregar el resto del xml
+            root.append(tree)
+            xml_authorized = tostring(root).decode()
+        return xml_authorized
+
     def action_create_file_authorized(self):
         for xml_data in self:
-            # el xml debe estar autorizado, tener fecha de autorizacion
-            # si tengo xml firmado, a ese anexarle la autorizacion
-            if xml_data.state == 'authorized' and xml_data.xml_authorization and xml_data.xml_file:
-                tree = ET.parse(xml_data.generate_file_name())
-                root = Element("RespuestaAutorizacion")
-                authorizacion_ele = Element('estado')
-                authorizacion_ele.text = "AUTORIZADO"
-                root.append(authorizacion_ele)
-                # anexar la fecha y numero de autorizacion
-                authorizacion_ele = Element('numeroAutorizacion')
-                authorizacion_ele.text = xml_data.xml_authorization
-                root.append(authorizacion_ele)
-                authorizacion_ele = Element('fechaAutorizacion')
-                authorizacion_ele.text = fields.Datetime.context_timestamp(xml_data,
-                                                                           xml_data.ln10_ec_authorization_date).strftime(DTF)
-                root.append(authorizacion_ele)
-                authorizacion_ele = Element('ambiente')
-                authorizacion_ele.text = "PRODUCCION" if xml_data.l10n_ec_type_environment == 'production' else 'PRUEBAS'
-                root.append(authorizacion_ele)
-                # agregar el resto del xml
-                root.append(tree.getroot())
-                xml_authorized = tostring(root).decode()
-                xml_data.write_file(xml_authorized)
-                # crear el adjunto
-                document = xml_data.get_current_document()
-                document.l10n_ec_action_create_attachments_electronic()
+            xml_authorized = self._action_create_file_authorized()
+            # crear el adjunto
+            document = xml_data.get_current_document()
+            document.l10n_ec_action_create_attachments_electronic(xml_authorized)
         return True
 
     @api.model
@@ -945,7 +948,7 @@ class SriXmlData(models.Model):
         self.ensure_one()
         document = self.get_current_document()
         # al consumidor final no se debe enviar mail, pero marcarlo como enviado
-        if self.partner_id and self.partner_id.type_ref == 'consumidor':
+        if self.partner_id and self.partner_id.l10n_ec_type_sri == 'Consumidor':
             raise UserError(_("No esta permitido el envio de correos a consumidor final"))
         if not self._is_document_enabled_for_send_mail():
             raise UserError(
@@ -1133,13 +1136,13 @@ class SriXmlData(models.Model):
             # por ahora, no hago nada para que la tarea siga intentando en una nueva llamada
             if not ok and messages:
                 xml_to_notify |= xml_data
-        if xml_to_notify:
-            template = self.env.ref('ecua_documentos_electronicos.et_documents_electronics_to_notify')
-            ctx = self.env.context.copy()
-            ctx['xml_to_notify'] = xml_to_notify
-            ctx['title'] = "Los siguientes Documentos no se han podido autorizar con el SRI, " \
-                           "es necesario que los revise, corrija y envie manualmente de lo contrario no se autorizaran:"
-            template.with_context(ctx).l10n_ec_action_sent_mail_electronic(company)
+        # if xml_to_notify:
+        #     template = self.env.ref('ecua_documentos_electronicos.et_documents_electronics_to_notify')
+        #     ctx = self.env.context.copy()
+        #     ctx['xml_to_notify'] = xml_to_notify
+        #     ctx['title'] = "Los siguientes Documentos no se han podido autorizar con el SRI, " \
+        #                    "es necesario que los revise, corrija y envie manualmente de lo contrario no se autorizaran:"
+        #     template.with_context(ctx).l10n_ec_action_sent_mail_electronic(company)
         return True
 
     @api.model
@@ -1147,7 +1150,7 @@ class SriXmlData(models.Model):
         domain = [
             ('company_id', '=', company.id),
             ('state', '=', 'authorized'),
-            ('partner_id.type_ref', '!=', 'consumidor'),
+            ('partner_id.l10n_ec_type_sri', '!=', 'Consumidor'),
             ('send_mail', '=', False),
             ('ln10_ec_authorization_date', '=', date_from),
         ]
@@ -1187,7 +1190,7 @@ class SriXmlData(models.Model):
         portal_model = self.env['portal.wizard']
         if not self.env.company.l10n_ec_create_login_for_partners:
             return False
-        partners = self.mapped('partner_id').filtered(lambda x: not x.user_ids and x.type_ref != 'consumidor')
+        partners = self.mapped('partner_id').filtered(lambda x: not x.user_ids and x.l10n_ec_type_sri != 'Consumidor')
         if partners:
             ctx = self.env.context.copy()
             ctx['active_model'] = 'res.partner'
