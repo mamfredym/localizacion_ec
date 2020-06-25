@@ -32,13 +32,13 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
     def get_identification_type_partner(self, partner):
         # codigos son tomados de la ficha tecnica del SRI, tabla 7
         # pasar por defecto consumidor final
-        tipoIdentificacionComprador = '07'
-        if partner.l10n_ec_type_sri == 'Ruc':
-            tipoIdentificacionComprador = '04'
-        elif partner.l10n_ec_type_sri == 'Cedula':
-            tipoIdentificacionComprador = '05'
-        elif partner.l10n_ec_type_sri == 'Pasaporte':
-            tipoIdentificacionComprador = '06'
+        tipoIdentificacionComprador = "07"
+        if partner.l10n_ec_type_sri == "Ruc":
+            tipoIdentificacionComprador = "04"
+        elif partner.l10n_ec_type_sri == "Cedula":
+            tipoIdentificacionComprador = "05"
+        elif partner.l10n_ec_type_sri == "Pasaporte":
+            tipoIdentificacionComprador = "06"
         return tipoIdentificacionComprador
 
     def _prepare_l10n_ec_sri_xml_values(self, l10n_ec_type_conection_sri):

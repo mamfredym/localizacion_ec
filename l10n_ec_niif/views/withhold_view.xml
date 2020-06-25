@@ -216,15 +216,26 @@
                             <page name="info" string="Information">
                                 <group>
                                     <group>
-                                        <field name="move_id" attrs="{'invisible': [('move_id', '=', False)]}"/>
-                                        <field name="ln10_ec_xml_key"
-                                            attrs="{'invisible':[('ln10_ec_xml_data_id','=',False)]}" />
-                                        <field name="ln10_ec_electronic_authorization"
-                                            attrs="{'invisible':[('ln10_ec_xml_data_id','=',False)]}" />
-                                        <field name="ln10_ec_authorization_date"
-                                            attrs="{'invisible':[('ln10_ec_xml_data_id','=',False)]}" />
-                                        <field name="ln10_ec_xml_data_id"
-                                            attrs="{'invisible':[('ln10_ec_xml_data_id','=',False)]}" />
+                                        <field
+                                            name="move_id"
+                                            attrs="{'invisible': [('move_id', '=', False)]}"
+                                        />
+                                        <field
+                                            name="ln10_ec_xml_key"
+                                            attrs="{'invisible':[('ln10_ec_xml_data_id','=',False)]}"
+                                        />
+                                        <field
+                                            name="ln10_ec_electronic_authorization"
+                                            attrs="{'invisible':[('ln10_ec_xml_data_id','=',False)]}"
+                                        />
+                                        <field
+                                            name="ln10_ec_authorization_date"
+                                            attrs="{'invisible':[('ln10_ec_xml_data_id','=',False)]}"
+                                        />
+                                        <field
+                                            name="ln10_ec_xml_data_id"
+                                            attrs="{'invisible':[('ln10_ec_xml_data_id','=',False)]}"
+                                        />
                                     </group>
                                     <group attrs="{'invisible': [('type', 'not in', ('purchase', 'credit_card'))]}">
                                         <field name="point_of_emission_id" />

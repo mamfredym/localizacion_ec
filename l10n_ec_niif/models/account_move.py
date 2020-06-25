@@ -223,27 +223,41 @@ class AccountMove(models.Model):
                                                       compute='_get_l10n_ec_identification_type',
                                                       compute_sudo=True)
     # replace field from Abstract class for change attributes(readonly and states)
-    l10n_ec_point_of_emission_id = fields.Many2one(comodel_name="l10n_ec.point.of.emission",
-        readonly=True, states={'draft': [('readonly', False)]})
+    l10n_ec_point_of_emission_id = fields.Many2one(
+        comodel_name="l10n_ec.point.of.emission",
+        readonly=True,
+        states={"draft": [("readonly", False)]},
+    )
     # campo para el punto de emision de retenciones
     # se crea un campo xq el otro es para ventas
-    l10n_ec_point_of_emission_withhold_id = fields.Many2one(comodel_name="l10n_ec.point.of.emission",
-        string="Point of emission", readonly=True, states={'draft': [('readonly', False)]})
-    l10n_ec_authorization_line_id = fields.Many2one(comodel_name="l10n_ec.sri.authorization.line",
-                                                    string="Own Ecuadorian Authorization Line")
-    l10n_ec_authorization_id = fields.Many2one(comodel_name="l10n_ec.sri.authorization",
-                                               string="Own Ecuadorian Authorization",
-                                               related="l10n_ec_authorization_line_id.authorization_id", store=True)
-    l10n_ec_type_emission = fields.Selection(string="Type Emission",
-                                             selection=[
-                                                 ('electronic', 'Electronic'),
-                                                 ('pre_printed', 'Pre Printed'),
-                                                 ('auto_printer', 'Auto Printer'),
-                                             ],
-                                             required=False,
-                                             default=False,
-                                             readonly=True,
-                                             states={'draft': [('readonly', False)]})
+    l10n_ec_point_of_emission_withhold_id = fields.Many2one(
+        comodel_name="l10n_ec.point.of.emission",
+        string="Point of emission",
+        readonly=True,
+        states={"draft": [("readonly", False)]},
+    )
+    l10n_ec_authorization_line_id = fields.Many2one(
+        comodel_name="l10n_ec.sri.authorization.line",
+        string="Own Ecuadorian Authorization Line",
+    )
+    l10n_ec_authorization_id = fields.Many2one(
+        comodel_name="l10n_ec.sri.authorization",
+        string="Own Ecuadorian Authorization",
+        related="l10n_ec_authorization_line_id.authorization_id",
+        store=True,
+    )
+    l10n_ec_type_emission = fields.Selection(
+        string="Type Emission",
+        selection=[
+            ("electronic", "Electronic"),
+            ("pre_printed", "Pre Printed"),
+            ("auto_printer", "Auto Printer"),
+        ],
+        required=False,
+        default=False,
+        readonly=True,
+        states={"draft": [("readonly", False)]},
+    )
 
     @api.depends(
         'name',
@@ -308,12 +322,20 @@ class AccountMove(models.Model):
             default = {}
         if self.filtered(lambda x: x.company_id.country_id.code == 'EC'):
             invoice_type = self.l10n_ec_get_invoice_type()
-            if self.l10n_ec_point_of_emission_id and \
-                    invoice_type in ('out_invoice', 'out_refund', 'liquidation', 'debit_note_out'):
-                next_number, auth_line = self.l10n_ec_point_of_emission_id.get_next_value_sequence(
-                    invoice_type, False, False)
-                default['l10n_latam_document_number'] = next_number
-                default['l10n_ec_authorization_line_id'] = auth_line.id
+            if self.l10n_ec_point_of_emission_id and invoice_type in (
+                "out_invoice",
+                "out_refund",
+                "liquidation",
+                "debit_note_out",
+            ):
+                (
+                    next_number,
+                    auth_line,
+                ) = self.l10n_ec_point_of_emission_id.get_next_value_sequence(
+                    invoice_type, False, False
+                )
+                default["l10n_latam_document_number"] = next_number
+                default["l10n_ec_authorization_line_id"] = auth_line.id
         return super(AccountMove, self).copy(default)
 
     l10n_ec_withhold_number = fields.Char(
@@ -492,148 +514,226 @@ class AccountMove(models.Model):
 
     def _check_document_values_for_ecuador(self):
         # TODO: se deberia agregar un campo en el grupo de impuesto para diferenciarlos(l10n_ec_type_ec)
-        withhold_iva_group = self.env.ref('l10n_ec_niif.tax_group_iva_withhold')
-        withhold_rent_group = self.env.ref('l10n_ec_niif.tax_group_renta_withhold')
-        iva_group = self.env.ref('l10n_ec_niif.tax_group_iva')
+        withhold_iva_group = self.env.ref("l10n_ec_niif.tax_group_iva_withhold")
+        withhold_rent_group = self.env.ref("l10n_ec_niif.tax_group_renta_withhold")
+        iva_group = self.env.ref("l10n_ec_niif.tax_group_iva")
         # validaciones para consumidor final
         # * no permitir factura de ventas mayor a un monto configurado(200 USD por defecto)
         # * no permitir emitir Nota de credito ni factura de proveedor
         if self.l10n_ec_consumidor_final:
-            if self.type == 'out_invoice' and float_compare(
-                    self.amount_total, self.company_id.l10n_ec_consumidor_final_limit, precision_digits=2) == 1:
-                raise UserError(_("You can't make invoice where amount total %s "
-                                  "is bigger than %s for final customer")
-                                % (self.amount_total, self.company_id.l10n_ec_consumidor_final_limit))
-            if self.type in ('in_invoice', 'in_refund', 'out_refund'):
-                raise UserError(_("You can't make bill or refund to final customer on ecuadorian company"))
+            if (
+                self.type == "out_invoice"
+                and float_compare(
+                    self.amount_total,
+                    self.company_id.l10n_ec_consumidor_final_limit,
+                    precision_digits=2,
+                )
+                == 1
+            ):
+                raise UserError(
+                    _(
+                        "You can't make invoice where amount total %s "
+                        "is bigger than %s for final customer"
+                    )
+                    % (
+                        self.amount_total,
+                        self.company_id.l10n_ec_consumidor_final_limit,
+                    )
+                )
+            if self.type in ("in_invoice", "in_refund", "out_refund"):
+                raise UserError(
+                    _(
+                        "You can't make bill or refund to final customer on ecuadorian company"
+                    )
+                )
         # validaciones en facturas de proveedor para emitir retenciones
         # * tener 1 impuesto de retencion IVA y 1 impuesto de retencion RENTA
         # * no permitir retener IVA si no hay impuesto de IVA(evitar IVA 0)
-        if self.type == 'in_invoice':
+        if self.type == "in_invoice":
             error_list = []
             for line in self.invoice_line_ids:
-                iva_taxes = line.tax_ids.filtered(lambda x: x.tax_group_id.id == iva_group.id and x.amount > 0)
-                iva_0_taxes = line.tax_ids.filtered(lambda x: x.tax_group_id.id == iva_group.id and x.amount == 0)
+                iva_taxes = line.tax_ids.filtered(
+                    lambda x: x.tax_group_id.id == iva_group.id and x.amount > 0
+                )
+                iva_0_taxes = line.tax_ids.filtered(
+                    lambda x: x.tax_group_id.id == iva_group.id and x.amount == 0
+                )
                 withhold_iva_taxes = line.tax_ids.filtered(
-                    lambda x: x.tax_group_id.id == withhold_iva_group.id and x.amount > 0)
+                    lambda x: x.tax_group_id.id == withhold_iva_group.id
+                    and x.amount > 0
+                )
                 rent_withhold_taxes = line.tax_ids.filtered(
-                    lambda x: x.tax_group_id.id == withhold_rent_group.id)
-                if self.partner_id.country_id.code == 'EC':
+                    lambda x: x.tax_group_id.id == withhold_rent_group.id
+                )
+                if self.partner_id.country_id.code == "EC":
                     if len(rent_withhold_taxes) == 0:
-                        error_list.append(_('You must apply at least one income withholding tax'))
+                        error_list.append(
+                            _("You must apply at least one income withholding tax")
+                        )
                     if len(iva_taxes) == 0 and len(iva_0_taxes) == 0:
-                        error_list.append(_('You must apply at least one VAT tax'))
+                        error_list.append(_("You must apply at least one VAT tax"))
                 if len(iva_taxes) >= 1 and len(iva_0_taxes) >= 1:
-                    error_list.append(_('Cannot apply VAT zero rate with another VAT rate'))
+                    error_list.append(
+                        _("Cannot apply VAT zero rate with another VAT rate")
+                    )
                 if len(iva_taxes) > 1:
-                    error_list.append(_('You cannot have more than one VAT tax %s') %
-                                      (' / '.join(t.description or t.name for t in iva_taxes)))
+                    error_list.append(
+                        _("You cannot have more than one VAT tax %s")
+                        % (" / ".join(t.description or t.name for t in iva_taxes))
+                    )
                 if len(iva_0_taxes) > 1:
-                    error_list.append(_('You cannot have more than one VAT 0 tax %s') %
-                                      (' / '.join(t.description or t.name for t in iva_0_taxes)))
+                    error_list.append(
+                        _("You cannot have more than one VAT 0 tax %s")
+                        % (" / ".join(t.description or t.name for t in iva_0_taxes))
+                    )
                 if len(withhold_iva_taxes) > 1:
-                    error_list.append(_('You cannot have more than one VAT Withholding tax %s') %
-                                      (' / '.join(t.description or t.name for t in withhold_iva_taxes)))
+                    error_list.append(
+                        _("You cannot have more than one VAT Withholding tax %s")
+                        % (
+                            " / ".join(
+                                t.description or t.name for t in withhold_iva_taxes
+                            )
+                        )
+                    )
                 if len(rent_withhold_taxes) > 1:
-                    error_list.append(_('You cannot have more than one Rent Withholding tax %s') %
-                                      (' / '.join(t.description or t.name for t in rent_withhold_taxes)))
+                    error_list.append(
+                        _("You cannot have more than one Rent Withholding tax %s")
+                        % (
+                            " / ".join(
+                                t.description or t.name for t in rent_withhold_taxes
+                            )
+                        )
+                    )
                 if len(iva_taxes) == 0 and len(withhold_iva_taxes) > 0:
-                    error_list.append(_('You cannot apply VAT withholding without an assigned VAT tax %s') %
-                                      (' / '.join(t.description or t.name for t in withhold_iva_taxes)))
+                    error_list.append(
+                        _(
+                            "You cannot apply VAT withholding without an assigned VAT tax %s"
+                        )
+                        % (
+                            " / ".join(
+                                t.description or t.name for t in withhold_iva_taxes
+                            )
+                        )
+                    )
         if error_list:
-            raise UserError('\n'.join(error_list))
+            raise UserError("\n".join(error_list))
         return True
 
     def _prepare_withhold_values(self):
-        '''
+        """
         :return: dict with values for create a new withhold
-        '''
+        """
         withhold_values = {
-            'company_id': self.company_id.id,
-            'number': self.l10n_ec_withhold_number,
-            'issue_date': self.l10n_ec_withhold_date,
-            'partner_id': self.partner_id.id,
-            'invoice_id': self.id,
-            'type': 'purchase',
-            'document_type': self.l10n_ec_type_emission,
-            'point_of_emission_id': self.l10n_ec_point_of_emission_withhold_id.id,
-            'authorization_line_id': self.l10n_ec_authorization_line_id.id,
-            'state': 'draft',
+            "company_id": self.company_id.id,
+            "number": self.l10n_ec_withhold_number,
+            "issue_date": self.l10n_ec_withhold_date,
+            "partner_id": self.partner_id.id,
+            "invoice_id": self.id,
+            "type": "purchase",
+            "document_type": self.l10n_ec_type_emission,
+            "point_of_emission_id": self.l10n_ec_point_of_emission_withhold_id.id,
+            "authorization_line_id": self.l10n_ec_authorization_line_id.id,
+            "state": "draft",
         }
         return withhold_values
 
     def _prepare_withhold_lines_values(self, withhold):
-        '''
+        """
         Compute withhold lines based on taxes groups for withhold IVA and RENTA
         :param withhold: recordset(l10n_ec.withhold) to create lines
         :return: list(dict) with values for create withhold lines
-        '''
-        tax_model = self.env['account.tax']
-        percent_model = self.env['l10n_ec.withhold.line.percent']
-        withhold_iva_group = self.env.ref('l10n_ec_niif.tax_group_iva_withhold')
-        withhold_rent_group = self.env.ref('l10n_ec_niif.tax_group_renta_withhold')
+        """
+        tax_model = self.env["account.tax"]
+        percent_model = self.env["l10n_ec.withhold.line.percent"]
+        withhold_iva_group = self.env.ref("l10n_ec_niif.tax_group_iva_withhold")
+        withhold_rent_group = self.env.ref("l10n_ec_niif.tax_group_renta_withhold")
         tax_data = {}
         for line in self.invoice_line_ids:
             for tax in line.tax_ids:
-                if tax.tax_group_id.id in (withhold_iva_group.id, withhold_rent_group.id):
+                if tax.tax_group_id.id in (
+                    withhold_iva_group.id,
+                    withhold_rent_group.id,
+                ):
                     base_tag_id = tax.invoice_repartition_line_ids.filtered(
-                        lambda x: x.repartition_type == 'base').mapped('tag_ids')
+                        lambda x: x.repartition_type == "base"
+                    ).mapped("tag_ids")
                     tax_tag_id = tax.invoice_repartition_line_ids.filtered(
-                        lambda x: x.repartition_type == 'tax').mapped('tag_ids')
-                    tax_type = 'rent'
+                        lambda x: x.repartition_type == "tax"
+                    ).mapped("tag_ids")
+                    tax_type = "rent"
                     percent = abs(tax.amount)
                     if tax.tax_group_id.id == withhold_iva_group.id:
-                        tax_type = 'iva'
-                        percent = abs(tax.invoice_repartition_line_ids.filtered(
-                            lambda x: x.repartition_type == 'tax').factor_percent)
-                    tax_data.setdefault(tax, {
-                        'withhold_id': withhold.id,
-                        'invoice_id': self.id,
-                        'tax_id': tax.id,
-                        'base_tag_id': base_tag_id and base_tag_id.ids[0] or False,
-                        'tax_tag_id': tax_tag_id and tax_tag_id.ids[0] or False,
-                        'type': tax_type,
-                        'base_amount': 0.0,
-                        'tax_amount': 0.0,
-                        'base_amount_currency': 0.0,
-                        'tax_amount_currency': 0.0,
-                        'percent_id': percent_model._get_percent(percent, tax_type).id,
-                    })
+                        tax_type = "iva"
+                        percent = abs(
+                            tax.invoice_repartition_line_ids.filtered(
+                                lambda x: x.repartition_type == "tax"
+                            ).factor_percent
+                        )
+                    tax_data.setdefault(
+                        tax,
+                        {
+                            "withhold_id": withhold.id,
+                            "invoice_id": self.id,
+                            "tax_id": tax.id,
+                            "base_tag_id": base_tag_id and base_tag_id.ids[0] or False,
+                            "tax_tag_id": tax_tag_id and tax_tag_id.ids[0] or False,
+                            "type": tax_type,
+                            "base_amount": 0.0,
+                            "tax_amount": 0.0,
+                            "base_amount_currency": 0.0,
+                            "tax_amount_currency": 0.0,
+                            "percent_id": percent_model._get_percent(
+                                percent, tax_type
+                            ).id,
+                        },
+                    )
         for tax in tax_data.keys():
             base_amount = 0
             tax_amount = 0
-            base_tag_id = tax_data[tax].get('base_tag_id')
-            tax_tag_id = tax_data[tax].get('tax_tag_id')
+            base_tag_id = tax_data[tax].get("base_tag_id")
+            tax_tag_id = tax_data[tax].get("tax_tag_id")
             for line in self.line_ids:
-                for tag in line.tag_ids.filtered(lambda x: x.id in (base_tag_id, tax_tag_id)):
+                for tag in line.tag_ids.filtered(
+                    lambda x: x.id in (base_tag_id, tax_tag_id)
+                ):
                     tag_amount = line.balance
                     if tag.id == base_tag_id:
                         base_amount = abs(tag_amount)
-                        tax_data[tax]['base_amount'] += base_amount
-                        tax_data[tax]['base_amount_currency'] += self.currency_id.compute(
-                            base_amount, self.company_id.currency_id)
+                        tax_data[tax]["base_amount"] += base_amount
+                        tax_data[tax][
+                            "base_amount_currency"
+                        ] += self.currency_id.compute(
+                            base_amount, self.company_id.currency_id
+                        )
                     if tag.id == tax_tag_id:
                         tax_amount = abs(tag_amount)
-                        tax_data[tax]['tax_amount'] += tax_amount
-                        tax_data[tax]['tax_amount_currency'] += self.currency_id.compute(
-                            tax_amount, self.company_id.currency_id)
+                        tax_data[tax]["tax_amount"] += tax_amount
+                        tax_data[tax][
+                            "tax_amount_currency"
+                        ] += self.currency_id.compute(
+                            tax_amount, self.company_id.currency_id
+                        )
         for tax, tax_vals in tax_data.items():
             if tax.tax_group_id.id == withhold_iva_group.id:
-                tax_vals['base_amount'] = (tax_vals['tax_amount'] / (percent_model.browse(
-                        tax_vals['percent_id']).percent / 100.0))
-                tax_vals['base_amount_currency'] = self.currency_id.compute(
-                    tax_vals['base_amount'], self.company_id.currency_id)
+                tax_vals["base_amount"] = tax_vals["tax_amount"] / (
+                    percent_model.browse(tax_vals["percent_id"]).percent / 100.0
+                )
+                tax_vals["base_amount_currency"] = self.currency_id.compute(
+                    tax_vals["base_amount"], self.company_id.currency_id
+                )
         return tax_data.values()
 
     def action_post(self):
-        withhold_model = self.env['l10n_ec.withhold']
-        withhold_line_model = self.env['l10n_ec.withhold.line']
+        withhold_model = self.env["l10n_ec.withhold"]
+        withhold_line_model = self.env["l10n_ec.withhold.line"]
         for move in self:
-            if move.company_id.country_id.code == 'EC':
+            if move.company_id.country_id.code == "EC":
                 move._check_document_values_for_ecuador()
                 # proceso de retenciones en compra
-                if move.type == 'in_invoice' and move.l10n_ec_withhold_required:
-                    current_withhold = withhold_model.create(move._prepare_withhold_values())
+                if move.type == "in_invoice" and move.l10n_ec_withhold_required:
+                    current_withhold = withhold_model.create(
+                        move._prepare_withhold_values()
+                    )
                     tax_data = move._prepare_withhold_lines_values(current_withhold)
                     withhold_line_model.create(tax_data)
                     current_withhold.action_done()
@@ -646,7 +746,9 @@ class AccountMove(models.Model):
         for move in self:
             if move.is_purchase_document() and move.l10n_ec_withhold_ids:
                 move.l10n_ec_withhold_ids.action_cancel()
-                move.l10n_ec_withhold_ids.with_context(cancel_from_invoice=True).unlink()
+                move.l10n_ec_withhold_ids.with_context(
+                    cancel_from_invoice=True
+                ).unlink()
         return super(AccountMove, self).button_draft()
 
     def unlink(self):
@@ -997,7 +1099,7 @@ class AccountMove(models.Model):
         return True
 
     def l10n_ec_get_info_factura(self, node):
-        util_model = self.env['l10n_ec.utils']
+        util_model = self.env["l10n_ec.utils"]
         company = self.company_id or self.env.company
         currency = company.currency_id
         precision_get = self.env['decimal.precision'].precision_get
@@ -1012,7 +1114,9 @@ class AccountMove(models.Model):
         if self.l10n_ec_identification_type_id:
             tipoIdentificacionComprador = self.l10n_ec_identification_type_id.code
         elif self.commercial_partner_id:
-            tipoIdentificacionComprador = self.get_identification_type_partner(self.commercial_partner_id)
+            tipoIdentificacionComprador = self.get_identification_type_partner(
+                self.commercial_partner_id
+            )
         else:
             # si no tengo informacion paso por defecto consumiro final
             # pero debe tener como identificacion 13 digitos 99999999999999
@@ -1112,7 +1216,7 @@ class AccountMove(models.Model):
         return node
 
     def l10n_ec_get_info_credit_note(self, node):
-        util_model = self.env['l10n_ec.utils']
+        util_model = self.env["l10n_ec.utils"]
         company = self.company_id or self.env.company
         currency = company.currency_id
         precision_get = self.env['decimal.precision'].precision_get
@@ -1127,7 +1231,9 @@ class AccountMove(models.Model):
         if self.l10n_ec_identification_type_id:
             tipoIdentificacionComprador = self.l10n_ec_identification_type_id.code
         elif self.commercial_partner_id:
-            tipoIdentificacionComprador = self.get_identification_type_partner(self.commercial_partner_id)
+            tipoIdentificacionComprador = self.get_identification_type_partner(
+                self.commercial_partner_id
+            )
         else:
             # si no tengo informacion paso por defecto consumiro final
             # pero debe tener como identificacion 13 digitos 99999999999999
@@ -1144,15 +1250,26 @@ class AccountMove(models.Model):
         if self.rise:
             SubElement(infoNotaCredito, "rise").text = self.rise
         # TODO: notas de credito solo se emitiran a facturas o a otros documentos???
-        SubElement(infoNotaCredito, "codDocModificado").text = '01'
-        SubElement(infoNotaCredito,
-                   "numDocModificado").text = self.numero_documento or self.legacy_document_number or self.invoice_rectification_id.l10n_ec_get_document_number()
-        SubElement(infoNotaCredito, "fechaEmisionDocSustento").text = (self.fecha_documento or self.legacy_document_date or self.invoice_rectification_id.l10n_ec_get_document_date()).strftime(util_model.get_formato_date())
-        SubElement(infoNotaCredito, "totalSinImpuestos").text = util_model.formato_numero(
-            self.amount_untaxed, currency.decimal_places)
-        SubElement(infoNotaCredito, "valorModificacion").text = util_model.formato_numero(self.amount_total,
-                                                                                              currency.decimal_places)
-        SubElement(infoNotaCredito, "moneda").text = self.company_id.currency_id.name or 'DOLAR'
+        SubElement(infoNotaCredito, "codDocModificado").text = "01"
+        SubElement(infoNotaCredito, "numDocModificado").text = (
+            self.numero_documento
+            or self.legacy_document_number
+            or self.invoice_rectification_id.l10n_ec_get_document_number()
+        )
+        SubElement(infoNotaCredito, "fechaEmisionDocSustento").text = (
+            self.fecha_documento
+            or self.legacy_document_date
+            or self.invoice_rectification_id.l10n_ec_get_document_date()
+        ).strftime(util_model.get_formato_date())
+        SubElement(
+            infoNotaCredito, "totalSinImpuestos"
+        ).text = util_model.formato_numero(self.amount_untaxed, currency.decimal_places)
+        SubElement(
+            infoNotaCredito, "valorModificacion"
+        ).text = util_model.formato_numero(self.amount_total, currency.decimal_places)
+        SubElement(infoNotaCredito, "moneda").text = (
+            self.company_id.currency_id.name or "DOLAR"
+        )
         # Definicion de Impuestos
         totalConImpuestos = SubElement(infoNotaCredito, "totalConImpuestos")
         if self.l10n_ec_base_iva_0 != 0:
@@ -1200,7 +1317,7 @@ class AccountMove(models.Model):
         return node
 
     def l10n_ec_get_info_debit_note(self, node):
-        util_model = self.env['l10n_ec.utils']
+        util_model = self.env["l10n_ec.utils"]
         company = self.company_id or self.env.company
         currency = company.currency_id
         infoNotaDebito = SubElement(node, "infoNotaDebito")
@@ -1211,7 +1328,9 @@ class AccountMove(models.Model):
         if self.l10n_ec_identification_type_id:
             tipoIdentificacionComprador = self.l10n_ec_identification_type_id.code
         elif self.commercial_partner_id:
-            tipoIdentificacionComprador = self.get_identification_type_partner(self.commercial_partner_id)
+            tipoIdentificacionComprador = self.get_identification_type_partner(
+                self.commercial_partner_id
+            )
         else:
             # si no tengo informacion paso por defecto consumiro final
             # pero debe tener como identificacion 13 digitos 99999999999999
@@ -1228,11 +1347,20 @@ class AccountMove(models.Model):
         if self.rise:
             SubElement(infoNotaDebito, "rise").text = self.rise
         # TODO: notas de debito solo se emitiran a facturas o a otros documentos???
-        SubElement(infoNotaDebito, "codDocModificado").text = '01'
-        SubElement(infoNotaDebito,
-                   "numDocModificado").text = self.numero_documento or self.legacy_document_number or self.invoice_rectification_id.l10n_ec_get_document_number()
-        SubElement(infoNotaDebito, "fechaEmisionDocSustento").text = (self.fecha_documento or self.legacy_document_date or self.invoice_rectification_id.l10n_ec_get_document_date()).strftime(util_model.get_formato_date())
-        SubElement(infoNotaDebito, "totalSinImpuestos").text = util_model.formato_numero(self.amount_untaxed)
+        SubElement(infoNotaDebito, "codDocModificado").text = "01"
+        SubElement(infoNotaDebito, "numDocModificado").text = (
+            self.numero_documento
+            or self.legacy_document_number
+            or self.invoice_rectification_id.l10n_ec_get_document_number()
+        )
+        SubElement(infoNotaDebito, "fechaEmisionDocSustento").text = (
+            self.fecha_documento
+            or self.legacy_document_date
+            or self.invoice_rectification_id.l10n_ec_get_document_date()
+        ).strftime(util_model.get_formato_date())
+        SubElement(
+            infoNotaDebito, "totalSinImpuestos"
+        ).text = util_model.formato_numero(self.amount_untaxed)
         # Definicion de Impuestos
         # xq no itero sobre los impuestos???'
         impuestos = SubElement(infoNotaDebito, "impuestos")
@@ -1275,7 +1403,9 @@ class AccountMove(models.Model):
         SubElement(infoLiquidacionCompra, "obligadoContabilidad").text = util_model.get_obligado_contabilidad(
             company.partner_id.property_account_position_id)
         if self.commercial_partner_id:
-            tipoIdentificacionComprador = self.get_identification_type_partner(self.commercial_partner_id)
+            tipoIdentificacionComprador = self.get_identification_type_partner(
+                self.commercial_partner_id
+            )
         else:
             # si no tengo informacion paso por defecto consumiro final
             # pero debe tener como identificacion 13 digitos 99999999999999
@@ -1374,17 +1504,27 @@ class AccountMove(models.Model):
             reembolsos = SubElement(node, "reembolsos")
             for reembolso in self.l10n_ec_reembolso_ids:
                 reembolso_detail = SubElement(reembolsos, "reembolsoDetalle")
-                tipoIdentificacionComprador = self.get_identification_type_partner(reembolso.partner_id.commercial_partner_id)
-                SubElement(reembolso_detail, "tipoIdentificacionProveedorReembolso").text = tipoIdentificacionComprador
-                SubElement(reembolso_detail,
-                           "identificacionProveedorReembolso").text = reembolso.partner_id.commercial_partner_id.vat
-                country_code = reembolso.partner_id.commercial_partner_id.country_id.phone_code or '593'
-                SubElement(reembolso_detail,
-                           "codPaisPagoProveedorReembolso").text = str(country_code)
-                SubElement(reembolso_detail,
-                           "tipoProveedorReembolso").text = tipoIdentificacionComprador == '05' and '01' or '02'
-                SubElement(reembolso_detail, "codDocReembolso").text = '01'
-                agency, printer, sequence = reembolso.document_number.split('-')
+                tipoIdentificacionComprador = self.get_identification_type_partner(
+                    reembolso.partner_id.commercial_partner_id
+                )
+                SubElement(
+                    reembolso_detail, "tipoIdentificacionProveedorReembolso"
+                ).text = tipoIdentificacionComprador
+                SubElement(
+                    reembolso_detail, "identificacionProveedorReembolso"
+                ).text = reembolso.partner_id.commercial_partner_id.vat
+                country_code = (
+                    reembolso.partner_id.commercial_partner_id.country_id.phone_code
+                    or "593"
+                )
+                SubElement(
+                    reembolso_detail, "codPaisPagoProveedorReembolso"
+                ).text = str(country_code)
+                SubElement(reembolso_detail, "tipoProveedorReembolso").text = (
+                    tipoIdentificacionComprador == "05" and "01" or "02"
+                )
+                SubElement(reembolso_detail, "codDocReembolso").text = "01"
+                agency, printer, sequence = reembolso.document_number.split("-")
                 SubElement(reembolso_detail, "estabDocReembolso").text = agency
                 SubElement(reembolso_detail, "ptoEmiDocReembolso").text = printer
                 SubElement(reembolso_detail, "secuencialDocReembolso").text = sequence
