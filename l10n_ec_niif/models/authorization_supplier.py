@@ -186,11 +186,11 @@ class L10nECSriAuthorizationSupplier(models.Model):
             raise Warning(_('You must declare authorization to check'))
         if foreign:
             return True
-        number = number.split('-')
-        if len(number) != 3:
+        number_split = number.split('-')
+        if len(number_split) != 3:
             raise Warning(
                 _("Invalid Number, that must be like 001-001-0123456789"))
-        num_shop, num_printer, num_doc = number
+        num_shop, num_printer, num_doc = number_split
         try:
             num_doc = int(num_doc)
         except ValueError:
