@@ -161,7 +161,7 @@ class AccountInvoiceReembolso(models.Model):
                 if len(number_data) == 3:
                     try:
                         number_last = int(number_data[2])
-                    except:
+                    except Exception:
                         warning = {
                             "title": "Advertencia!!!",
                             "message": _(
@@ -216,7 +216,7 @@ class AccountInvoiceReembolso(models.Model):
                 elif len(number_data) == 1:
                     try:
                         number_to_check = str(int(number_data[0]))
-                    except:
+                    except Exception:
                         pass
                 if (
                     number_to_check

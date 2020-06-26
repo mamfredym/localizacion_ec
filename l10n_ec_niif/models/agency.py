@@ -392,7 +392,7 @@ class L10EcPointOfEmission(models.Model):
                     try:
                         next_seq_temp = int(next_seq_temp)
                         first_number_electronic = int(first_number_electronic)
-                    except:
+                    except Exception:
                         next_seq_temp = False
                         first_number_electronic = False
                     # si es menor al configurado, devolver el primer secuencial
@@ -404,7 +404,7 @@ class L10EcPointOfEmission(models.Model):
             if not next_seq and first_number_electronic and self:
                 try:
                     first_number_electronic = int(first_number_electronic)
-                except:
+                except Exception:
                     return False, False
                 next_seq = self.create_number(first_number_electronic)
                 # todos los documentos de account.move se guardan en la misma tabla y con el mismo nombre de campo

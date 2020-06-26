@@ -398,10 +398,10 @@ class L10nECSriAuthorizationSupplier(models.Model):
             try:
                 agency, printer_point, seq_number = number.split("-")
                 seq_number = int(seq_number)
-            except:
+            except Exception:
                 try:
                     seq_number = int(number)
-                except:
+                except Exception:
                     return res
         if agency and printer_point:
             criteria.append(("agency", "=", agency))

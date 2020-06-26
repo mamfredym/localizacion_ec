@@ -275,7 +275,7 @@ class SriXmlData(models.Model):
             number_splited = number.split("-")
             res = int(number_splited[2])
         except Exception as e:
-            _logger.debug('Error getting sequence: %s' % str(e))
+            _logger.debug("Error getting sequence: %s" % str(e))
             res = None
         return res
 
