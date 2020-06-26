@@ -38,8 +38,8 @@
                         % if object.origin:
                         (Con referencia: ${object.origin})
                         % endif
-                        % if object.ln10_ec_xml_key:
-                        Clave de Acceso: ${object.ln10_ec_xml_key}
+                        % if object.l10n_ec_xml_key:
+                        Clave de Acceso: ${object.l10n_ec_xml_key}
                         % endif
                         por un monto de <strong
                         >${object.amount_total} ${object.currency_id.name}</strong>
@@ -108,8 +108,8 @@
                         ,</p>
                     <p>Adjunto se encuentra su
                         Retención <strong>${object.display_name}</strong>
-                        % if object.ln10_ec_xml_key:
-                        Clave de Acceso: ${object.ln10_ec_xml_key}
+                        % if object.l10n_ec_xml_key:
+                        Clave de Acceso: ${object.l10n_ec_xml_key}
                         % endif
                         por un monto de <strong
                         >${object.total} ${object.company_id.currency_id.name}</strong>

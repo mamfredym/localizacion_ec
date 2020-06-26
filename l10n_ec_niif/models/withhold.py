@@ -14,7 +14,7 @@ class L10nEcWithhold(models.Model):
         "portal.mixin",
         "mail.thread",
         "mail.activity.mixin",
-        "ln10_ec.common.document.electronic",
+        "l10n_ec.common.document.electronic",
     ]
     _description = "Ecuadorian Withhold"
     _rec_name = "number"

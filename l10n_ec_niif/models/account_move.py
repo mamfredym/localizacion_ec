@@ -84,8 +84,8 @@ class L10nECIdentificationType(models.Model):
 class AccountMove(models.Model):
     _inherit = [
         "account.move",
-        "ln10_ec.common.document",
-        "ln10_ec.common.document.electronic",
+        "l10n_ec.common.document",
+        "l10n_ec.common.document.electronic",
     ]
     _name = "account.move"
 
@@ -95,20 +95,20 @@ class AccountMove(models.Model):
         "l10n_ec_debit_note",
         "l10n_ec_liquidation",
     )
-    def _compute_ln10_ec_is_environment_production(self):
+    def _compute_l10n_ec_is_environment_production(self):
         xml_model = self.env["sri.xml.data"]
         for invoice in self:
             if invoice.is_invoice():
                 invoice_type = invoice.l10n_ec_get_invoice_type()
-                invoice.ln10_ec_is_environment_production = xml_model.ln10_ec_is_environment_production(
+                invoice.l10n_ec_is_environment_production = xml_model.l10n_ec_is_environment_production(
                     invoice_type, invoice.l10n_ec_point_of_emission_id
                 )
             else:
-                invoice.ln10_ec_is_environment_production = False
+                invoice.l10n_ec_is_environment_production = False
 
-    ln10_ec_is_environment_production = fields.Boolean(
+    l10n_ec_is_environment_production = fields.Boolean(
         "Es Ambiente de Produccion?",
-        compute="_compute_ln10_ec_is_environment_production",
+        compute="_compute_l10n_ec_is_environment_production",
         store=True,
         index=True,
     )
@@ -1126,7 +1126,7 @@ class AccountMove(models.Model):
         #             f"a ningun documento que modifique tributariamente, por favor verifique"
         #         )
         #     # validar que la factura este autorizada electronicamente
-        #     if self.refund_invoice_id and not self.refund_invoice_id.ln10_ec_xml_data_id:
+        #     if self.refund_invoice_id and not self.refund_invoice_id.l10n_ec_xml_data_id:
         #         message_list.append(
         #             f"No puede generar una Nota de credito, "
         #             f"cuya factura rectificativa: {self.refund_invoice_id.display_name} "
@@ -1141,7 +1141,7 @@ class AccountMove(models.Model):
         if self.env.context.get("no_create_electronic", False):
             return True
         # Si ya se encuentra autorizado, no hacer nuevamente el proceso de generacion del xml
-        for invoice in self.filtered(lambda x: not x.ln10_ec_xml_data_id):
+        for invoice in self.filtered(lambda x: not x.l10n_ec_xml_data_id):
             invoice_type = invoice.l10n_ec_get_invoice_type()
             if invoice.type == "in_invoice":
                 for retention in invoice.l10n_ec_withhold_ids:
@@ -2085,7 +2085,7 @@ AccountMove()
 
 
 class AccountMoveLine(models.Model):
-    _inherit = ["account.move.line", "ln10_ec.common.document.line"]
+    _inherit = ["account.move.line", "l10n_ec.common.document.line"]
     _name = "account.move.line"
 
     l10n_ec_withhold_line_id = fields.Many2one(

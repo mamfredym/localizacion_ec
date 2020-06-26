@@ -239,7 +239,7 @@ class L10EcPointOfEmission(models.Model):
         force_preprint = False
         if (
             self.type_emission == "electronic"
-            and not xml_model.ln10_ec_is_environment_production(invoice_type, self)
+            and not xml_model.l10n_ec_is_environment_production(invoice_type, self)
         ):
             force_preprint = True
         if self.type_emission in ("pre_printed", "auto_printer") or force_preprint:
@@ -351,7 +351,7 @@ class L10EcPointOfEmission(models.Model):
         force_preprint = False
         if (
             self.type_emission == "electronic"
-            and not xml_model.ln10_ec_is_environment_production(invoice_type, self)
+            and not xml_model.l10n_ec_is_environment_production(invoice_type, self)
         ):
             force_preprint = True
             raise_exception = True
@@ -374,7 +374,7 @@ class L10EcPointOfEmission(models.Model):
             if (
                 not first_number_electronic
                 and self
-                and xml_model.ln10_ec_is_environment_production(invoice_type, self)
+                and xml_model.l10n_ec_is_environment_production(invoice_type, self)
             ):
                 first_number_electronic = self._get_first_number_electronic(
                     invoice_type

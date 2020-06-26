@@ -6,7 +6,7 @@ from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
 
 
 class L10nEcCommonDocument(models.AbstractModel):
-    _name = "ln10_ec.common.document"
+    _name = "l10n_ec.common.document"
     _description = "Abstract Class for Ecuadorian documents"
 
     l10n_ec_point_of_emission_id = fields.Many2one(
@@ -53,7 +53,7 @@ class L10nEcCommonDocument(models.AbstractModel):
 
 
 class L10nEcCommonDocumentLine(models.AbstractModel):
-    _name = "ln10_ec.common.document.line"
+    _name = "l10n_ec.common.document.line"
     _description = "Abstract Class for Ecuadorian documents details"
 
     l10n_ec_base_iva = fields.Float(

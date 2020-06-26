@@ -7,13 +7,13 @@ from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
 
 
 class L10nEcCommonDocumentElectronic(models.AbstractModel):
-    _name = "ln10_ec.common.document.electronic"
+    _name = "l10n_ec.common.document.electronic"
     _description = "Abstract Class for electronic documents"
 
-    ln10_ec_electronic_authorization = fields.Char(
+    l10n_ec_electronic_authorization = fields.Char(
         "Autorizacion Electrónica", size=49, copy=False, index=True, readonly=True
     )
-    ln10_ec_xml_data_id = fields.Many2one(
+    l10n_ec_xml_data_id = fields.Many2one(
         "sri.xml.data",
         "XML electronico",
         copy=False,
@@ -21,10 +21,10 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
         auto_join=True,
         readonly=True,
     )
-    ln10_ec_xml_key = fields.Char(
+    l10n_ec_xml_key = fields.Char(
         "Clave de acceso", size=49, copy=False, index=True, readonly=True
     )
-    ln10_ec_authorization_date = fields.Datetime(
+    l10n_ec_authorization_date = fields.Datetime(
         "Fecha de Autorización", copy=False, index=True, readonly=True
     )
 
@@ -54,13 +54,13 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
         :return: An ir.attachment recordset
         """
         self.ensure_one()
-        if not self.ln10_ec_xml_key:
+        if not self.l10n_ec_xml_key:
             return []
         domain = [
             ("res_id", "=", self.id),
             ("res_model", "=", self._name),
             ("name", "=", "%s.xml" % self.get_printed_report_name_l10n_ec()),
-            ("description", "=", self.ln10_ec_xml_key),
+            ("description", "=", self.l10n_ec_xml_key),
         ]
         return self.env["ir.attachment"].search(domain)
 
@@ -74,12 +74,12 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
         ctx.pop("default_type", False)
         AttachmentModel = self.env["ir.attachment"].with_context(ctx)
         attachment = AttachmentModel.browse()
-        if self.ln10_ec_xml_key and self.ln10_ec_xml_data_id:
+        if self.l10n_ec_xml_key and self.l10n_ec_xml_data_id:
             attachment = self.l10n_ec_get_attachments_electronic()
             if not attachment:
                 if file_data is None:
                     file_data = (
-                        self.ln10_ec_xml_data_id._action_create_file_authorized()
+                        self.l10n_ec_xml_data_id._action_create_file_authorized()
                     )
                 file_name = self.get_printed_report_name_l10n_ec()
                 if file_data:
@@ -90,18 +90,18 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
                             "res_model": self._name,
                             "datas": base64.encodebytes(file_data.encode()),
                             "store_fname": "%s.xml" % file_name,
-                            "description": self.ln10_ec_xml_key,
+                            "description": self.l10n_ec_xml_key,
                         }
                     )
         return attachment
 
     def l10n_ec_action_update_electronic_authorization(
-        self, numeroAutorizacion, ln10_ec_authorization_date
+        self, numeroAutorizacion, l10n_ec_authorization_date
     ):
         self.write(
             {
-                "ln10_ec_electronic_authorization": str(numeroAutorizacion),
-                "ln10_ec_authorization_date": ln10_ec_authorization_date.strftime(DTF),
+                "l10n_ec_electronic_authorization": str(numeroAutorizacion),
+                "l10n_ec_authorization_date": l10n_ec_authorization_date.strftime(DTF),
             }
         )
 
