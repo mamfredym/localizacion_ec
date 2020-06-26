@@ -347,7 +347,7 @@ class L10nECSriAuthorizationSupplier(models.Model):
             num_shop, num_printer, num_doc = numero
             num_doc = int(num_doc)
             number_criteria = [
-                (field_name, "like", "{}-{}-%s".format(num_shop, num_printer, num_doc))
+                (field_name, "like", "{}-{}-{}".format(num_shop, num_printer, num_doc))
             ]
         except Exception as e:
             number_criteria = [(field_name, "=", str(number))]

@@ -36,6 +36,3 @@ class SriErrorCode(models.Model):
             )
             res.append((element.id, name))
         return res
-
-
-sri_error_code()

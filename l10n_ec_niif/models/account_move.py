@@ -121,8 +121,8 @@ class AccountMove(models.Model):
         string="Credit Notes",
         required=False,
     )
-    l10n_ec_reembolso_ids = fields.One2many(
-        comodel_name="l10n_ec.account.invoice.reembolso",
+    l10n_ec_refund_ids = fields.One2many(
+        comodel_name="l10n_ec.account.invoice.refund",
         inverse_name="invoice_id",
         string="Refunds",
         required=False,
@@ -1109,15 +1109,15 @@ class AccountMove(models.Model):
                 f"Debe asignar la forma de pago del SRI en el documento: {self.display_name}, por favor verifique."
             )
         # validaciones para reembolso en liquidacion de compras
-        if self.l10n_ec_liquidation and self.l10n_ec_reembolso_ids:
-            for reembolso in self.l10n_ec_reembolso_ids:
-                if not reembolso.partner_id.commercial_partner_id.vat:
+        if self.l10n_ec_liquidation and self.l10n_ec_refund_ids:
+            for refund in self.l10n_ec_refund_ids:
+                if not refund.partner_id.commercial_partner_id.vat:
                     message_list.append(
-                        f"En Reembolsos debe asignar el RUC en la Empresa: {reembolso.partner_id.commercial_partner_id.name}, por favor verifique."
+                        f"En Reembolsos debe asignar el RUC en la Empresa: {refund.partner_id.commercial_partner_id.name}, por favor verifique."
                     )
-                if reembolso.currency_id.is_zero(reembolso.total_invoice):
+                if refund.currency_id.is_zero(refund.total_invoice):
                     message_list.append(
-                        f"El total del reembolso debe ser mayor a cero, por favor verifique."
+                        "El total del reembolso debe ser mayor a cero, por favor verifique."
                     )
         # if self.type == 'out_refund':
         #     if not self.refund_invoice_id and not self.numero_documento:
@@ -1210,7 +1210,7 @@ class AccountMove(models.Model):
         valor,
         tag_name="totalImpuesto",
         tarifa=-1,
-        reembolso=False,
+        refund=False,
         liquidation=False,
         decimales=2,
     ):
@@ -1219,7 +1219,7 @@ class AccountMove(models.Model):
         SubElement(tag, "codigo").text = codigo
         SubElement(tag, "codigoPorcentaje").text = codigo_porcentaje
         if liquidation:
-            if reembolso:
+            if refund:
                 if tarifa != -1:
                     SubElement(tag, "tarifa").text = util_model.formato_numero(
                         tarifa, 0
@@ -1244,7 +1244,7 @@ class AccountMove(models.Model):
         else:
             if tarifa != -1:
                 SubElement(tag, "tarifa").text = util_model.formato_numero(tarifa, 0)
-            if reembolso:
+            if refund:
                 SubElement(
                     tag, "baseImponibleReembolso"
                 ).text = util_model.formato_numero(base, decimales)
@@ -1838,20 +1838,20 @@ class AccountMove(models.Model):
             SubElement(
                 infoLiquidacionCompra, "totalComprobantesReembolso"
             ).text = util_model.formato_numero(
-                sum([r.total_invoice for r in self.l10n_ec_reembolso_ids]),
+                sum([r.total_invoice for r in self.l10n_ec_refund_ids]),
                 decimales=currency.decimal_places,
             )
             SubElement(
                 infoLiquidacionCompra, "totalBaseImponibleReembolso"
             ).text = util_model.formato_numero(
-                sum([r.total_base_iva for r in self.l10n_ec_reembolso_ids]),
+                sum([r.total_base_iva for r in self.l10n_ec_refund_ids]),
                 decimales=currency.decimal_places,
             )
             SubElement(
                 infoLiquidacionCompra, "totalImpuestoReembolso"
             ).text = util_model.formato_numero(
-                sum([r.l10n_ec_iva for r in self.l10n_ec_reembolso_ids])
-                + sum([r.total_ice for r in self.l10n_ec_reembolso_ids]),
+                sum([r.l10n_ec_iva for r in self.l10n_ec_refund_ids])
+                + sum([r.total_ice for r in self.l10n_ec_refund_ids]),
                 decimales=currency.decimal_places,
             )
         # Definicion de Impuestos
@@ -1992,21 +1992,21 @@ class AccountMove(models.Model):
             #     False, decimales=currency.decimal_places)
         # informacion de reembolso solo se debe agregar si el tipo de documento es
         # Comprobante de venta emitido por reembolso(codigo 41)
-        if self.l10n_ec_reembolso_ids:
+        if self.l10n_ec_refund_ids:
             reembolsos = SubElement(node, "reembolsos")
-            for reembolso in self.l10n_ec_reembolso_ids:
+            for refund in self.l10n_ec_refund_ids:
                 reembolso_detail = SubElement(reembolsos, "reembolsoDetalle")
                 tipoIdentificacionComprador = self.get_identification_type_partner(
-                    reembolso.partner_id.commercial_partner_id
+                    refund.partner_id.commercial_partner_id
                 )
                 SubElement(
                     reembolso_detail, "tipoIdentificacionProveedorReembolso"
                 ).text = tipoIdentificacionComprador
                 SubElement(
                     reembolso_detail, "identificacionProveedorReembolso"
-                ).text = reembolso.partner_id.commercial_partner_id.vat
+                ).text = refund.partner_id.commercial_partner_id.vat
                 country_code = (
-                    reembolso.partner_id.commercial_partner_id.country_id.phone_code
+                    refund.partner_id.commercial_partner_id.country_id.phone_code
                     or "593"
                 )
                 SubElement(
@@ -2016,61 +2016,61 @@ class AccountMove(models.Model):
                     tipoIdentificacionComprador == "05" and "01" or "02"
                 )
                 SubElement(reembolso_detail, "codDocReembolso").text = "01"
-                agency, printer, sequence = reembolso.document_number.split("-")
+                agency, printer, sequence = refund.document_number.split("-")
                 SubElement(reembolso_detail, "estabDocReembolso").text = agency
                 SubElement(reembolso_detail, "ptoEmiDocReembolso").text = printer
                 SubElement(reembolso_detail, "secuencialDocReembolso").text = sequence
-                fecha_emision = reembolso.date_invoice.strftime(
+                fecha_emision = refund.date_invoice.strftime(
                     util_model.get_formato_date()
                 )
                 SubElement(
                     reembolso_detail, "fechaEmisionDocReembolso"
                 ).text = fecha_emision
                 SubElement(reembolso_detail, "numeroautorizacionDocReemb").text = (
-                    reembolso.l10n_ec_partner_authorization_id
-                    and reembolso.l10n_ec_partner_authorization_id.number
-                    or reembolso.electronic_authorization
+                    refund.l10n_ec_partner_authorization_id
+                    and refund.l10n_ec_partner_authorization_id.number
+                    or refund.electronic_authorization
                 )
                 detalleImpuestos = SubElement(reembolso_detail, "detalleImpuestos")
                 tarifa_iva = (
-                    reembolso.total_base_iva
-                    and round((reembolso.total_iva / reembolso.total_base_iva), 2)
+                    refund.total_base_iva
+                    and round((refund.total_iva / refund.total_base_iva), 2)
                     or 0.0
                 )
                 tipo_iva = "2"
                 if tarifa_iva == 0.14:
                     tipo_iva = "3"
-                if reembolso.total_base_iva0 != 0:
+                if refund.total_base_iva0 != 0:
                     self.l10n_ec_get_total_impuestos(
                         detalleImpuestos,
                         "2",
                         "0",
-                        reembolso.total_base_iva0,
+                        refund.total_base_iva0,
                         0.0,
                         "detalleImpuesto",
                         0,
                         liquidation=True,
                         decimales=currency.decimal_places,
                     )
-                if reembolso.total_base_iva != 0:
+                if refund.total_base_iva != 0:
                     self.l10n_ec_get_total_impuestos(
                         detalleImpuestos,
                         "2",
                         tipo_iva,
-                        reembolso.total_base_iva,
-                        reembolso.total_iva,
+                        refund.total_base_iva,
+                        refund.total_iva,
                         "detalleImpuesto",
                         int(tarifa_iva * 100),
                         liquidation=True,
-                        reembolso=True,
+                        refund=True,
                         decimales=currency.decimal_places,
                     )
-                if reembolso.total_base_no_iva != 0:
+                if refund.total_base_no_iva != 0:
                     self.l10n_ec_get_total_impuestos(
                         detalleImpuestos,
                         "2",
                         "6",
-                        reembolso.total_base_no_iva,
+                        refund.total_base_no_iva,
                         0.0,
                         "detalleImpuesto",
                         0,

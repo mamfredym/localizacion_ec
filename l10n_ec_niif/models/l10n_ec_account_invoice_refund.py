@@ -5,10 +5,10 @@ from odoo.exceptions import ValidationError
 from odoo.tools.translate import _
 
 
-class AccountInvoiceReembolso(models.Model):
+class AccountInvoiceRefund(models.Model):
 
-    _name = "l10n_ec.account.invoice.reembolso"
-    _description = "Facturas de reembolso"
+    _name = "l10n_ec.account.invoice.refund"
+    _description = "Invoice Refund"
     _rec_name = "document_number"
 
     @api.depends(
@@ -19,13 +19,13 @@ class AccountInvoiceReembolso(models.Model):
         "total_ice",
     )
     def _compute_total_invoice(self):
-        for reembolso in self:
-            reembolso.total_invoice = (
-                reembolso.total_base_iva
-                + reembolso.total_base_iva0
-                + reembolso.total_base_no_iva
-                + reembolso.total_iva
-                + reembolso.total_ice
+        for refund in self:
+            refund.total_invoice = (
+                refund.total_base_iva
+                + refund.total_base_iva0
+                + refund.total_base_no_iva
+                + refund.total_iva
+                + refund.total_ice
             )
 
     invoice_id = fields.Many2one(
@@ -78,31 +78,31 @@ class AccountInvoiceReembolso(models.Model):
         auth_s_model = self.env["l10n_ec.sri.authorization.supplier"]
         util_model = self.env["l10n_ec.utils"]
         padding_auth = "1,9"
-        for reembolso in self:
+        for refund in self:
             if (
-                reembolso.l10n_ec_partner_authorization_id
-                and reembolso.l10n_ec_partner_authorization_id.padding > 0
+                refund.l10n_ec_partner_authorization_id
+                and refund.l10n_ec_partner_authorization_id.padding > 0
             ):
-                padding_auth = reembolso.l10n_ec_partner_authorization_id.padding
+                padding_auth = refund.l10n_ec_partner_authorization_id.padding
             cadena = r"(\d{3})+\-(\d{3})+\-(\d{%s})" % (padding_auth)
             if (
-                not reembolso.l10n_ec_foreign
-                and reembolso.document_number
-                and not re.match(cadena, reembolso.document_number)
+                not refund.l10n_ec_foreign
+                and refund.document_number
+                and not re.match(cadena, refund.document_number)
             ):
                 raise ValidationError(
                     _(
                         "The número de documento no es correcto, debe ser de la forma 00X-00X-000XXXXXX, X es un número"
                     )
                 )
-            if reembolso.document_type == "normal":
+            if refund.document_type == "normal":
                 if not auth_s_model.check_number_document(
                     "invoice_reembolso",
-                    reembolso.document_number,
-                    reembolso.l10n_ec_partner_authorization_id,
-                    reembolso.date_invoice,
-                    reembolso.id,
-                    reembolso.l10n_ec_foreign,
+                    refund.document_number,
+                    refund.l10n_ec_partner_authorization_id,
+                    refund.date_invoice,
+                    refund.id,
+                    refund.l10n_ec_foreign,
                 ):
                     raise ValidationError(
                         _("Ya existe otro documento con el mismo número")
@@ -110,27 +110,24 @@ class AccountInvoiceReembolso(models.Model):
             else:
                 auth_s_model.validate_unique_document_partner(
                     "invoice_reembolso",
-                    reembolso.document_number,
-                    reembolso.partner_id.id,
-                    util_model.ensure_id(reembolso),
+                    refund.document_number,
+                    refund.partner_id.id,
+                    util_model.ensure_id(refund),
                 )
 
     @api.constrains("electronic_authorization", "document_type")
     def _check_electronic_authorization(self):
         cadena = r"(\d{37}$)|(\d{49}$)"
-        for reembolso in self:
-            if (
-                reembolso.document_type == "electronic"
-                and reembolso.electronic_authorization
-            ):
-                if len(reembolso.electronic_authorization) not in (37, 49):
+        for refund in self:
+            if refund.document_type == "electronic" and refund.electronic_authorization:
+                if len(refund.electronic_authorization) not in (37, 49):
                     raise ValidationError(
                         _(
                             "El número de autorización electrónica es incorrecto, "
                             "este debe ser de 37 or 49 digitos. Revise el reembolso"
                         )
                     )
-                if not re.match(cadena, reembolso.electronic_authorization):
+                if not re.match(cadena, refund.electronic_authorization):
                     raise ValidationError(
                         _(
                             "La autorización electronica debe tener solo números, "

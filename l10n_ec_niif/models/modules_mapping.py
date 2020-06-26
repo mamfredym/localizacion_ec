@@ -220,7 +220,7 @@ def get_model_name(document_type):
         "liquidation": "account.move",
         "withholding": "l10n_ec.withhold",
         "delivery_note": "l10n_ec.delivery.note",
-        "invoice_reembolso": "l10n_ec.account.invoice.reembolso",
+        "invoice_reembolso": "l10n_ec.account.invoice.refund",
     }
     return model_name.get(document_type, "")
 

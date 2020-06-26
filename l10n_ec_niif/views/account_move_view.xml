@@ -333,7 +333,7 @@
                 </xpath>
                 <xpath expr="//page[@id='other_tab']" position="before">
                     <page string="Invoice Refund" name="l10n_ec_reembolso">
-                        <field name="l10n_ec_reembolso_ids">
+                        <field name="l10n_ec_refund_ids">
                             <tree>
                                 <field name="document_number" />
                                 <field name="partner_id" />

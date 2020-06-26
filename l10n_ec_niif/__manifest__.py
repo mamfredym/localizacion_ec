@@ -1,6 +1,6 @@
 {
     "name": "Ecuador - Accounting IFRS",
-    "version": "13.0.0.0.1",
+    "version": "13.0.0.0.2",
     "category": "Localization",
     "author": "Spearhead",
     "website": "https://www.vision-estrategica.com",
@@ -62,6 +62,6 @@
     "installable": True,
     "auto_install": False,
     "external_dependencies": {
-        "python": ["stdnum", "xmlsig", "OpenSSL", "xades", "barcode", "zeep", "Crypto"],
+        "python": ["stdnum", "xmlsig", "OpenSSL", "xades", "zeep"],
     },
 }

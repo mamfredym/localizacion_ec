@@ -10,9 +10,7 @@ from pprint import pformat
 from random import randint
 from xml.etree.ElementTree import Element, SubElement, tostring
 
-import barcode
 import pytz
-from barcode.writer import ImageWriter
 from lxml import etree
 from zeep import Client
 from zeep.transports import Transport
@@ -1101,18 +1099,6 @@ class SriXmlData(models.Model):
             )
             raise UserError("\n".join(messages_error))
         return authorized
-
-    @api.model
-    def make_barcode(self, number):
-        # El tipo puede ser A, B, C
-        # Se usa el identificador de aplicacion 99 debido a que es una aplicacion interna
-        code = barcode.Code128(str(number), writer=ImageWriter())
-        fp = io.BytesIO()
-        code.write(fp, text="")
-        fp.seek(0)
-        data = fp.read()
-        fp.close()
-        return base64.encodebytes(data)
 
     def _get_messages_before_sent_sri(self, res_document):
         """
