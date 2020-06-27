@@ -100,7 +100,7 @@
                             attrs="{'invisible': [('type', '!=', 'out_refund'), ('l10n_ec_debit_note', '=', False)]}"
                         />
                         <field
-                            name="l10n_legacy_document_date"
+                            name="l10n_ec_legacy_document_date"
                             attrs="{'invisible': [('type', '!=', 'out_refund'), ('l10n_ec_debit_note', '=', False)]}"
                         />
                         <field name="l10n_ec_start_date" invisible="1" />

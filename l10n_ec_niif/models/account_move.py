@@ -170,7 +170,7 @@ class AccountMove(models.Model):
         default=lambda self: self.env.context.get("default_l10n_ec_liquidation", False),
     )
     l10n_ec_rise = fields.Char("R.I.S.E", copy=False)
-    l10n_legacy_document_date = fields.Date(string="External Document Date")
+    l10n_ec_legacy_document_date = fields.Date(string="External Document Date")
     l10n_ec_legacy_document_number = fields.Char(string="External Document Number")
     l10n_ec_credit_days = fields.Integer(
         string="Días Crédito", compute="_compute_l10n_ec_credit_days", store=True
@@ -1601,7 +1601,7 @@ class AccountMove(models.Model):
             or self.l10n_ec_original_invoice_id.l10n_ec_get_document_number()
         )
         SubElement(infoNotaCredito, "fechaEmisionDocSustento").text = (
-            self.l10n_legacy_document_date
+            self.l10n_ec_legacy_document_date
             or self.l10n_ec_original_invoice_id.l10n_ec_get_document_date()
         ).strftime(util_model.get_formato_date())
         SubElement(
@@ -1751,7 +1751,7 @@ class AccountMove(models.Model):
             or self.debit_origin_id.l10n_ec_get_document_number()
         )
         SubElement(infoNotaDebito, "fechaEmisionDocSustento").text = (
-            self.l10n_legacy_document_date
+            self.l10n_ec_legacy_document_date
             or self.debit_origin_id.l10n_ec_get_document_date()
         ).strftime(util_model.get_formato_date())
         SubElement(
