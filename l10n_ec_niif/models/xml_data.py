@@ -1017,13 +1017,7 @@ class SriXmlData(models.Model):
             # si supero el maximo de intentos liberar la clave actual y generar una en modo contingencia
             # una tarea cron debe encargarse de reenviar para autorizar
             if l10n_ec_max_intentos > company.l10n_ec_max_intentos:
-                # pasar por context que el modo de emision es contingencia
-                # si el documento esta en espera de autorizacion no pasar a contingencia
-                if (
-                    not context.get("l10n_ec_xml_call_from_cron", False)
-                    and self.state != "waiting"
-                ):
-                    self.action_create_xml_file()
+                return False
             elif send_again:
                 # si no supera el maximo de intentos, volve a intentar
                 return self.send_xml_data_to_check(
