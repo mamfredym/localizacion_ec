@@ -169,6 +169,9 @@ class AccountMove(models.Model):
         string="Liquidation of Purchases?",
         default=lambda self: self.env.context.get("default_l10n_ec_liquidation", False),
     )
+    l10n_ec_rise = fields.Char("R.I.S.E", copy=False)
+    l10n_legacy_document_date = fields.Date(string="External Document Date")
+    l10n_ec_legacy_document_number = fields.Char(string="External Document Number")
     l10n_ec_credit_days = fields.Integer(
         string="Días Crédito", compute="_compute_l10n_ec_credit_days", store=True
     )
@@ -253,19 +256,17 @@ class AccountMove(models.Model):
                     latam_type = "invoice"
                     if move.type in ("out_refund", "in_refund"):
                         latam_type = "credit_note"
-                    move.write(
-                        {
-                            "l10n_latam_available_document_type_ids": [
-                                (
-                                    6,
-                                    0,
-                                    move.l10n_ec_identification_type_id.document_type_ids.filtered(
-                                        lambda x: x.internal_type == latam_type
-                                    ).ids,
-                                )
-                            ]
-                        }
-                    )
+                    if move.l10n_ec_debit_note:
+                        latam_type = "debit_note"
+                    move.l10n_latam_available_document_type_ids = [
+                        (
+                            6,
+                            0,
+                            move.l10n_ec_identification_type_id.document_type_ids.filtered(
+                                lambda x: x.internal_type == latam_type
+                            ).ids,
+                        )
+                    ]
                     if (
                         move.l10n_latam_available_document_type_ids
                         and move.l10n_latam_document_type_id.id
@@ -391,7 +392,16 @@ class AccountMove(models.Model):
     def default_get(self, fields):
         values = super(AccountMove, self).default_get(fields)
         type = values.get("type", self.type)
-        if type in ("out_invoice", "out_refund", "in_invoice"):
+        fields_ec_to_fill = {
+            "l10n_ec_point_of_emission_id",
+            "l10n_ec_withhold_number",
+            "l10n_latam_document_number" "l10n_ec_authorization_line_id",
+        }
+        if type in (
+            "out_invoice",
+            "out_refund",
+            "in_invoice",
+        ) and fields_ec_to_fill.intersection(set(fields)):
             invoice_type = modules_mapping.l10n_ec_get_invoice_type(
                 type,
                 values.get("l10n_ec_debit_note", self.l10n_ec_debit_note),
@@ -438,11 +448,20 @@ class AccountMove(models.Model):
                             values["l10n_ec_authorization_line_id"] = auth_line.id
         return values
 
-    def copy(self, default=None):
+    def copy_data(self, default=None):
         if not default:
             default = {}
         if self.filtered(lambda x: x.company_id.country_id.code == "EC"):
-            invoice_type = self.l10n_ec_get_invoice_type()
+            inv_type = default.get("type") or self.type
+            l10n_ec_debit_note = (
+                default.get("l10n_ec_debit_note") or self.l10n_ec_debit_note
+            )
+            l10n_ec_liquidation = (
+                default.get("l10n_ec_liquidation") or self.l10n_ec_liquidation
+            )
+            invoice_type = modules_mapping.l10n_ec_get_invoice_type(
+                inv_type, l10n_ec_debit_note, l10n_ec_liquidation, False
+            )
             if self.l10n_ec_point_of_emission_id and invoice_type in (
                 "out_invoice",
                 "out_refund",
@@ -457,7 +476,7 @@ class AccountMove(models.Model):
                 )
                 default["l10n_latam_document_number"] = next_number
                 default["l10n_ec_authorization_line_id"] = auth_line.id
-        return super(AccountMove, self).copy(default)
+        return super(AccountMove, self).copy_data(default)
 
     l10n_ec_withhold_number = fields.Char(
         string="Withhold Number",
@@ -673,6 +692,7 @@ class AccountMove(models.Model):
         withhold_iva_group = self.env.ref("l10n_ec_niif.tax_group_iva_withhold")
         withhold_rent_group = self.env.ref("l10n_ec_niif.tax_group_renta_withhold")
         iva_group = self.env.ref("l10n_ec_niif.tax_group_iva")
+        error_list = []
         # validaciones para consumidor final
         # * no permitir factura de ventas mayor a un monto configurado(200 USD por defecto)
         # * no permitir emitir Nota de credito ni factura de proveedor
@@ -706,7 +726,6 @@ class AccountMove(models.Model):
         # * tener 1 impuesto de retencion IVA y 1 impuesto de retencion RENTA
         # * no permitir retener IVA si no hay impuesto de IVA(evitar IVA 0)
         if self.type == "in_invoice":
-            error_list = []
             for line in self.invoice_line_ids:
                 iva_taxes = line.tax_ids.filtered(
                     lambda x: x.tax_group_id.id == iva_group.id and x.amount > 0
@@ -898,6 +917,14 @@ class AccountMove(models.Model):
                 if move.is_invoice():
                     move.l10n_ec_action_create_xml_data()
         return super(AccountMove, self).action_post()
+
+    def _reverse_move_vals(self, default_values, cancel=True):
+        # pasar la referencia al campo que se usa en localizacion ecuatoriana
+        # TODO: revisar si realmente es necesario agregar un nuevo campo o se podria usar el de Odoo base
+        default_values["l10n_ec_original_invoice_id"] = self.id
+        return super(AccountMove, self)._reverse_move_vals(
+            default_values, cancel=cancel
+        )
 
     def button_draft(self):
         for move in self:
@@ -1119,19 +1146,25 @@ class AccountMove(models.Model):
                     message_list.append(
                         "El total del reembolso debe ser mayor a cero, por favor verifique."
                     )
-        # if self.type == 'out_refund':
-        #     if not self.refund_invoice_id and not self.numero_documento:
-        #         message_list.append(
-        #             f"La Nota de Credito: {self.display_name} no esta asociada "
-        #             f"a ningun documento que modifique tributariamente, por favor verifique"
-        #         )
-        #     # validar que la factura este autorizada electronicamente
-        #     if self.refund_invoice_id and not self.refund_invoice_id.l10n_ec_xml_data_id:
-        #         message_list.append(
-        #             f"No puede generar una Nota de credito, "
-        #             f"cuya factura rectificativa: {self.refund_invoice_id.display_name} "
-        #             f"no esta autorizada electronicamente!"
-        #         )
+        if self.type == "out_refund":
+            if (
+                not self.l10n_ec_original_invoice_id
+                and not self.l10n_ec_legacy_document_number
+            ):
+                message_list.append(
+                    f"La Nota de Credito: {self.display_name} no esta asociada "
+                    f"a ningun documento que modifique tributariamente, por favor verifique"
+                )
+            # validar que la factura este autorizada electronicamente
+            if (
+                self.l10n_ec_original_invoice_id
+                and not self.l10n_ec_original_invoice_id.l10n_ec_xml_data_id
+            ):
+                message_list.append(
+                    f"No puede generar una Nota de credito, "
+                    f"cuya factura rectificativa: {self.l10n_ec_original_invoice_id.display_name} "
+                    f"no esta autorizada electronicamente!"
+                )
         return message_list
 
     def l10n_ec_action_create_xml_data(self):
@@ -1559,19 +1592,17 @@ class AccountMove(models.Model):
         ).text = util_model.get_obligado_contabilidad(
             company.partner_id.property_account_position_id
         )
-        if self.rise:
-            SubElement(infoNotaCredito, "rise").text = self.rise
+        if self.l10n_ec_rise:
+            SubElement(infoNotaCredito, "rise").text = self.l10n_ec_rise
         # TODO: notas de credito solo se emitiran a facturas o a otros documentos???
         SubElement(infoNotaCredito, "codDocModificado").text = "01"
         SubElement(infoNotaCredito, "numDocModificado").text = (
-            self.numero_documento
-            or self.legacy_document_number
-            or self.invoice_rectification_id.l10n_ec_get_document_number()
+            self.l10n_ec_legacy_document_number
+            or self.l10n_ec_original_invoice_id.l10n_ec_get_document_number()
         )
         SubElement(infoNotaCredito, "fechaEmisionDocSustento").text = (
-            self.fecha_documento
-            or self.legacy_document_date
-            or self.invoice_rectification_id.l10n_ec_get_document_date()
+            self.l10n_legacy_document_date
+            or self.l10n_ec_original_invoice_id.l10n_ec_get_document_date()
         ).strftime(util_model.get_formato_date())
         SubElement(
             infoNotaCredito, "totalSinImpuestos"
@@ -1711,19 +1742,17 @@ class AccountMove(models.Model):
         ).text = util_model.get_obligado_contabilidad(
             company.partner_id.property_account_position_id
         )
-        if self.rise:
-            SubElement(infoNotaDebito, "rise").text = self.rise
+        if self.l10n_ec_rise:
+            SubElement(infoNotaDebito, "rise").text = self.l10n_ec_rise
         # TODO: notas de debito solo se emitiran a facturas o a otros documentos???
         SubElement(infoNotaDebito, "codDocModificado").text = "01"
         SubElement(infoNotaDebito, "numDocModificado").text = (
-            self.numero_documento
-            or self.legacy_document_number
-            or self.invoice_rectification_id.l10n_ec_get_document_number()
+            self.l10n_ec_legacy_document_number
+            or self.debit_origin_id.l10n_ec_get_document_number()
         )
         SubElement(infoNotaDebito, "fechaEmisionDocSustento").text = (
-            self.fecha_documento
-            or self.legacy_document_date
-            or self.invoice_rectification_id.l10n_ec_get_document_date()
+            self.l10n_legacy_document_date
+            or self.debit_origin_id.l10n_ec_get_document_date()
         ).strftime(util_model.get_formato_date())
         SubElement(
             infoNotaDebito, "totalSinImpuestos"

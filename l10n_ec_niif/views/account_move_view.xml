@@ -91,6 +91,18 @@
                             options="{'no_create': True}"
                             attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund'))]}"
                         />
+                        <field
+                            name="l10n_ec_rise"
+                            attrs="{'invisible': [('type', '!=', 'out_refund'), ('l10n_ec_debit_note', '=', False)]}"
+                        />
+                        <field
+                            name="l10n_ec_legacy_document_number"
+                            attrs="{'invisible': [('type', '!=', 'out_refund'), ('l10n_ec_debit_note', '=', False)]}"
+                        />
+                        <field
+                            name="l10n_legacy_document_date"
+                            attrs="{'invisible': [('type', '!=', 'out_refund'), ('l10n_ec_debit_note', '=', False)]}"
+                        />
                         <field name="l10n_ec_start_date" invisible="1" />
                         <field name="l10n_ec_expiration_date" invisible="1" />
                         <field
