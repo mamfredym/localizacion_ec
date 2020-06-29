@@ -1,12 +1,12 @@
-#
+import logging
 
 from odoo import api, fields, models
-from odoo.exceptions import RedirectWarning, UserError, ValidationError, Warning
+from odoo.exceptions import UserError, ValidationError, Warning
 from odoo.tools.translate import _
 
-import odoo.addons.decimal_precision as dp
-
 from ..models import modules_mapping
+
+_logger = logging.getLogger(__name__)
 
 
 class L10nEcAgency(models.Model):
@@ -69,6 +69,7 @@ class L10nEcAgency(models.Model):
                             _("Number of agency must be between 1 and 999")
                         )
                 except ValueError as e:
+                    _logger.debug("Error parsing agency number %s" % str(e))
                     raise ValidationError(_("Number of agency must be only numbers"))
 
     _sql_constraints = [
@@ -174,6 +175,7 @@ class L10EcPointOfEmission(models.Model):
                     seq = int(number)
                 document_format = self.create_number(seq)
             except Exception as e:
+                _logger("Error function complete_number %s" % str(e))
                 pass
         return document_format
 
@@ -219,6 +221,7 @@ class L10EcPointOfEmission(models.Model):
             if self.number != number_printer:
                 is_number_valid = False
         except Exception as e:
+            _logger("Error parsing number of document: %s" % str(e))
             is_number_valid = False
         if is_number_valid and number:
             doc_find = auth_line_model.search(
@@ -306,6 +309,7 @@ class L10EcPointOfEmission(models.Model):
                     sorted(self.env.context.get("numbers_skip", []))[-1].split("-")[2]
                 )
         except Exception as e:
+            _logger.debug("Error parsing number: %s" % str(e))
             seq = False
         if doc_recs:
             for doc in doc_recs:
@@ -328,6 +332,7 @@ class L10EcPointOfEmission(models.Model):
                 try:
                     seq = int(next_seq.split("-")[2])
                 except Exception as e:
+                    _logger.debug("Error parsing number: %s" % str(e))
                     seq = False
                 if seq:
                     for doc in doc_recs:
