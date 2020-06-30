@@ -1,10 +1,12 @@
-#
+import logging
 
 from stdnum.ec import ci, ruc
 
 from odoo import SUPERUSER_ID, api, fields, models
-from odoo.exceptions import UserError, ValidationError, Warning
+from odoo.exceptions import UserError, Warning
 from odoo.tools.translate import _
+
+_logger = logging.getLogger(__name__)
 
 
 class ResPartner(models.Model):
@@ -117,6 +119,7 @@ class ResPartner(models.Model):
             if c == 13:
                 return b
         except Exception as e:
+            _logger.debug("Error parsing final customer value %s" % str(e))
             return False
 
     def check_vat_ec(self, vat):

@@ -199,7 +199,7 @@ class SriKeyType(models.Model):
             # este deberia tener entre las extensiones digital_signature = True
             # pero si el certificado solo tiene uno, devolvera None
             ca_certificates_list = p12.get_ca_certificates()
-            if not ca_certificates_list is None:
+            if ca_certificates_list is not None:
                 for x509_inst in ca_certificates_list:
                     x509_cryp = x509_inst.to_cryptography()
                     for exten in x509_cryp.extensions:
@@ -209,7 +209,7 @@ class SriKeyType(models.Model):
                         ):
                             x509 = x509_inst
                             break
-        if not x509 is None:
+        if x509 is not None:
             p12.set_certificate(x509)
             p12.set_privatekey(private_key)
         ctx = XAdESContext(ImpliedPolicy(xmlsig.constants.TransformSha1))

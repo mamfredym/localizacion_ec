@@ -40,6 +40,3 @@ class ResCompany(models.Model):
                 notification.append("Fecha expiracion: " + key.expiration_date)
                 notification.append("La llave ya expiro")
         return notification
-
-
-res_company()

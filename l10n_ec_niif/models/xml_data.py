@@ -816,7 +816,7 @@ class SriXmlData(models.Model):
         autorizacion_list = []
         list_aux = []
         l10n_ec_authorization_date = False
-        if hasattr(response, "autorizaciones") and not response.autorizaciones is None:
+        if hasattr(response, "autorizaciones") and response.autorizaciones is not None:
             if isinstance(response.autorizaciones, str):
                 _logger.warning(
                     "Authorization data error, reponse message is not correct. %s",
@@ -1028,7 +1028,6 @@ class SriXmlData(models.Model):
             return True
 
         company = self.env.company
-        ctx = self.env.context.copy()
         send_again, authorized, raise_error = False, False, True
         messages_error, message_data = [], []
         # si esta esperando autorizacion, una tarea cron debe encargarse de eso

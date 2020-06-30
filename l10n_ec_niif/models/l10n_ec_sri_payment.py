@@ -22,7 +22,7 @@ class L10nEcSriPaymentMethod(models.Model):
         self, name, args=None, operator="ilike", limit=100, name_get_uid=None
     ):
         args = args or []
-        res = super(L10n_ecSriPaymentMethod, self)._name_search(
+        res = super(L10nEcSriPaymentMethod, self)._name_search(
             name, args, operator, limit, name_get_uid
         )
         if not res and name:

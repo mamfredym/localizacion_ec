@@ -1,14 +1,13 @@
-#
-
+import logging
 import re
 
 from odoo import SUPERUSER_ID, api, fields, models
-from odoo.exceptions import RedirectWarning, ValidationError, Warning
+from odoo.exceptions import ValidationError, Warning
 from odoo.tools.translate import _
 
-import odoo.addons.decimal_precision as dp
-
 from ..models import modules_mapping
+
+_logger = logging.getLogger(__name__)
 
 
 class L10nECSriAuthorizationSupplier(models.Model):
@@ -350,6 +349,7 @@ class L10nECSriAuthorizationSupplier(models.Model):
                 (field_name, "like", "{}-{}-{}".format(num_shop, num_printer, num_doc))
             ]
         except Exception as e:
+            _logger.debug("Error parsing number: %s" % str(e))
             number_criteria = [(field_name, "=", str(number))]
         args = (
             modules_mapping.get_domain(invoice_type, include_state=False)

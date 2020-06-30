@@ -663,7 +663,7 @@ class AccountMove(models.Model):
                     continue
                 if "move_id" in line_data:
                     line_data.pop("move_id")
-                if not "date" in line_data:
+                if "date" not in line_data:
                     line_data.update(
                         {"date": self.invoice_date or fields.Date.context_today(self),}
                     )
@@ -818,7 +818,6 @@ class AccountMove(models.Model):
         :param withhold: recordset(l10n_ec.withhold) to create lines
         :return: list(dict) with values for create withhold lines
         """
-        tax_model = self.env["account.tax"]
         percent_model = self.env["l10n_ec.withhold.line.percent"]
         withhold_iva_group = self.env.ref("l10n_ec_niif.tax_group_iva_withhold")
         withhold_rent_group = self.env.ref("l10n_ec_niif.tax_group_renta_withhold")
@@ -1032,7 +1031,6 @@ class AccountMove(models.Model):
 
     def action_show_l10n_ec_withholds(self):
         self.ensure_one()
-        type = self.mapped("type")[0]
         action = self.env.ref(
             "l10n_ec_niif.l10n_ec_withhold_purchase_act_window"
         ).read()[0]

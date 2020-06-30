@@ -332,7 +332,6 @@ class L10nEcWithhold(models.Model):
 
     def action_show_move(self):
         self.ensure_one()
-        type = self.mapped("type")[0]
         action = self.env.ref("account.action_move_journal_line").read()[0]
 
         moves = self.mapped("move_ids")
