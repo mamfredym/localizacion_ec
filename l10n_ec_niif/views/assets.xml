@@ -19,5 +19,17 @@
                 />
             </xpath>
         </template>
+        <template
+            id="portal_assets_frontend"
+            name="electronics assets"
+            inherit_id="web.assets_frontend"
+        >
+            <xpath expr="." position="inside">
+                <script
+                    type="text/javascript"
+                    src="/l10n_ec_niif/static/src/js/l10n_ec_portal_electronic_sidebar.js"
+                />
+            </xpath>
+        </template>
     </data>
 </odoo>

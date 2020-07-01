@@ -186,6 +186,11 @@ class L10nEcWithhold(models.Model):
         string="Move Count", compute="_compute_l10n_ec_withhold_ids", store=False
     )
 
+    def _compute_access_url(self):
+        super(L10nEcWithhold, self)._compute_access_url()
+        for withhold in self:
+            withhold.access_url = "/my/retencion/%s" % (withhold.id)
+
     @api.depends("invoice_id")
     def _compute_is_related_document(self):
         for rec in self:

@@ -1,0 +1,197 @@
+<odoo>
+    <template
+        id="portal_my_home_withhold"
+        name="Portal My Home : withhold entries"
+        inherit_id="portal.portal_my_home"
+        priority="30"
+    >
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-if="withhold_count" t-call="portal.portal_docs_entry">
+                <t t-set="title">Retenciones</t>
+                <t t-set="url" t-value="'/my/retencion'" />
+                <t t-set="count" t-value="withhold_count" />
+            </t>
+        </xpath>
+    </template>
+    <template
+        id="portal_my_home_menu_withhold"
+        name="Portal layout : withhold menu entries"
+        inherit_id="portal.portal_breadcrumbs"
+        priority="30"
+    >
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li
+                t-if="page_name == 'withhold'"
+                t-attf-class="breadcrumb-item #{'active ' if not withhold else ''}"
+            >
+                <a
+                    t-if="withhold"
+                    t-attf-href="/my/retencion?{{ keep_query() }}"
+                >Retenciones</a>
+                <t t-else="">Retenciones</t>
+            </li>
+            <li t-if="withhold" class="breadcrumb-item active">
+                <t t-esc="withhold.l10n_ec_get_document_number()" />
+            </li>
+        </xpath>
+    </template>
+    <template id="portal_my_withhold" name="Mis Retenciones">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True" />
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Retenciones</t>
+            </t>
+            <t t-if="not withholds and not errors">
+                <p>Actualmente No hay Retenciones para su cuenta.</p>
+            </t>
+            <div class="panel-body" t-if="errors">
+                <t t-call="l10n_ec_niif.portal_document_electronic_error" />
+            </div>
+            <t t-if="withholds" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Número de Documento</th>
+                        <th>Fecha Autorización</th>
+                        <th>Clave de Acceso</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="withholds" t-as="withhold">
+                        <tr>
+                            <td>
+                                <t
+                                    t-set="document_number"
+                                    t-value="withhold.l10n_ec_get_document_number()"
+                                />
+                                <a
+                                    t-att-href="withhold.get_portal_url()"
+                                    t-att-title="document_number"
+                                >
+                                    <t t-esc="document_number" t-if="document_number" />
+                                    <em t-else="">Retencion en borrador</em>
+                                </a>
+                            </td>
+                            <td>
+                                <span t-field="withhold.l10n_ec_authorization_date" />
+                            </td>
+                            <td>
+                                <span t-field="withhold.l10n_ec_xml_key" />
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </t>
+        </t>
+    </template>
+    <template
+        id="portal_withhold_page"
+        name="withhold Portal Template"
+        inherit_id="portal.portal_sidebar"
+        primary="True"
+    >
+        <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
+            <div class="row mt16 o_portal_electronic_sidebar">
+                <!-- Sidebar -->
+                <t t-call="portal.portal_record_sidebar">
+                    <t t-set="classes" t-value="'col-lg-auto d-print-none'" />
+                    <t t-set="title">
+                        <h2 class="mb-0">
+                            <b t-esc="withhold.l10n_ec_get_document_number()" />
+                        </h2>
+                    </t>
+                    <t t-set="entries">
+                        <ul
+                            class="list-group list-group-flush flex-wrap flex-row flex-lg-column"
+                        >
+                            <li class="list-group-item flex-grow-1">
+                                <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
+                                    <div class="btn-group  flex-grow-1 mr-1 mb-1">
+                                        <a
+                                            class="btn btn-secondary btn-block o_download_btn"
+                                            t-att-href="withhold.get_portal_url(report_type='pdf', download=True)"
+                                            title="Download"
+                                        ><i class="fa fa-download" /> Download</a>
+                                    </div>
+                                    <div class="btn-group flex-grow-1 mb-1">
+                                        <a
+                                            class="btn btn-secondary btn-block o_print_btn o_portal_electronic_print"
+                                            t-att-href="withhold.get_portal_url(report_type='pdf')"
+                                            id="print_electronic_report"
+                                            title="Print"
+                                            target="_blank"
+                                        ><i class="fa fa-print" /> Print</a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li
+                                t-if="withhold.create_uid"
+                                class="list-group-item flex-grow-1"
+                            >
+                                <div class="small mb-1">
+                                    <strong class="text-muted">Contact</strong>
+                                </div>
+                                <div class="row">
+                                    <div class="col flex-grow-0 pr-2">
+                                        <img
+                                            t-if="withhold.create_uid.image_1024"
+                                            class="rounded-circle mt-1 o_portal_contact_img"
+                                            t-att-src="image_data_uri(withhold.create_uid.image_1024)"
+                                            alt="Contact"
+                                        />
+                                        <img
+                                            t-else=""
+                                            class="rounded-circle mt-1 o_portal_contact_img"
+                                            src="/web/static/src/img/user_menu_avatar.png"
+                                            alt="Contact"
+                                        />
+                                    </div>
+                                    <div class="col pl-0">
+                                        <span
+                                            t-field="withhold.create_uid"
+                                            t-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True}'
+                                        />
+                                        <a href="#electronic_chatter" class="small">
+                                            <i class="fa fa-fw fa-comments" />
+                                            <b>Send message</b>
+                                        </a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </t>
+                </t>
+                <!-- Page Content -->
+                <div id="electronic_content" class="col-12 col-lg">
+                    <t
+                        t-if="error or warning"
+                        t-call="l10n_ec_niif.portal_document_electronic_error"
+                    />
+                    <t
+                        t-if="success and (not error and not warning)"
+                        t-call="l10n_ec_niif.portal_document_electronic_success"
+                    />
+                    <div class="o_portal_html_view shadow p-3">
+                        <div class="o_portal_html_loader text-center">
+                            <i
+                                class="fa fa-circle-o-notch fa-spin fa-2x fa-fw text-black-50"
+                            />
+                        </div>
+                        <iframe
+                            id="electronic_report_html"
+                            class="mt8 mb8"
+                            width="100%"
+                            height="100%"
+                            frameborder="0"
+                            scrolling="no"
+                            t-att-src="withhold.get_portal_url(report_type='html')"
+                        />
+                    </div>
+                    <!-- chatter -->
+                    <t t-call="l10n_ec_niif.portal_electronic_chatter">
+                        <t t-set="object_electronic" t-value="withhold" />
+                    </t>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

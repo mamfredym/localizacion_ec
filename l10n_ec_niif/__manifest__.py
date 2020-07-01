@@ -13,6 +13,8 @@
         "l10n_latam_invoice_document",
         "account_accountant",
         "account_debit_note",
+        "portal",
+        "mail",
     ],
     "data": [
         "security/ir.model.access.csv",
@@ -60,6 +62,8 @@
         "views/sri_error_code_view.xml",
         "views/sri_key_type_view.xml",
         "views/xml_data_view.xml",
+        "views/l10n_ec_portal_common_electronic_templates.xml",
+        "views/l10n_ec_portal_withhold_templates.xml",
         "views/res_config_view.xml",
         "views/assets.xml",
     ],
