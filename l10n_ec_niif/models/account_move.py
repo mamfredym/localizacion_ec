@@ -1303,6 +1303,17 @@ class AccountMove(models.Model):
         # TODO: agregar informacion de pagos, considerar para ATS
         return []
 
+    def l10n_ec_get_tarifa_iva(self):
+        tarifa_iva = 0
+        iva_group = self.env.ref("l10n_ec_niif.tax_group_iva")
+        for line in self.line_ids:
+            if (
+                line.tax_line_id.tax_group_id.id == iva_group.id
+                and line.tax_line_id.amount > 0
+            ):
+                tarifa_iva = line.tax_line_id.amount
+        return tarifa_iva
+
     def l10n_ec_get_document_code_sri(self):
         # 01 : Factura
         # 03 : Liquidacion de Compras

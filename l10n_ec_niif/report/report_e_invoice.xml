@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- reemplazar reporte de factura para hacerlo extensible y poder reutilizar
+		el reporte -->
+    <template id="account.report_invoice">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="l10n_ec_niif.report_invoice_document_extension" />
+            </t>
+        </t>
+    </template>
+    <template id="account.report_invoice_with_payments">
+        <t t-call="web.html_container">
+            <t t-set="document_with_payments" t-value="True" />
+            <t t-foreach="docs" t-as="o">
+                <t
+                    t-call="l10n_ec_niif.report_invoice_document_with_payments_extension"
+                />
+            </t>
+        </t>
+    </template>
+    <template id="report_invoice_document_with_payments_extension">
+        <t t-set="call_report_original" t-value="True" />
+        <t
+            t-set="lang"
+            t-value="o.invoice_user_id.sudo().lang if o.type in ('in_invoice', 'in_refund') else o.partner_id.lang"
+        />
+        <!-- Si tiene xml electronico llamar a plantilla de RIDE -->
+        <t t-if="o.l10n_ec_xml_data_id">
+            <t t-set="call_report_original" t-value="False" />
+            <t t-call="l10n_ec_niif.l10n_ec_invoice_document" t-lang="lang" />
+        </t>
+        <!-- TODO: Agregar condicion si es preimpreso llamar a otra plantilla -->
+        <t t-if="call_report_original">
+            <t t-call="account.report_invoice_document_with_payments" t-lang="lang" />
+        </t>
+    </template>
+    <template id="report_invoice_document_extension">
+        <t t-set="call_report_original" t-value="True" />
+        <t
+            t-set="lang"
+            t-value="o.invoice_user_id.sudo().lang if o.type in ('in_invoice', 'in_refund') else o.partner_id.lang"
+        />
+        <!-- Si tiene xml electronico llamar a plantilla de RIDE -->
+        <t t-if="o.l10n_ec_xml_data_id">
+            <t t-set="call_report_original" t-value="False" />
+            <t t-call="l10n_ec_niif.l10n_ec_invoice_document" t-lang="lang" />
+        </t>
+        <!-- TODO: Agregar condicion si es preimpreso llamar a otra plantilla -->
+        <t t-if="call_report_original">
+            <t t-call="account.report_invoice_document" t-lang="lang" />
+        </t>
+    </template>
+    <!-- plantillas principal para documentos pero separados por tipo de documento -->
+    <template id="l10n_ec_invoice_document">
+        <t t-set="o" t-value="o.with_context(lang=lang)" />
+        <!-- Multicompany -->
+        <t t-if="o and 'company_id' in o">
+            <t t-set="company" t-value="o.company_id.sudo()" />
+        </t>
+        <t t-if="not o or not 'company_id' in o">
+            <t t-set="company" t-value="res_company" />
+        </t>
+        <!-- como no se imprime el encabezado, pasar explicitamente el margen
+			superior para no dejar en blanco el espacio del encabezado -->
+        <t t-set="data_report_margin_top" t-value="10" />
+        <t t-set="emision_date" t-value="o.invoice_date" />
+        <t t-set="printer_point" t-value="o.l10n_ec_point_of_emission_id" />
+        <t t-set="partner" t-value="o.commercial_partner_id" />
+        <t t-set="document_string" t-value="'FACTURA'" />
+        <t t-if="o.type == 'out_refund'">
+            <t t-set="document_string" t-value="'NOTA DE CRÉDITO'" />
+        </t>
+        <t t-if="o.type == 'out_invoice' and o.l10n_ec_debit_note">
+            <t t-set="document_string" t-value="'NOTA DE DÉBITO'" />
+        </t>
+        <t t-if="o.type == 'in_invoice' and o.l10n_ec_liquidation">
+            <t
+                t-set="document_string"
+                t-value="'LIQUIDACIÓN DE COMPRA DE BIENES Y PRESTACION DE SERVICIOS'"
+            />
+        </t>
+        <t t-set="comment" t-value="o.narration" />
+        <t t-set="payments_info" t-value="o.l10n_ec_get_pagos_data()" />
+        <t t-set="tarifa_iva" t-value="o.l10n_ec_get_tarifa_iva()" />
+        <div
+            class="article"
+            t-att-data-oe-model="o and o._name"
+            t-att-data-oe-id="o and o.id"
+            t-att-data-oe-lang="o and o.env.context.get('lang')"
+        >
+            <t t-call="l10n_ec_niif.electronic_report_common_head" />
+            <t t-if="o.type == 'out_invoice' and not o.l10n_ec_debit_note">
+                <t t-call="l10n_ec_niif.e_invoice_document_body" />
+            </t>
+            <t t-if="o.type == 'out_invoice' and o.l10n_ec_debit_note">
+                <t t-call="l10n_ec_niif.e_debit_note_document_body" />
+            </t>
+            <t t-if="o.type == 'out_refund'">
+                <t t-call="l10n_ec_niif.e_credit_note_document_body" />
+            </t>
+            <t t-if="o.type == 'in_invoice' and o.l10n_ec_liquidation">
+                <t t-call="l10n_ec_niif.e_liquidation_document_body" />
+            </t>
+            <table class="table table-sm table-no-border">
+                <tbody>
+                    <tr>
+                        <td style="width: 50%">
+                            <t
+                                t-call="l10n_ec_niif.electronic_report_common_info_aditional"
+                            />
+                            <br />
+                            <t
+                                t-if="o.type in ('out_invoice', 'in_invoice')"
+                                t-call="l10n_ec_niif.electronic_report_common_payment_info"
+                            />
+                        </td>
+                        <td style="width: 40%">
+                            <t
+                                t-call="l10n_ec_niif.electronic_report_common_total_info"
+                            />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <t t-call="l10n_ec_niif.electronic_report_page_footer" />
+    </template>
+    <!-- RIDE de facturas de cliente -->
+    <template id="e_invoice_document_body">
+        <div class="div-bordered">
+            <table class="table table-sm table-no-border small">
+                <tbody>
+                    <tr>
+                        <td style="width: 60%">
+                            <strong>Razón social / Nombres y Apellidos: </strong>
+                            <span t-field="partner.name" />
+                        </td>
+                        <td>
+                            <strong>Identificación: </strong>
+                            <span t-field="partner.vat" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Fecha de Emisión: </strong>
+                            <span t-field="o.invoice_date" />
+                        </td>
+                        <td>
+                            <strong>Guia de remisión: </strong>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <br />
+        <table class="table table-sm table-bordered-black">
+            <thead>
+                <tr style="font-size: 10px;">
+                    <th
+                        class="amount-md"
+                        t-if="company.l10n_ec_print_ride_main_code"
+                    >Código Principal</th>
+                    <th
+                        class="amount-sm"
+                        t-if="company.l10n_ec_print_ride_aux_code"
+                    >Código Auxiliar</th>
+                    <th class="amount-sm">Cantidad</th>
+                    <th class="">Descripción</th>
+                    <th
+                        class="amount-sm"
+                        t-if="company.l10n_ec_print_ride_detail1"
+                    >Detalle adicional</th>
+                    <th
+                        class="amount-sm"
+                        t-if="company.l10n_ec_print_ride_detail2"
+                    >Detalle adicional</th>
+                    <th
+                        class="amount-sm"
+                        t-if="company.l10n_ec_print_ride_detail3"
+                    >Detalle adicional</th>
+                    <th class="amount-sm">Precio Unitario</th>
+                    <th class="amount-sm">Descuento</th>
+                    <th class="amount-md">Precio Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <t
+                    t-foreach="o.invoice_line_ids.filtered(lambda x: not x.display_type)"
+                    t-as="line"
+                >
+                    <tr style="font-size: 9px;">
+                        <td t-if="company.l10n_ec_print_ride_main_code">
+                            <span
+                                t-esc="line.product_id and line.product_id.default_code or 'S/N'"
+                            />
+                        </td>
+                        <td t-if="company.l10n_ec_print_ride_aux_code" />
+                        <td class="text-right">
+                            <span t-field="line.quantity" />
+                        </td>
+                        <td>
+                            <span t-field="line.name" />
+                        </td>
+                        <td t-if="company.l10n_ec_print_ride_detail1" />
+                        <td t-if="company.l10n_ec_print_ride_detail2" />
+                        <td t-if="company.l10n_ec_print_ride_detail3" />
+                        <td class="text-right">
+                            <span
+                                t-field="line.price_unit"
+                                t-options='{"widget": "monetary", "display_currency": res_company.currency_id}'
+                            />
+                        </td>
+                        <td class="text-right">
+							<span t-field="line.discount" />%
+						</td>
+                        <td class="text-right">
+                            <span t-field="line.price_subtotal" />
+                        </td>
+                    </tr>
+                </t>
+            </tbody>
+        </table>
+    </template>
+    <!-- RIDE de notas de credito de cliente -->
+    <template id="e_credit_note_document_body">
+        <div class="div-bordered">
+            <table class="table table-sm table-no-border small">
+                <tbody>
+                    <tr>
+                        <td style="width: 60%">
+                            <strong>Razón social / Nombres y Apellidos: </strong>
+                            <span t-field="partner.name" />
+                        </td>
+                        <td>
+                            <strong>Identificación: </strong>
+                            <span t-field="partner.ref" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Fecha de Emisión: </strong>
+                            <span t-field="o.invoice_date" />
+                        </td>
+                        <td>
+						</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Comprobante que modifica: </strong>
+                            <span t-field="o.invoice_date" />
+                        </td>
+                        <td>
+							FACTURA
+							<span t-field="o.l10n_ec_original_invoice_id.l10n_latam_document_number" />
+						</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Fecha Emisión(Comprobante a modificar): </strong>
+                        </td>
+                        <td>
+                            <span
+                                t-field="o.l10n_ec_original_invoice_id.invoice_date"
+                            />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Razón de modificación: </strong>
+                        </td>
+                        <td>
+                            <span t-field="o.name" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <br />
+        <table class="table table-sm table-bordered-black">
+            <thead>
+                <tr style="font-size: 10px;">
+                    <th
+                        class="amount-md"
+                        t-if="company.l10n_ec_print_ride_main_code"
+                    >Código Principal</th>
+                    <th
+                        class="amount-sm"
+                        t-if="company.l10n_ec_print_ride_aux_code"
+                    >Código Auxiliar</th>
+                    <th class="amount-sm">Cantidad</th>
+                    <th class="">Descripción</th>
+                    <th
+                        class="amount-sm"
+                        t-if="company.l10n_ec_print_ride_detail1"
+                    >Detalle adicional</th>
+                    <th
+                        class="amount-sm"
+                        t-if="company.l10n_ec_print_ride_detail2"
+                    >Detalle adicional</th>
+                    <th
+                        class="amount-sm"
+                        t-if="company.l10n_ec_print_ride_detail3"
+                    >Detalle adicional</th>
+                    <th class="amount-sm">Precio Unitario</th>
+                    <th class="amount-sm">Descuento</th>
+                    <th class="amount-md">Precio Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <t
+                    t-foreach="o.invoice_line_ids.filtered(lambda x: not x.display_type)"
+                    t-as="line"
+                >
+                    <tr style="font-size: 9px;">
+                        <td t-if="company.l10n_ec_print_ride_main_code">
+                            <span
+                                t-esc="line.product_id and line.product_id.default_code or 'S/N'"
+                            />
+                        </td>
+                        <td t-if="company.l10n_ec_print_ride_aux_code" />
+                        <td class="text-right">
+                            <span t-field="line.quantity" />
+                        </td>
+                        <td>
+                            <span t-field="line.name" />
+                        </td>
+                        <td t-if="company.l10n_ec_print_ride_detail1" />
+                        <td t-if="company.l10n_ec_print_ride_detail2" />
+                        <td t-if="company.l10n_ec_print_ride_detail3" />
+                        <td class="text-right">
+                            <span
+                                t-field="line.price_unit"
+                                t-options='{"widget": "monetary", "display_currency": res_company.currency_id}'
+                            />
+                        </td>
+                        <td class="text-right">
+							<span t-field="line.discount" />%
+						</td>
+                        <td class="text-right">
+                            <span t-field="line.price_subtotal" />
+                        </td>
+                    </tr>
+                </t>
+            </tbody>
+        </table>
+    </template>
+    <!-- RIDE de Notas de debito de cliente -->
+    <template id="e_debit_note_document_body">
+        <div class="div-bordered">
+            <table class="table table-sm table-no-border small">
+                <tbody>
+                    <tr>
+                        <td style="width: 60%">
+                            <strong>Razón social / Nombres y Apellidos: </strong>
+                            <span t-field="partner.name" />
+                        </td>
+                        <td>
+                            <strong>Identificación: </strong>
+                            <span t-field="partner.ref" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Fecha de Emisión: </strong>
+                            <span t-field="o.invoice_date" />
+                        </td>
+                        <td>
+						</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Comprobante que modifica: </strong>
+                            <span t-field="o.invoice_date" />
+                        </td>
+                        <td>
+							FACTURA
+							<span t-field="o.l10n_ec_original_invoice_id.l10n_latam_document_number" />
+						</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Fecha Emisión(Comprobante a modificar): </strong>
+                        </td>
+                        <td>
+                            <span
+                                t-field="o.l10n_ec_original_invoice_id.invoice_date"
+                            />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <br />
+        <table class="table table-sm table-bordered-black small">
+            <thead>
+                <tr style="font-size: 10px;">
+                    <th>RAZÓN DE MODIFICACIÓN</th>
+                    <th>VALOR DE LA MODIFICACIÓN</th>
+                </tr>
+            </thead>
+            <tbody>
+                <t
+                    t-foreach="o.invoice_line_ids.filtered(lambda x: not x.display_type)"
+                    t-as="line"
+                >
+                    <tr style="font-size: 9px;">
+                        <td>
+                            <span t-field="line.name" />
+                        </td>
+                        <td class="text-right">
+                            <span t-field="line.price_subtotal" />
+                        </td>
+                    </tr>
+                </t>
+            </tbody>
+        </table>
+    </template>
+    <!-- RIDE de liquidacion de compras -->
+    <template id="e_liquidation_document_body">
+        <div class="div-bordered">
+            <table class="table table-sm table-no-border small">
+                <tbody>
+                    <tr>
+                        <td style="width: 60%">
+                            <strong>Nombres y Apellidos: </strong>
+                            <span t-field="partner.name" />
+                        </td>
+                        <td>
+                            <strong>Identificación: </strong>
+                            <span t-field="partner.ref" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Fecha de Emisión: </strong>
+                            <span t-field="o.invoice_date" />
+                        </td>
+                        <td>
+                            <strong>Direccion: </strong>
+                            <span t-field="o.partner_id.street" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <br />
+        <table class="table table-sm table-bordered-black">
+            <thead>
+                <tr style="font-size: 10px;">
+                    <th
+                        class="amount-md"
+                        t-if="company.l10n_ec_print_ride_main_code"
+                    >Código Principal</th>
+                    <th
+                        class="amount-sm"
+                        t-if="company.l10n_ec_print_ride_aux_code"
+                    >Código Auxiliar</th>
+                    <th class="amount-sm">Cantidad</th>
+                    <th class="">Descripción</th>
+                    <th
+                        class="amount-sm"
+                        t-if="company.l10n_ec_print_ride_detail1"
+                    >Detalle adicional</th>
+                    <th
+                        class="amount-sm"
+                        t-if="company.l10n_ec_print_ride_detail2"
+                    >Detalle adicional</th>
+                    <th
+                        class="amount-sm"
+                        t-if="company.l10n_ec_print_ride_detail3"
+                    >Detalle adicional</th>
+                    <th class="amount-sm">Precio Unitario</th>
+                    <th class="amount-sm">Descuento</th>
+                    <th class="amount-md">Precio Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <t
+                    t-foreach="o.invoice_line_ids.filtered(lambda x: not x.display_type)"
+                    t-as="line"
+                >
+                    <tr style="font-size: 9px;">
+                        <td t-if="company.l10n_ec_l10n_ec_print_ride_main_code">
+                            <span
+                                t-esc="line.product_id and line.product_id.default_code or 'S/N'"
+                            />
+                        </td>
+                        <td t-if="company.l10n_ec_l10n_ec_print_ride_aux_code" />
+                        <td class="text-right">
+                            <span t-field="line.quantity" />
+                        </td>
+                        <td>
+                            <span t-field="line.name" />
+                        </td>
+                        <td t-if="company.l10n_ec_print_ride_detail1" />
+                        <td t-if="company.l10n_ec_print_ride_detail2" />
+                        <td t-if="company.l10n_ec_print_ride_detail3" />
+                        <td class="text-right">
+                            <span
+                                t-field="line.price_unit"
+                                t-options='{"widget": "monetary", "display_currency": res_company.currency_id}'
+                            />
+                        </td>
+                        <td class="text-right">
+							<span t-field="line.discount" />%
+						</td>
+                        <td class="text-right">
+                            <span t-field="line.price_subtotal" />
+                        </td>
+                    </tr>
+                </t>
+            </tbody>
+        </table>
+    </template>
+    <!-- reemplazar el nombre del reporte en archivo adjunto para que llame
+		a funcion python y sea extensible -->
+    <record id="account.account_invoices" model="ir.actions.report">
+        <field name="attachment">(object._get_report_base_filename()+'.pdf')</field>
+    </record>
+    <record id="account.account_invoices_without_payment" model="ir.actions.report">
+        <field name="attachment">(object._get_report_base_filename()+'.pdf')</field>
+    </record>
+</odoo>
