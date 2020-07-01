@@ -23,3 +23,4 @@ from . import withhold
 from . import res_users
 from . import res_config
 from . import l10n_ec_utils
+from . import mail_template
