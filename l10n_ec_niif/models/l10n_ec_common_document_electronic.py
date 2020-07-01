@@ -147,6 +147,11 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
             )
         )
 
+    def l10n_ec_get_document_string(self):
+        # funcion debe ser reemplazada en cada clase heredada
+        # esta funcion debe devolver el tipo de documento(Factura, Nota de Credito, etc)
+        return ""
+
     def l10n_ec_get_document_version_xml(self):
         # funcion debe ser reemplazada en cada clase heredada
         # esta funcion debe devolver la version del xml que se debe usar

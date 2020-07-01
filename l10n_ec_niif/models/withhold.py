@@ -366,6 +366,9 @@ class L10nEcWithhold(models.Model):
         # esta funcion debe devolver la fecha de emision del documento
         return self.issue_date
 
+    def l10n_ec_get_document_string(self):
+        return "Retencion"
+
     def l10n_ec_get_document_version_xml(self):
         # esta funcion debe devolver la version del xml que se debe usar
         company = self.company_id or self.env.company
@@ -375,6 +378,10 @@ class L10nEcWithhold(models.Model):
         # esta funcion debe devolver el nombre del archivo xml sin la extension
         # algo como: id, prefijo, secuencial
         return f"{self.id}_RET_{self.l10n_ec_get_document_number()}"
+
+    def _get_report_base_filename(self):
+        self.ensure_one()
+        return f"RET-{self.l10n_ec_get_document_number()}"
 
     def l10n_ec_action_generate_xml_data(self, node_root):
         util_model = self.env["l10n_ec.utils"]
@@ -437,6 +444,52 @@ class L10nEcWithhold(models.Model):
             ).text = dateDocSustento.strftime(util_model.get_formato_date())
         self.l10n_ec_add_info_adicional(node_root)
         return node_root
+
+    def action_sent_mail_electronic(self):
+        self.ensure_one()
+        template = self.env.ref("l10n_ec_niif.email_template_e_retention", False)
+        ctx = {
+            "default_model": self._name,
+            "default_res_id": self.id,
+            "default_use_template": bool(template),
+            "default_template_id": template.id,
+            "default_composition_mode": "comment",
+            "custom_layout": "mail.mail_notification_light",
+            "force_email": True,
+            "model_description": self.l10n_ec_get_document_string(),
+        }
+        return {
+            "type": "ir.actions.act_window",
+            "view_mode": "form",
+            "res_model": "mail.compose.message",
+            "views": [(False, "form")],
+            "view_id": False,
+            "target": "new",
+            "context": ctx,
+        }
+
+    def l10n_ec_action_sent_mail_electronic(self):
+        MailComposeMessage = self.env["mail.compose.message"]
+        self.ensure_one()
+        template = self.env.ref("l10n_ec_niif.email_template_e_retention", False)
+        ctx = {
+            "default_model": self._name,
+            "default_res_id": self.id,
+            "default_use_template": bool(template),
+            "default_template_id": template.id,
+            "default_composition_mode": "comment",
+            "custom_layout": "mail.mail_notification_light",
+            "force_email": True,
+            "model_description": self.l10n_ec_get_document_string(),
+        }
+        msj = MailComposeMessage.with_context(ctx).create({})
+        send_mail = True
+        try:
+            msj.onchange_template_id_wrapper()
+            msj.send_mail()
+        except Exception:
+            send_mail = False
+        return send_mail
 
 
 class L10nEcWithholdLinePercent(models.Model):

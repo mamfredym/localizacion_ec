@@ -40,6 +40,7 @@
         "report/report_withholds_pre_printed.xml",
         "report/report_withholds_auto_printer.xml",
         "report/report_withholds.xml",
+        "data/email_template.xml",
         "views/sri_menu.xml",
         "views/res_partner_view.xml",
         "views/tax_support_view.xml",

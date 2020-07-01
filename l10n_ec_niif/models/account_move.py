@@ -1341,6 +1341,9 @@ class AccountMove(models.Model):
         # esta funcion debe devolver la fecha de emision del documento
         return self.invoice_date
 
+    def l10n_ec_get_document_string(self):
+        return self.l10n_latam_document_type_id.report_name
+
     def l10n_ec_get_document_version_xml(self):
         # esta funcion debe devolver la version del xml que se debe usar
         company = self.company_id or self.env.company
@@ -2117,6 +2120,36 @@ class AccountMove(models.Model):
                     )
         self.l10n_ec_add_info_adicional(node)
         return node
+
+    def l10n_ec_action_sent_mail_electronic(self):
+        # reemplazar funcion que es generica en modelo abstracto
+        # esta funcion se llama desde el xml electronico para enviar mail al cliente
+        MailComposeMessage = self.env["mail.compose.message"]
+        self.ensure_one()
+        res = self.action_invoice_sent()
+        ctx = res["context"]
+        msj = (
+            MailComposeMessage.with_context(ctx)
+            .sudo(user=self.invoice_user_id.id)
+            .create({})
+        )
+        send_mail = True
+        try:
+            msj.onchange_template_id_wrapper()
+            msj.send_mail()
+        except Exception:
+            send_mail = False
+        return send_mail
+
+    def action_invoice_sent(self):
+        self.ensure_one()
+        res = super(AccountMove, self).action_invoice_sent()
+        # si es electronico, cambiar la plantilla de correo a usar
+        if self.l10n_ec_xml_data_id:
+            template = self.env.ref("l10n_ec_niif.email_template_e_invoice", False)
+            if template:
+                res["context"]["default_template_id"] = template.id
+        return res
 
 
 AccountMove()
