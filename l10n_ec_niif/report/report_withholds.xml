@@ -1,21 +1,29 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <data>
-        <report
-            id="action_ report_withhold_auto_printer"
-            model="l10n_ec.withhold"
-            string="Retention receipt auto printer"
-            report_type="qweb-pdf"
-            name="l10n_ec_niif.report_withhold_auto_printer"
-            file="l10n_ec_niif.report_withhold_auto_printer"
-        />
-        <report
-            id="action_ report_withhold_pre_printed"
-            model="l10n_ec.withhold"
-            string="Retention receipt pre printed"
-            report_type="qweb-pdf"
-            name="l10n_ec_niif.report_withhold_pre_printed"
-            file="l10n_ec_niif.report_withhold_pre_printed"
-        />
-    </data>
+
+    <template id="report_withhold">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-if="o.document_type == 'electronic'">
+                    <t t-call="l10n_ec_niif.e_withhold_document" />
+                </t>
+                <t t-if="o.document_type == 'auto_printer'">
+                    <t t-call="l10n_ec_niif.report_withhold_auto_printer" />
+                </t>
+                <t t-if="o.document_type == 'pre_printed'">
+                    <t t-call="l10n_ec_niif.report_withhold_pre_printed" />
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <report
+        id="action_report_withhold"
+        model="l10n_ec.withhold"
+        string="Withhold"
+        report_type="qweb-pdf"
+        name="l10n_ec_niif.report_withhold"
+        file="l10n_ec_niif.report_withhold"
+    />
+
 </odoo>

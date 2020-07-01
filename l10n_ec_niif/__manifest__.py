@@ -36,6 +36,7 @@
         "data/cron_jobs.xml",
         "report/electronics_report_remplates.xml",
         "report/report_e_invoice.xml",
+        "report/report_e_withhold.xml",
         "report/report_withholds_pre_printed.xml",
         "report/report_withholds_auto_printer.xml",
         "report/report_withholds.xml",
