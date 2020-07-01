@@ -37,10 +37,11 @@
                                 class="text-center"
                                 t-if="company.partner_id.city and company.partner_id.country_id"
                             >
-								<span t-esc="company.partner_id.city.capitalize()" />
-								-
-								<span t-esc="company.partner_id.country_id.name.capitalize()" />
-							</div>
+                                <span t-esc="company.partner_id.city.capitalize()" />-
+                                <span
+                                    t-esc="company.partner_id.country_id.name.capitalize()"
+                                />
+                            </div>
                             <br />
                             <strong>Dir. Matriz: </strong>
                             <span
@@ -91,39 +92,41 @@
                     </td>
                     <td>
                         <div class="div-bordered div-radius" style="min-height: 325px;">
-							<strong>R.U.C.:</strong>
-							<strong t-field="company.partner_id.ref" />
-							<br /><br />
-							<strong t-esc="document_string" />
-							<br />
-							Nº.
-							<span t-esc="o.l10n_ec_get_document_number()" />
-							<br /><br />
-							<strong>NÚMERO DE AUTORIZACION</strong>
-							<br />
-							<span t-field="o.l10n_ec_electronic_authorization" />
-							<br /><br />
-							<t t-if="o.l10n_ec_authorization_date">
+                            <strong>R.U.C.:</strong>
+                            <strong t-field="company.partner_id.ref" />
+                            <br /><br />
+                            <strong t-esc="document_string" />
+                            <br />
+                            Nº.
+                            <span t-esc="o.l10n_ec_get_document_number()" />
+                            <br /><br />
+                            <strong>NÚMERO DE AUTORIZACION</strong>
+                            <br />
+                            <span t-field="o.l10n_ec_electronic_authorization" />
+                            <br /><br />
+                            <t t-if="o.l10n_ec_authorization_date">
                                 <strong>Fecha y hora de autorización: </strong>
                                 <span t-field="o.l10n_ec_authorization_date" />
                                 <br />
                                 <br />
                             </t>
-							<strong>AMBIENTE: </strong>
-							<span t-field="o.l10n_ec_xml_data_id.l10n_ec_type_environment" />
-							<br /><br />
-							<strong>EMISION: </strong>
-							<span t-esc="'Normal'" />
-							<br /><br />
-							<strong>CLAVE DE ACCESO: </strong>
-							<br />
-<!--							<div class="oe_product_image" t-att-style="style_max_size_barcode">-->
-<!--								<img t-if="o.l10n_ec_xml_key" t-att-src="'data:image/png;base64,%s' % to_text(o.l10n_ec_xml_data_id.make_barcode(o.l10n_ec_xml_key))" t-att-style="style_max_size_barcode"/>-->
-<!--							</div>-->
-							<br />
-							<span t-field="o.l10n_ec_xml_key" />
-							<br />
-						</div>
+                            <strong>AMBIENTE: </strong>
+                            <span
+                                t-field="o.l10n_ec_xml_data_id.l10n_ec_type_environment"
+                            />
+                            <br /><br />
+                            <strong>EMISION: </strong>
+                            <span t-esc="'Normal'" />
+                            <br /><br />
+                            <strong>CLAVE DE ACCESO: </strong>
+                            <br />
+                            <!--							<div class="oe_product_image" t-att-style="style_max_size_barcode">-->
+                            <!--								<img t-if="o.l10n_ec_xml_key" t-att-src="'data:image/png;base64,%s' % to_text(o.l10n_ec_xml_data_id.make_barcode(o.l10n_ec_xml_key))" t-att-style="style_max_size_barcode"/>-->
+                            <!--							</div>-->
+                            <br />
+                            <span t-field="o.l10n_ec_xml_key" />
+                            <br />
+                        </div>
                     </td>
                 </tr>
             </table>
@@ -233,16 +236,16 @@
                         <strong>SUBTOTAL No objeto de IVA</strong>
                     </td>
                     <td class="text-right">
-<!--						<span t-field="o.base_no_iva" />-->
-					</td>
+                        <!--						<span t-field="o.base_no_iva" />-->
+                    </td>
                 </tr>
                 <tr>
                     <td>
                         <strong>SUBTOTAL SIN IMPUESTOS</strong>
                     </td>
                     <td class="text-right">
-<!--						<span t-field="o.total_sin_descuento" />-->
-					</td>
+                        <!--						<span t-field="o.total_sin_descuento" />-->
+                    </td>
                 </tr>
                 <tr>
                     <td>
@@ -263,8 +266,8 @@
                         <strong>ICE</strong>
                     </td>
                     <td class="text-right">
-<!--						<span t-field="o.total_ice" />-->
-					</td>
+                        <!--						<span t-field="o.total_ice" />-->
+                    </td>
                 </tr>
                 <tr>
                     <td>
@@ -289,7 +292,7 @@
     </template>
     <template id="electronic_report_page_footer">
         <div class="footer text-right" style="font-size:8px" t-if="not hide_footer">
-			Pag. <span class="page" /> / <span class="topage" />
-		</div>
+            Pag. <span class="page" /> / <span class="topage" />
+        </div>
     </template>
 </odoo>

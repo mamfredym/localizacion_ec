@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <!-- reemplazar reporte de factura para hacerlo extensible y poder reutilizar
-		el reporte -->
+    <!-- reemplazar reporte de factura para hacerlo extensible y poder reutilizar el reporte -->
     <template id="account.report_invoice">
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
@@ -61,8 +60,7 @@
         <t t-if="not o or not 'company_id' in o">
             <t t-set="company" t-value="res_company" />
         </t>
-        <!-- como no se imprime el encabezado, pasar explicitamente el margen
-			superior para no dejar en blanco el espacio del encabezado -->
+        <!-- como no se imprime el encabezado, pasar explicitamente el margen superior para no dejar en blanco el espacio del encabezado -->
         <t t-set="data_report_margin_top" t-value="10" />
         <t t-set="emision_date" t-value="o.invoice_date" />
         <t t-set="printer_point" t-value="o.l10n_ec_point_of_emission_id" />
@@ -213,8 +211,8 @@
                             />
                         </td>
                         <td class="text-right">
-							<span t-field="line.discount" />%
-						</td>
+                            <span t-field="line.discount" />%
+                        </td>
                         <td class="text-right">
                             <span t-field="line.price_subtotal" />
                         </td>
@@ -244,7 +242,7 @@
                             <span t-field="o.invoice_date" />
                         </td>
                         <td>
-						</td>
+                        </td>
                     </tr>
                     <tr>
                         <td>
@@ -252,9 +250,11 @@
                             <span t-field="o.invoice_date" />
                         </td>
                         <td>
-							FACTURA
-							<span t-field="o.l10n_ec_original_invoice_id.l10n_latam_document_number" />
-						</td>
+                            FACTURA
+                            <span
+                                t-field="o.l10n_ec_original_invoice_id.l10n_latam_document_number"
+                            />
+                        </td>
                     </tr>
                     <tr>
                         <td>
@@ -336,8 +336,8 @@
                             />
                         </td>
                         <td class="text-right">
-							<span t-field="line.discount" />%
-						</td>
+                            <span t-field="line.discount" />%
+                        </td>
                         <td class="text-right">
                             <span t-field="line.price_subtotal" />
                         </td>
@@ -367,7 +367,7 @@
                             <span t-field="o.invoice_date" />
                         </td>
                         <td>
-						</td>
+                        </td>
                     </tr>
                     <tr>
                         <td>
@@ -375,9 +375,11 @@
                             <span t-field="o.invoice_date" />
                         </td>
                         <td>
-							FACTURA
-							<span t-field="o.l10n_ec_original_invoice_id.l10n_latam_document_number" />
-						</td>
+                            FACTURA
+                            <span
+                                t-field="o.l10n_ec_original_invoice_id.l10n_latam_document_number"
+                            />
+                        </td>
                     </tr>
                     <tr>
                         <td>
@@ -504,8 +506,8 @@
                             />
                         </td>
                         <td class="text-right">
-							<span t-field="line.discount" />%
-						</td>
+                            <span t-field="line.discount" />%
+                        </td>
                         <td class="text-right">
                             <span t-field="line.price_subtotal" />
                         </td>
@@ -514,8 +516,7 @@
             </tbody>
         </table>
     </template>
-    <!-- reemplazar el nombre del reporte en archivo adjunto para que llame
-		a funcion python y sea extensible -->
+    <!-- reemplazar el nombre del reporte en archivo adjunto para que llame a funcion python y sea extensible -->
     <record id="account.account_invoices" model="ir.actions.report">
         <field name="attachment">(object._get_report_base_filename()+'.pdf')</field>
     </record>

@@ -11,13 +11,13 @@
                                 <strong>Document number</strong>
                             </td>
                             <td>
-                                <span t-field="o.number"/>
+                                <span t-field="o.number" />
                             </td>
                             <td>
                                 <strong>Document type</strong>
                             </td>
                             <td>
-                                <span t-field="o.document_type"/>
+                                <span t-field="o.document_type" />
                             </td>
                         </tr>
                         <tr>
@@ -25,7 +25,7 @@
                                 <strong>Point of Emission</strong>
                             </td>
                             <td t-if="o.point_of_emission_id">
-                                <span t-field="o.point_of_emission_id"/>
+                                <span t-field="o.point_of_emission_id" />
                             </td>
                             <td t-if="o.authorization_line_id.authorization_id">
                                 <strong>Authorization</strong>
@@ -41,13 +41,13 @@
                                 <strong>Related Document</strong>
                             </td>
                             <td>
-                                <span t-field="o.invoice_id"/>
+                                <span t-field="o.invoice_id" />
                             </td>
                             <td>
                                 <strong>Issue date</strong>
                             </td>
                             <td>
-                                <span t-field="o.issue_date"/>
+                                <span t-field="o.issue_date" />
                             </td>
                         </tr>
                         <tr>
@@ -55,7 +55,7 @@
                                 <strong>Concept</strong>
                             </td>
                             <td colspan="3">
-                                <span t-field="o.concept"/>
+                                <span t-field="o.concept" />
                             </td>
                         </tr>
                     </table>
@@ -72,19 +72,19 @@
                         <tbody>
                             <tr t-foreach="o.line_ids" t-as="l">
                                 <td>
-                                    <span t-field="l.type"/>
+                                    <span t-field="l.type" />
                                 </td>
                                 <td>
-                                    <span t-field="l.tax_id"/>
+                                    <span t-field="l.tax_id" />
                                 </td>
                                 <td class="text-right">
-                                    <span t-field="l.base_amount"/>
+                                    <span t-field="l.base_amount" />
                                 </td>
                                 <td class="text-right">
-                                    <span t-field="l.percent_id"/>
+                                    <span t-field="l.percent_id" />
                                 </td>
                                 <td class="text-right">
-                                    <span t-field="l.tax_amount"/>
+                                    <span t-field="l.tax_amount" />
                                 </td>
                             </tr>
                         </tbody>
@@ -94,7 +94,7 @@
                                     <strong>Total I.V.A.</strong>
                                 </td>
                                 <td class="text-right">
-                                    <span t-field="o.tax_iva"/>
+                                    <span t-field="o.tax_iva" />
                                 </td>
                             </tr>
                             <tr>
@@ -102,14 +102,14 @@
                                     <strong>Total I.R.</strong>
                                 </td>
                                 <td class="text-right">
-                                    <span t-field="o.tax_rent"/>
+                                    <span t-field="o.tax_rent" />
                                 </td>
                             </tr>
                         </tfoot>
                     </table>
                     <p t-if="o.note">
                         <strong>Note: </strong>
-                        <span t-field="o.note"/>
+                        <span t-field="o.note" />
                     </p>
                 </div>
             </t>

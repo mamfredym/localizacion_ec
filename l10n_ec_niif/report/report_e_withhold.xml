@@ -1,110 +1,122 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-	<template id="e_withhold_document">
-		<!-- Multicompany -->
-		<t t-if="o and 'company_id' in o">
-			<t t-set="company" t-value="o.company_id.sudo()" />
-		</t>
-		<t t-if="not o or not 'company_id' in o">
-			<t t-set="company" t-value="res_company" />
-		</t>
-		<!-- como no se imprime el encabezado, pasar explicitamente el margen
-			superior para no dejar en blanco el espacio del encabezado -->
-		<t t-set="emision_date" t-value="o.issue_date" />
-		<t t-set="printer_point" t-value="o.point_of_emission_id" />
-		<t t-set="partner" t-value="o.commercial_partner_id" />
-		<t t-set="document_string" t-value="'COMPROBANTE DE RETENCIÓN'" />
-		<div class="article small" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
-			<t t-call="l10n_ec_niif.electronic_report_common_head" />
-			<t t-call="l10n_ec_niif.e_withhold_document_body" />
+    <template id="e_withhold_document">
+        <!-- Multicompany -->
+        <t t-if="o and 'company_id' in o">
+            <t t-set="company" t-value="o.company_id.sudo()" />
+        </t>
+        <t t-if="not o or not 'company_id' in o">
+            <t t-set="company" t-value="res_company" />
+        </t>
+        <!-- como no se imprime el encabezado, pasar explicitamente el margen
+            superior para no dejar en blanco el espacio del encabezado -->
+        <t t-set="emision_date" t-value="o.issue_date" />
+        <t t-set="printer_point" t-value="o.point_of_emission_id" />
+        <t t-set="partner" t-value="o.commercial_partner_id" />
+        <t t-set="document_string" t-value="'COMPROBANTE DE RETENCIÓN'" />
+        <div
+            class="article small"
+            t-att-data-oe-model="o and o._name"
+            t-att-data-oe-id="o and o.id"
+            t-att-data-oe-lang="o and o.env.context.get('lang')"
+        >
+            <t t-call="l10n_ec_niif.electronic_report_common_head" />
+            <t t-call="l10n_ec_niif.e_withhold_document_body" />
             <p style="page-break-after:always;" />
-			<table class="table table-sm table-no-border">
-				<tbody>
-					<tr>
-						<td style="width: 50%">
-							<t
-								t-call="l10n_ec_niif.electronic_report_common_info_aditional" />
-						</td>
-						<td style="width: 40%">
+            <table class="table table-sm table-no-border">
+                <tbody>
+                    <tr>
+                        <td style="width: 50%">
+                            <t
+                                t-call="l10n_ec_niif.electronic_report_common_info_aditional"
+                            />
+                        </td>
+                        <td style="width: 40%">
 
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-		<t t-call="l10n_ec_niif.electronic_report_page_footer" />
-	</template>
-
-	<template id="e_withhold_document_body">
-		<div class="div-bordered">
-			<table class="table table-sm table-no-border">
-				<tbody>
-					<tr>
-						<td style="width: 65%">
-							<strong>Razón social / Nombres y Apellidos: </strong>
-							<span t-field="partner.name" />
-						</td>
-						<td>
-							<strong>Identificación: </strong>
-							<span t-field="partner.vat" />
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<strong>Fecha de Emisión: </strong>
-							<span t-field="o.issue_date" />
-						</td>
-						<td>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-		<br />
-		<table class="table table-sm table-bordered-black">
-			<thead>
-				<tr style="font-size: 10px;">
-					<th class="text-center amount-sm">Comprobante</th>
-					<th class="text-center amount-xl">Número</th>
-					<th class="text-center amount-sm">Fecha de emisión</th>
-					<th class="text-center amount-sm">Ejercicio Fiscal</th>
-					<th class="text-center amount-xl">Base Imponible para la Retención</th>
-					<th class="text-center amount-sm">Impuesto</th>
-					<th class="text-center amount-sm">Porcentaje de Retención</th>
-					<th class="text-center amount-xl">Valor Retenido</th>
-				</tr>
-			</thead>
-			<tbody>
-				<t t-foreach="o.line_ids" t-as="line">
-					<tr style="font-size: 9px;">
-						<td>
-							<span t-field="line.invoice_id.l10n_latam_document_type_id.name" />
-						</td>
-						<td>
-							<span t-field="line.invoice_id.l10n_latam_document_number" />
-						</td>
-						<td>
-							<span t-field="line.invoice_id.invoice_date" />
-						</td>
-						<td class="text-right">
-							<span t-field="line.issue_date" t-options="{'widget': 'date', 'format': 'yyyy'}" />
-						</td>
-						<td class="text-right">
-							<span t-field="line.base_amount" />
-						</td>
-						<td class="text-center">
-							<span t-field="line.type" />
-						</td>
-						<td class="text-right">
-							<span t-field="line.percentage" />%
-						</td>
-						<td class="text-right">
-							<span t-field="line.tax_amount" />
-						</td>
-					</tr>
-				</t>
-			</tbody>
-		</table>
-	</template>
-
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <t t-call="l10n_ec_niif.electronic_report_page_footer" />
+    </template>
+    <template id="e_withhold_document_body">
+        <div class="div-bordered">
+            <table class="table table-sm table-no-border">
+                <tbody>
+                    <tr>
+                        <td style="width: 65%">
+                            <strong>Razón social / Nombres y Apellidos: </strong>
+                            <span t-field="partner.name" />
+                        </td>
+                        <td>
+                            <strong>Identificación: </strong>
+                            <span t-field="partner.vat" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Fecha de Emisión: </strong>
+                            <span t-field="o.issue_date" />
+                        </td>
+                        <td />
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <br />
+        <table class="table table-sm table-bordered-black">
+            <thead>
+                <tr style="font-size: 10px;">
+                    <th class="text-center amount-sm">Comprobante</th>
+                    <th class="text-center amount-xl">Número</th>
+                    <th class="text-center amount-sm">Fecha de emisión</th>
+                    <th class="text-center amount-sm">Ejercicio Fiscal</th>
+                    <th
+                        class="text-center amount-xl"
+                    >Base Imponible para la Retención</th>
+                    <th class="text-center amount-sm">Impuesto</th>
+                    <th class="text-center amount-sm">Porcentaje de Retención</th>
+                    <th class="text-center amount-xl">Valor Retenido</th>
+                </tr>
+            </thead>
+            <tbody>
+                <t t-foreach="o.line_ids" t-as="line">
+                    <tr style="font-size: 9px;">
+                        <td>
+                            <span
+                                t-field="line.invoice_id.l10n_latam_document_type_id.name"
+                            />
+                        </td>
+                        <td>
+                            <span
+                                t-field="line.invoice_id.l10n_latam_document_number"
+                            />
+                        </td>
+                        <td>
+                            <span t-field="line.invoice_id.invoice_date" />
+                        </td>
+                        <td class="text-right">
+                            <span
+                                t-field="line.issue_date"
+                                t-options="{'widget': 'date', 'format': 'yyyy'}"
+                            />
+                        </td>
+                        <td class="text-right">
+                            <span t-field="line.base_amount" />
+                        </td>
+                        <td class="text-center">
+                            <span t-field="line.type" />
+                        </td>
+                        <td class="text-right">
+                            <span t-field="line.percentage" />%
+                        </td>
+                        <td class="text-right">
+                            <span t-field="line.tax_amount" />
+                        </td>
+                    </tr>
+                </t>
+            </tbody>
+        </table>
+    </template>
 </odoo>
