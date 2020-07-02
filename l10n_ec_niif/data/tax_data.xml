@@ -3,12 +3,28 @@
     <data>
         <record id="tax_group_iva" model="account.tax.group">
             <field name="name">I.V.A. 12%</field>
+            <field name="l10n_ec_xml_fe_code">2</field>
         </record>
         <record id="tax_group_iva_withhold" model="account.tax.group">
             <field name="name">Retención I.V.A.</field>
+            <field name="l10n_ec_xml_fe_code">2</field>
         </record>
         <record id="tax_group_renta_withhold" model="account.tax.group">
             <field name="name">Retención I.R.</field>
+            <field name="l10n_ec_xml_fe_code">1</field>
+        </record>
+        <record id="tax_group_ice" model="account.tax.group">
+            <field name="name">I.C.E.</field>
+            <field name="l10n_ec_xml_fe_code">3</field>
+        </record>
+        <record id="tax_group_irbpnr" model="account.tax.group">
+            <field name="name">IRBPNR</field>
+            <field name="l10n_ec_xml_fe_code">5</field>
+        </record>
+        <record id="tax_group_isd" model="account.tax.group">
+            <field name="name">ISD</field>
+            <field name="sequence">16</field>
+            <field name="l10n_ec_xml_fe_code">6</field>
         </record>
         <record model="account.tax.template" id="tax_411_iva">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
@@ -20,6 +36,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
             <field name="sequence">0</field>
+            <field name="l10n_ec_xml_fe_code">2</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva" />
             <field
                 name="invoice_repartition_line_ids"
@@ -39,6 +56,7 @@
             <field name="amount">12</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
+            <field name="l10n_ec_xml_fe_code">2</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva" />
             <field
                 name="invoice_repartition_line_ids"
@@ -58,6 +76,7 @@
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
+            <field name="l10n_ec_xml_fe_code">0</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva" />
             <field
                 name="invoice_repartition_line_ids"
@@ -77,6 +96,7 @@
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
+            <field name="l10n_ec_xml_fe_code">0</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva" />
             <field
                 name="invoice_repartition_line_ids"
@@ -96,6 +116,7 @@
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
+            <field name="l10n_ec_xml_fe_code">0</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva" />
             <field
                 name="invoice_repartition_line_ids"
@@ -115,6 +136,7 @@
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
+            <field name="l10n_ec_xml_fe_code">0</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva" />
             <field
                 name="invoice_repartition_line_ids"
@@ -134,6 +156,7 @@
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
+            <field name="l10n_ec_xml_fe_code">0</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva" />
             <field
                 name="invoice_repartition_line_ids"
@@ -153,6 +176,7 @@
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
+            <field name="l10n_ec_xml_fe_code">0</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva" />
             <field
                 name="invoice_repartition_line_ids"
@@ -170,6 +194,7 @@
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
+            <field name="l10n_ec_xml_fe_code">0</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva" />
             <field
                 name="invoice_repartition_line_ids"
@@ -187,6 +212,7 @@
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
+            <field name="l10n_ec_xml_fe_code">0</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva" />
             <field
                 name="invoice_repartition_line_ids"
@@ -204,6 +230,7 @@
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
+            <field name="l10n_ec_xml_fe_code">7</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva" />
             <field
                 name="invoice_repartition_line_ids"
@@ -223,6 +250,7 @@
             <field name="amount">12</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
+            <field name="l10n_ec_xml_fe_code">2</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva" />
             <field
                 name="invoice_repartition_line_ids"
@@ -243,6 +271,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
             <field name="sequence">0</field>
+            <field name="l10n_ec_xml_fe_code">2</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva" />
             <field
                 name="invoice_repartition_line_ids"
@@ -262,6 +291,7 @@
             <field name="amount">12</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
+            <field name="l10n_ec_xml_fe_code">2</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva" />
             <field
                 name="invoice_repartition_line_ids"
@@ -281,6 +311,7 @@
             <field name="amount">12</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
+            <field name="l10n_ec_xml_fe_code">2</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva" />
             <field
                 name="invoice_repartition_line_ids"
@@ -300,6 +331,7 @@
             <field name="amount">12</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
+            <field name="l10n_ec_xml_fe_code">2</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva" />
             <field
                 name="invoice_repartition_line_ids"
@@ -319,6 +351,7 @@
             <field name="amount">12</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
+            <field name="l10n_ec_xml_fe_code">2</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva" />
             <field
                 name="invoice_repartition_line_ids"
@@ -338,6 +371,7 @@
             <field name="amount">12</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
+            <field name="l10n_ec_xml_fe_code">2</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva" />
             <field
                 name="invoice_repartition_line_ids"
@@ -357,6 +391,7 @@
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
+            <field name="l10n_ec_xml_fe_code">0</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva" />
             <field
                 name="invoice_repartition_line_ids"
@@ -376,6 +411,7 @@
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
+            <field name="l10n_ec_xml_fe_code">0</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva" />
             <field
                 name="invoice_repartition_line_ids"
@@ -395,6 +431,7 @@
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
+            <field name="l10n_ec_xml_fe_code">0</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva" />
             <field
                 name="invoice_repartition_line_ids"
@@ -414,6 +451,7 @@
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
+            <field name="l10n_ec_xml_fe_code">0</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva" />
             <field
                 name="invoice_repartition_line_ids"
@@ -431,6 +469,7 @@
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
+            <field name="l10n_ec_xml_fe_code">6</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva" />
             <field
                 name="invoice_repartition_line_ids"
@@ -448,6 +487,7 @@
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
+            <field name="l10n_ec_xml_fe_code">6</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva" />
             <field
                 name="invoice_repartition_line_ids"
@@ -465,6 +505,7 @@
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
+            <field name="l10n_ec_xml_fe_code">7</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva" />
             <field
                 name="invoice_repartition_line_ids"
@@ -484,6 +525,7 @@
             <field name="amount">12</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
+            <field name="l10n_ec_xml_fe_code">2</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva" />
             <field
                 name="invoice_repartition_line_ids"
@@ -501,6 +543,7 @@
             <field name="amount">12</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
+            <field name="l10n_ec_xml_fe_code">9</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva_withhold" />
             <field
                 name="invoice_repartition_line_ids"
@@ -518,6 +561,7 @@
             <field name="amount">12</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
+            <field name="l10n_ec_xml_fe_code">10</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva_withhold" />
             <field
                 name="invoice_repartition_line_ids"
@@ -535,6 +579,7 @@
             <field name="amount">12</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
+            <field name="l10n_ec_xml_fe_code">1</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva_withhold" />
             <field
                 name="invoice_repartition_line_ids"
@@ -552,6 +597,7 @@
             <field name="amount">12</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
+            <field name="l10n_ec_xml_fe_code">11</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva_withhold" />
             <field
                 name="invoice_repartition_line_ids"
@@ -569,6 +615,7 @@
             <field name="amount">12</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
+            <field name="l10n_ec_xml_fe_code">2</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva_withhold" />
             <field
                 name="invoice_repartition_line_ids"
@@ -586,6 +633,7 @@
             <field name="amount">12</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
+            <field name="l10n_ec_xml_fe_code">3</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva_withhold" />
             <field
                 name="invoice_repartition_line_ids"

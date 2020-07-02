@@ -675,25 +675,12 @@ class L10nEcWithholdLine(models.Model):
     def get_retention_code(self):
         self.ensure_one()
         retention_code = "6"
-        if self.type == "iva":
-            retention_code = "2"
-        elif self.type == "rent":
-            retention_code = "1"
+        if self.tax_id.tax_group_id.l10n_ec_xml_fe_code:
+            retention_code = self.tax_id.tax_group_id.l10n_ec_xml_fe_code
         return retention_code
 
     def get_retention_tax_code(self):
         if self.type == "iva":
-            if self.percentage == 10.0:
-                return "9"
-            elif self.percentage == 20.0:
-                return "10"
-            elif self.percentage == 30.0:
-                return "1"
-            elif self.percentage == 50.0:
-                return "11"
-            elif self.percentage == 70.0:
-                return "2"
-            elif self.percentage == 100.0:
-                return "3"
+            return self.tax_id.l10n_ec_xml_fe_code
         elif self.type == "rent":
             return self.tax_id.description

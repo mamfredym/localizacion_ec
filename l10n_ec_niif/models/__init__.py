@@ -2,6 +2,7 @@ from . import agency
 from . import authorization
 from . import authorization_supplier
 from . import res_partner
+from . import account_tax
 from . import account_chart_template
 from . import account_fiscal_position
 from . import account_payment_term
