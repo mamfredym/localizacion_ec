@@ -5,7 +5,7 @@ odoo.define("l10n_ec_niif.ElectronicPortalSidebar", function(require) {
     var PortalSidebar = require("portal.PortalSidebar");
     var utils = require("web.utils");
 
-    publicWidget.registry.AccountPortalSidebar = PortalSidebar.extend({
+    publicWidget.registry.ElectronicPortalSidebar = PortalSidebar.extend({
         selector: ".o_portal_electronic_sidebar",
         events: {
             "click .o_portal_electronic_print": "_onPrintElectronic",

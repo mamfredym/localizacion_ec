@@ -40,7 +40,123 @@
                             colspan="4"
                         />
                     </page>
+                    <page name="invoice_elec" string="Facturación Electrónica">
+                        <group
+                            colspan="4"
+                            string="Notificación de Documentos Electrónicos"
+                        >
+                            <group>
+                                <field name="l10n_ec_email_out_invoice" />
+                                <field name="l10n_ec_email_out_refund" />
+                                <field name="l10n_ec_email_debit_note_out" />
+                            </group>
+                            <group>
+                                <field name="l10n_ec_email_liquidation" />
+                                <field name="l10n_ec_email_delivery_note" />
+                                <field name="l10n_ec_email_withhold_purchase" />
+                                <field
+                                    name="l10n_ec_require_email_electronic"
+                                    invisible="1"
+                                />
+                            </group>
+                        </group>
+                    </page>
                 </xpath>
+                <field name="email" position="attributes">
+                    <attribute
+                        name="attrs"
+                    >{'required': [('l10n_ec_require_email_electronic', '=', True)]}</attribute>
+                </field>
+                <xpath
+                    expr="//field[@name='child_ids']//form//field[@name='email']"
+                    position="attributes"
+                >
+                    <attribute
+                        name="attrs"
+                    >{'required': [('l10n_ec_require_email_electronic', '=', True)]}</attribute>
+                </xpath>
+                <xpath
+                    expr="//field[@name='child_ids']//form//field[@name='email']/../.."
+                    position="after"
+                >
+                    <separator colspan="4" />
+                    <group colspan="4" string="Notificación de Documentos Electrónicos">
+                        <group>
+                            <field name="l10n_ec_email_out_invoice" />
+                            <field name="l10n_ec_email_out_refund" />
+                            <field name="l10n_ec_email_debit_note_out" />
+                        </group>
+                        <group>
+                            <field name="l10n_ec_email_liquidation" />
+                            <field name="l10n_ec_email_delivery_note" />
+                            <field name="l10n_ec_email_withhold_purchase" />
+                            <field
+                                name="l10n_ec_require_email_electronic"
+                                invisible="1"
+                            />
+                        </group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="res_partner_short_form_view">
+            <field name="name">res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_short_form" />
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet//group[last()]" position="after">
+                    <group colspan="4" string="Notificación de Documentos Electrónicos">
+                        <group>
+                            <field name="l10n_ec_email_out_invoice" />
+                            <field name="l10n_ec_email_out_refund" />
+                            <field name="l10n_ec_email_debit_note_out" />
+                        </group>
+                        <group>
+                            <field name="l10n_ec_email_liquidation" />
+                            <field name="l10n_ec_email_delivery_note" />
+                            <field name="l10n_ec_email_withhold_purchase" />
+                            <field
+                                name="l10n_ec_require_email_electronic"
+                                invisible="1"
+                            />
+                        </group>
+                    </group>
+                </xpath>
+                <field name="email" position="attributes">
+                    <attribute
+                        name="attrs"
+                    >{'required': [('l10n_ec_require_email_electronic', '=', True)]}</attribute>
+                </field>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_partner_simple_form">
+            <field name="name">res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_simple_form" />
+            <field name="arch" type="xml">
+                <xpath expr="/form//group[last()]" position="after">
+                    <group colspan="4" string="Notificación de Documentos Electrónicos">
+                        <group>
+                            <field name="l10n_ec_email_out_invoice" />
+                            <field name="l10n_ec_email_out_refund" />
+                            <field name="l10n_ec_email_debit_note_out" />
+                        </group>
+                        <group>
+                            <field name="l10n_ec_email_liquidation" />
+                            <field name="l10n_ec_email_delivery_note" />
+                            <field name="l10n_ec_email_withhold_purchase" />
+                            <field
+                                name="l10n_ec_require_email_electronic"
+                                invisible="1"
+                            />
+                        </group>
+                    </group>
+                </xpath>
+                <field name="email" position="attributes">
+                    <attribute
+                        name="attrs"
+                    >{'required': [('l10n_ec_require_email_electronic', '=', True)]}</attribute>
+                </field>
             </field>
         </record>
         <record id="view_verificar_ruc_cedula_tree_inh" model="ir.ui.view">

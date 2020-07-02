@@ -1188,6 +1188,7 @@ class AccountMove(models.Model):
                             sri_xml_vals["withhold_id"] = retention.id
                             new_xml_rec = xml_model.create(sri_xml_vals)
                             xml_recs += new_xml_rec
+                            retention._l10n_ec_add_followers_to_electronic_documents()
             # si el documento esta habilitado, hacer el proceso electronico
             if (
                 invoice.l10n_ec_point_of_emission_id.type_emission == "electronic"
@@ -1227,8 +1228,37 @@ class AccountMove(models.Model):
                     sri_xml_vals["liquidation_id"] = invoice.id
                 new_xml_rec = xml_model.create(sri_xml_vals)
                 xml_recs += new_xml_rec
+                invoice._l10n_ec_add_followers_to_electronic_documents()
         if xml_recs:
             xml_recs.process_document_electronic()
+        return True
+
+    def _l10n_ec_add_followers_to_electronic_documents(self):
+        partners = self.env["res.partner"].browse()
+        invoice_type = self.l10n_ec_get_invoice_type()
+        boolean_field_name = ""
+        if invoice_type == "out_invoice":
+            boolean_field_name = "l10n_ec_email_out_invoice"
+        if invoice_type == "out_refund":
+            boolean_field_name = "l10n_ec_email_out_refund"
+        if invoice_type == "debit_note_out":
+            boolean_field_name = "l10n_ec_email_debit_note_out"
+        if invoice_type == "liquidation":
+            boolean_field_name = "l10n_ec_email_liquidation"
+        if boolean_field_name:
+            if (
+                self.commercial_partner_id[boolean_field_name]
+                and self.commercial_partner_id not in self.message_partner_ids
+            ):
+                partners |= self.commercial_partner_id
+            for contact in self.commercial_partner_id.child_ids:
+                if (
+                    contact[boolean_field_name]
+                    and contact not in self.message_partner_ids
+                ):
+                    partners |= contact
+        if partners:
+            self.message_subscribe(partners.ids)
         return True
 
     @api.model
@@ -2128,11 +2158,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         res = self.action_invoice_sent()
         ctx = res["context"]
-        msj = (
-            MailComposeMessage.with_context(ctx)
-            .sudo(user=self.invoice_user_id.id)
-            .create({})
-        )
+        msj = MailComposeMessage.with_context(ctx).create({})
         send_mail = True
         try:
             msj.onchange_template_id_wrapper()

@@ -360,6 +360,23 @@ class L10nEcWithhold(models.Model):
 
     # bloque de codigo para generar documento electronico
 
+    def _l10n_ec_add_followers_to_electronic_documents(self):
+        partners = self.env["res.partner"].browse()
+        if (
+            self.commercial_partner_id.l10n_ec_email_withhold_purchase
+            and self.commercial_partner_id not in self.message_partner_ids
+        ):
+            partners |= self.commercial_partner_id
+        for contact in self.commercial_partner_id.child_ids:
+            if (
+                contact.l10n_ec_email_withhold_purchase
+                and contact not in self.message_partner_ids
+            ):
+                partners |= contact
+        if partners:
+            self.message_subscribe(partners.ids)
+        return True
+
     def l10n_ec_get_document_code_sri(self):
         return "07"
 
@@ -495,6 +512,13 @@ class L10nEcWithhold(models.Model):
         except Exception:
             send_mail = False
         return send_mail
+
+    def l10n_ec_get_share_url(self, redirect=False, signup_partner=False, pid=None):
+        # funcion para usarla desde los correos electronicos
+        # el metodo original al ser privado no permite llamarlo desde la plantilla de correo
+        return self._get_share_url(
+            redirect=redirect, signup_partner=signup_partner, pid=pid
+        )
 
 
 class L10nEcWithholdLinePercent(models.Model):

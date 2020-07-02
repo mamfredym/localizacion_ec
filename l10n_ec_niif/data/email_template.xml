@@ -88,6 +88,15 @@
                     </ul>
                 </p>
                 <br /><br />
+                <div style="margin: 32px 0px 32px 0px; text-align: center;">
+                    <a
+                        href="${object.get_base_url() + object.l10n_ec_get_share_url()}"
+                        style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;"
+                    >
+                        Ver Retencion
+                    </a>
+                </div>
+                <br /><br />
                 % if object.partner_id.user_ids and object.partner_id.signup_url:
                 Para ver todos sus documentos visite <a
                     href="${object.partner_id.signup_url}"

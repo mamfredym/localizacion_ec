@@ -120,11 +120,18 @@
                             <br /><br />
                             <strong>CLAVE DE ACCESO: </strong>
                             <br />
-                            <!--							<div class="oe_product_image" t-att-style="style_max_size_barcode">-->
-                            <!--								<img t-if="o.l10n_ec_xml_key" t-att-src="'data:image/png;base64,%s' % to_text(o.l10n_ec_xml_data_id.make_barcode(o.l10n_ec_xml_key))" t-att-style="style_max_size_barcode"/>-->
-                            <!--							</div>-->
-                            <br />
-                            <span t-field="o.l10n_ec_xml_key" />
+                            <div
+                                class="oe_product_image text-center"
+                                t-if="o.l10n_ec_xml_key"
+                            >
+                                <img
+                                    class="barcode"
+                                    t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;' % ('Code128', o.l10n_ec_xml_key, 400, 100)"
+                                    alt="Clave de Acceso"
+                                />
+                                <br />
+                                <span t-field="o.l10n_ec_xml_key" />
+                            </div>
                             <br />
                         </div>
                     </td>

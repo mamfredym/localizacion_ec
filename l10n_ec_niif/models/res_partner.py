@@ -234,6 +234,11 @@ class ResPartner(models.Model):
         readonly=False,
         default=lambda self: not ("default_parent_id" in self.env.context),
     )
+    l10n_ec_email_liquidation = fields.Boolean(
+        "As Follower on Liquidations",
+        readonly=False,
+        default=lambda self: not ("default_parent_id" in self.env.context),
+    )
     l10n_ec_email_delivery_note = fields.Boolean(
         "As Follower Delivery Note",
         readonly=False,
@@ -244,6 +249,32 @@ class ResPartner(models.Model):
         readonly=False,
         default=lambda self: not ("default_parent_id" in self.env.context),
     )
+    l10n_ec_require_email_electronic = fields.Boolean(
+        string=u"Requerir Correo Electronico",
+        store=False,
+        compute="_compute_l10n_ec_require_email_electronic",
+    )
+
+    @api.depends(
+        "l10n_ec_email_out_invoice",
+        "l10n_ec_email_out_refund",
+        "l10n_ec_email_debit_note_out",
+        "l10n_ec_email_liquidation",
+        "l10n_ec_email_delivery_note",
+        "l10n_ec_email_withhold_purchase",
+    )
+    def _compute_l10n_ec_require_email_electronic(self):
+        for partner in self:
+            partner.l10n_ec_require_email_electronic = any(
+                [
+                    partner.l10n_ec_email_out_invoice,
+                    partner.l10n_ec_email_out_refund,
+                    partner.l10n_ec_email_debit_note_out,
+                    partner.l10n_ec_email_liquidation,
+                    partner.l10n_ec_email_delivery_note,
+                    partner.l10n_ec_email_withhold_purchase,
+                ]
+            )
 
     def get_direccion_matriz(self, printer_point):
         return self.street or printer_point.agency_id.address_id.street or "NA"
