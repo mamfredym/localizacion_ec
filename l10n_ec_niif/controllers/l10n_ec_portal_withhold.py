@@ -1,8 +1,9 @@
+import base64
 from collections import OrderedDict
 
 from odoo import http
 from odoo.exceptions import AccessError
-from odoo.http import request
+from odoo.http import content_disposition, request
 
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 
@@ -45,7 +46,7 @@ class PortalRetention(PortalElectronicCommon):
             values,
             "l10n_ec_my_withhold_history",
             False,
-            **kwargs
+            **kwargs,
         )
 
     @http.route(
@@ -63,7 +64,7 @@ class PortalRetention(PortalElectronicCommon):
         filterby=None,
         search=None,
         search_in=None,
-        **kw
+        **kw,
     ):
         values = self._prepare_portal_layout_values()
         AccountRetention = request.env["l10n_ec.withhold"]
@@ -157,7 +158,19 @@ class PortalRetention(PortalElectronicCommon):
         except AccessError:
             return request.redirect("/my")
 
-        if report_type in ("html", "pdf", "text"):
+        if report_type == "xml" and download:
+            attachment = withhold_sudo.l10n_ec_action_create_attachments_electronic()
+            report = base64.decodebytes(attachment.datas).decode()
+            reporthttpheaders = [
+                ("Content-Type", "application/xml"),
+                ("Content-Length", len(report)),
+            ]
+            filename = f"{withhold_sudo.get_printed_report_name_l10n_ec()}.xml"
+            reporthttpheaders.append(
+                ("Content-Disposition", content_disposition(filename))
+            )
+            return request.make_response(report, headers=reporthttpheaders)
+        elif report_type in ("html", "pdf", "text"):
             return self._show_report(
                 model=withhold_sudo,
                 report_type=report_type,

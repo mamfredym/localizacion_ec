@@ -53,6 +53,7 @@
                         <th>Número de Documento</th>
                         <th>Fecha Autorización</th>
                         <th>Clave de Acceso</th>
+                        <th>Documentos</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -76,6 +77,26 @@
                             </td>
                             <td>
                                 <span t-field="withhold.l10n_ec_xml_key" />
+                            </td>
+                            <td>
+                                <div class="btn-group  flex-grow-1 mr-1 mb-1">
+                                    <a
+                                        class="btn btn-link btn-block o_download_btn"
+                                        t-att-href="withhold.get_portal_url(report_type='pdf', download=True)"
+                                        title="Download RIDE"
+                                    >
+                                        <i class="fa fa-file-pdf-o" />
+                                    </a>
+                                </div>
+                                <div class="btn-group  flex-grow-1 mr-1 mb-1">
+                                    <a
+                                        class="btn btn-link btn-block o_download_btn"
+                                        t-att-href="withhold.get_portal_url(report_type='xml', download=True)"
+                                        title="Download XML"
+                                    >
+                                        <i class="fa fa-file-code-o" />
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                     </t>
@@ -109,17 +130,24 @@
                                         <a
                                             class="btn btn-secondary btn-block o_download_btn"
                                             t-att-href="withhold.get_portal_url(report_type='pdf', download=True)"
-                                            title="Download"
-                                        ><i class="fa fa-download" /> Download</a>
+                                            title="Download RIDE"
+                                        ><i class="fa fa-download" /> RIDE</a>
+                                    </div>
+                                    <div class="btn-group  flex-grow-1 mr-1 mb-1">
+                                        <a
+                                            class="btn btn-secondary btn-block o_download_btn"
+                                            t-att-href="withhold.get_portal_url(report_type='xml', download=True)"
+                                            title="Download XML"
+                                        ><i class="fa fa-download" /> XML</a>
                                     </div>
                                     <div class="btn-group flex-grow-1 mb-1">
                                         <a
                                             class="btn btn-secondary btn-block o_print_btn o_portal_electronic_print"
                                             t-att-href="withhold.get_portal_url(report_type='pdf')"
                                             id="print_electronic_report"
-                                            title="Print"
+                                            title="Print RIDE"
                                             target="_blank"
-                                        ><i class="fa fa-print" /> Print</a>
+                                        ><i class="fa fa-print" /> Print RIDE</a>
                                     </div>
                                 </div>
                             </li>
