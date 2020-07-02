@@ -143,4 +143,4 @@ class ResCompany(models.Model):
         for sri_resolution in sri_resolution_recs:
             if not sri_resolution.date_to or sri_resolution.date_to >= date:
                 sri_resolution_rec = sri_resolution
-        return sri_resolution_rec and sri_resolution_rec.resolution or "000"
+        return sri_resolution_rec and sri_resolution_rec.resolution or ""

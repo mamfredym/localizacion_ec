@@ -41,8 +41,11 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
             tipoIdentificacionComprador = "06"
         return tipoIdentificacionComprador
 
-    def _prepare_l10n_ec_sri_xml_values(self, l10n_ec_type_conection_sri):
-        return {"l10n_ec_type_conection_sri": l10n_ec_type_conection_sri}
+    def _prepare_l10n_ec_sri_xml_values(self, company):
+        return {
+            "company_id": company.id,
+            "l10n_ec_type_conection_sri": company.l10n_ec_type_conection_sri,
+        }
 
     def get_printed_report_name_l10n_ec(self):
         # funcion solo usada para ser llamada de manera externa

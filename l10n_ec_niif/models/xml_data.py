@@ -137,7 +137,9 @@ class SriXmlData(models.Model):
     withhold_id = fields.Many2one(
         "l10n_ec.withhold", "Retención", index=True, auto_join=True
     )
-    company_id = fields.Many2one("res.company", string="Compañía")
+    company_id = fields.Many2one(
+        "res.company", string="Compañía", default=lambda self: self.env.company
+    )
     partner_id = fields.Many2one("res.partner", "Cliente", index=True, auto_join=True)
     create_uid = fields.Many2one("res.users", "Creado por", readonly=True)
     create_date = fields.Datetime("Fecha de Creación", readonly=True)
@@ -1477,7 +1479,7 @@ class SriXmlData(models.Model):
             ("state", "=", "authorized"),
             ("partner_id.l10n_ec_type_sri", "!=", "Consumidor"),
             ("send_mail", "=", False),
-            ("l10n_ec_authorization_date", "=", date_from),
+            ("l10n_ec_authorization_date", ">=", date_from),
         ]
         if not company.l10n_ec_send_mail_invoice:
             domain.append(("invoice_out_id", "=", False))

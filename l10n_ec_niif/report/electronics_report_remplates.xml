@@ -7,7 +7,7 @@
         >
             <t
                 t-set="style_div_company"
-                t-value="'min-height: 195px; padding-left: 20px;'"
+                t-value="'min-height: 230px; padding-left: 20px;'"
             />
             <t t-set="company_logo" t-value="company.logo" />
             <t t-if="company.l10n_ec_electronic_logo">
@@ -20,7 +20,7 @@
                             <div class="oe_product_image">
                                 <img
                                     t-att-src="'data:image/png;base64,%s' % to_text(company_logo)"
-                                    height="125"
+                                    height="150"
                                     width="100%"
                                 />
                             </div>
@@ -80,20 +80,26 @@
                                     />
                                 </t>
                             </t>
-                            <!--							<t t-if="company.partner_id.contribuyente_especial">-->
-                            <!--								<br/>-->
-                            <!--								<strong>Contribuyente especial Nro </strong>-->
-                            <!--								<strong t-field="company.partner_id.numero_contribuyente_especial"/>-->
-                            <!--							</t>-->
-                            <!--							<br/>-->
-                            <!--							<strong>Obligado a llevar contabilidad: </strong>-->
-                            <!--							<span t-esc="obligado_contabilidad"/>-->
+                            <t
+                                t-set="contribuyente_especial"
+                                t-value="company.get_contribuyente_data(o.l10n_ec_get_document_date())"
+                            />
+                            <t t-if="contribuyente_especial">
+                                <br />
+                                <strong>Contribuyente especial Nro: </strong>
+                                <span t-esc="contribuyente_especial" />
+                            </t>
+                            <br />
+                            <strong>Obligado a llevar contabilidad: </strong>
+                            <span
+                                t-esc="o.env['l10n_ec.utils'].get_obligado_contabilidad(company.partner_id.property_account_position_id)"
+                            />
                         </div>
                     </td>
                     <td>
                         <div class="div-bordered div-radius" style="min-height: 325px;">
                             <strong>R.U.C.:</strong>
-                            <strong t-field="company.partner_id.ref" />
+                            <strong t-field="company.partner_id.vat" />
                             <br /><br />
                             <strong t-esc="document_string" />
                             <br />

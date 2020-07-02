@@ -417,9 +417,10 @@ class L10nEcWithhold(models.Model):
             infoCompRetencion, "dirEstablecimiento"
         ).text = util_model._clean_str(address[:300])
         numero_contribuyente_especial = company.get_contribuyente_data(self.issue_date)
-        SubElement(
-            infoCompRetencion, "contribuyenteEspecial"
-        ).text = numero_contribuyente_especial
+        if numero_contribuyente_especial:
+            SubElement(
+                infoCompRetencion, "contribuyenteEspecial"
+            ).text = numero_contribuyente_especial
         SubElement(
             infoCompRetencion, "obligadoContabilidad"
         ).text = util_model.get_obligado_contabilidad(

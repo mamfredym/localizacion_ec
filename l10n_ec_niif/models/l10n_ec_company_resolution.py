@@ -1,9 +1,11 @@
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class L10nCompanyResolution(models.Model):
     _name = "l10n_ec.sri.company.resolution"
     _description = "Company Resolutions"
+    _rec_name = "resolution"
 
     company_id = fields.Many2one(
         "res.company",
@@ -12,7 +14,15 @@ class L10nCompanyResolution(models.Model):
         required=True,
         ondelete="cascade",
     )
-    resolution = fields.Char("Resolution")
+    resolution = fields.Char("Resolution", size=3)
     date_from = fields.Date("Date from")
     date_to = fields.Date("Date to")
     active = fields.Boolean(default=True)
+
+    @api.constrains("date_from", "date_to")
+    @api.onchange("date_from", "date_to")
+    def _check_dates(self):
+        for resolution in self:
+            if resolution.date_from and resolution.date_to:
+                if resolution.date_to < resolution.date_from:
+                    raise ValidationError(_("Dates are not valid"))

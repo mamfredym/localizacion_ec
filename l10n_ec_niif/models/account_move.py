@@ -1183,7 +1183,7 @@ class AccountMove(models.Model):
                         if xml_model._is_document_authorized("withhold_purchase"):
                             company = retention.company_id or self.env.company
                             sri_xml_vals = retention._prepare_l10n_ec_sri_xml_values(
-                                company.l10n_ec_type_conection_sri
+                                company
                             )
                             sri_xml_vals["withhold_id"] = retention.id
                             new_xml_rec = xml_model.create(sri_xml_vals)
@@ -1211,9 +1211,7 @@ class AccountMove(models.Model):
                     )._onchange_invoice_date()
                 # *********************************************************************************************
                 company = invoice.company_id or self.env.company
-                sri_xml_vals = invoice._prepare_l10n_ec_sri_xml_values(
-                    company.l10n_ec_type_conection_sri
-                )
+                sri_xml_vals = invoice._prepare_l10n_ec_sri_xml_values(company)
                 # factura
                 if invoice_type == "out_invoice":
                     sri_xml_vals["invoice_out_id"] = invoice.id
@@ -1429,9 +1427,10 @@ class AccountMove(models.Model):
         numero_contribuyente_especial = company.get_contribuyente_data(
             self.invoice_date
         )
-        SubElement(
-            infoFactura, "contribuyenteEspecial"
-        ).text = numero_contribuyente_especial
+        if numero_contribuyente_especial:
+            SubElement(
+                infoFactura, "contribuyenteEspecial"
+            ).text = numero_contribuyente_especial
         SubElement(
             infoFactura, "obligadoContabilidad"
         ).text = util_model.get_obligado_contabilidad(
@@ -1626,9 +1625,10 @@ class AccountMove(models.Model):
         numero_contribuyente_especial = company.get_contribuyente_data(
             self.invoice_date
         )
-        SubElement(
-            infoNotaCredito, "contribuyenteEspecial"
-        ).text = numero_contribuyente_especial
+        if numero_contribuyente_especial:
+            SubElement(
+                infoNotaCredito, "contribuyenteEspecial"
+            ).text = numero_contribuyente_especial
         SubElement(
             infoNotaCredito, "obligadoContabilidad"
         ).text = util_model.get_obligado_contabilidad(
@@ -1776,9 +1776,10 @@ class AccountMove(models.Model):
         numero_contribuyente_especial = company.get_contribuyente_data(
             self.invoice_date
         )
-        SubElement(
-            infoNotaDebito, "contribuyenteEspecial"
-        ).text = numero_contribuyente_especial
+        if numero_contribuyente_especial:
+            SubElement(
+                infoNotaDebito, "contribuyenteEspecial"
+            ).text = numero_contribuyente_especial
         SubElement(
             infoNotaDebito, "obligadoContabilidad"
         ).text = util_model.get_obligado_contabilidad(
@@ -1861,9 +1862,10 @@ class AccountMove(models.Model):
         numero_contribuyente_especial = company.get_contribuyente_data(
             self.invoice_date
         )
-        SubElement(
-            infoLiquidacionCompra, "contribuyenteEspecial"
-        ).text = numero_contribuyente_especial
+        if numero_contribuyente_especial:
+            SubElement(
+                infoLiquidacionCompra, "contribuyenteEspecial"
+            ).text = numero_contribuyente_especial
         SubElement(
             infoLiquidacionCompra, "obligadoContabilidad"
         ).text = util_model.get_obligado_contabilidad(
