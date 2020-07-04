@@ -32,7 +32,12 @@ class L10nEcWithhold(models.Model):
         "res.currency", string="Currency", related="company_id.currency_id", store=True,
     )
     number = fields.Char(
-        string="Number", required=True, readonly=True, states=_STATES, tracking=True
+        string="Number",
+        required=True,
+        readonly=True,
+        states=_STATES,
+        tracking=True,
+        size=17,
     )
     no_number = fields.Boolean("Withholding  without Number?")
     state = fields.Selection(
@@ -257,78 +262,113 @@ class L10nEcWithhold(models.Model):
                 vals_move_line
             )
 
-        if self.type == "sale":
-            destination_account_id = self.partner_id.property_account_receivable_id
-            if not self.line_ids:
-                raise UserError(_("You must have at least one line to continue"))
-            vals_move = {
-                "ref": _("RET CLI: %s") % self.number,
-                "date": self.issue_date,
-                "company_id": self.company_id.id,
-                "state": "draft",
-                "journal_id": self.company_id.l10n_ec_withhold_journal_id.id,
-                "type": "entry",
-                "l10n_ec_withhold_id": self.id,
-            }
-            move_rec = model_move.create(vals_move)
-            total_detained_iva = 0.0
-            total_detained_rent = 0.0
-            invoices = self.invoice_id
-            for line in self.line_ids:
-                if not invoices:
-                    invoices |= line.invoice_id
-                if line.type == "iva":
-                    total_detained_iva += line.tax_amount
-                elif line.type == "rent":
-                    total_detained_rent += line.tax_amount
-            if total_detained_iva > 0:
-                _create_move_line(
-                    move_rec.id,
-                    0.0,
-                    total_detained_iva,
-                    self.company_id.l10n_ec_withhold_sale_iva_account_id.id,
-                    self.company_id.l10n_ec_withhold_sale_iva_tag_id.ids,
-                    total_detained_iva,
-                    name=_("IVA RETENIDO RET. %s") % self.number,
-                )
-            if total_detained_rent > 0:
-                _create_move_line(
-                    move_rec.id,
-                    0.0,
-                    total_detained_rent,
-                    self.company_id.l10n_ec_withhold_sale_rent_account_id.id,
-                    name=_("I.R. RETENIDO RET. %s") % self.number,
-                )
-            move_line = model_aml.browse()
-            if invoices:
-                move_line = invoices.line_ids.filtered(
-                    lambda l: not l.reconciled
-                    and l.account_id == destination_account_id
-                )
-            if not move_line:
-                raise UserError(_("There is no outstanding balance on this invoice"))
-            lines_to_reconcile = model_aml.browse()
-            lines_to_reconcile += move_line
-            lines_to_reconcile += _create_move_line(
-                move_rec.id,
-                total_detained_iva + total_detained_rent,
-                0.0,
-                destination_account_id.id,
-                name=_("CRUCE RET. %s con %s")
-                % (self.number, self.invoice_id.display_name),
-                partner_id=self.partner_id.id,
-            )
-            lines_to_reconcile.reconcile()
+        for rec in self:
+            if rec.type == "sale":
+                destination_account_id = rec.partner_id.property_account_receivable_id
+                if not rec.line_ids:
+                    raise UserError(_("You must have at least one line to continue"))
+                if not rec.company_id.l10n_ec_withhold_journal_id:
+                    raise UserError(
+                        _("You must configure Withhold Journal on Company to continue")
+                    )
+                if not rec.company_id.l10n_ec_withhold_sale_iva_account_id:
+                    raise UserError(
+                        _(
+                            "You must configure Withhold Sale Vat Account on Company to continue"
+                        )
+                    )
+                if not rec.company_id.l10n_ec_withhold_sale_rent_account_id:
+                    raise UserError(
+                        _(
+                            "You must configure Withhold Sale Rent Account on Company to continue"
+                        )
+                    )
+                vals_move = {
+                    "ref": _("RET CLI: %s") % rec.number,
+                    "date": rec.issue_date,
+                    "company_id": rec.company_id.id,
+                    "state": "draft",
+                    "journal_id": rec.company_id.l10n_ec_withhold_journal_id.id,
+                    "type": "entry",
+                    "l10n_ec_withhold_id": rec.id,
+                    "currency_id": rec.line_ids.mapped("currency_id").id
+                    or self.env.company.currency_id.id,
+                }
+                move_rec = model_move.create(vals_move)
+                rec.move_id = move_rec.id
+                invoice_group_to_reconcile = {}
+                for line in rec.line_ids:
+                    invoice_group_to_reconcile.setdefault(
+                        line.invoice_id.id, model_aml.browse()
+                    )
+                    for aml in line.invoice_id.line_ids.filtered(
+                        lambda line: not line.reconciled
+                        and line.account_id == destination_account_id
+                        and line.partner_id.id == line.move_id.partner_id.id
+                    ):
+                        invoice_group_to_reconcile[line.invoice_id.id] |= aml
+                    if line.tax_amount > 0:
+                        account_id = False
+                        tax_code = False
+                        name = False
+                        if line.type == "iva":
+                            account_id = (
+                                rec.company_id.l10n_ec_withhold_sale_iva_account_id.id
+                            )
+                            tax_code = (
+                                rec.company_id.l10n_ec_withhold_sale_iva_tag_id.ids
+                            )
+                            name = _("Withhold Vat. %s") % line.invoice_id.display_name
+                        elif line.type == "rent":
+                            account_id = (
+                                rec.company_id.l10n_ec_withhold_sale_rent_account_id.id
+                            )
+                            tax_code = []
+                            name = (
+                                _("Withhold Rent Tax. %s")
+                                % line.invoice_id.display_name
+                            )
+                        _create_move_line(
+                            move_id=move_rec.id,
+                            credit=0.0,
+                            debit=line.tax_amount,
+                            account_id=account_id,
+                            tax_code_id=tax_code,
+                            tax_amount=line.tax_amount,
+                            name=name,
+                        )
+                        invoice_group_to_reconcile[
+                            line.invoice_id.id
+                        ] |= _create_move_line(
+                            move_id=move_rec.id,
+                            credit=line.tax_amount,
+                            debit=0.0,
+                            account_id=destination_account_id.id,
+                            tax_code_id=[],
+                            tax_amount=line.tax_amount,
+                            name=name,
+                        )
+                for invoice_id in invoice_group_to_reconcile.keys():
+                    if len(invoice_group_to_reconcile[invoice_id]) > 1:
+                        invoice_group_to_reconcile[invoice_id].reconcile()
+                move_rec.action_post()
         self.write(
             {"state": "done",}
         )
 
+    def action_back_to_draft(self):
+        return self.write({"state": "draft",})
+
     def action_cancel(self):
-        for withholding in self:
-            # TODO: realizar proceso de anulacion de una retencion en ventas
-            if withholding.type == "purchase":
-                withholding.write({"state": "cancelled"})
-        return True
+        for rec in self:
+            if rec.type == "sale":
+                if rec.move_id:
+                    rec.move_id.button_cancel()
+                    rec.move_id.line_ids.remove_move_reconcile()
+                    current_move = rec.move_id
+                    rec.move_id = False
+                    current_move.unlink()
+        return self.write({"state": "cancelled"})
 
     @api.depends("move_ids",)
     def _compute_l10n_ec_withhold_ids(self):
@@ -604,7 +644,10 @@ class L10nEcWithholdLine(models.Model):
         string="Issue date", related="withhold_id.issue_date", store=True,
     )
     invoice_id = fields.Many2one(
-        comodel_name="account.move", string="Related Document", required=False
+        comodel_name="account.move",
+        string="Related Document",
+        required=False,
+        default=lambda self: self.env.context.get("default_invoice_id", False),
     )
     tax_id = fields.Many2one(comodel_name="account.tax", string="Tax", required=False)
     base_tag_id = fields.Many2one(
@@ -651,6 +694,10 @@ class L10nEcWithholdLine(models.Model):
         "invoice_id", "type",
     )
     def _onchange_invoice(self):
+        if not self.invoice_id:
+            if self.env.context.get("active_model", False) == "account.move":
+                if self.env.context.get("active_id", False):
+                    self.invoice_id = self.env.context.get("active_id", False)
         if self.invoice_id:
             base_amount = 0
             if self.type == "iva":

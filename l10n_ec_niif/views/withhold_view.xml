@@ -192,6 +192,18 @@
                             states="draft"
                         />
                         <button
+                            name="action_cancel"
+                            type="object"
+                            string="Cancel"
+                            attrs="{'invisible': ['|', ('state', '!=', 'done'), ('type', '!=', 'sale')]}"
+                        />
+                        <button
+                            name="action_back_to_draft"
+                            type="object"
+                            string="Back to Draft"
+                            attrs="{'invisible': ['|', ('state', '!=', 'cancelled'), ('type', '!=', 'sale')]}"
+                        />
+                        <button
                             name="action_sent_mail_electronic"
                             type="object"
                             string="Send by email"
@@ -276,6 +288,7 @@
                                             name="invoice_id"
                                             options="{'no_create': True}"
                                             attrs="{'column_invisible': [('parent.l10n_ec_related_document', '=', True)]}"
+                                            context="{'default_invoice_id': invoice_id}"
                                             domain="[('commercial_partner_id', '=', parent.commercial_partner_id), ('state', '=', 'posted'), ('type', '=', 'out_invoice')]"
                                         />
                                         <field
