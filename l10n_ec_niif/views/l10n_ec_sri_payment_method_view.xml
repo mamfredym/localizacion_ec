@@ -4,9 +4,10 @@
         <field name="name">l10n_ec.sri.payment.method.tree</field>
         <field name="model">l10n_ec.sri.payment.method</field>
         <field name="arch" type="xml">
-            <tree>
+            <tree create="false" delete="false" edit="false">
                 <field name="name" />
                 <field name="code" />
+                <field name="active" widget="boolean_toggle" />
             </tree>
         </field>
     </record>
@@ -14,7 +15,7 @@
         <field name="name">l10n_ec.sri.payment.method.form</field>
         <field name="model">l10n_ec.sri.payment.method</field>
         <field name="arch" type="xml">
-            <form>
+            <form create="false" delete="false" edit="false">
                 <sheet>
                     <widget
                         name="web_ribbon"

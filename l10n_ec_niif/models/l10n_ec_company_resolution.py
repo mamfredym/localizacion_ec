@@ -14,9 +14,9 @@ class L10nCompanyResolution(models.Model):
         required=True,
         ondelete="cascade",
     )
-    resolution = fields.Char("Resolution", size=3)
-    date_from = fields.Date("Date from")
-    date_to = fields.Date("Date to")
+    resolution = fields.Char("Resolution", size=3, required=True)
+    date_from = fields.Date("Date from", required=True)
+    date_to = fields.Date("Date to", required=True)
     active = fields.Boolean(default=True)
 
     @api.constrains("date_from", "date_to")

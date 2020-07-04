@@ -22,7 +22,7 @@
                 <header>
                     <button
                         name="action_validate_and_load"
-                        string="Validar Firma"
+                        string="Validate Cert"
                         type="object"
                         class="oe_highlight"
                         states="unverified"
@@ -30,21 +30,13 @@
                     <field name="state" widget="statusbar" />
                 </header>
                 <sheet>
-                    <div class="oe_button_box" name="button_box">
-                        <button
-                            name="toggle_active"
-                            type="object"
-                            confirm="Esta seguro de inactivar esta firma electronica?"
-                            class="oe_stat_button"
-                            icon="fa-archive"
-                        >
-                            <field
-                                name="active"
-                                widget="boolean_button"
-                                options="{'terminology': 'archive'}"
-                            />
-                        </button>
-                    </div>
+                    <widget
+                        name="web_ribbon"
+                        text="Archived"
+                        bg_color="bg-danger"
+                        attrs="{'invisible': [('active', '=', True)]}"
+                    />
+                    <field name="active" invisible="1" />
                     <group>
                         <group>
                             <field name="name" required="1" />
@@ -64,22 +56,31 @@
                         </group>
                     </group>
                     <notebook colspan="2">
-                        <page string="Informacion de certificado">
+                        <page string="Cert Info">
                             <group>
                                 <group>
                                     <field name="emision_date" />
                                     <field name="subject_common_name" />
-                                    <field name="subject_serial_number" />
+                                    <field
+                                        name="subject_serial_number"
+                                        groups="base.group_system"
+                                    />
                                 </group>
                                 <group>
                                     <field name="expire_date" />
                                     <field name="issuer_common_name" />
-                                    <field name="cert_serial_number" />
-                                    <field name="cert_version" />
+                                    <field
+                                        name="cert_serial_number"
+                                        groups="base.group_system"
+                                    />
+                                    <field
+                                        name="cert_version"
+                                        groups="base.group_system"
+                                    />
                                 </group>
                             </group>
                         </page>
-                        <page string="Clave Privada" groups="base.group_system">
+                        <page string="Private Key" groups="base.group_system">
                             <field name="private_key" nolabel="1" colspan="2" />
                         </page>
                     </notebook>
@@ -98,7 +99,7 @@
         </field>
     </record>
     <record id="sri_key_type_action" model="ir.actions.act_window">
-        <field name="name">Certificados de Firma electronica</field>
+        <field name="name">Electronic Signature Certs</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">sri.key.type</field>
         <field name="view_mode">tree,form</field>
@@ -107,7 +108,7 @@
     </record>
     <menuitem
         id="sri_key_type_menu"
-        name="Certificados de Firma electronica"
+        name="Electronic Signature Certs"
         sequence="2"
         parent="sri_electronic_documents_menu"
         action="sri_key_type_action"

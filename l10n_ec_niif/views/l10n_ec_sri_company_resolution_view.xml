@@ -35,12 +35,12 @@
         <field name="name">l10n_ec.sri.company.resolution.tree</field>
         <field name="model">l10n_ec.sri.company.resolution</field>
         <field name="arch" type="xml">
-            <tree>
+            <tree editable="bottom">
                 <field name="company_id" groups="base.group_multi_company" />
                 <field name="resolution" />
                 <field name="date_from" />
                 <field name="date_to" />
-                <field name="active" />
+                <field name="active" widget="boolean_toggle" />
             </tree>
         </field>
     </record>
