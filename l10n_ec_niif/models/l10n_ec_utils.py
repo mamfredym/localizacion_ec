@@ -1,3 +1,5 @@
+import pytz
+
 from odoo import api, fields, models, tools
 
 
@@ -140,3 +142,25 @@ class L10necUtils(models.AbstractModel):
             else:
                 string_to_reeplace = string_to_reeplace.replace(c, SPACE)
         return "".join(string_to_reeplace.splitlines())
+
+    @api.model
+    def _change_time_zone(self, date, from_zone=None, to_zone=None):
+        """
+        Cambiar la informacion de zona horaria a la fecha
+        En caso de no pasar la zona horaria origen(from_zone), tomar la zona horaria del usuario
+        En caso de no pasar la zona horaria destino(to_zone), tomar UTC
+        @param date: Object datetime to convert according timezone in format '%Y-%m-%d %H:%M:%S'
+        @return: datetime according timezone
+        """
+        fields_model = self.env["ir.fields.converter"]
+        if not from_zone:
+            # get timezone from user
+            from_zone = fields_model._input_tz()
+        # get UTC per Default
+        if not to_zone:
+            to_zone = pytz.UTC
+        # si no hay informacion de zona horaria, establecer la zona horaria
+        if not date.tzinfo:
+            date = from_zone.localize(date)
+        date = date.astimezone(to_zone)
+        return date
