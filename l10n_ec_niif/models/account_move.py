@@ -1343,22 +1343,13 @@ class AccountMove(models.Model):
         return tarifa_iva
 
     def l10n_ec_get_document_code_sri(self):
-        # 01 : Factura
-        # 03 : Liquidacion de Compras
-        # 04 : Nota de Credito
-        # 05 : Nota de Debito
-        # lo ideal seria tomar este dato del tipo de documento(campo l10n_latam_document_type_id)
-        # pero no tiene los mismos codigos
-        document_code_sri = ""
         invoice_type = self.l10n_ec_get_invoice_type()
+        # factura de venta es codigo 18, pero aca debe pasarse codigo 01
+        # los demas documentos tomar del tipo de documento(l10n_latam_document_type_id)
         if invoice_type == "out_invoice":
             document_code_sri = "01"
-        elif invoice_type == "liquidation":
-            document_code_sri = "03"
-        elif invoice_type == "out_refund":
-            document_code_sri = "04"
-        elif invoice_type == "debit_note_out":
-            document_code_sri = "05"
+        else:
+            document_code_sri = self.l10n_latam_document_type_id.code
         return document_code_sri
 
     def l10n_ec_get_document_number(self):
