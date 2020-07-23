@@ -1,5 +1,4 @@
 import base64
-import io
 import logging
 import time
 import traceback
@@ -933,27 +932,24 @@ class SriXmlData(models.Model):
         if self.state == "authorized" and self.xml_authorization and self.xml_file:
             tree = ET.fromstring(self.get_file())
             root = Element("RespuestaAutorizacion")
-            authorizacion_ele = Element("estado")
+            authorizacion_ele = SubElement(root, "estado")
             authorizacion_ele.text = "AUTORIZADO"
-            root.append(authorizacion_ele)
             # anexar la fecha y numero de autorizacion
-            authorizacion_ele = Element("numeroAutorizacion")
+            authorizacion_ele = SubElement(root, "numeroAutorizacion")
             authorizacion_ele.text = self.xml_authorization
-            root.append(authorizacion_ele)
-            authorizacion_ele = Element("fechaAutorizacion")
+            authorizacion_ele = SubElement(root, "fechaAutorizacion")
             authorizacion_ele.text = fields.Datetime.context_timestamp(
                 self, self.l10n_ec_authorization_date
             ).strftime(DTF)
-            root.append(authorizacion_ele)
-            authorizacion_ele = Element("ambiente")
+            authorizacion_ele = SubElement(root, "ambiente")
             authorizacion_ele.text = (
                 "PRODUCCION"
                 if self.l10n_ec_type_environment == "production"
                 else "PRUEBAS"
             )
-            root.append(authorizacion_ele)
             # agregar el resto del xml
-            root.append(tree)
+            comprobante_node = SubElement(root, "comprobante")
+            comprobante_node.text = tostring(tree).decode()
             xml_authorized = tostring(root).decode()
         return xml_authorized
 
