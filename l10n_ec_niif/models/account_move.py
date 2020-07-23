@@ -170,11 +170,27 @@ class AccountMove(models.Model):
         default=lambda self: self.env.context.get("default_l10n_ec_liquidation", False),
     )
     l10n_ec_rise = fields.Char("R.I.S.E", copy=False)
+    l10n_ec_legacy_document = fields.Boolean(
+        string="Is External Doc. Modified?",
+        help="With this option activated, the system will not require an invoice to issue the Debut or Credit Note",
+    )
     l10n_ec_legacy_document_date = fields.Date(string="External Document Date")
     l10n_ec_legacy_document_number = fields.Char(string="External Document Number")
     l10n_ec_credit_days = fields.Integer(
         string="Días Crédito", compute="_compute_l10n_ec_credit_days", store=True
     )
+
+    @api.constrains("l10n_ec_legacy_document_number", "l10n_latam_document_type_id")
+    @api.onchange("l10n_ec_legacy_document_number", "l10n_latam_document_type_id")
+    def _check_l10n_ec_legacy_document_number(self):
+        for invoice in self:
+            if (
+                invoice.l10n_ec_legacy_document_number
+                and invoice.l10n_latam_document_type_id
+            ):
+                invoice.l10n_latam_document_type_id._format_document_number(
+                    invoice.l10n_ec_legacy_document_number
+                )
 
     @api.depends("invoice_date", "invoice_date_due")
     def _compute_l10n_ec_credit_days(self):

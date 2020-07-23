@@ -7,6 +7,26 @@
             <field name="priority">100</field>
             <field name="inherit_id" ref="l10n_latam_invoice_document.view_move_form" />
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='ref']" position="after">
+                    <field
+                        name="l10n_ec_original_invoice_id"
+                        attrs="{'invisible': ['|', ('type', '!=', 'out_refund'), ('l10n_ec_legacy_document', '=', True)], 'required': [('type', '=', 'out_refund'), ('l10n_ec_legacy_document', '=', False)], 'readonly': [('state', '!=', 'draft')]}"
+                        domain="[('type', '=', 'in_invoice'), ('state', '=', 'posted'), ('commercial_partner_id', '=', commercial_partner_id)]"
+                    />
+                    <field
+                        name="l10n_ec_original_invoice_id"
+                        attrs="{'invisible': ['|', ('type', '!=', 'in_refund'), ('l10n_ec_legacy_document', '=', True)], 'required': [('type', '=', 'in_refund'), ('l10n_ec_legacy_document', '=', False)], 'readonly': [('state', '!=', 'draft')]}"
+                        domain="[('type', '=', 'out_invoice'), ('state', '=', 'posted'), ('commercial_partner_id', '=', commercial_partner_id)]"
+                    />
+                    <field
+                        name="l10n_ec_legacy_document_number"
+                        attrs="{'invisible': [('l10n_ec_legacy_document', '=', False)], 'required': [('l10n_ec_legacy_document', '=', True)], 'readonly': [('state', '!=', 'draft')]}"
+                    />
+                    <field
+                        name="l10n_ec_legacy_document_date"
+                        attrs="{'invisible': [('l10n_ec_legacy_document', '=', False)], 'required': [('l10n_ec_legacy_document', '=', True)], 'readonly': [('state', '!=', 'draft')]}"
+                    />
+                </xpath>
                 <xpath expr="//field[@name='invoice_date']" position="attributes">
                     <attribute
                         name="attrs"
@@ -85,6 +105,10 @@
                                'readonly': [('state', '!=', 'draft')]}"
                             force_save="1"
                         />
+                        <field
+                            name="l10n_ec_legacy_document"
+                            attrs="{'invisible': [('type', 'in', ('in_invoice', 'out_invoice')), ('l10n_ec_debit_note', '=', False)], 'readonly': [('state', '!=', 'draft')]}"
+                        />
                         <field name="l10n_ec_identification_type_id" />
                         <field
                             name="l10n_ec_sri_payment_id"
@@ -93,14 +117,6 @@
                         />
                         <field
                             name="l10n_ec_rise"
-                            attrs="{'invisible': [('type', '!=', 'out_refund'), ('l10n_ec_debit_note', '=', False)]}"
-                        />
-                        <field
-                            name="l10n_ec_legacy_document_number"
-                            attrs="{'invisible': [('type', '!=', 'out_refund'), ('l10n_ec_debit_note', '=', False)]}"
-                        />
-                        <field
-                            name="l10n_ec_legacy_document_date"
                             attrs="{'invisible': [('type', '!=', 'out_refund'), ('l10n_ec_debit_note', '=', False)]}"
                         />
                         <field name="l10n_ec_start_date" invisible="1" />
@@ -189,18 +205,6 @@
             <field name="model">account.move</field>
             <field name="inherit_id" ref="account.view_move_form" />
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='ref']" position="after">
-                    <field
-                        name="l10n_ec_original_invoice_id"
-                        attrs="{'invisible': [('type', '!=', 'out_refund')], 'required': [('type', '=', 'out_refund')], 'readonly': [('state', '!=', 'draft')]}"
-                        domain="[('type', '=', 'in_invoice'), ('state', '=', 'posted'), ('commercial_partner_id', '=', commercial_partner_id)]"
-                    />
-                    <field
-                        name="l10n_ec_original_invoice_id"
-                        attrs="{'invisible': [('type', '!=', 'in_refund')], 'required': [('type', '=', 'in_refund')], 'readonly': [('state', '!=', 'draft')]}"
-                        domain="[('type', '=', 'out_invoice'), ('state', '=', 'posted'), ('commercial_partner_id', '=', commercial_partner_id)]"
-                    />
-                </xpath>
                 <xpath expr="//field[@name='invoice_vendor_bill_id']" position="after">
                     <field
                         name="l10n_ec_withhold_number"
