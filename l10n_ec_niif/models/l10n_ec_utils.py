@@ -63,6 +63,8 @@ class L10necUtils(models.AbstractModel):
         """
         if not string_to_reeplace:
             return string_to_reeplace
+        else:
+            string_to_reeplace = string_to_reeplace.lstrip()
         caracters = [".", ",", "-", "\a", "\b", "\f", "\n", "\r", "\t", "\v"]
         for c in caracters:
             string_to_reeplace = string_to_reeplace.replace(c, separator)
@@ -141,7 +143,7 @@ class L10necUtils(models.AbstractModel):
             # si no tengo codigo ascii, posiblemente dio error en la conversion
             else:
                 string_to_reeplace = string_to_reeplace.replace(c, SPACE)
-        return "".join(string_to_reeplace.splitlines())
+        return "".join(string_to_reeplace.lstrip().splitlines())
 
     @api.model
     def _change_time_zone(self, date, from_zone=None, to_zone=None):

@@ -458,13 +458,13 @@ class SriXmlData(models.Model):
         except AssertionError as e:
             if self.env.context.get("l10n_ec_xml_call_from_cron"):
                 _logger.error(
-                    "XML Mal Creado, faltan datos, verifique clave de acceso: %s, Detalle de error: %s",
+                    "Wrong Creation on XML File, faltan datos, verifique clave de acceso: %s, Detalle de error: %s",
                     self.l10n_ec_xml_key,
                     tools.ustr(e),
                 )
             else:
                 raise UserError(
-                    _("XML Mal Creado, faltan datos, verifique: \n%s") % tools.ustr(e)
+                    _("Wrong Creation on XML File, missing data : \n%s") % tools.ustr(e)
                 )
         return True
 
