@@ -157,6 +157,18 @@ class L10nEcWithhold(models.Model):
         states=_STATES,
         required=True,
     )
+    l10n_ec_legacy_document = fields.Boolean(
+        string="Is External Doc. Modified?",
+        readonly=True,
+        states=_STATES,
+        help="With this option activated, the system will not require an invoice to issue the Debut or Credit Note",
+    )
+    l10n_ec_legacy_document_date = fields.Date(
+        string="External Document Date", readonly=True, states=_STATES,
+    )
+    l10n_ec_legacy_document_number = fields.Char(
+        string="External Document Number", readonly=True, states=_STATES,
+    )
 
     @api.depends(
         "line_ids.type", "line_ids.tax_amount",
@@ -190,6 +202,15 @@ class L10nEcWithhold(models.Model):
     move_count = fields.Integer(
         string="Move Count", compute="_compute_l10n_ec_withhold_ids", store=False
     )
+
+    @api.constrains("l10n_ec_legacy_document_number")
+    @api.onchange("l10n_ec_legacy_document_number")
+    def _check_l10n_ec_legacy_document_number(self):
+        for withhold in self:
+            if withhold.l10n_ec_legacy_document_number:
+                withhold._format_withhold_document_number(
+                    withhold.l10n_ec_legacy_document_number
+                )
 
     def _compute_access_url(self):
         super(L10nEcWithhold, self)._compute_access_url()

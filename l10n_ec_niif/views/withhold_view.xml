@@ -251,8 +251,16 @@
                                 />
                                 <field
                                     name="invoice_id"
-                                    attrs="{'readonly': [('l10n_ec_is_create_from_invoice', '=', True)]}"
+                                    attrs="{'invisible': [('l10n_ec_legacy_document', '=', True)], 'readonly': [('l10n_ec_is_create_from_invoice', '=', True)]}"
                                     domain="[('commercial_partner_id', '=', commercial_partner_id), ('state', '=', 'posted'), ('type', '=', 'out_invoice')]"
+                                />
+                                <field
+                                    name="l10n_ec_legacy_document_number"
+                                    attrs="{'invisible': [('l10n_ec_legacy_document', '=', False)], 'required': [('l10n_ec_legacy_document', '=', True)]}"
+                                />
+                                <field
+                                    name="l10n_ec_legacy_document_date"
+                                    attrs="{'invisible': [('l10n_ec_legacy_document', '=', False)], 'required': [('l10n_ec_legacy_document', '=', True)]}"
                                 />
                                 <field name="l10n_ec_related_document" invisible="1" />
                                 <field
@@ -337,6 +345,10 @@
                             <page name="info" string="Information">
                                 <group>
                                     <group>
+                                        <field
+                                            name="l10n_ec_legacy_document"
+                                            attrs="{'invisible': [('type', '!=', 'sale')]}"
+                                        />
                                         <field
                                             name="move_id"
                                             attrs="{'invisible': [('move_id', '=', False)]}"
