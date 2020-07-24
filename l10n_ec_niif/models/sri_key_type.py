@@ -68,7 +68,7 @@ class SriKeyType(models.Model):
             _logger.warning(tools.ustr(ex))
             raise UserError(
                 _(
-                    "Error al abrir la firma, posiblmente ha ingresado mal la clave de la firma o el archivo no es compatible."
+                    "Error opening the signature, possibly the signature key has been entered incorrectly or the file is not supported."
                 )
             )
 
@@ -139,7 +139,7 @@ class SriKeyType(models.Model):
             _logger.warning(tools.ustr(ex))
             raise UserError(
                 _(
-                    "Error al abrir la firma, posiblmente ha ingresado mal la clave de la firma o el archivo no es compatible."
+                    "Error opening the signature, possibly the signature key has been entered incorrectly or the file is not supported"
                 )
             )
         doc = etree.fromstring(xml_string_data)

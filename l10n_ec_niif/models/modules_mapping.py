@@ -29,9 +29,7 @@ def get_document_type(invoice_type):
         document_type = "delivery_note"
     else:
         raise Warning(
-            _(
-                "Tipo de Factura/Documento: %s no es válido, por favor verique, get_document_type"
-            )
+            _("Invoice / Document Type: %s is invalid, please check, get_document_type")
             % (invoice_type)
         )
     return document_type
@@ -75,7 +73,7 @@ def l10n_ec_get_invoice_type(
     if not document_type and raise_exception:
         raise Warning(
             _(
-                "Tipo de Factura/Documento: %s no es válido, por favor verique, l10n_ec_get_invoice_type"
+                "Invoice / Document Type: %s is invalid, please check, l10n_ec_get_invoice_type"
             )
             % (invoice_type)
         )
@@ -130,7 +128,7 @@ def get_invoice_type_reverse(invoice_type):
     else:
         raise Warning(
             _(
-                "Tipo de Factura/Documento: %s no es válido, por favor verique, get_invoice_type_reverse"
+                "Invoice / Document Type: %s is invalid, please check, get_invoice_type_reverse"
             )
             % (invoice_type)
         )
@@ -164,7 +162,7 @@ def get_invoice_field_report(invoice_type):
     if not field_report_name:
         raise Warning(
             _(
-                "Tipo de Factura/Documento: %s no es válido, por favor verique. get_invoice_field_report"
+                "Invoice / Document Type: %s is not valid, please check. get_invoice_field_report"
             )
             % (invoice_type)
         )
@@ -196,13 +194,13 @@ def get_document_name(document_type):
     @return: str, la descripcion del tipo de documento, entendible por el usuario
     """
     document_names = {
-        "invoice": _("Factura"),
-        "credit_note": _("Nota de Crédito"),
-        "debit_note": _("Nota de Débito"),
-        "liquidation": _("Liquidación de Compras"),
-        "withholding": _("Retención"),
-        "delivery_note": _("Guía de Remisión"),
-        "invoice_reembolso": _("Reembolso de gasto"),
+        "invoice": _("Invoice"),
+        "credit_note": _("Credit Note"),
+        "debit_note": _("Debit Note"),
+        "liquidation": _("Purchase liquidation"),
+        "withholding": _("Withhold"),
+        "delivery_note": _("Delivery Note"),
+        "invoice_reembolso": _("Expense reimbursement"),
     }
     return document_names.get(document_type, "")
 

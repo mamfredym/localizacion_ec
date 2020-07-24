@@ -619,7 +619,7 @@ class SriXmlData(models.Model):
                 tools.config.get("no_electronic_documents")
                 and company.l10n_ec_type_environment == "production"
             ):
-                raise Exception(_("NO SE ENVIA A AUTORIAZAR EN MODO DESARROLLO"))
+                raise Exception(_("NOT SENT TO AUTHORIZE IN DEVELOPMENT MODE"))
             send = True
             # En caso de ya haber tratado de enviar anteriormente, no debe enviar 2 veces
             if len(self.try_ids) >= 1:

@@ -221,7 +221,7 @@ class L10nEcWithhold(models.Model):
                 [("invoice_id", "=", rec.invoice_id.id), ("id", "!=", rec.id)]
             )
             if l10n_ec_withhold_line_ids:
-                raise UserError(_("Factura ya es registrada"))
+                raise UserError(_("Invoice is already registered"))
         return True
 
     @api.onchange("number")

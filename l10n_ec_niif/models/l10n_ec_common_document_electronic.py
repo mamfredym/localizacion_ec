@@ -128,7 +128,7 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
         # 07 : Comprobante de Retencion
         raise UserError(
             _(
-                "Debe reemplazar esta funcion l10n_ec_get_document_code_sri en su clase heredada"
+                "You must replace this function l10n_ec_get_document_code_sri in your inherited class"
             )
         )
 
@@ -137,7 +137,7 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
         # esta funcion debe devolver el numero de documento
         raise UserError(
             _(
-                "Debe reemplazar esta funcion l10n_ec_get_document_number en su clase heredada"
+                "You must replace this function l10n_ec_get_document_number in its inherited class"
             )
         )
 
@@ -146,7 +146,7 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
         # esta funcion debe devolver la fecha de emision del documento
         raise UserError(
             _(
-                "Debe reemplazar esta funcion l10n_ec_get_document_date en su clase heredada"
+                "You must replace this function l10n_ec_get_document_date in your inherited class"
             )
         )
 
@@ -160,7 +160,7 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
         # esta funcion debe devolver la version del xml que se debe usar
         raise UserError(
             _(
-                "Debe reemplazar esta funcion l10n_ec_get_document_version_xml en su clase heredada"
+                "You must replace this function l10n_ec_get_document_version_xml in your inherited class"
             )
         )
 
@@ -170,7 +170,7 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
         # algo como: id, prefijo, secuencial
         raise UserError(
             _(
-                "Debe reemplazar esta funcion l10n_ec_get_document_filename_xml en su clase heredada"
+                "You must replace this function l10n_ec_get_document_filename_xml in your inherited class"
             )
         )
 
@@ -179,7 +179,7 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
         # esta funcion debe crear la data del documento en el xml(node_root)
         raise UserError(
             _(
-                "Debe reemplazar esta funcion l10n_ec_action_generate_xml_data en su clase heredada"
+                "You must replace this function l10n_ec_action_generate_xml_data in its inherited class"
             )
         )
 

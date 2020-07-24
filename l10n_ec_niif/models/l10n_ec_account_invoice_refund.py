@@ -92,7 +92,7 @@ class AccountInvoiceRefund(models.Model):
             ):
                 raise ValidationError(
                     _(
-                        "The número de documento no es correcto, debe ser de la forma 00X-00X-000XXXXXX, X es un número"
+                        "The document number is not correct, it must be of the form 00X-00X-000XXXXXX, X is a number"
                     )
                 )
             if refund.document_type == "normal":
@@ -105,7 +105,7 @@ class AccountInvoiceRefund(models.Model):
                     refund.l10n_ec_foreign,
                 ):
                     raise ValidationError(
-                        _("Ya existe otro documento con el mismo número")
+                        _("Another document with the same number already exists")
                     )
             else:
                 auth_s_model.validate_unique_document_partner(
@@ -123,15 +123,15 @@ class AccountInvoiceRefund(models.Model):
                 if len(refund.electronic_authorization) not in (37, 49):
                     raise ValidationError(
                         _(
-                            "El número de autorización electrónica es incorrecto, "
-                            "este debe ser de 37 or 49 digitos. Revise el reembolso"
+                            "The electronic authorization number is incorrect, "
+                            "This must be 37 or 49 digits. Check the refund"
                         )
                     )
                 if not re.match(cadena, refund.electronic_authorization):
                     raise ValidationError(
                         _(
-                            "La autorización electronica debe tener solo números, "
-                            "por favor verifique el reembolso!"
+                            "The electronic authorization must have only numbers, "
+                            "please check the refund!"
                         )
                     )
 
@@ -160,9 +160,9 @@ class AccountInvoiceRefund(models.Model):
                         number_last = int(number_data[2])
                     except Exception:
                         warning = {
-                            "title": "Advertencia!!!",
+                            "title": _("Warning!!!"),
                             "message": _(
-                                "The número de documento no es correcto, debe ser de la forma 00X-00X-000XXXXXX, X es un número"
+                                "The document number is not correct, it must be of the form 00X-00X-000XXXXXX, X is a number"
                             ),
                         }
                         number_last = False
@@ -176,18 +176,18 @@ class AccountInvoiceRefund(models.Model):
                         self.document_number = invoice_number
                 else:
                     warning = {
-                        "title": "Advertencia!!!",
+                        "title": _("Warning!!!"),
                         "message": _(
-                            "The número de documento no es correcto, debe ser de la forma 00X-00X-000XXXXXX, X es un número"
+                            "The document number is not correct, it must be of the form 00X-00X-000XXXXXX, X is a number"
                         ),
                     }
             return {"domain": domain, "warning": warning}
         if invoice_number and not self.partner_id:
             self.document_number = ""
             warning = {
-                "title": _("Advertencia!!!"),
+                "title": _("Warning!!!"),
                 "message": _(
-                    "Usted debe seleccionar primero la empresa para proceder con esta acción"
+                    "You must select company first to continue with this action"
                 ),
             }
             return {"domain": domain, "warning": warning}
@@ -244,14 +244,14 @@ class AccountInvoiceRefund(models.Model):
                 self.document_number = ""
             if auth_data.get("message", ""):
                 warning = {
-                    "title": _("Advertencia!!!"),
+                    "title": _("Warning!!!"),
                     "message": auth_data.get("message", ""),
                 }
             return {"domain": domain, "warning": warning}
         if not auth_data.get("auth_ids", []) and self.partner_id and invoice_number:
             if auth_data.get("message", ""):
                 warning = {
-                    "title": _("Advertencia!!!"),
+                    "title": _("Warning!!!"),
                     "message": auth_data.get("message", ""),
                 }
                 return {"domain": domain, "warning": warning}
