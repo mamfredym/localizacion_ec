@@ -1,0 +1,4288 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_ec_niif
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-07-24 15:30+0000\n"
+"PO-Revision-Date: 2020-07-24 11:13-0500\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: es\n"
+"X-Generator: Poedit 2.3\n"
+
+#. module: l10n_ec_niif
+#: model:mail.template,subject:l10n_ec_niif.email_template_e_invoice model:mail.template,subject:l10n_ec_niif.email_template_e_retention
+msgid "${object.company_id.name}, Nuevo Documento Electronico (${object.display_name or 'n/a'})"
+msgstr "${object.company_id.name}, Nuevo Documento Electronico (${object.display_name or 'n/a'})"
+
+#. module: l10n_ec_niif
+#: model:mail.template,subject:l10n_ec_niif.email_template_keys_expired
+msgid "${object.company_id} Llaves expiradas"
+msgstr "${object.company_id} Llaves expiradas"
+
+#. module: l10n_ec_niif
+#: model:mail.template,report_name:l10n_ec_niif.email_template_e_invoice model:mail.template,report_name:l10n_ec_niif.email_template_e_retention
+msgid "${object.get_printed_report_name_l10n_ec()}"
+msgstr "${object.get_printed_report_name_l10n_ec()}"
+
+#. module: l10n_ec_niif
+#: model:mail.template,subject:l10n_ec_niif.mail_documents_no_autorization
+msgid "${object.name} - Documentos Electrónico no Autorizado"
+msgstr "${object.name} - Documentos Electrónico no Autorizado"
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
+#, python-format
+msgid "%s is not within the authorization dates %s y %s"
+msgstr "%s is not within the authorization dates %s y %s"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_sri_authorization_supplier_documents_form_view model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_sri_authorization_supplier_form_view
+msgid "00X"
+msgstr "00X"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_sri_authorization_supplier_form_view
+msgid "0123456789"
+msgstr "0123456789"
+
+#. module: l10n_ec_niif
+#: model:mail.template,body_html:l10n_ec_niif.email_template_keys_expired
+msgid ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"max-width:600px; height:auto; margin-left:30px;\">\n"
+"                <div style=\"margin-left:30px;align=center;\">\n"
+"                    Este es una notificación de llaves expiradas:\n"
+"                    <br/>\n"
+"                    % set noti=NULL\n"
+"                    % set notification = object.date_expire_send_mail()\n"
+"                    % for noti in notification:\n"
+"                    ${noti}<br/>\n"
+"                    % endfor\n"
+"                </div>\n"
+"            </div>\n"
+"        "
+msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"max-width:600px; height:auto; margin-left:30px;\">\n"
+"                <div style=\"margin-left:30px;align=center;\">\n"
+"                    Este es una notificación de llaves expiradas:\n"
+"                    <br/>\n"
+"                    % set noti=NULL\n"
+"                    % set notification = object.date_expire_send_mail()\n"
+"                    % for noti in notification:\n"
+"                    ${noti}<br/>\n"
+"                    % endfor\n"
+"                </div>\n"
+"            </div>\n"
+"        "
+
+#. module: l10n_ec_niif
+#: model:mail.template,body_html:l10n_ec_niif.mail_documents_no_autorization
+msgid ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"max-width:600px; height:auto; margin-left:30px;\">\n"
+"                <div style=\"margin-left:30px;align=center;\">\n"
+"                    Notificacion:\n"
+"                    <br/>\n"
+"                    % set documents = object.get_documents_electonic_no_autorization()\n"
+"                    <p class=\"text-center\" style=\"font-weight: bold\">Documentos Electrónicos no Autorizadas</p>\n"
+"                    <div style=\"display:table;margin-left: 6%;width:95%\">\n"
+"                        <div style=\"display:table-row-group;\">\n"
+"                            % for doc in documents:\n"
+"                            <div style=\"display:table-row;\">\n"
+"                                <div style=\"display:table-cell;width:65%;text-align:center;border:solid;border-width: 1px 1px 1px 1px;\">${doc.display_name}</div>\n"
+"                                <div style=\"display:table-cell;width:65%;text-align:center;border:solid;border-width: 1px 1px 1px 1px;\">${doc.last_error_id.display_name}</div>\n"
+"                                <div style=\"display:table-cell;width:65%;text-align:center;border:solid;border-width: 1px 1px 1px 1px;\">\n"
+"                                    <span>\n"
+"                                        <a href=\"${doc.get_mail_url()}\">Ver Documento</a>\n"
+"                                    </span>\n"
+"                                </div>\n"
+"                            </div>\n"
+"                            % endfor\n"
+"                        </div>\n"
+"                    </div>\n"
+"                </div>\n"
+"            </div>\n"
+"        "
+msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"max-width:600px; height:auto; margin-left:30px;\">\n"
+"                <div style=\"margin-left:30px;align=center;\">\n"
+"                    Notificacion:\n"
+"                    <br/>\n"
+"                    % set documents = object.get_documents_electonic_no_autorization()\n"
+"                    <p class=\"text-center\" style=\"font-weight: bold\">Documentos Electrónicos no Autorizadas</p>\n"
+"                    <div style=\"display:table;margin-left: 6%;width:95%\">\n"
+"                        <div style=\"display:table-row-group;\">\n"
+"                            % for doc in documents:\n"
+"                            <div style=\"display:table-row;\">\n"
+"                                <div style=\"display:table-cell;width:65%;text-align:center;border:solid;border-width: 1px 1px 1px 1px;\">${doc.display_name}</div>\n"
+"                                <div style=\"display:table-cell;width:65%;text-align:center;border:solid;border-width: 1px 1px 1px 1px;\">${doc.last_error_id.display_name}</div>\n"
+"                                <div style=\"display:table-cell;width:65%;text-align:center;border:solid;border-width: 1px 1px 1px 1px;\">\n"
+"                                    <span>\n"
+"                                        <a href=\"${doc.get_mail_url()}\">Ver Documento</a>\n"
+"                                    </span>\n"
+"                                </div>\n"
+"                            </div>\n"
+"                            % endfor\n"
+"                        </div>\n"
+"                    </div>\n"
+"                </div>\n"
+"            </div>\n"
+"        "
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid ""
+"<b>Off-Line:</b>\n"
+"                                                Los documentos se autorizan en un maximo de 24 horas con el SRI"
+msgstr ""
+"<b>Off-Line:</b>\n"
+"                                                Los documentos se autorizan en un maximo de 24 horas con el SRI"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid ""
+"<b>On-Line:</b>\n"
+"                                                Los documentos se autorizan en linea con el SRI"
+msgstr ""
+"<b>On-Line:</b>\n"
+"                                                Los documentos se autorizan en linea con el SRI"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid ""
+"<b>Producción:</b>\n"
+"                                                Los documentos tienen validez Tributaria"
+msgstr ""
+"<b>Producción:</b>\n"
+"                                                Los documentos tienen validez Tributaria"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid ""
+"<b>Pruebas:</b>\n"
+"                                                Los documentos no tienen validez Tributaria"
+msgstr ""
+"<b>Pruebas:</b>\n"
+"                                                Los documentos no tienen validez Tributaria"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.electronic_report_common_head
+msgid ""
+"<br/>\n"
+"                                    <strong>Email Sucursal: </strong>"
+msgstr ""
+"<br/>\n"
+"                                    <strong>Email Sucursal: </strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.electronic_report_common_head
+msgid ""
+"<br/>\n"
+"                                    <strong>Telf. Sucursal: </strong>"
+msgstr ""
+"<br/>\n"
+"                                    <strong>Telf. Sucursal: </strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.electronic_report_common_head
+msgid ""
+"<br/>\n"
+"                                <strong>Contribuyente especial Nro: </strong>"
+msgstr ""
+"<br/>\n"
+"                                <strong>Contribuyente especial Nro: </strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.electronic_report_common_head
+msgid ""
+"<br/>\n"
+"                                <strong>Dir. Sucursal: </strong>"
+msgstr ""
+"<br/>\n"
+"                                <strong>Dir. Sucursal: </strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.electronic_report_common_head
+msgid ""
+"<br/>\n"
+"                                <strong>Email: </strong>"
+msgstr ""
+"<br/>\n"
+"                                <strong>Email: </strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.electronic_report_common_head
+msgid ""
+"<br/>\n"
+"                                <strong>Telf.: </strong>"
+msgstr ""
+"<br/>\n"
+"                                <strong>Telf.: </strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.electronic_report_common_head
+msgid ""
+"<br/>\n"
+"                            <strong>Dir. Matriz: </strong>"
+msgstr ""
+"<br/>\n"
+"                            <strong>Dir. Matriz: </strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.electronic_report_common_head
+msgid ""
+"<br/>\n"
+"                            <strong>Obligado a llevar contabilidad: </strong>"
+msgstr ""
+"<br/>\n"
+"                            <strong>Obligado a llevar contabilidad: </strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.electronic_report_common_head
+msgid ""
+"<br/>\n"
+"                            Nº."
+msgstr ""
+"<br/>\n"
+"                            Nº."
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.electronic_report_common_head
+msgid ""
+"<br/><br/>\n"
+"                            <strong>CLAVE DE ACCESO: </strong>\n"
+"                            <br/>"
+msgstr ""
+"<br/><br/>\n"
+"                            <strong>CLAVE DE ACCESO: </strong>\n"
+"                            <br/>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.electronic_report_common_head
+msgid ""
+"<br/><br/>\n"
+"                            <strong>EMISION: </strong>"
+msgstr ""
+"<br/><br/>\n"
+"                            <strong>EMISION: </strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.electronic_report_common_head
+msgid ""
+"<br/><br/>\n"
+"                            <strong>NÚMERO DE AUTORIZACION</strong>\n"
+"                            <br/>"
+msgstr ""
+"<br/><br/>\n"
+"                            <strong>NÚMERO DE AUTORIZACION</strong>\n"
+"                            <br/>"
+
+#. module: l10n_ec_niif
+#: model:mail.template,body_html:l10n_ec_niif.email_template_e_retention
+msgid ""
+"<div>\n"
+"                <p>Estimado(a) <strong>${object.partner_id.name}</strong>\n"
+"\n"
+"                    % if object.partner_id.parent_id:\n"
+"                    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"                    % endif\n"
+"                    ,</p>\n"
+"                <br/>\n"
+"                <p>Reciba un cordial saludo de quienes hacemos <strong>${object.company_id.name}</strong>.\n"
+"                    Nos complace informarle que su documento electrónico ha sido generado\n"
+"                    con el siguiente detalle:\n"
+"                    <ul>\n"
+"                        <li><strong>Tipo de Documento: </strong> ${object.l10n_ec_get_document_string()}</li>\n"
+"                        <li><strong>Número de Documento: </strong> ${object.l10n_ec_get_document_number()}</li>\n"
+"                        <li><strong>Clave de acceso: </strong> ${object.l10n_ec_xml_key}</li>\n"
+"                    </ul>\n"
+"                </p>\n"
+"                <br/><br/>\n"
+"                <div style=\"margin: 32px 0px 32px 0px; text-align: center;\">\n"
+"                    <a href=\"${object.get_base_url() + object.l10n_ec_get_share_url()}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                        Ver Retencion\n"
+"                    </a>\n"
+"                </div>\n"
+"                <br/><br/>\n"
+"                % if object.partner_id.user_ids and object.partner_id.signup_url:\n"
+"                Para ver todos sus documentos visite <a href=\"${object.partner_id.signup_url}\">nuestro portal</a>\n"
+"                <br/>\n"
+"                % endif\n"
+"                <p>Gracias por Preferirnos,</p>\n"
+"            </div>\n"
+"        "
+msgstr ""
+"<div>\n"
+"                <p>Estimado(a) <strong>${object.partner_id.name}</strong>\n"
+"\n"
+"                    % if object.partner_id.parent_id:\n"
+"                    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"                    % endif\n"
+"                    ,</p>\n"
+"                <br/>\n"
+"                <p>Reciba un cordial saludo de quienes hacemos <strong>${object.company_id.name}</strong>.\n"
+"                    Nos complace informarle que su documento electrónico ha sido generado\n"
+"                    con el siguiente detalle:\n"
+"                    <ul>\n"
+"                        <li><strong>Tipo de Documento: </strong> ${object.l10n_ec_get_document_string()}</li>\n"
+"                        <li><strong>Número de Documento: </strong> ${object.l10n_ec_get_document_number()}</li>\n"
+"                        <li><strong>Clave de acceso: </strong> ${object.l10n_ec_xml_key}</li>\n"
+"                    </ul>\n"
+"                </p>\n"
+"                <br/><br/>\n"
+"                <div style=\"margin: 32px 0px 32px 0px; text-align: center;\">\n"
+"                    <a href=\"${object.get_base_url() + object.l10n_ec_get_share_url()}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                        Ver Retencion\n"
+"                    </a>\n"
+"                </div>\n"
+"                <br/><br/>\n"
+"                % if object.partner_id.user_ids and object.partner_id.signup_url:\n"
+"                Para ver todos sus documentos visite <a href=\"${object.partner_id.signup_url}\">nuestro portal</a>\n"
+"                <br/>\n"
+"                % endif\n"
+"                <p>Gracias por Preferirnos,</p>\n"
+"            </div>\n"
+"        "
+
+#. module: l10n_ec_niif
+#: model:mail.template,body_html:l10n_ec_niif.email_template_e_invoice
+msgid ""
+"<div>\n"
+"                <p>Estimado(a) <strong>${object.partner_id.name}</strong>\n"
+"                    % if object.partner_id.parent_id:\n"
+"                    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"                    % endif\n"
+"                    ,</p>\n"
+"                <br/>\n"
+"                <p>Reciba un cordial saludo de quienes hacemos <strong>${object.company_id.name}</strong>.\n"
+"                    Nos complace informarle que su documento electrónico ha sido generado\n"
+"                    con el siguiente detalle:\n"
+"                    <ul>\n"
+"                        <li><strong>Tipo de Documento: </strong> ${object.l10n_ec_get_document_string()}</li>\n"
+"                        <li><strong>Número de Documento: </strong> ${object.l10n_ec_get_document_number()}</li>\n"
+"                        <li><strong>Clave de acceso: </strong> ${object.l10n_ec_xml_key}</li>\n"
+"                        <li><strong>Valor Total: </strong> ${format_amount(object.amount_total, object.currency_id)}</li>\n"
+"                        % if object.origin:\n"
+"                        <li><strong>Referencia: </strong> ${object.origin}</li>\n"
+"                        % endif\n"
+"                    </ul>\n"
+"                </p>\n"
+"                <br/><br/>\n"
+"                % if object.partner_id.user_ids and object.partner_id.signup_url:\n"
+"                Para ver todos sus documentos visite <a href=\"${object.partner_id.signup_url}\">nuestro portal</a>\n"
+"                <br/>\n"
+"                % endif\n"
+"                <p>Gracias por Preferirnos,</p>\n"
+"            </div>\n"
+"        "
+msgstr ""
+"<div>\n"
+"                <p>Estimado(a) <strong>${object.partner_id.name}</strong>\n"
+"                    % if object.partner_id.parent_id:\n"
+"                    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"                    % endif\n"
+"                    ,</p>\n"
+"                <br/>\n"
+"                <p>Reciba un cordial saludo de quienes hacemos <strong>${object.company_id.name}</strong>.\n"
+"                    Nos complace informarle que su documento electrónico ha sido generado\n"
+"                    con el siguiente detalle:\n"
+"                    <ul>\n"
+"                        <li><strong>Tipo de Documento: </strong> ${object.l10n_ec_get_document_string()}</li>\n"
+"                        <li><strong>Número de Documento: </strong> ${object.l10n_ec_get_document_number()}</li>\n"
+"                        <li><strong>Clave de acceso: </strong> ${object.l10n_ec_xml_key}</li>\n"
+"                        <li><strong>Valor Total: </strong> ${format_amount(object.amount_total, object.currency_id)}</li>\n"
+"                        % if object.origin:\n"
+"                        <li><strong>Referencia: </strong> ${object.origin}</li>\n"
+"                        % endif\n"
+"                    </ul>\n"
+"                </p>\n"
+"                <br/><br/>\n"
+"                % if object.partner_id.user_ids and object.partner_id.signup_url:\n"
+"                Para ver todos sus documentos visite <a href=\"${object.partner_id.signup_url}\">nuestro portal</a>\n"
+"                <br/>\n"
+"                % endif\n"
+"                <p>Gracias por Preferirnos,</p>\n"
+"            </div>\n"
+"        "
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.portal_withhold_page
+msgid "<i class=\"fa fa-download\"/> RIDE"
+msgstr "<i class=\"fa fa-download\"/> RIDE"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.portal_withhold_page
+msgid "<i class=\"fa fa-download\"/> XML"
+msgstr "<i class=\"fa fa-download\"/> XML"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.portal_withhold_page
+msgid ""
+"<i class=\"fa fa-fw fa-comments\"/>\n"
+"                                            <b>Send message</b>"
+msgstr ""
+"<i class=\"fa fa-fw fa-comments\"/>\n"
+"                                            <b>Enviar Mensaje</b>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.portal_withhold_page
+msgid "<i class=\"fa fa-print\"/> Print RIDE"
+msgstr "<i class=\"fa fa-print\"/> Imprimir RIDE"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.account_move_form_view_latam
+msgid ""
+"<span attrs=\"{'invisible': ['|', '|', '|', ('type', '!=', 'out_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/'), ('l10n_ec_debit_note', '=', True)]}\">Draft Customer Invoice</span>\n"
+"                        <span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'out_refund'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Draft Customer Credit Note</span>\n"
+"                        <span attrs=\"{'invisible': ['|', '|',  '|', '|', ('type', '!=', 'in_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/'), ('l10n_ec_debit_note', '=', True), ('l10n_ec_liquidation', '=', True)]}\">Draft Vendor Bill</span>\n"
+"                        <span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'in_refund'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Draft Vendor Refund</span>\n"
+"                        <span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'out_receipt'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Draft Sales Receipt</span>\n"
+"                        <span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'in_receipt'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Draft Purchase Receipt</span>\n"
+"                        <span attrs=\"{'invisible': ['|', '|', '|', ('type', '!=', 'out_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/'), ('l10n_ec_debit_note', '=', False)]}\">Draft Customer Debit Note</span>\n"
+"                        <span attrs=\"{'invisible': ['|', '|', '|', '|', ('type', '!=', 'in_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/'), ('l10n_ec_debit_note', '=', False), ('l10n_ec_liquidation', '=', True)]}\">Draft Vendor Debit Note</span>\n"
+"                        <span attrs=\"{'invisible': ['|', '|', '|', '|', ('type', '!=', 'in_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/'), ('l10n_ec_debit_note', '=', True), ('l10n_ec_liquidation', '=', False)]}\">Draft Liquidation of Purchase</span>"
+msgstr ""
+"<span attrs=\"{'invisible': ['|', '|', '|', ('type', '!=', 'out_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/'), ('l10n_ec_debit_note', '=', True)]}\">Borrador Factura Cliente</span>\n"
+"                        <span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'out_refund'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Borrador de Nota de Crédito Cliente</span>\n"
+"                        <span attrs=\"{'invisible': ['|', '|',  '|', '|', ('type', '!=', 'in_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/'), ('l10n_ec_debit_note', '=', True), ('l10n_ec_liquidation', '=', True)]}\">Borrador Factura Proveedor</span>\n"
+"                        <span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'in_refund'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Borrador Nota de Crédito Proveedor</span>\n"
+"                        <span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'out_receipt'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Borrador Comprobante de Venta</span>\n"
+"                        <span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'in_receipt'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Borrador Comprobante de Compra</span>\n"
+"                        <span attrs=\"{'invisible': ['|', '|', '|', ('type', '!=', 'out_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/'), ('l10n_ec_debit_note', '=', False)]}\">Borrador Nota de Débito Cliente</span>\n"
+"                        <span attrs=\"{'invisible': ['|', '|', '|', '|', ('type', '!=', 'in_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/'), ('l10n_ec_debit_note', '=', False), ('l10n_ec_liquidation', '=', True)]}\">Borrador Nota de Débito Proveedor</"
+"span>\n"
+"                        <span attrs=\"{'invisible': ['|', '|', '|', '|', ('type', '!=', 'in_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/'), ('l10n_ec_debit_note', '=', True), ('l10n_ec_liquidation', '=', False)]}\">Borrador de Liquidación de Compras</"
+"span>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid "<span class=\"o_form_label col-12\">URL de Web Services</span>"
+msgstr "<span class=\"o_form_label col-12\">URL de Servicio WEB</span>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid "<span class=\"o_form_label\">Final Consumer</span>"
+msgstr "<span class=\"o_form_label\">Consumidor Final</span>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid "<span class=\"o_form_label\">Withhold Sales</span>"
+msgstr "<span class=\"o_form_label\">Retención en Ventas</span>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.portal_withhold_page
+msgid "<strong class=\"text-muted\">Contact</strong>"
+msgstr "<strong class=\"text-muted\">Contacto</strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.electronic_report_common_head
+msgid "<strong>AMBIENTE: </strong>"
+msgstr "<strong>AMBIENTE: </strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.report_withhold_auto_printer
+msgid "<strong>Authorization</strong>"
+msgstr "<strong>Autorización</strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_credit_note_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_debit_note_document_body
+msgid "<strong>Comprobante que modifica: </strong>"
+msgstr "<strong>Comprobante que modifica: </strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.report_withhold_auto_printer
+msgid "<strong>Concept</strong>"
+msgstr "<strong>Concepto</strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.electronic_report_common_total_info
+msgid "<strong>DESCUENTO</strong>"
+msgstr "<strong>DESCUENTO</strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_liquidation_document_body
+msgid "<strong>Direccion: </strong>"
+msgstr "<strong>Dirección: </strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.electronic_report_common_info_aditional
+msgid "<strong>Dirección: </strong>"
+msgstr "<strong>Dirección: </strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.report_withhold_auto_printer
+msgid "<strong>Document number</strong>"
+msgstr "<strong>Número de Documento</strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.report_withhold_auto_printer
+msgid "<strong>Document type</strong>"
+msgstr "<strong>Tipo de Documento</strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.electronic_report_common_info_aditional
+msgid "<strong>Email: </strong>"
+msgstr "<strong>Email: </strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_credit_note_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_debit_note_document_body
+msgid "<strong>Fecha Emisión(Comprobante a modificar): </strong>"
+msgstr "<strong>Fecha Emisión(Comprobante a modificar): </strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_credit_note_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_debit_note_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_invoice_document_body
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_liquidation_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_withhold_document_body
+msgid "<strong>Fecha de Emisión: </strong>"
+msgstr "<strong>Fecha de Emisión: </strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.electronic_report_common_head
+msgid "<strong>Fecha y hora de autorización: </strong>"
+msgstr "<strong>Fecha y hora de autorización: </strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_invoice_document_body
+msgid "<strong>Guia de remisión: </strong>"
+msgstr "<strong>Guia de remisión: </strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.electronic_report_common_total_info
+msgid "<strong>ICE</strong>"
+msgstr "<strong>ICE</strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_credit_note_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_debit_note_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_invoice_document_body
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_liquidation_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_withhold_document_body
+msgid "<strong>Identificación: </strong>"
+msgstr "<strong>Identificación: </strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.electronic_report_common_info_aditional
+msgid ""
+"<strong>Información Adicional</strong>\n"
+"            <br/>"
+msgstr ""
+"<strong>Información Adicional</strong>\n"
+"            <br/>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.report_withhold_auto_printer
+msgid "<strong>Issue date</strong>"
+msgstr "<strong>Fecha de Emisión</strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_liquidation_document_body
+msgid "<strong>Nombres y Apellidos: </strong>"
+msgstr "<strong>Nombres y Apellidos: </strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.report_withhold_auto_printer model_terms:ir.ui.view,arch_db:l10n_ec_niif.report_withhold_pre_printed
+msgid "<strong>Note: </strong>"
+msgstr "<strong>Nota: </strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.report_withhold_auto_printer
+msgid "<strong>Point of Emission</strong>"
+msgstr "<strong>Punto de Emisión</strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.electronic_report_common_head
+msgid "<strong>R.U.C.:</strong>"
+msgstr "<strong>R.U.C.:</strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_credit_note_document_body
+msgid "<strong>Razón de modificación: </strong>"
+msgstr "<strong>Razón de modificación: </strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_credit_note_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_debit_note_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_invoice_document_body
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_withhold_document_body
+msgid "<strong>Razón social / Nombres y Apellidos: </strong>"
+msgstr "<strong>Razón social / Nombres y Apellidos: </strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.report_withhold_auto_printer
+msgid "<strong>Related Document</strong>"
+msgstr "<strong>Documento Relacionado</strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.electronic_report_common_total_info
+msgid "<strong>SUBTOTAL 0%</strong>"
+msgstr "<strong>SUBTOTAL 0%</strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.electronic_report_common_total_info
+msgid "<strong>SUBTOTAL Exento de IVA</strong>"
+msgstr "<strong>SUBTOTAL Exento de IVA</strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.electronic_report_common_total_info
+msgid "<strong>SUBTOTAL No objeto de IVA</strong>"
+msgstr "<strong>SUBTOTAL No objeto de IVA</strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.electronic_report_common_total_info
+msgid "<strong>SUBTOTAL SIN IMPUESTOS</strong>"
+msgstr "<strong>SUBTOTAL SIN IMPUESTOS</strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.electronic_report_common_info_aditional
+msgid "<strong>Telefono: </strong>"
+msgstr "<strong>Telefono: </strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.report_withhold_auto_printer
+msgid "<strong>Total I.R.</strong>"
+msgstr "<strong>Total I.R.</strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.report_withhold_auto_printer
+msgid "<strong>Total I.V.A.</strong>"
+msgstr "<strong>Total I.V.A.</strong>"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.electronic_report_common_total_info
+msgid "<strong>VALOR TOTAL</strong>"
+msgstr "<strong>VALOR TOTAL</strong>"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_xml_version__document_type__ats
+msgid "ATS"
+msgstr "ATS"
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_l10n_ec_common_document
+msgid "Abstract Class for Ecuadorian documents"
+msgstr "Clase abstracta para documentos ecuatorianos"
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_l10n_ec_common_document_line
+msgid "Abstract Class for Ecuadorian documents details"
+msgstr "Clase abstracta para detalle de documentos ecuatorianos"
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_l10n_ec_common_document_electronic
+msgid "Abstract Class for electronic documents"
+msgstr "Clase abstracta para documentos electrónicos"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__access_warning model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__access_warning
+msgid "Access warning"
+msgstr "Advertencia de acceso"
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_account_chart_template
+msgid "Account Chart Template"
+msgstr "Plantilla de Plan de Cuentas"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__move_id
+msgid "Account Move"
+msgstr "Movimiento Contable"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid "Accounting config for withhold on sales"
+msgstr "Configuración Contable para retenciones en ventas"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__move_ids
+msgid "Accounting entries"
+msgstr "Apuntes contables"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__message_needaction model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__message_needaction
+msgid "Action Needed"
+msgstr "Acción necesaria"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_form_view
+msgid "Activar Notificación"
+msgstr "Activar Notificación"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_company_resolution__active
+msgid "Active"
+msgstr "Activo"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_agency__active model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_point_of_emission__active
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization__active model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_line__active
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_payment_method__active
+msgid "Active?"
+msgstr "Activo?"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__activity_ids model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__activity_ids
+msgid "Activities"
+msgstr "Actividades"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__activity_exception_decoration model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Decoración de Excepción de actividad"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__activity_state model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__activity_state
+msgid "Activity State"
+msgstr "Estado de la actividad"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_key_type__active
+msgid "Activo?"
+msgstr "Activo?"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.portal_my_withhold
+msgid "Actualmente No hay Retenciones para su cuenta."
+msgstr "Actualmente No hay Retenciones para su cuenta."
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_account_debit_note
+msgid "Add Debit Note wizard"
+msgstr "Asistente para agregar Nota de Débito"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.account_move_form_view
+msgid "Add Withhold"
+msgstr "Agregar Retención"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_agency__address_id
+msgid "Address"
+msgstr "Dirección"
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_l10n_ec_agency model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__agency_id
+msgid "Agencia"
+msgstr "Agencia"
+
+#. module: l10n_ec_niif
+#: model:ir.ui.menu,name:l10n_ec_niif.manu_action_l10n_ec_agency_tree_view
+msgid "Agencies"
+msgstr "Agencias"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_agency_id model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_common_document__l10n_ec_agency_id
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_point_of_emission__agency_id model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_line__agency_id
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_supplier__agency model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__agency_id model_terms:ir.ui.view,arch_db:l10n_ec_niif.account_invoice_select
+msgid "Agency"
+msgstr "Agencia"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_agency__name
+msgid "Agency Name"
+msgstr "Nombre de Agencia"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_search_view
+msgid "Agrupar por"
+msgstr "Agrupar por"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_users__l10n_ec_agency_ids
+msgid "Allowed Agencies"
+msgstr "Agencias Permitidas"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_agency__user_ids model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_agency_form_view
+msgid "Allowed Users"
+msgstr "Usuarios Permitidos"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__res_partner__l10n_ec_input_origins__a
+msgid "Ama de Casa o Estudiante"
+msgstr "Ama de Casa o Estudiante"
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/l10n_ec_account_invoice_refund.py:0
+#, python-format
+msgid "Another document with the same number already exists"
+msgstr "Otro documento con el mismo número ya existe"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_aplica_convenio_doble_tributacion
+msgid "Aplica convenio doble tributación"
+msgstr "Aplica convenio doble tributación"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_xml_version__document_type
+msgid "Aplicable en"
+msgstr "Aplicable en"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_sri_company_resolution_form_view model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_sri_payment_method_form_view
+msgid "Archived"
+msgstr "Archivado"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_search_view
+msgid "Archivo XML de Firma Electrónica"
+msgstr "Archivo XML de Firma Electrónica"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_key_type__file_content
+msgid "Archivo de Firma"
+msgstr "Archivo de Firma"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_form_view
+msgid "Archivos"
+msgstr "Archivos"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_partner__l10n_ec_email_delivery_note model:ir.model.fields,field_description:l10n_ec_niif.field_res_users__l10n_ec_email_delivery_note
+msgid "As Follower Delivery Note"
+msgstr "Como seguidor de guía de remisión"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_partner__l10n_ec_email_out_refund model:ir.model.fields,field_description:l10n_ec_niif.field_res_users__l10n_ec_email_out_refund
+msgid "As Follower on Credit Note"
+msgstr "Como seguido en nota de crédito"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_partner__l10n_ec_email_debit_note_out model:ir.model.fields,field_description:l10n_ec_niif.field_res_users__l10n_ec_email_debit_note_out
+msgid "As Follower on Debit Notes"
+msgstr "Como seguidor de notas débito"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_partner__l10n_ec_email_out_invoice model:ir.model.fields,field_description:l10n_ec_niif.field_res_users__l10n_ec_email_out_invoice
+msgid "As Follower on Invoice"
+msgstr "Como seguidor en facturas"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_partner__l10n_ec_email_liquidation model:ir.model.fields,field_description:l10n_ec_niif.field_res_users__l10n_ec_email_liquidation
+msgid "As Follower on Liquidations"
+msgstr "Como seguidor en liquidación de compra"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_partner__l10n_ec_email_withhold_purchase model:ir.model.fields,field_description:l10n_ec_niif.field_res_users__l10n_ec_email_withhold_purchase
+msgid "As Follower on Withhold"
+msgstr "Como seguidor de retención"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__message_attachment_count model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__message_attachment_count
+msgid "Attachment Count"
+msgstr "Cuenta de Adjuntos"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_line__authorization_id model_terms:ir.ui.view,arch_db:l10n_ec_niif.account_invoice_select
+msgid "Authorization"
+msgstr "Autorización"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization__number
+msgid "Authorization Number"
+msgstr "Número de Autorización"
+
+#. module: l10n_ec_niif
+#: model:ir.actions.act_window,name:l10n_ec_niif.action_l10n_ec_sri_authorization_tree_view model:ir.ui.menu,name:l10n_ec_niif.menu_action_l10n_ec_sri_authorization_tree_view
+msgid "Authorizations"
+msgstr "Autorizaciones"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__account_move__l10n_ec_type_emission__auto_printer model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_point_of_emission__type_emission__auto_printer
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_withhold__document_type__auto_printer
+msgid "Auto Printer"
+msgstr "Auto Printer"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_supplier__autoprinter
+msgid "Autoprinter?"
+msgstr "Autoprinter?"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_electronic_authorization model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_common_document_electronic__l10n_ec_electronic_authorization
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__l10n_ec_electronic_authorization
+msgid "Autorizacion Electrónica"
+msgstr "Autorizacion Electrónica"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_account_invoice_refund__l10n_ec_partner_authorization_id
+msgid "Autorización"
+msgstr "Autorización"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_account_invoice_refund__electronic_authorization
+msgid "Autorización Electrónica"
+msgstr "Autorización Electrónica"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__xml_authorization
+msgid "Autorización SRI"
+msgstr "Autorización SRI"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid "Autorización de Documentos"
+msgstr "Autorización de Documentos"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__authorization_to_cancel
+msgid "Autorización para cancelar"
+msgstr "Autorización para cancelar"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__sri_xml_data__state__authorized
+msgid "Autorizado"
+msgstr "Autorizado"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_electronic_invoice model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_electronic_invoice
+msgid "Autorizado Facturas?"
+msgstr "Autorizado Facturas?"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_electronic_liquidation model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_electronic_liquidation
+msgid "Autorizado Liquidacion de compras?"
+msgstr "Autorizado Liquidacion de compras?"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_electronic_credit_note model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_electronic_credit_note
+msgid "Autorizado Notas de Crédito?"
+msgstr "Autorizado Notas de Crédito?"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_electronic_debit_note model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_electronic_debit_note
+msgid "Autorizado Notas de Débito?"
+msgstr "Autorizado Notas de Débito?"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_electronic_withhold model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_electronic_withhold
+msgid "Autorizado Retenciones?"
+msgstr "Autorizado Retenciones?"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_form_view
+msgid "Back to Draft"
+msgstr "Regresar a Borrador"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line__base_amount_currency
+msgid "Base Amount"
+msgstr "Monto Base"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line__base_amount model_terms:ir.ui.view,arch_db:l10n_ec_niif.report_withhold_auto_printer
+msgid "Base Amount Currency"
+msgstr "Monto Base Moneda"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_base_iva model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_base_iva_currency
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move_line__l10n_ec_base_iva model:ir.model.fields,field_description:l10n_ec_niif.field_account_move_line__l10n_ec_base_iva_currency
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_common_document__l10n_ec_base_iva model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_common_document__l10n_ec_base_iva_currency
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_common_document_line__l10n_ec_base_iva model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_common_document_line__l10n_ec_base_iva_currency
+msgid "Base IVA"
+msgstr "Base IVA"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_base_iva_0 model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_base_iva_0_currency
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move_line__l10n_ec_base_iva_0 model:ir.model.fields,field_description:l10n_ec_niif.field_account_move_line__l10n_ec_base_iva_0_currency
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_common_document__l10n_ec_base_iva_0 model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_common_document__l10n_ec_base_iva_0_currency
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_common_document_line__l10n_ec_base_iva_0 model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_common_document_line__l10n_ec_base_iva_0_currency
+msgid "Base IVA 0"
+msgstr "Base IVA 0"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_withhold_document_body
+msgid "Base Imponible para la Retención"
+msgstr "Base Imponible para la Retención"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line__base_tag_id
+msgid "Base Tax Tag"
+msgstr "Etiqueta de Base Impuesto"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_partner__l10n_ec_business_name model:ir.model.fields,field_description:l10n_ec_niif.field_res_users__l10n_ec_business_name
+msgid "Business Name"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/account_chart_template.py:0
+#, python-format
+msgid "CDN"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_error_code__change_key
+msgid "Cambiar Clave?"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_form_view
+msgid "Cancel"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__sri_xml_data__state__cancel
+msgid "Cancelado"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_withhold__state__cancelled
+msgid "Cancelled"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/account_move.py:0
+#, python-format
+msgid "Cannot apply VAT zero rate with another VAT rate"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_credit_note_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_invoice_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_liquidation_document_body
+msgid "Cantidad"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__res_partner__l10n_ec_marital_status__c
+msgid "Casado(a)"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_key_type_form_view
+msgid "Cert Info"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_form_view
+msgid "Check Authorization"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_latam_document_type__l10n_ec_check_format
+msgid "Check Format EC"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
+#, python-format
+msgid "Check parameters of partner and number to continue"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_partner__l10n_ec_marital_status model:ir.model.fields,field_description:l10n_ec_niif.field_res_users__l10n_ec_marital_status
+msgid "Civil Status"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__l10n_ec_xml_key model_terms:ir.ui.view,arch_db:l10n_ec_niif.electronic_report_common_head model_terms:ir.ui.view,arch_db:l10n_ec_niif.portal_my_withhold
+msgid "Clave de Acceso"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_xml_key model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_common_document_electronic__l10n_ec_xml_key
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__l10n_ec_xml_key
+msgid "Clave de acceso"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_key_type__password
+msgid "Clave de firma"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__partner_id model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_search_view
+msgid "Cliente"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_identification_type__code model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_payment_method__code
+msgid "Code"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.constraint,message:l10n_ec_niif.constraint_l10n_ec_sri_payment_method_code_uniq
+msgid "Code of Payment Method must be unique, please review!"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_tax_group__l10n_ec_xml_fe_code
+msgid "Codigo en Facturacion electronica"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__commercial_partner_id
+msgid "Commercial partner"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_res_company
+msgid "Companies"
+msgstr "Compañías"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_account_invoice_refund__company_id model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_agency__company_id
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_point_of_emission__company_id model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization__company_id
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_company_resolution__company_id model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__company_id
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line__company_id model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_sri_company_resolution_search_view
+msgid "Company"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_account_invoice_refund__currency_id
+msgid "Company Currency"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_l10n_ec_sri_company_resolution
+msgid "Company Resolutions"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,help:l10n_ec_niif.field_l10n_ec_account_invoice_refund__company_id
+msgid "Company related to this journal"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_agency__partner_id
+msgid "Company's Partner"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_key_type__company_id
+msgid "Compañia"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__company_id
+msgid "Compañía"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_withhold_document_body
+msgid "Comprobante"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__concept
+msgid "Concept"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid "Conexión"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_res_config_settings
+msgid "Config Settings"
+msgstr "Opciones de Configuración"
+
+#. module: l10n_ec_niif
+#: model:ir.actions.act_window,name:l10n_ec_niif.action_sri_account_config model:ir.ui.menu,name:l10n_ec_niif.menu_account_config
+msgid "Configuraciones SRI"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid "Configurar Plantillas de Correo"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.ui.menu,name:l10n_ec_niif.sri_config_menu
+msgid "Configurations"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_consumidor_final
+msgid "Consumidor Final"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_res_partner model_terms:ir.ui.view,arch_db:l10n_ec_niif.portal_withhold_page
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__account_payment_term__l10n_ec_sri_type__contado
+msgid "Contado"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_agency__count_invoice model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_point_of_emission__count_invoice
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization__count_invoice model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_line__count_invoice
+msgid "Count Invoice"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__sri_xml_data__state__draft
+msgid "Creado"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__create_uid
+msgid "Creado por"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_create_login_for_partners model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_create_login_for_partners
+msgid "Crear Usuario para portal?"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid "Crear Usuarios para portal?"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_form_view
+msgid "Crear XML autorizado"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_form_view
+msgid "Create XML File"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.actions.act_window,help:l10n_ec_niif.action_move_debit_note_out_type
+msgid "Create a customer debit note"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.actions.act_window,help:l10n_ec_niif.action_move_debit_note_in_type
+msgid "Create a vendor debit note"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.actions.act_window,help:l10n_ec_niif.action_move_liquidation_of_purchases_type
+msgid "Create a vendor liquidation of purchases"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.actions.act_window,help:l10n_ec_niif.action_move_debit_note_out_type
+msgid "Create debit notes, register payments and keep track of the discussions with your customers."
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.actions.act_window,help:l10n_ec_niif.action_move_debit_note_in_type
+msgid "Create debit notes, register payments and keep track of the discussions with your vendors."
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.actions.act_window,help:l10n_ec_niif.action_move_liquidation_of_purchases_type
+msgid "Create liquidation of purchases, register payments and keep track of the discussions with your vendors."
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_account_invoice_refund__create_uid model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_agency__create_uid
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_identification_type__create_uid model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_point_of_emission__create_uid
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_point_of_emission_document_sequence__create_uid model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization__create_uid
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_line__create_uid model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_supplier__create_uid
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_company_resolution__create_uid model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_payment_method__create_uid
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_tax_support__create_uid model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__create_uid
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line__create_uid model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line_percent__create_uid
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_xml_version__create_uid model:ir.model.fields,field_description:l10n_ec_niif.field_sri_error_code__create_uid model:ir.model.fields,field_description:l10n_ec_niif.field_sri_key_type__create_uid
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data_message_line__create_uid model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data_send_try__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_account_invoice_refund__create_date model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_agency__create_date
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_identification_type__create_date model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_point_of_emission__create_date
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_point_of_emission_document_sequence__create_date model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization__create_date
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_line__create_date model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_supplier__create_date
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_company_resolution__create_date model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_payment_method__create_date
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_tax_support__create_date model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__create_date
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line__create_date model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line_percent__create_date
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_xml_version__create_date model:ir.model.fields,field_description:l10n_ec_niif.field_sri_error_code__create_date
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_key_type__create_date model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data_send_try__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/agency.py:0 code:addons/l10n_ec_niif/models/authorization.py:0 code:addons/l10n_ec_niif/models/authorization_supplier.py:0 code:addons/l10n_ec_niif/models/modules_mapping.py:0
+#, python-format
+msgid "Credit Note"
+msgstr "Factura rectificativa"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_credit_note_ids
+msgid "Credit Notes"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__account_payment_term__l10n_ec_sri_type__credito
+msgid "Crédito"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__currency_id model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line__currency_id
+msgid "Currency"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/account_chart_template.py:0
+#, python-format
+msgid "Customer Debit Notes"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,help:l10n_ec_niif.field_l10n_ec_withhold__access_url model:ir.model.fields,help:l10n_ec_niif.field_sri_xml_data__access_url
+msgid "Customer Portal URL"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:l10n_latam.identification.type,name:l10n_ec_niif.it_cedula
+msgid "Cédula"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_error_code__code
+msgid "Código"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_credit_note_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_invoice_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_liquidation_document_body
+msgid "Código Auxiliar"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_credit_note_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_invoice_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_liquidation_document_body
+msgid "Código Principal"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data_message_line__message_code_id
+msgid "Código de Mensaje"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_tax_support__code
+msgid "Código de Sustento Tributario"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_tax__l10n_ec_ats_code model:ir.model.fields,field_description:l10n_ec_niif.field_account_tax_template__l10n_ec_ats_code
+msgid "Código en A.T.S."
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_tax__l10n_ec_xml_fe_code model:ir.model.fields,field_description:l10n_ec_niif.field_account_tax_template__l10n_ec_xml_fe_code
+msgid "Código en Facturacion electronica"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.actions.act_window,name:l10n_ec_niif.action_sri_error_code_tree_view model:ir.ui.menu,name:l10n_ec_niif.sri_error_code_menu
+msgid "Códigos de Error SRI"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_company_resolution__date_from
+msgid "Date from"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_company_resolution__date_to
+msgid "Date to"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/l10n_ec_company_resolution.py:0
+#, python-format
+msgid "Dates are not valid"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/account_move.py:0
+#, python-format
+msgid "Debe configurar la forma de pago por defecto esto lo encuentra en Contabilidad / SRI / Configuración"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/l10n_ec_common_document_electronic.py:0
+#, python-format
+msgid "Debe reemplazar esta funcion l10n_ec_action_sent_mail_electronic en su clase heredada"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/agency.py:0 code:addons/l10n_ec_niif/models/authorization.py:0 code:addons/l10n_ec_niif/models/authorization_supplier.py:0 code:addons/l10n_ec_niif/models/modules_mapping.py:0
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_point_of_emission_document_sequence__document_type__debit_note
+#, python-format
+msgid "Debit Note"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_bank_statement_import_journal_creation__l10n_ec_debit_note model:ir.model.fields,field_description:l10n_ec_niif.field_account_journal__l10n_ec_debit_note
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_debit_note
+msgid "Debit Note?"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.actions.act_window,name:l10n_ec_niif.action_move_debit_note_in_type model:ir.actions.act_window,name:l10n_ec_niif.action_move_debit_note_out_type model:ir.ui.menu,name:l10n_ec_niif.menu_action_move_debit_note_in_type
+#: model:ir.ui.menu,name:l10n_ec_niif.menu_action_move_debit_note_out_type
+msgid "Debit Notes"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_identification_type__purchase_liquidation_document_type_id
+msgid "Default Document Type for Purchase's Liquidation"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_users__l10n_ec_printer_default_id
+msgid "Default Point of Emission"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_identification_type__purchase_credit_note_document_type_id
+msgid "Default Purchases Document Type for Credit Notes"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_identification_type__purchase_debit_note_document_type_id
+msgid "Default Purchases Document Type for Debit Notes"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_identification_type__purchase_invoice_document_type_id
+msgid "Default Purchases Document Type for Invoices"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_identification_type__sale_credit_note_document_type_id
+msgid "Default Sales Document Type for Credit Notes"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_identification_type__sale_debit_note_document_type_id
+msgid "Default Sales Document Type for Debit Notes"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_identification_type__sale_invoice_document_type_id
+msgid "Default Sales Document Type for Invoices"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid "Default Values"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/agency.py:0 code:addons/l10n_ec_niif/models/authorization.py:0 code:addons/l10n_ec_niif/models/authorization_supplier.py:0 code:addons/l10n_ec_niif/models/modules_mapping.py:0
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_point_of_emission_document_sequence__document_type__delivery_note
+#, python-format
+msgid "Delivery Note"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_form_view
+msgid "Desactivar Notificación"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_error_code__name model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_credit_note_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_invoice_document_body
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_liquidation_document_body
+msgid "Descripción"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_tax_support__name
+msgid "Descripción de Sustento Tributario"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__description
+msgid "Description"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_credit_note_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_invoice_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_liquidation_document_body
+msgid "Descuento"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_credit_note_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_invoice_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_liquidation_document_body
+msgid "Detalle adicional"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__sri_xml_data__state__returned
+msgid "Devuelta"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_account_invoice_refund__display_name model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_agency__display_name
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_common_document__display_name model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_common_document_electronic__display_name
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_common_document_line__display_name model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_identification_type__display_name
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_point_of_emission__display_name model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_point_of_emission_document_sequence__display_name
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization__display_name model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_line__display_name
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_supplier__display_name model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_company_resolution__display_name
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_payment_method__display_name model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_tax_support__display_name
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_utils__display_name model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__display_name
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line__display_name model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line_percent__display_name
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_xml_version__display_name model:ir.model.fields,field_description:l10n_ec_niif.field_sri_error_code__display_name
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_key_type__display_name model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__display_name
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data_message_line__display_name model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data_send_try__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__res_partner__l10n_ec_marital_status__d
+msgid "Divorciado(a)"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__number_document model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_form_view
+msgid "Document Number"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_point_of_emission_document_sequence__document_type model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_line__document_type
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_supplier__document_type
+msgid "Document Type"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization__line_ids model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_tax_support__document_type_ids
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_identification_type_form_view
+msgid "Document Types"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__document_type
+msgid "Document type"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_form_view
+msgid "Documento"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.portal_my_withhold
+msgid "Documentos"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid "Documentos Autorizados"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.actions.server,name:l10n_ec_niif.ir_cron_xml_rejected_ir_actions_server model:ir.cron,cron_name:l10n_ec_niif.ir_cron_xml_rejected model:ir.cron,name:l10n_ec_niif.ir_cron_xml_rejected
+msgid "Documentos Rechazados o Devueltos"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.actions.server,name:l10n_ec_niif.ir_cron_xml_offline_ir_actions_server model:ir.cron,cron_name:l10n_ec_niif.ir_cron_xml_offline model:ir.cron,name:l10n_ec_niif.ir_cron_xml_offline
+msgid "Documentos emitidos Off-Line"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.actions.server,name:l10n_ec_niif.ir_cron_xml_per_contingence_ir_actions_server model:ir.cron,cron_name:l10n_ec_niif.ir_cron_xml_per_contingence model:ir.cron,name:l10n_ec_niif.ir_cron_xml_per_contingence
+msgid "Documentos emitidos en contingecia"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.actions.server,name:l10n_ec_niif.ir_cron_xml_no_authorizated_ir_actions_server model:ir.cron,cron_name:l10n_ec_niif.ir_cron_xml_no_authorizated model:ir.cron,name:l10n_ec_niif.ir_cron_xml_no_authorizated
+msgid "Documentos en espera de autorizacion"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_withhold__state__done
+msgid "Done"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.portal_my_withhold model_terms:ir.ui.view,arch_db:l10n_ec_niif.portal_withhold_page
+msgid "Download RIDE"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.portal_my_withhold model_terms:ir.ui.view,arch_db:l10n_ec_niif.portal_withhold_page
+msgid "Download XML"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_withhold__state__draft
+msgid "Draft"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_credit_days
+msgid "Días Crédito"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/account_chart_template.py:0
+#, python-format
+msgid "EXCH"
+msgstr "CAMBIO"
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/l10n_latam_document_type.py:0 code:addons/l10n_ec_niif/models/withhold.py:0
+#, python-format
+msgid "Ecuadorian Document %s must be like 001-001-123456789"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_document_number
+msgid "Ecuadorian Document Number"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_identification_type_id
+msgid "Ecuadorian Identification Type"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.res_users_form_view
+msgid "Ecuadorian Localization"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.actions.act_window,name:l10n_ec_niif.action_l10n_ec_identification_type_tree_view model:ir.ui.menu,name:l10n_ec_niif.menu_action_l10n_ec_identification_type_tree_view model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_identification_type_form_view
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_identification_type_search_view
+msgid "Ecuadorian Move Identification Type"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_identification_type_tree_view
+msgid "Ecuadorian Move Identification Types"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_l10n_ec_tax_support model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_tax_support_form_view
+msgid "Ecuadorian Tax Support"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.actions.act_window,name:l10n_ec_niif.action_l10n_ec_tax_support_tree_view model:ir.ui.menu,name:l10n_ec_niif.menu_action_l10n_ec_tax_support_tree_view model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_tax_support_search_view
+msgid "Ecuadorian Tax Supports"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_l10n_ec_withhold model:ir.model,name:l10n_ec_niif.model_l10n_ec_withhold_line
+msgid "Ecuadorian Withhold"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_withhold_document_body
+msgid "Ejercicio Fiscal"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__account_move__l10n_ec_type_emission__electronic model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_point_of_emission__type_emission__electronic
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_withhold__document_type__electronic
+msgid "Electronic"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.ui.menu,name:l10n_ec_niif.sri_electronic_documents_menu
+msgid "Electronic Documents"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.actions.act_window,name:l10n_ec_niif.sri_key_type_action model:ir.ui.menu,name:l10n_ec_niif.sri_key_type_menu
+msgid "Electronic Signature Certs"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__electronic_authorization
+msgid "Electronic authorization"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_account_invoice_refund__document_type__electronic
+msgid "Electrónico"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_mail_template
+msgid "Email Templates"
+msgstr "Plantillas de correo electrónico"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__res_partner__l10n_ec_input_origins__v
+msgid "Empleado Privado"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__res_partner__l10n_ec_input_origins__b
+msgid "Empleado Público"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__sri_xml_data__state__waiting
+msgid "En Espera de Autorización"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_xml_version__xml_header_name
+msgid "Encabezado en XML"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__sri_xml_data_send_try__type_send__send
+msgid "Enviado a Autorizar"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.actions.server,name:l10n_ec_niif.ir_cron_xml_electronic_sent_mail_ir_actions_server model:ir.cron,cron_name:l10n_ec_niif.ir_cron_xml_electronic_sent_mail model:ir.cron,name:l10n_ec_niif.ir_cron_xml_electronic_sent_mail
+msgid "Enviar Mail de Documentos electronicos"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_send_mail_from model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_send_mail_from
+msgid "Enviar Mail desde"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_form_view
+msgid "Enviar mail a cliente"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/sri_key_type.py:0
+#, python-format
+msgid "Error opening the signature, possibly the signature key has been entered incorrectly or the file is not supported"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/sri_key_type.py:0
+#, python-format
+msgid "Error opening the signature, possibly the signature key has been entered incorrectly or the file is not supported."
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_sri_error_code
+msgid "Errores SRI"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_is_environment_production
+msgid "Es Ambiente de Produccion?"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,help:l10n_ec_niif.field_sri_error_code__change_key
+msgid "Es necesario regenerar la clave cuando se recibe este error"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/xml_data.py:0
+#, python-format
+msgid "Es obligatorio seleccionar el tipo de llave o archivo de cifrado usa para la firma de los documentos electrónicos, verificar la configuración de la compañia"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_key_type__state model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__state model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_search_view
+msgid "Estado"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,help:l10n_ec_niif.field_sri_xml_data__notification_active
+msgid "Esto permite activar o desactivar las notificaciones del presente documento"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/modules_mapping.py:0
+#, python-format
+msgid "Expense reimbursement"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_expiration_date model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization__expiration_date
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_supplier__expiration_date
+msgid "Expiration Date"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_bank_statement_import_journal_creation__l10n_ec_extended_type model:ir.model.fields,field_description:l10n_ec_niif.field_account_journal__l10n_ec_extended_type
+msgid "Extended Type"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_legacy_document_date
+msgid "External Document Date"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_legacy_document_number
+msgid "External Document Number"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_credit_note_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_debit_note_document_body
+msgid "FACTURA"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__invoice_out_id model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_point_of_emission_document_sequence__document_type__invoice
+msgid "Factura"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_point_of_emission_document_sequence__document_type__credit_note
+msgid "Factura rectificativa"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_verificar_ruc_cedula_inh
+msgid "Facturación Electrónica"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_xml_version__document_type__invoice model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_search_view model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid "Facturas"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_send_mail_invoice model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_send_mail_invoice
+msgid "Facturas electronicas?"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__failed_message_ids model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__failed_message_ids
+msgid "Failed Messages"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.portal_my_withhold
+msgid "Fecha Autorización"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_search_view
+msgid "Fecha Creacion"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_search_view
+msgid "Fecha Emision"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_authorization_date model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_common_document_electronic__l10n_ec_authorization_date
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__l10n_ec_authorization_date model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__l10n_ec_authorization_date
+msgid "Fecha de Autorización"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_search_view
+msgid "Fecha de Creacion"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__create_date model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data_message_line__create_date
+msgid "Fecha de Creación"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_key_type__emision_date model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_search_view
+msgid "Fecha de Emision"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_account_invoice_refund__date_invoice
+msgid "Fecha de Emisión"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__send_date
+msgid "Fecha de Envío"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__signed_date
+msgid "Fecha de Firma"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__response_date
+msgid "Fecha de Respuesta"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_key_type__expire_date
+msgid "Fecha de Vencimiento"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__cancel_date
+msgid "Fecha de cancelación"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__date_emision_document
+msgid "Fecha de emision"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_withhold_document_body
+msgid "Fecha de emisión"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__res_partner__l10n_ec_sex__f
+msgid "Femenino"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_sri_payment_method_search_view
+msgid "Filters"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_search_view
+msgid "Filtros"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid "Firma Electrónica"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__sri_key_type__state__valid
+msgid "Firma Valida"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__sri_key_type__state__expired
+msgid "Firma Vencida"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__sri_xml_data__state__signed
+msgid "Firmado"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_line__first_sequence model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_supplier__first_sequence
+msgid "First Sequence"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
+#, python-format
+msgid "First sequence must be bigger than last sequence, please check the authorization %s start: % last:%s"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
+#, python-format
+msgid "First sequence must be bigger than zero, please check authorization %s"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_account_fiscal_position
+msgid "Fiscal Position"
+msgstr "Posición fiscal"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__message_follower_ids model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__message_follower_ids
+msgid "Followers"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__message_channel_ids model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__message_channel_ids
+msgid "Followers (Channels)"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__message_partner_ids model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_partner__l10n_ec_foreign_type model:ir.model.fields,field_description:l10n_ec_niif.field_res_users__l10n_ec_foreign_type
+msgid "Foreign Type"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_foreign model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_account_invoice_refund__l10n_ec_foreign
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_partner__l10n_ec_foreign model:ir.model.fields,field_description:l10n_ec_niif.field_res_users__l10n_ec_foreign
+msgid "Foreign?"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.electronic_report_common_payment_info
+msgid "Forma de Pago"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_sri_company_resolution_search_view model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_line_search_view model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_search_view
+msgid "Group By"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_xml_version__document_type__delivery_note
+msgid "Guias de Remision"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__l10n_ec_related_document
+msgid "Have related document?"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.portal_electronic_chatter
+msgid "History"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.portal_document_electronic_error
+msgid "Hubo un error procesando su solicitud, intente mas tarde"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:account.tax.group,name:l10n_ec_niif.tax_group_ice
+msgid "I.C.E."
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:account.tax.group,name:l10n_ec_niif.tax_group_iva
+msgid "I.V.A. 12%"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_account_invoice_refund__id model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_agency__id model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_common_document__id
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_common_document_electronic__id model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_common_document_line__id
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_identification_type__id model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_point_of_emission__id
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_point_of_emission_document_sequence__id model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization__id
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_line__id model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_supplier__id
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_company_resolution__id model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_payment_method__id
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_tax_support__id model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_utils__id model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__id
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line__id model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line_percent__id model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_xml_version__id
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_error_code__id model:ir.model.fields,field_description:l10n_ec_niif.field_sri_key_type__id model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__id
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data_message_line__id model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data_send_try__id
+msgid "ID"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:account.tax.group,name:l10n_ec_niif.tax_group_irbpnr
+msgid "IRBPNR"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:account.tax.group,name:l10n_ec_niif.tax_group_isd
+msgid "ISD"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_iva model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_iva_currency
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move_line__l10n_ec_iva model:ir.model.fields,field_description:l10n_ec_niif.field_account_move_line__l10n_ec_iva_currency
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_common_document__l10n_ec_iva model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_common_document__l10n_ec_iva_currency
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_common_document_line__l10n_ec_iva model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_common_document_line__l10n_ec_iva_currency
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_withhold_line__type__iva model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_withhold_line_percent__type__iva
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_kanban_view model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_tree_no_create_view model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_tree_view
+msgid "IVA"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid "IVA Account"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid "IVA Tag"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__activity_exception_icon model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__activity_exception_icon
+msgid "Icon"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,help:l10n_ec_niif.field_l10n_ec_withhold__activity_exception_icon model:ir.model.fields,help:l10n_ec_niif.field_sri_xml_data__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,help:l10n_ec_niif.field_l10n_ec_withhold__message_needaction model:ir.model.fields,help:l10n_ec_niif.field_l10n_ec_withhold__message_unread model:ir.model.fields,help:l10n_ec_niif.field_sri_xml_data__message_needaction
+#: model:ir.model.fields,help:l10n_ec_niif.field_sri_xml_data__message_unread
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,help:l10n_ec_niif.field_l10n_ec_withhold__message_has_error model:ir.model.fields,help:l10n_ec_niif.field_l10n_ec_withhold__message_has_sms_error model:ir.model.fields,help:l10n_ec_niif.field_sri_xml_data__message_has_error
+#: model:ir.model.fields,help:l10n_ec_niif.field_sri_xml_data__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_print_ride_aux_code model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_print_ride_aux_code
+msgid "Imprimir Codigo Auxiliar?"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_print_ride_main_code model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_print_ride_main_code
+msgid "Imprimir Codigo Principal?"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_print_ride_detail1 model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_print_ride_detail1
+msgid "Imprimir Detalle Adicional 1?"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_print_ride_detail2 model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_print_ride_detail2
+msgid "Imprimir Detalle Adicional 2?"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_print_ride_detail3 model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_print_ride_detail3
+msgid "Imprimir Detalle Adicional 3?"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_withhold_document_body
+msgid "Impuesto"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_sri_payment_method_search_view
+msgid "Inactive"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__res_partner__l10n_ec_input_origins__i
+msgid "Independiente"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,help:l10n_ec_niif.field_account_tax__l10n_ec_ats_code model:ir.model.fields,help:l10n_ec_niif.field_account_tax_template__l10n_ec_ats_code
+msgid "Indica el codigo usado en el Anexo Transaccional Simplificado del SRI"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,help:l10n_ec_niif.field_account_tax__l10n_ec_xml_fe_code model:ir.model.fields,help:l10n_ec_niif.field_account_tax_template__l10n_ec_xml_fe_code
+msgid "Indica el codigo usado en el xml de facturacion electronica que se envia al SRI, en caso de no estar configrado se tomara el codigo de impuesto normal"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_form_view
+msgid "Información"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data_message_line__other_info
+msgid "Información Adicional"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_form_view
+msgid "Information"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_point_of_emission_document_sequence__initial_sequence
+msgid "Initial Sequence"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_point_of_emission__sequence_ids
+msgid "Initial Sequences"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_partner__l10n_ec_input_origins model:ir.model.fields,field_description:l10n_ec_niif.field_res_users__l10n_ec_input_origins
+msgid "Input Origins"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_form_view
+msgid "Intentos de Envío"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_sri_xml_data_send_try
+msgid "Intentos de envio a SRI"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_max_intentos model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_max_intentos
+msgid "Intentos máximos de autorización"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
+#, python-format
+msgid "Invalid Format Number, this must be like 0123456789"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
+#, python-format
+msgid "Invalid Number Format, this must be like 001"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
+#, python-format
+msgid "Invalid Number, that must be like 001-001-0123456789"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/agency.py:0 code:addons/l10n_ec_niif/models/authorization.py:0 code:addons/l10n_ec_niif/models/authorization_supplier.py:0 code:addons/l10n_ec_niif/models/modules_mapping.py:0
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+#, python-format
+msgid "Invoice"
+msgstr "Factura"
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/modules_mapping.py:0
+#, python-format
+msgid "Invoice / Document Type: %s is invalid, please check, get_document_type"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/modules_mapping.py:0
+#, python-format
+msgid "Invoice / Document Type: %s is invalid, please check, get_invoice_type_reverse"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/modules_mapping.py:0
+#, python-format
+msgid "Invoice / Document Type: %s is invalid, please check, l10n_ec_get_invoice_type"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/modules_mapping.py:0
+#, python-format
+msgid "Invoice / Document Type: %s is not valid, please check. get_invoice_field_report"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_l10n_ec_account_invoice_refund model_terms:ir.ui.view,arch_db:l10n_ec_niif.account_invoice_liquidation_purchase_form_view
+msgid "Invoice Refund"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_consumidor_final_limit model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_consumidor_final_limit
+msgid "Invoice Sales Limit Final Consumer"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/account_move.py:0
+#, python-format
+msgid "Invoice date outside defined date range"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/account_move.py:0
+#, python-format
+msgid "Invoice date outside defined date range2"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/withhold.py:0
+#, python-format
+msgid "Invoice is already registered"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_is_exportation
+msgid "Is Exportation?"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_legacy_document
+msgid "Is External Doc. Modified?"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__message_is_follower model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__message_is_follower
+msgid "Is Follower"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__l10n_ec_is_create_from_invoice
+msgid "Is created from invoice?"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_line_search_view model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_search_view
+msgid "Issue Date"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__issue_date model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line__issue_date
+msgid "Issue date"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/agency.py:0
+#, python-format
+msgid "It is not possible to find authorization for the document type %s at the point of emission %s for the agency %s with date %s on company: %s"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/agency.py:0
+#, python-format
+msgid "It is not possible to find authorization for the document type %s at the point of issue %s for the agency %s with date %s"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_account_journal model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__journal_id model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid "Journal"
+msgstr "Diario"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_invoice_filter_type_domain
+msgid "Journal Domain"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_account_move
+msgid "Journal Entries"
+msgstr "Asientos contables"
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_account_move_line
+msgid "Journal Item"
+msgstr "Apunte contable"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__res_partner__l10n_ec_input_origins__h
+msgid "Jubilado"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/account_chart_template.py:0
+#, python-format
+msgid "LDP"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,help:l10n_ec_niif.field_l10n_ec_xml_version__file_path
+msgid "La ruta del archivo xsd a usar, puede ser una ruta absoluta o relativa al modulo, pero debe incluir el nombre del archivo y la extension"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_account_invoice_refund____last_update model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_agency____last_update
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_common_document____last_update model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_common_document_electronic____last_update
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_common_document_line____last_update model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_identification_type____last_update
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_point_of_emission____last_update model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_point_of_emission_document_sequence____last_update
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization____last_update model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_line____last_update
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_supplier____last_update model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_company_resolution____last_update
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_payment_method____last_update model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_tax_support____last_update
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_utils____last_update model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold____last_update
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line____last_update model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line_percent____last_update
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_xml_version____last_update model:ir.model.fields,field_description:l10n_ec_niif.field_sri_error_code____last_update
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_key_type____last_update model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data____last_update
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data_message_line____last_update model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data_send_try____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_line__last_sequence model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_supplier__last_sequence
+msgid "Last Sequence"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_account_invoice_refund__write_uid model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_agency__write_uid
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_identification_type__write_uid model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_point_of_emission__write_uid
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_point_of_emission_document_sequence__write_uid model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization__write_uid
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_line__write_uid model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_supplier__write_uid
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_company_resolution__write_uid model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_payment_method__write_uid
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_tax_support__write_uid model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__write_uid
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line__write_uid model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line_percent__write_uid
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_xml_version__write_uid model:ir.model.fields,field_description:l10n_ec_niif.field_sri_error_code__write_uid model:ir.model.fields,field_description:l10n_ec_niif.field_sri_key_type__write_uid
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__write_uid model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data_message_line__write_uid
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data_send_try__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_account_invoice_refund__write_date model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_agency__write_date
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_identification_type__write_date model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_point_of_emission__write_date
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_point_of_emission_document_sequence__write_date model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization__write_date
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_line__write_date model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_supplier__write_date
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_company_resolution__write_date model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_payment_method__write_date
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_tax_support__write_date model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__write_date
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line__write_date model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line_percent__write_date
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_xml_version__write_date model:ir.model.fields,field_description:l10n_ec_niif.field_sri_error_code__write_date model:ir.model.fields,field_description:l10n_ec_niif.field_sri_key_type__write_date
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__write_date model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data_send_try__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
+#, python-format
+msgid "Last sequence must be bigger than zero, please check authorization %s"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_l10n_latam_document_type
+msgid "Latam Document Type"
+msgstr "Tipo de Documento Latam"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid "Limit Amount"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid "Limit for billing in sales for final consumer, total amount"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__line_ids model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_form_view
+msgid "Lines"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_search_view
+msgid "Liquidacion de Compras"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__liquidation_id model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_xml_version__document_type__liquidation
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid "Liquidacion de compras"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_send_mail_liquidation
+msgid "Liquidacion de compras?"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_account_invoice_refund__invoice_id
+msgid "Liquidación de Compras"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.actions.act_window,name:l10n_ec_niif.action_move_liquidation_of_purchases_type model:ir.ui.menu,name:l10n_ec_niif.menu_action_move_liquidation_of_purchases_type
+msgid "Liquidation of Purchase"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/account_chart_template.py:0 code:addons/l10n_ec_niif/models/agency.py:0 code:addons/l10n_ec_niif/models/authorization.py:0
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_point_of_emission_document_sequence__document_type__liquidation
+#, python-format
+msgid "Liquidation of Purchases"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_bank_statement_import_journal_creation__l10n_ec_liquidation model:ir.model.fields,field_description:l10n_ec_niif.field_account_journal__l10n_ec_liquidation
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_liquidation
+msgid "Liquidation of Purchases?"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
+#, python-format
+msgid "Liquidation of purchases"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.actions.server,name:l10n_ec_niif.ir_cron_key_expire_ir_actions_server model:ir.cron,cron_name:l10n_ec_niif.ir_cron_key_expire model:ir.cron,name:l10n_ec_niif.ir_cron_key_expire
+msgid "Llaves expiradas"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_electronic_logo model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_electronic_logo
+msgid "Logo de Documentos electrónicos"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid "Logo para Documentos Electrónicos"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__send_mail
+msgid "Mail enviado?"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__message_main_attachment_id model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__message_main_attachment_id
+msgid "Main Attachment"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid "Marque esta opcion si desea crear automaticamente un usuario por cada cliente para que puedan ver sus documentos en el portal."
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__res_partner__l10n_ec_sex__m
+msgid "Masculino"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data_message_line__message model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_form_view
+msgid "Mensaje"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__sri_message_ids model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_form_view
+msgid "Mensajes Informativos"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_sri_xml_data_message_line
+msgid "Mensajes S.R.I."
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__message_has_error model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__message_ids model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__message_ids
+msgid "Messages"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_error_code__raise_error
+msgid "Mostrar Error al Usuario?"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__move_count
+msgid "Move Count"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_form_view
+msgid "Moves"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__account_move__l10n_ec_aplica_convenio_doble_tributacion__no model:ir.model.fields.selection,name:l10n_ec_niif.selection__account_move__l10n_ec_pago_exterior_sujeto_retencion__no
+msgid "NO"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/xml_data.py:0
+#, python-format
+msgid "NOT SENT TO AUTHORIZE IN DEVELOPMENT MODE"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_identification_type__name model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_payment_method__name
+msgid "Name"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__activity_date_deadline model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__activity_summary model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__activity_summary
+msgid "Next Activity Summary"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__activity_type_id model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__activity_type_id
+msgid "Next Activity Type"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__sri_xml_data__state__rejected
+msgid "No Autorizado"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_error_code__no_resend
+msgid "No Reenviar?"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/xml_data.py:0
+#, python-format
+msgid "No esta habilitado el envio de correos para los documentos tipo: %s, verifique su configuracion"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/xml_data.py:0
+#, python-format
+msgid "No esta permitido el envio de correos a consumidor final"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/xml_data.py:0
+#, python-format
+msgid "No puede eliminar registros a menos que esten en estado borrador"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/xml_data.py:0
+#, python-format
+msgid "No se pudo firmar el documento, por favor verifique que la configuracion de firma electronica este correcta"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_xml_version__name model:ir.model.fields,field_description:l10n_ec_niif.field_sri_key_type__name
+msgid "Nombre"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_verificar_ruc_cedula_inh model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_verificar_ruc_cedula_search model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_verificar_ruc_cedula_tree_inh
+msgid "Nombre Comercial"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_key_type__file_name
+msgid "Nombre de archivo"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__xml_filename
+msgid "Nombre de archivo xml"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_account_invoice_refund__document_type__normal
+msgid "Normal"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_fiscal_position__l10n_ec_no_account
+msgid "Not Required to Keep Accounting?"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__credit_note_out_id
+msgid "Nota de Crédito"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_xml_version__document_type__debit_note
+msgid "Nota de Debito"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__debit_note_out_id
+msgid "Nota de Débito"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_xml_version__document_type__credit_note model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_search_view
+msgid "Notas de Credito"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid "Notas de Crédito"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_send_mail_credit_note model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_send_mail_credit_note
+msgid "Notas de Crédito?"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_search_view
+msgid "Notas de Debito"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid "Notas de Débito"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_send_mail_debit_note model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_send_mail_debit_note
+msgid "Notas de Débito?"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__note
+msgid "Note"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_form_view
+msgid "Notes"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid "Notificaciones por Correo"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.res_partner_short_form_view model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_partner_simple_form model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_verificar_ruc_cedula_inh
+msgid "Notificación de Documentos Electrónicos"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__notification_active
+msgid "Notificación de Documentos Electrónicos no Autorizados?"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_supplier__number model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__number
+msgid "Number"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_cron_process model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_cron_process
+msgid "Number Documents Process in Cron"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__message_needaction_counter model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/agency.py:0 model:ir.model.constraint,message:l10n_ec_niif.constraint_l10n_ec_agency_number_uniq
+#, python-format
+msgid "Number of Agency must be unique by company!"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/agency.py:0
+#, python-format
+msgid "Number of agency must be between 1 and 999"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/agency.py:0
+#, python-format
+msgid "Number of agency must be only numbers"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__message_has_error_counter model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__message_has_error_counter
+msgid "Number of errors"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,help:l10n_ec_niif.field_l10n_ec_withhold__message_needaction_counter model:ir.model.fields,help:l10n_ec_niif.field_sri_xml_data__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,help:l10n_ec_niif.field_l10n_ec_withhold__message_has_error_counter model:ir.model.fields,help:l10n_ec_niif.field_sri_xml_data__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization.py:0
+#, python-format
+msgid "Number of sequence must be bigger than zero"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,help:l10n_ec_niif.field_l10n_ec_withhold__message_unread_counter model:ir.model.fields,help:l10n_ec_niif.field_sri_xml_data__message_unread_counter
+msgid "Number of unread messages"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_key_type__subject_serial_number
+msgid "Numero de Serie(Asunto)"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_key_type__cert_serial_number
+msgid "Numero de serie(cerificado)"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_withhold_document_body
+msgid "Número"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.portal_my_withhold
+msgid "Número de Documento"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_account_invoice_refund__document_number
+msgid "Número de Factura"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__res_company__l10n_ec_type_conection_sri__offline model:ir.model.fields.selection,name:l10n_ec_niif.selection__sri_xml_data__l10n_ec_type_conection_sri__offline
+msgid "Off-Line"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_withhold__type__credit_card
+msgid "On Credit Card Liquidation"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_withhold__type__purchase
+msgid "On Purchases"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_withhold__type__sale
+msgid "On Sales"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__res_company__l10n_ec_type_conection_sri__online model:ir.model.fields.selection,name:l10n_ec_niif.selection__sri_xml_data__l10n_ec_type_conection_sri__online
+msgid "On-Line"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid "Opciones de Impresion RIDE"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_error_code_form_view
+msgid "Opciones de Sistemas"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_key_type__subject_common_name
+msgid "Organizacion(Asunto)"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_key_type__issuer_common_name
+msgid "Organizacion(Emisor)"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_original_invoice_id
+msgid "Original Invoice"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_form_view
+msgid "Otra Información"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_authorization_id
+msgid "Own Ecuadorian Authorization"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_authorization_line_id model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__authorization_line_id
+msgid "Own Ecuadorian Authorization Line"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_line__padding model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_supplier__padding
+msgid "Padding"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization.py:0
+#, python-format
+msgid "Padding must be between 0 or 9"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
+#, python-format
+msgid "Padding number must be between 0 and 9"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.electronic_report_page_footer
+msgid "Pag. <span class=\"page\"/> / <span class=\"topage\"/>"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_pago_exterior_sujeto_retencion
+msgid "Pago sujeto a retención"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__account_move__l10n_ec_tipo_regimen_pago_exterior__02
+msgid "Paraíso fiscal"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_supplier__partner_id model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__partner_id
+msgid "Partner"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line__partner_currency_id
+msgid "Partner Currency"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.account_invoice_liquidation_purchase_form_view
+msgid "Partner Information"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__partner_authorization_id
+msgid "Partner authorization"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:l10n_latam.identification.type,name:l10n_ec_niif.it_pasaporte
+msgid "Pasaporte"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_account_payment_term
+msgid "Payment Terms"
+msgstr "Plazos de pago"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line__percent_id model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line__percentage
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line_percent__name model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line_percent__percent
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.report_withhold_auto_printer
+msgid "Percent"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.constraint,message:l10n_ec_niif.constraint_l10n_ec_withhold_line_percent_type_percent_unique
+msgid "Percent Withhold must be unique by type"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__res_partner__l10n_ec_foreign_type__01
+msgid "Persona Natural"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.electronic_report_common_payment_info
+msgid "Plazo"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_point_of_emission_id model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_common_document__l10n_ec_point_of_emission_id
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_line__point_of_emission_id model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_supplier__printer_point
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__point_of_emission_id model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_agency_form_view
+msgid "Point of Emission"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_point_of_emission_withhold_id model_terms:ir.ui.view,arch_db:l10n_ec_niif.account_invoice_select
+msgid "Point of emission"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_point_of_emission__name
+msgid "Point of emission's name"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_agency__printer_point_ids model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_agency_form_view
+msgid "Points of Emission"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_withhold_document_body
+msgid "Porcentaje de Retención"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__access_url model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__access_url
+msgid "Portal Access URL"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid "Portal de Clientes"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_error_code__solution
+msgid "Posible Solucion"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_error_code_form_view
+msgid "Posible Solución"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__account_move__l10n_ec_type_emission__pre_printed model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_point_of_emission__type_emission__pre_printed
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_withhold__document_type__pre_printed
+msgid "Pre Printed"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_credit_note_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_invoice_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_liquidation_document_body
+msgid "Precio Total"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_credit_note_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_invoice_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_liquidation_document_body
+msgid "Precio Unitario"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.portal_withhold_page
+msgid "Print RIDE"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_point_of_emission_document_sequence__printer_id
+msgid "Printer"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_key_type__private_key model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_key_type_form_view
+msgid "Private Key"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__res_company__l10n_ec_type_environment__production model:ir.model.fields.selection,name:l10n_ec_niif.selection__sri_xml_data__l10n_ec_type_environment__production
+msgid "Producción"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_account_invoice_refund__partner_id
+msgid "Proveedor"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__res_company__l10n_ec_type_environment__test model:ir.model.fields.selection,name:l10n_ec_niif.selection__sri_xml_data__l10n_ec_type_environment__test
+msgid "Pruebas"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__l10n_ec_point_of_emission_id
+msgid "Punto de Emisión"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.actions.act_window,name:l10n_ec_niif.l10n_ec_withhold_line_purchases_action model:ir.ui.menu,name:l10n_ec_niif.menu_l10n_ec_withhold_line_purchases_action
+msgid "Purchase Withhold Lines"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.actions.act_window,name:l10n_ec_niif.l10n_ec_withhold_purchase_act_window model:ir.ui.menu,name:l10n_ec_niif.menu_l10n_ec_withhold_purchase_act_window
+msgid "Purchase Withholds"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/modules_mapping.py:0
+#, python-format
+msgid "Purchase liquidation"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_rise
+msgid "R.I.S.E"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_debit_note_document_body
+msgid "RAZÓN DE MODIFICACIÓN"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/withhold.py:0
+#, python-format
+msgid "RET CLI: %s"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:l10n_latam.identification.type,name:l10n_ec_niif.it_ruc
+msgid "RUC"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_verificar_ruc_cedula_search model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_verificar_ruc_cedula_tree_inh
+msgid "Razón Social"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid "Recepción de Documentos"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_refund_ids
+msgid "Refunds"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__invoice_id model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line__invoice_id
+msgid "Related Document"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_partner__l10n_ec_related_part model:ir.model.fields,field_description:l10n_ec_niif.field_res_users__l10n_ec_related_part
+msgid "Related Part?"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__res_partner__l10n_ec_input_origins__m
+msgid "Remesa del Exterior"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_withhold_line__type__rent model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_withhold_line_percent__type__rent
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_kanban_view model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_tree_no_create_view model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_tree_view
+msgid "Rent"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid "Rent Account"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__res_partner__l10n_ec_input_origins__r
+msgid "Rentista"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_partner__l10n_ec_require_email_electronic model:ir.model.fields,field_description:l10n_ec_niif.field_res_users__l10n_ec_require_email_electronic
+msgid "Requerir Correo Electronico"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_company_resolution__resolution
+msgid "Resolution"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data_send_try__response_date
+msgid "Response Date"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__activity_user_id model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__activity_user_id
+msgid "Responsible User"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.portal_my_withhold
+msgid "Retencion en borrador"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_xml_version__document_type__withholding model_terms:ir.ui.view,arch_db:l10n_ec_niif.portal_my_home_menu_withhold model_terms:ir.ui.view,arch_db:l10n_ec_niif.portal_my_home_withhold
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.portal_my_withhold model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_search_view model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid "Retenciones"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_send_mail_retention model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_send_mail_liquidation
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_send_mail_retention
+msgid "Retenciones?"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__withhold_id
+msgid "Retención"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:account.tax.group,name:l10n_ec_niif.tax_group_renta_withhold
+msgid "Retención I.R."
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:account.tax.group,name:l10n_ec_niif.tax_group_iva_withhold
+msgid "Retención I.V.A."
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.report_withhold_auto_printer
+msgid "Retention receipt"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/account_move.py:0
+#, python-format
+msgid "Reversal"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_verificar_ruc_cedula_search
+msgid "Ruc/Cédula/Pasaporte"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_xml_version__file_path
+msgid "Ruta de archivo"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__account_move__l10n_ec_tipo_regimen_pago_exterior__03
+msgid "Régimen fiscal preferente o jurisdicción de menor imposición"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__account_move__l10n_ec_tipo_regimen_pago_exterior__01
+msgid "Régimen general"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_agency_form_view
+msgid "S.R.I Agency"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_sri_payment_id model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_sri_payment_id
+msgid "S.R.I Payment Method"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.actions.act_window,name:l10n_ec_niif.action_l10n_ec_agency_tree_view model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_agency_search_view model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_agency_tree_view
+msgid "S.R.I. Agencies"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_l10n_ec_sri_authorization model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_sri_authorization_form_view
+msgid "S.R.I. Authorization"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_l10n_ec_sri_authorization_line
+msgid "S.R.I. Authorization Document Type"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_l10n_ec_sri_authorization_supplier
+msgid "S.R.I. Authorization Suppliers"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_sri_authorization_search_view model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_sri_authorization_tree_view
+msgid "S.R.I. Authorizations"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.actions.act_window,name:l10n_ec_niif.l10n_ec_sri_company_resolution_act_window model:ir.ui.menu,name:l10n_ec_niif.l10n_ec_sri_company_resolution_menu
+msgid "S.R.I. Company Resolutions"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_agency__number model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_point_of_emission__number
+msgid "S.R.I. Number"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.actions.act_window,name:l10n_ec_niif.action_l10n_ec_sri_payment_method_tree_view model:ir.ui.menu,name:l10n_ec_niif.l10n_ec_sri_payment_method_menu
+msgid "S.R.I. Payments Method"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__account_move__l10n_ec_aplica_convenio_doble_tributacion__si model:ir.model.fields.selection,name:l10n_ec_niif.selection__account_move__l10n_ec_pago_exterior_sujeto_retencion__si
+msgid "SI"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__message_has_sms_error model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.ui.menu,name:l10n_ec_niif.sri_root_menu
+msgid "SRI"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization.py:0 model:ir.model.constraint,message:l10n_ec_niif.constraint_l10n_ec_sri_authorization_number_uniq
+#, python-format
+msgid "SRI Authorization must be unique by company"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.account_move_form_view_latam
+msgid "SRI Data"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_partner__l10n_ec_type_sri model:ir.model.fields,field_description:l10n_ec_niif.field_res_users__l10n_ec_type_sri
+msgid "SRI Identification Type"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_sri_payment_id model:ir.model.fields,field_description:l10n_ec_niif.field_res_partner__l10n_ec_sri_payment_id
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_users__l10n_ec_sri_payment_id
+msgid "SRI Payment Method"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_l10n_ec_sri_payment_method
+msgid "SRI Payment method"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_sri_xml_data
+msgid "SRI XML Electronic"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.actions.act_window,name:l10n_ec_niif.l10n_ec_withhold_sales_act_window model:ir.ui.menu,name:l10n_ec_niif.menu_l10n_ec_withhold_sales_act_window
+msgid "Sales Withholds"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,help:l10n_ec_niif.field_sri_error_code__raise_error
+msgid "Se enviara la descripcion del error al usuario en el momento que se aprueba el documento"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__access_token model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__access_token
+msgid "Security Token"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data_send_try__send_date
+msgid "Send Date"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__try_ids
+msgid "Send Logs"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_form_view
+msgid "Send Xml to authorize"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_form_view
+msgid "Send by email"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_partner__l10n_ec_sex model:ir.model.fields,field_description:l10n_ec_niif.field_res_users__l10n_ec_sex
+msgid "Sex"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_form_view
+msgid "Sign XML File"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_search_view
+msgid "Sin Enviar Correo al cliente"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__sri_key_type__state__unverified
+msgid "Sin Verificar"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__res_partner__l10n_ec_foreign_type__02
+msgid "Sociedad"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__res_partner__l10n_ec_marital_status__s
+msgid "Soltero(a)"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_start_date model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization__start_date
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_supplier__start_date
+msgid "Start Date"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__state model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_search_view
+msgid "State"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,help:l10n_ec_niif.field_l10n_ec_withhold__activity_state model:ir.model.fields,help:l10n_ec_niif.field_sri_xml_data__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_account_tax model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line__tax_id model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_form_view
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_line_search_view model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_line_view_tree model_terms:ir.ui.view,arch_db:l10n_ec_niif.report_withhold_auto_printer
+msgid "Tax"
+msgstr "Impuesto"
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_form_view model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_line_view_tree
+msgid "Tax Currency"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_account_tax_group
+msgid "Tax Group"
+msgstr "Grupo de impuestos"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_tax_support_id
+msgid "Tax Support"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_tax_support_domain_ids
+msgid "Tax Support Domain"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line__tax_tag_id
+msgid "Tax Tax Tag"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_account_tax_template
+msgid "Templates for Taxes"
+msgstr "Plantilla de impuestos"
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
+#, python-format
+msgid "The agency number %s does not correspond to the authorization, that should be %s"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
+#, python-format
+msgid "The dates of authorization of supplier %s must be valid start: %s end: %s"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/l10n_ec_account_invoice_refund.py:0
+#, python-format
+msgid "The document number is not correct, it must be of the form 00X-00X-000XXXXXX, X is a number"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/l10n_ec_account_invoice_refund.py:0
+#, python-format
+msgid "The electronic authorization must have only numbers, please check the refund!"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/l10n_ec_account_invoice_refund.py:0
+#, python-format
+msgid "The electronic authorization number is incorrect, This must be 37 or 49 digits. Check the refund"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
+#, python-format
+msgid "The emission point number %s does not correspond to the authorization, that should be %s"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization.py:0
+#, python-format
+msgid "The first sequence %s must be lower than last sequence %s"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
+#, python-format
+msgid "The number of document must be numeric, please don't input letters, or check if partner is not ecuadorian"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/agency.py:0 model:ir.model.constraint,message:l10n_ec_niif.constraint_l10n_ec_point_of_emission_number_uniq
+#, python-format
+msgid "The number of point of emission must be unique by Agency!"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
+#, python-format
+msgid "The sequence number %s is not within the range %s and %s"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.constraint,message:l10n_ec_niif.constraint_l10n_ec_sri_authorization_date_check2
+msgid "The start date must be anterior to the expiration date."
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
+#, python-format
+msgid "There is another document of type %s with number '%s' for partner %s"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization.py:0
+#, python-format
+msgid "There is another document type %s with number '%s' for the company %s"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
+#, python-format
+msgid "There is more than one match of active authorizations for the partner %s of type %s for the number %s with date %s, please select the correct authorization and then enter the number"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.actions.act_window,help:l10n_ec_niif.l10n_ec_sri_company_resolution_act_window
+msgid "There is no Company resolutions click here to add new Company resolution."
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
+#, python-format
+msgid "There's another authorization in same periods, please check the authorization on partner %s"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
+#, python-format
+msgid "There's another document type %s with number '%s' for partner %s"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization.py:0
+#, python-format
+msgid "There's another line with document type %s for point of emission %s in the agency %s, please check sequences"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization.py:0
+#, python-format
+msgid "There's another line with document type %s for point of emission %s on agency %s to authorization %s"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
+#, python-format
+msgid "There's no exist authorization for document type %s for partner %s with date %s for sequence %s, check if you should create authorization"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
+#, python-format
+msgid "There's no exist authorization for document type %s for partner %s with date %s, check if you should create authorization"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_sri_authorization_supplier_form_view
+msgid "Third Party Authorization"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_partner__l10n_ec_authorization_ids model:ir.model.fields,field_description:l10n_ec_niif.field_res_users__l10n_ec_authorization_ids
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_sri_authorization_supplier_documents_form_view model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_sri_authorization_supplier_tree_view
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_verificar_ruc_cedula_inh
+msgid "Third Party Authorizations"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_ws_timeout model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_ws_timeout
+msgid "Timeout Web Service"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data_message_line__message_type model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data_send_try__type_send
+msgid "Tipo"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_account_invoice_refund__document_type
+msgid "Tipo Documento"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_payment_term__l10n_ec_sri_type
+msgid "Tipo SRI"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__l10n_ec_type_environment model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid "Tipo de Ambiente"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_type_environment model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_type_environment
+msgid "Tipo de Ambiente de Documentos Electronicos"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_key_type_id model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_key_type_id
+msgid "Tipo de Llave"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_sri_key_type
+msgid "Tipo de Llave electronica"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_type_conection_sri model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_type_conection_sri
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__l10n_ec_type_conection_sri model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid "Tipo de conexion con SRI"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_tipo_regimen_pago_exterior
+msgid "Tipo de regimen fiscal del exterior"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_identification_type__document_type_ids
+msgid "Tipos de Transacciones Asociadas"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_account_invoice_refund__total_base_iva model_terms:ir.ui.view,arch_db:l10n_ec_niif.account_invoice_liquidation_purchase_form_view
+msgid "Total Base IVA"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_account_invoice_refund__total_base_iva0 model_terms:ir.ui.view,arch_db:l10n_ec_niif.account_invoice_liquidation_purchase_form_view
+msgid "Total Base IVA 0"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.account_invoice_liquidation_purchase_form_view
+msgid "Total Base No IVA"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_account_invoice_refund__total_base_no_iva
+msgid "Total Base no IVA"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_discount_total model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_discount_total_currency
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move_line__l10n_ec_discount_total model:ir.model.fields,field_description:l10n_ec_niif.field_account_move_line__l10n_ec_discount_total_currency
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_common_document__l10n_ec_discount_total model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_common_document__l10n_ec_discount_total_currency
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_common_document_line__l10n_ec_discount_total model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_common_document_line__l10n_ec_discount_total_currency
+msgid "Total Discount"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_account_invoice_refund__total_invoice
+msgid "Total Factura"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.account_invoice_liquidation_purchase_form_view
+msgid "Total Facturas"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_account_invoice_refund__total_ice model_terms:ir.ui.view,arch_db:l10n_ec_niif.account_invoice_liquidation_purchase_form_view
+msgid "Total ICE"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_account_invoice_refund__total_iva model_terms:ir.ui.view,arch_db:l10n_ec_niif.account_invoice_liquidation_purchase_form_view
+msgid "Total IVA"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__type model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line__type
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line_percent__type model_terms:ir.ui.view,arch_db:l10n_ec_niif.report_withhold_auto_printer
+msgid "Type"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_sri_authorization_form_view
+msgid "Type Documents"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_type_emission model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_point_of_emission__type_emission
+msgid "Type Emission"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,help:l10n_ec_niif.field_l10n_ec_withhold__activity_exception_decoration model:ir.model.fields,help:l10n_ec_niif.field_sri_xml_data__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_ws_auth_production
+msgid "URL del WS de Producción SRI para Autorización de Documentos"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_ws_receipt_production
+msgid "URL del WS de Producción de SRI para Recepción de Documentos"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_ws_auth_test
+msgid "URL del WS de Pruebas de SRI para Autorización de Documentos"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_ws_receipt_test
+msgid "URL del WS de Pruebas de SRI para Recepción de Documentos"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data_message_line__write_date
+msgid "Ultima actualización"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_search_view
+msgid "Ultimo Error"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__last_error_id
+msgid "Ultimo Mensaje de error"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__res_partner__l10n_ec_marital_status__
+msgid "Unión Libre"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__message_unread model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__message_unread
+msgid "Unread Messages"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__message_unread_counter model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,help:l10n_ec_niif.field_sri_error_code__no_resend
+msgid "Usar para que no se trate de reenviar el documento cuando devuelve este codigo"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid "Use un tamaño de 450x150 píxeles aprox."
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_res_users
+msgid "Users"
+msgstr "Usuarios"
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__cancel_user_id
+msgid "Usuario que canceló"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_l10n_ec_utils
+msgid "Utilities miscellaneous"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_debit_note_document_body
+msgid "VALOR DE LA MODIFICACIÓN"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/res_partner.py:0
+#, python-format
+msgid "VAT %s is not valid for an Ecuadorian company, it must be like this form 17165373411001"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/account_chart_template.py:0
+#, python-format
+msgid "VDN"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_form_view
+msgid "Validate"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_key_type_form_view
+msgid "Validate Cert"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.electronic_report_common_payment_info
+msgid "Valor"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_withhold_document_body
+msgid "Valor Retenido"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/account_chart_template.py:0
+#, python-format
+msgid "Vendor Debit Notes"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__sri_xml_data_send_try__type_send__check
+msgid "Verificar Clave de Acceso"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization.py:0
+#, python-format
+msgid "Verify the arguments to use the validate_unique_value_document function"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_xml_version__version_file model:ir.model.fields,field_description:l10n_ec_niif.field_sri_key_type__cert_version model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+msgid "Version"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__xml_file_version
+msgid "Version XML"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_invoice_version_xml_id model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_invoice_version_xml_id
+msgid "Version del XML Facturas"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_liquidation_version_xml_id model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_liquidation_version_xml_id
+msgid "Version del XML Liquidacion de compras"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_credit_note_version_xml_id model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_credit_note_version_xml_id
+msgid "Version del XML Nota de Credito"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_debit_note_version_xml_id model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_debit_note_version_xml_id
+msgid "Version del XML Nota de Debito"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_withholding_version_xml_id model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_withholding_version_xml_id
+msgid "Version del XML Retencion"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__res_partner__l10n_ec_marital_status__v
+msgid "Viudo(o)"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/l10n_ec_account_invoice_refund.py:0
+#, python-format
+msgid "Warning!!!"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__website_message_ids model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,help:l10n_ec_niif.field_l10n_ec_withhold__website_message_ids model:ir.model.fields,help:l10n_ec_niif.field_sri_xml_data__website_message_ids
+msgid "Website communication history"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,help:l10n_ec_niif.field_account_move__l10n_ec_legacy_document
+msgid "With this option activated, the system will not require an invoice to issue the Debut or Credit Note"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/agency.py:0 code:addons/l10n_ec_niif/models/authorization.py:0 code:addons/l10n_ec_niif/models/authorization_supplier.py:0 code:addons/l10n_ec_niif/models/modules_mapping.py:0
+#: model:ir.actions.report,name:l10n_ec_niif.action_report_withhold model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_withhold_id model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_withhold_ids
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line__withhold_id model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_point_of_emission_document_sequence__document_type__withholding
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_form_view model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
+#, python-format
+msgid "Withhold"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line__tax_amount_currency
+msgid "Withhold Amount"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line__tax_amount model_terms:ir.ui.view,arch_db:l10n_ec_niif.report_withhold_auto_printer
+msgid "Withhold Amount Currency"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_withhold_count
+msgid "Withhold Count"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_withhold_date
+msgid "Withhold Date"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__tax_iva
+msgid "Withhold IVA"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_withhold_journal_id model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_withhold_journal_id
+msgid "Withhold Journal"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move_line__l10n_ec_withhold_line_id model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_line_pivot_view model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_line_view_form
+msgid "Withhold Line"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_withhold_line_ids model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_line_search_view model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_line_view_tree
+msgid "Withhold Lines"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_withhold_number
+msgid "Withhold Number"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__tax_rent
+msgid "Withhold Rent"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/withhold.py:0
+#, python-format
+msgid "Withhold Rent Tax. %s"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_withhold_required
+msgid "Withhold Required"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_withhold_sale_iva_account_id model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_withhold_sale_iva_account_id
+msgid "Withhold Sales IVA Account"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_withhold_sale_iva_tag_id model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_withhold_sale_iva_tag_id
+msgid "Withhold Sales IVA Account Tag"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_withhold_sale_rent_account_id model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_withhold_sale_rent_account_id
+msgid "Withhold Sales Rent Account"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/withhold.py:0
+#, python-format
+msgid "Withhold Vat. %s"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__no_number
+msgid "Withholding  without Number?"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.ui.menu,name:l10n_ec_niif.withholds_root model_terms:ir.ui.view,arch_db:l10n_ec_niif.account_move_form_view model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_pivot_view
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_search_view model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_tree_no_create_view model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_tree_view
+msgid "Withholds"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/xml_data.py:0
+#, python-format
+msgid ""
+"Wrong Creation on XML File, missing data : \n"
+"%s"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data_message_line__xml_id model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data_send_try__xml_id
+msgid "XML Data"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.actions.act_window,name:l10n_ec_niif.action_sri_xml_data_tree_view model:ir.ui.menu,name:l10n_ec_niif.sri_xml_data_menu
+msgid "XML de Firma Electrónica"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_xml_data_id model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_common_document_electronic__l10n_ec_xml_data_id
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__l10n_ec_xml_data_id
+msgid "XML electronico"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__xml_file
+msgid "Xml File"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_l10n_ec_xml_version
+msgid "Xml Version"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.constraint,message:l10n_ec_niif.constraint_sri_xml_data_liquidation_id_uniq
+msgid "Ya existe una Liquidacion de compras con el mismo numero!"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.constraint,message:l10n_ec_niif.constraint_sri_xml_data_credit_note_out_id_uniq
+msgid "Ya existe una Nota de credito con el mismo numero!"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.constraint,message:l10n_ec_niif.constraint_sri_xml_data_debit_note_out_id_uniq
+msgid "Ya existe una Nota de debito con el mismo numero!"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.constraint,message:l10n_ec_niif.constraint_sri_xml_data_withhold_id_uniq
+msgid "Ya existe una Retencion con el mismo numero!"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.constraint,message:l10n_ec_niif.constraint_sri_xml_data_invoice_out_id_uniq
+msgid "Ya existe una factura con el mismo numero!"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization.py:0
+#, python-format
+msgid "You can not set 2 authorization that overlaps on the same day."
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/account_move.py:0
+#, python-format
+msgid "You can't make bill or refund to final customer on ecuadorian company"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/account_move.py:0
+#, python-format
+msgid "You can't make invoice where amount total %s is bigger than %s for final customer"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/account_move.py:0
+#, python-format
+msgid "You cannot apply VAT withholding without an assigned VAT tax %s"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/agency.py:0
+#, python-format
+msgid "You cannot delete an agency that contains an invoice. You can only archive the agency."
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/withhold.py:0
+#, python-format
+msgid "You cannot delete an approved hold"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization.py:0
+#, python-format
+msgid "You cannot delete an authorization that contains an invoice. You can only archive the authorization."
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/account_move.py:0
+#, python-format
+msgid "You cannot have more than one Rent Withholding tax %s"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/account_move.py:0
+#, python-format
+msgid "You cannot have more than one VAT 0 tax %s"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/account_move.py:0
+#, python-format
+msgid "You cannot have more than one VAT Withholding tax %s"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/account_move.py:0
+#, python-format
+msgid "You cannot have more than one VAT tax %s"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
+#, python-format
+msgid "You cannot modify authorization %s of partner %s, this is already used in active documents, contact de system administrator"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/res_partner.py:0
+#, python-format
+msgid "You cannot modify record of final consumer"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/res_partner.py:0
+#, python-format
+msgid "You cannot unlink final consumer"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/account_move.py:0
+#, python-format
+msgid "You must apply at least one VAT tax"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/account_move.py:0
+#, python-format
+msgid "You must apply at least one income withholding tax"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/withhold.py:0
+#, python-format
+msgid "You must configure Withhold Journal on Company to continue"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/withhold.py:0
+#, python-format
+msgid "You must configure Withhold Sale Rent Account on Company to continue"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/withhold.py:0
+#, python-format
+msgid "You must configure Withhold Sale Vat Account on Company to continue"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
+#, python-format
+msgid "You must declare authorization to check"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
+#, python-format
+msgid "You must declare document number to check authorization"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
+#, python-format
+msgid "You must declare document type to check authorization"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/withhold.py:0
+#, python-format
+msgid "You must have at least one line to continue"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization.py:0
+#, python-format
+msgid "You must indicate what type of document it is, Invoice, Credit Note, Debit Note, etc."
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/l10n_ec_common_document_electronic.py:0
+#, python-format
+msgid "You must replace this function l10n_ec_action_generate_xml_data in its inherited class"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/l10n_ec_common_document_electronic.py:0
+#, python-format
+msgid "You must replace this function l10n_ec_get_document_code_sri in your inherited class"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/l10n_ec_common_document_electronic.py:0
+#, python-format
+msgid "You must replace this function l10n_ec_get_document_date in your inherited class"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/l10n_ec_common_document_electronic.py:0
+#, python-format
+msgid "You must replace this function l10n_ec_get_document_filename_xml in your inherited class"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/l10n_ec_common_document_electronic.py:0
+#, python-format
+msgid "You must replace this function l10n_ec_get_document_number in its inherited class"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/l10n_ec_common_document_electronic.py:0
+#, python-format
+msgid "You must replace this function l10n_ec_get_document_version_xml in your inherited class"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/l10n_ec_account_invoice_refund.py:0
+#, python-format
+msgid "You must select company first to continue with this action"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
+#, python-format
+msgid "You must specify type of document to continue."
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/account_move.py:0
+#, python-format
+msgid "You only delete invoices in draft state"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/res_users.py:0
+#, python-format
+msgid "Your user does not have the permissions configured correctly (Agency, Point of emission), please check with the administrator"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model_terms:ir.ui.view,arch_db:l10n_ec_niif.portal_document_electronic_error model_terms:ir.ui.view,arch_db:l10n_ec_niif.portal_document_electronic_success
+msgid "close"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model.fields,field_description:l10n_ec_niif.field_res_partner__l10n_ec_is_ecuadorian_company model:ir.model.fields,field_description:l10n_ec_niif.field_res_users__l10n_ec_is_ecuadorian_company
+msgid "is Ecuadorian Company?"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_l10n_ec_identification_type
+msgid "l10n_ec.identification.type"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_l10n_ec_point_of_emission
+msgid "l10n_ec.point.of.emission"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_l10n_ec_point_of_emission_document_sequence
+msgid "l10n_ec.point.of.emission.document.sequence"
+msgstr ""
+
+#. module: l10n_ec_niif
+#: model:ir.model,name:l10n_ec_niif.model_l10n_ec_withhold_line_percent
+msgid "l10n_ec.withhold.line.percent"
+msgstr ""
