@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 13.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-24 15:30+0000\n"
-"PO-Revision-Date: 2020-07-24 11:13-0500\n"
+"PO-Revision-Date: 2020-07-25 07:55-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1007,116 +1007,116 @@ msgstr "Etiqueta de Base Impuesto"
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_res_partner__l10n_ec_business_name model:ir.model.fields,field_description:l10n_ec_niif.field_res_users__l10n_ec_business_name
 msgid "Business Name"
-msgstr ""
+msgstr "Nombre Comercial"
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/account_chart_template.py:0
 #, python-format
 msgid "CDN"
-msgstr ""
+msgstr "CDN"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_error_code__change_key
 msgid "Cambiar Clave?"
-msgstr ""
+msgstr "Cambiar Clave?"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_form_view
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields.selection,name:l10n_ec_niif.selection__sri_xml_data__state__cancel
 msgid "Cancelado"
-msgstr ""
+msgstr "Cancelado"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_withhold__state__cancelled
 msgid "Cancelled"
-msgstr ""
+msgstr "Cancelado"
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/account_move.py:0
 #, python-format
 msgid "Cannot apply VAT zero rate with another VAT rate"
-msgstr ""
+msgstr "No puede aplicar IVA cero con una tarifa diferente"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_credit_note_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_invoice_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_liquidation_document_body
 msgid "Cantidad"
-msgstr ""
+msgstr "Cantidad"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields.selection,name:l10n_ec_niif.selection__res_partner__l10n_ec_marital_status__c
 msgid "Casado(a)"
-msgstr ""
+msgstr "Casado(a)"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_key_type_form_view
 msgid "Cert Info"
-msgstr ""
+msgstr "Info. Certificado"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_form_view
 msgid "Check Authorization"
-msgstr ""
+msgstr "Verificar Autorización"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_latam_document_type__l10n_ec_check_format
 msgid "Check Format EC"
-msgstr ""
+msgstr "Verificar formato EC"
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
 #, python-format
 msgid "Check parameters of partner and number to continue"
-msgstr ""
+msgstr "Verificar los parámetros de la empresa y el número para continuar"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_res_partner__l10n_ec_marital_status model:ir.model.fields,field_description:l10n_ec_niif.field_res_users__l10n_ec_marital_status
 msgid "Civil Status"
-msgstr ""
+msgstr "Estado Civil"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__l10n_ec_xml_key model_terms:ir.ui.view,arch_db:l10n_ec_niif.electronic_report_common_head model_terms:ir.ui.view,arch_db:l10n_ec_niif.portal_my_withhold
 msgid "Clave de Acceso"
-msgstr ""
+msgstr "Clave de Acceso"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_xml_key model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_common_document_electronic__l10n_ec_xml_key
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__l10n_ec_xml_key
 msgid "Clave de acceso"
-msgstr ""
+msgstr "Clave de acceso"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_key_type__password
 msgid "Clave de firma"
-msgstr ""
+msgstr "Clave de firma"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__partner_id model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_search_view
 msgid "Cliente"
-msgstr ""
+msgstr "Cliente"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_identification_type__code model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_payment_method__code
 msgid "Code"
-msgstr ""
+msgstr "Código"
 
 #. module: l10n_ec_niif
 #: model:ir.model.constraint,message:l10n_ec_niif.constraint_l10n_ec_sri_payment_method_code_uniq
 msgid "Code of Payment Method must be unique, please review!"
-msgstr ""
+msgstr "El código del método de pago debe ser único, por favor revise"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_account_tax_group__l10n_ec_xml_fe_code
 msgid "Codigo en Facturacion electronica"
-msgstr ""
+msgstr "Codigo en Facturacion electronica"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__commercial_partner_id
 msgid "Commercial partner"
-msgstr ""
+msgstr "Empresa Comercial"
 
 #. module: l10n_ec_niif
 #: model:ir.model,name:l10n_ec_niif.model_res_company
@@ -1129,52 +1129,52 @@ msgstr "Compañías"
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_company_resolution__company_id model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__company_id
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line__company_id model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_sri_company_resolution_search_view
 msgid "Company"
-msgstr ""
+msgstr "Compañía"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_account_invoice_refund__currency_id
 msgid "Company Currency"
-msgstr ""
+msgstr "Modeda de la compañía"
 
 #. module: l10n_ec_niif
 #: model:ir.model,name:l10n_ec_niif.model_l10n_ec_sri_company_resolution
 msgid "Company Resolutions"
-msgstr ""
+msgstr "Resoluciones de la compañía"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,help:l10n_ec_niif.field_l10n_ec_account_invoice_refund__company_id
 msgid "Company related to this journal"
-msgstr ""
+msgstr "Compañía relacionada con este diario"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_agency__partner_id
 msgid "Company's Partner"
-msgstr ""
+msgstr "Compañía de la empresa"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_key_type__company_id
 msgid "Compañia"
-msgstr ""
+msgstr "Compañia"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__company_id
 msgid "Compañía"
-msgstr ""
+msgstr "Compañía"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_withhold_document_body
 msgid "Comprobante"
-msgstr ""
+msgstr "Comprobante"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__concept
 msgid "Concept"
-msgstr ""
+msgstr "Concepto"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
 msgid "Conexión"
-msgstr ""
+msgstr "Conexión"
 
 #. module: l10n_ec_niif
 #: model:ir.model,name:l10n_ec_niif.model_res_config_settings
@@ -1184,22 +1184,22 @@ msgstr "Opciones de Configuración"
 #. module: l10n_ec_niif
 #: model:ir.actions.act_window,name:l10n_ec_niif.action_sri_account_config model:ir.ui.menu,name:l10n_ec_niif.menu_account_config
 msgid "Configuraciones SRI"
-msgstr ""
+msgstr "Configuraciones SRI"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
 msgid "Configurar Plantillas de Correo"
-msgstr ""
+msgstr "Configurar Plantillas de Correo"
 
 #. module: l10n_ec_niif
 #: model:ir.ui.menu,name:l10n_ec_niif.sri_config_menu
 msgid "Configurations"
-msgstr ""
+msgstr "Configuraciones"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_consumidor_final
 msgid "Consumidor Final"
-msgstr ""
+msgstr "Consumidor Final"
 
 #. module: l10n_ec_niif
 #: model:ir.model,name:l10n_ec_niif.model_res_partner model_terms:ir.ui.view,arch_db:l10n_ec_niif.portal_withhold_page
@@ -1209,58 +1209,58 @@ msgstr "Contacto"
 #. module: l10n_ec_niif
 #: model:ir.model.fields.selection,name:l10n_ec_niif.selection__account_payment_term__l10n_ec_sri_type__contado
 msgid "Contado"
-msgstr ""
+msgstr "Contado"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_agency__count_invoice model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_point_of_emission__count_invoice
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization__count_invoice model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_line__count_invoice
 msgid "Count Invoice"
-msgstr ""
+msgstr "Cuenta de Facturas"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields.selection,name:l10n_ec_niif.selection__sri_xml_data__state__draft
 msgid "Creado"
-msgstr ""
+msgstr "Creado"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__create_uid
 msgid "Creado por"
-msgstr ""
+msgstr "Creado por"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_create_login_for_partners model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_create_login_for_partners
 msgid "Crear Usuario para portal?"
-msgstr ""
+msgstr "Crear Usuario para portal?"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
 msgid "Crear Usuarios para portal?"
-msgstr ""
+msgstr "Crear Usuarios para portal?"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_form_view
 msgid "Crear XML autorizado"
-msgstr ""
+msgstr "Crear XML autorizado"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_form_view
 msgid "Create XML File"
-msgstr ""
+msgstr "Crear archivo XML"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.actions.act_window,help:l10n_ec_niif.action_move_debit_note_out_type
 msgid "Create a customer debit note"
-msgstr ""
+msgstr "Crear nota de débito de cliente"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.actions.act_window,help:l10n_ec_niif.action_move_debit_note_in_type
 msgid "Create a vendor debit note"
-msgstr ""
+msgstr "Crear nota de débito del proveedor"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.actions.act_window,help:l10n_ec_niif.action_move_liquidation_of_purchases_type
 msgid "Create a vendor liquidation of purchases"
-msgstr ""
+msgstr "Crear liquidación de compra proveedores"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.actions.act_window,help:l10n_ec_niif.action_move_debit_note_out_type
