@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 13.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-24 15:30+0000\n"
-"PO-Revision-Date: 2020-07-25 07:55-0500\n"
+"PO-Revision-Date: 2020-07-25 15:27-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1106,7 +1106,7 @@ msgstr "Código"
 #. module: l10n_ec_niif
 #: model:ir.model.constraint,message:l10n_ec_niif.constraint_l10n_ec_sri_payment_method_code_uniq
 msgid "Code of Payment Method must be unique, please review!"
-msgstr "El código del método de pago debe ser único, por favor revise"
+msgstr "El código del método de pago debe ser único, por favor revise!"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_account_tax_group__l10n_ec_xml_fe_code
@@ -1265,17 +1265,17 @@ msgstr "Crear liquidación de compra proveedores"
 #. module: l10n_ec_niif
 #: model_terms:ir.actions.act_window,help:l10n_ec_niif.action_move_debit_note_out_type
 msgid "Create debit notes, register payments and keep track of the discussions with your customers."
-msgstr ""
+msgstr "Cree notas de débito, registre los pagos y mantenga el seguimiento de la discusión con sus clientes-"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.actions.act_window,help:l10n_ec_niif.action_move_debit_note_in_type
 msgid "Create debit notes, register payments and keep track of the discussions with your vendors."
-msgstr ""
+msgstr "Cree notas de débito, registre pagos y mantenga seguimiento de las discusiones con sus proveedores."
 
 #. module: l10n_ec_niif
 #: model_terms:ir.actions.act_window,help:l10n_ec_niif.action_move_liquidation_of_purchases_type
 msgid "Create liquidation of purchases, register payments and keep track of the discussions with your vendors."
-msgstr ""
+msgstr "Cree liquidaciones de compras, registre pagos y mantenga seguimiento de la discusión con sus proveedores."
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_account_invoice_refund__create_uid model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_agency__create_uid
@@ -1288,7 +1288,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_xml_version__create_uid model:ir.model.fields,field_description:l10n_ec_niif.field_sri_error_code__create_uid model:ir.model.fields,field_description:l10n_ec_niif.field_sri_key_type__create_uid
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data_message_line__create_uid model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data_send_try__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Creado por"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_account_invoice_refund__create_date model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_agency__create_date
@@ -1301,219 +1301,219 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_xml_version__create_date model:ir.model.fields,field_description:l10n_ec_niif.field_sri_error_code__create_date
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_key_type__create_date model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data_send_try__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Creado en"
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/agency.py:0 code:addons/l10n_ec_niif/models/authorization.py:0 code:addons/l10n_ec_niif/models/authorization_supplier.py:0 code:addons/l10n_ec_niif/models/modules_mapping.py:0
 #, python-format
 msgid "Credit Note"
-msgstr "Factura rectificativa"
+msgstr "Nota de Crédito"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_credit_note_ids
 msgid "Credit Notes"
-msgstr ""
+msgstr "Notas de Crédito"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields.selection,name:l10n_ec_niif.selection__account_payment_term__l10n_ec_sri_type__credito
 msgid "Crédito"
-msgstr ""
+msgstr "Crédito"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__currency_id model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "Moneda"
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/account_chart_template.py:0
 #, python-format
 msgid "Customer Debit Notes"
-msgstr ""
+msgstr "Notas de Crédito de Cliente"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,help:l10n_ec_niif.field_l10n_ec_withhold__access_url model:ir.model.fields,help:l10n_ec_niif.field_sri_xml_data__access_url
 msgid "Customer Portal URL"
-msgstr ""
+msgstr "Portal URL de Cliente"
 
 #. module: l10n_ec_niif
 #: model:l10n_latam.identification.type,name:l10n_ec_niif.it_cedula
 msgid "Cédula"
-msgstr ""
+msgstr "Cédula"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_error_code__code
 msgid "Código"
-msgstr ""
+msgstr "Código"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_credit_note_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_invoice_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_liquidation_document_body
 msgid "Código Auxiliar"
-msgstr ""
+msgstr "Código Auxiliar"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_credit_note_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_invoice_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_liquidation_document_body
 msgid "Código Principal"
-msgstr ""
+msgstr "Código Principal"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data_message_line__message_code_id
 msgid "Código de Mensaje"
-msgstr ""
+msgstr "Código de Mensaje"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_tax_support__code
 msgid "Código de Sustento Tributario"
-msgstr ""
+msgstr "Código de Sustento Tributario"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_account_tax__l10n_ec_ats_code model:ir.model.fields,field_description:l10n_ec_niif.field_account_tax_template__l10n_ec_ats_code
 msgid "Código en A.T.S."
-msgstr ""
+msgstr "Código en A.T.S."
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_account_tax__l10n_ec_xml_fe_code model:ir.model.fields,field_description:l10n_ec_niif.field_account_tax_template__l10n_ec_xml_fe_code
 msgid "Código en Facturacion electronica"
-msgstr ""
+msgstr "Código en Facturacion electronica"
 
 #. module: l10n_ec_niif
 #: model:ir.actions.act_window,name:l10n_ec_niif.action_sri_error_code_tree_view model:ir.ui.menu,name:l10n_ec_niif.sri_error_code_menu
 msgid "Códigos de Error SRI"
-msgstr ""
+msgstr "Códigos de Error SRI"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_company_resolution__date_from
 msgid "Date from"
-msgstr ""
+msgstr "Fecha desde"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_company_resolution__date_to
 msgid "Date to"
-msgstr ""
+msgstr "Fecha hasta"
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/l10n_ec_company_resolution.py:0
 #, python-format
 msgid "Dates are not valid"
-msgstr ""
+msgstr "Las fechas no son válidas"
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/account_move.py:0
 #, python-format
 msgid "Debe configurar la forma de pago por defecto esto lo encuentra en Contabilidad / SRI / Configuración"
-msgstr ""
+msgstr "Debe configurar la forma de pago por defecto esto lo encuentra en Contabilidad / SRI / Configuración"
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/l10n_ec_common_document_electronic.py:0
 #, python-format
 msgid "Debe reemplazar esta funcion l10n_ec_action_sent_mail_electronic en su clase heredada"
-msgstr ""
+msgstr "Debe reemplazar esta funcion l10n_ec_action_sent_mail_electronic en su clase heredada"
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/agency.py:0 code:addons/l10n_ec_niif/models/authorization.py:0 code:addons/l10n_ec_niif/models/authorization_supplier.py:0 code:addons/l10n_ec_niif/models/modules_mapping.py:0
 #: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_point_of_emission_document_sequence__document_type__debit_note
 #, python-format
 msgid "Debit Note"
-msgstr ""
+msgstr "Nota de débito"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_account_bank_statement_import_journal_creation__l10n_ec_debit_note model:ir.model.fields,field_description:l10n_ec_niif.field_account_journal__l10n_ec_debit_note
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_debit_note
 msgid "Debit Note?"
-msgstr ""
+msgstr "Nota de débito?"
 
 #. module: l10n_ec_niif
 #: model:ir.actions.act_window,name:l10n_ec_niif.action_move_debit_note_in_type model:ir.actions.act_window,name:l10n_ec_niif.action_move_debit_note_out_type model:ir.ui.menu,name:l10n_ec_niif.menu_action_move_debit_note_in_type
 #: model:ir.ui.menu,name:l10n_ec_niif.menu_action_move_debit_note_out_type
 msgid "Debit Notes"
-msgstr ""
+msgstr "Notas de Débito"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_identification_type__purchase_liquidation_document_type_id
 msgid "Default Document Type for Purchase's Liquidation"
-msgstr ""
+msgstr "Tipo de documento por defecto para liquidaciones de compras"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_res_users__l10n_ec_printer_default_id
 msgid "Default Point of Emission"
-msgstr ""
+msgstr "Punto de emisión por defecto"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_identification_type__purchase_credit_note_document_type_id
 msgid "Default Purchases Document Type for Credit Notes"
-msgstr ""
+msgstr "Tipo de documento de compras por defecto para notas de crédito"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_identification_type__purchase_debit_note_document_type_id
 msgid "Default Purchases Document Type for Debit Notes"
-msgstr ""
+msgstr "Tipo de documento de comrpas por defecto para para notas de débito"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_identification_type__purchase_invoice_document_type_id
 msgid "Default Purchases Document Type for Invoices"
-msgstr ""
+msgstr "Tipo de documento de compras por defecto para Facturas"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_identification_type__sale_credit_note_document_type_id
 msgid "Default Sales Document Type for Credit Notes"
-msgstr ""
+msgstr "Tipo de documento ventas por defecto para Notas de créditos"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_identification_type__sale_debit_note_document_type_id
 msgid "Default Sales Document Type for Debit Notes"
-msgstr ""
+msgstr "Tipo de documento ventas por defecto para notas de débito"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_identification_type__sale_invoice_document_type_id
 msgid "Default Sales Document Type for Invoices"
-msgstr ""
+msgstr "Tipo de documento ventas por defecto para Facturas"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
 msgid "Default Values"
-msgstr ""
+msgstr "Valores por Defecto"
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/agency.py:0 code:addons/l10n_ec_niif/models/authorization.py:0 code:addons/l10n_ec_niif/models/authorization_supplier.py:0 code:addons/l10n_ec_niif/models/modules_mapping.py:0
 #: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_point_of_emission_document_sequence__document_type__delivery_note
 #, python-format
 msgid "Delivery Note"
-msgstr ""
+msgstr "Guía de Remisión"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_form_view
 msgid "Desactivar Notificación"
-msgstr ""
+msgstr "Desactivar Notificación"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_error_code__name model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_credit_note_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_invoice_document_body
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_liquidation_document_body
 msgid "Descripción"
-msgstr ""
+msgstr "Descripción"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_tax_support__name
 msgid "Descripción de Sustento Tributario"
-msgstr ""
+msgstr "Descripción de Sustento Tributario"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__description
 msgid "Description"
-msgstr ""
+msgstr "Descripción"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_credit_note_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_invoice_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_liquidation_document_body
 msgid "Descuento"
-msgstr ""
+msgstr "Descuento"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_credit_note_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_invoice_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_liquidation_document_body
 msgid "Detalle adicional"
-msgstr ""
+msgstr "Detalle adicional"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields.selection,name:l10n_ec_niif.selection__sri_xml_data__state__returned
 msgid "Devuelta"
-msgstr ""
+msgstr "Devuelta"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_account_invoice_refund__display_name model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_agency__display_name
@@ -1529,94 +1529,94 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_key_type__display_name model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__display_name
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data_message_line__display_name model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data_send_try__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nombre Mostrado"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields.selection,name:l10n_ec_niif.selection__res_partner__l10n_ec_marital_status__d
 msgid "Divorciado(a)"
-msgstr ""
+msgstr "Divorciado(a)"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__number_document model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_form_view
 msgid "Document Number"
-msgstr ""
+msgstr "Número de documento"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_point_of_emission_document_sequence__document_type model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_line__document_type
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_supplier__document_type
 msgid "Document Type"
-msgstr ""
+msgstr "Tipo de documento"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization__line_ids model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_tax_support__document_type_ids
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_identification_type_form_view
 msgid "Document Types"
-msgstr ""
+msgstr "Tipos de Documento"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__document_type
 msgid "Document type"
-msgstr ""
+msgstr "Tipo de documento"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_form_view
 msgid "Documento"
-msgstr ""
+msgstr "Documento"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.portal_my_withhold
 msgid "Documentos"
-msgstr ""
+msgstr "Documentos"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
 msgid "Documentos Autorizados"
-msgstr ""
+msgstr "Documentos Autorizados"
 
 #. module: l10n_ec_niif
 #: model:ir.actions.server,name:l10n_ec_niif.ir_cron_xml_rejected_ir_actions_server model:ir.cron,cron_name:l10n_ec_niif.ir_cron_xml_rejected model:ir.cron,name:l10n_ec_niif.ir_cron_xml_rejected
 msgid "Documentos Rechazados o Devueltos"
-msgstr ""
+msgstr "Documentos Rechazados o Devueltos"
 
 #. module: l10n_ec_niif
 #: model:ir.actions.server,name:l10n_ec_niif.ir_cron_xml_offline_ir_actions_server model:ir.cron,cron_name:l10n_ec_niif.ir_cron_xml_offline model:ir.cron,name:l10n_ec_niif.ir_cron_xml_offline
 msgid "Documentos emitidos Off-Line"
-msgstr ""
+msgstr "Documentos emitidos Off-Line"
 
 #. module: l10n_ec_niif
 #: model:ir.actions.server,name:l10n_ec_niif.ir_cron_xml_per_contingence_ir_actions_server model:ir.cron,cron_name:l10n_ec_niif.ir_cron_xml_per_contingence model:ir.cron,name:l10n_ec_niif.ir_cron_xml_per_contingence
 msgid "Documentos emitidos en contingecia"
-msgstr ""
+msgstr "Documentos emitidos en contingecia"
 
 #. module: l10n_ec_niif
 #: model:ir.actions.server,name:l10n_ec_niif.ir_cron_xml_no_authorizated_ir_actions_server model:ir.cron,cron_name:l10n_ec_niif.ir_cron_xml_no_authorizated model:ir.cron,name:l10n_ec_niif.ir_cron_xml_no_authorizated
 msgid "Documentos en espera de autorizacion"
-msgstr ""
+msgstr "Documentos en espera de autorizacion"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_withhold__state__done
 msgid "Done"
-msgstr ""
+msgstr "Realizado"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.portal_my_withhold model_terms:ir.ui.view,arch_db:l10n_ec_niif.portal_withhold_page
 msgid "Download RIDE"
-msgstr ""
+msgstr "Descargar RIDE"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.portal_my_withhold model_terms:ir.ui.view,arch_db:l10n_ec_niif.portal_withhold_page
 msgid "Download XML"
-msgstr ""
+msgstr "Descargar XML"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_withhold__state__draft
 msgid "Draft"
-msgstr ""
+msgstr "Borrador"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_credit_days
 msgid "Días Crédito"
-msgstr ""
+msgstr "Días Crédito"
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/account_chart_template.py:0
@@ -1628,79 +1628,79 @@ msgstr "CAMBIO"
 #: code:addons/l10n_ec_niif/models/l10n_latam_document_type.py:0 code:addons/l10n_ec_niif/models/withhold.py:0
 #, python-format
 msgid "Ecuadorian Document %s must be like 001-001-123456789"
-msgstr ""
+msgstr "Los documentos ecuatorianos %s debe ser como 001-001-123456789"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_document_number
 msgid "Ecuadorian Document Number"
-msgstr ""
+msgstr "Número de documento ecuatoriano"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_identification_type_id
 msgid "Ecuadorian Identification Type"
-msgstr ""
+msgstr "Tipo de identificación ecuatoriana"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.res_users_form_view
 msgid "Ecuadorian Localization"
-msgstr ""
+msgstr "Localización Ecuatoriana"
 
 #. module: l10n_ec_niif
 #: model:ir.actions.act_window,name:l10n_ec_niif.action_l10n_ec_identification_type_tree_view model:ir.ui.menu,name:l10n_ec_niif.menu_action_l10n_ec_identification_type_tree_view model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_identification_type_form_view
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_identification_type_search_view
 msgid "Ecuadorian Move Identification Type"
-msgstr ""
+msgstr "Tipo de identificación de movimiento ecuatoriano"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_identification_type_tree_view
 msgid "Ecuadorian Move Identification Types"
-msgstr ""
+msgstr "Tipos de identificación de movimientos ecuatorianos"
 
 #. module: l10n_ec_niif
 #: model:ir.model,name:l10n_ec_niif.model_l10n_ec_tax_support model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_tax_support_form_view
 msgid "Ecuadorian Tax Support"
-msgstr ""
+msgstr "Sustento para impuesto Ecuatorianos"
 
 #. module: l10n_ec_niif
 #: model:ir.actions.act_window,name:l10n_ec_niif.action_l10n_ec_tax_support_tree_view model:ir.ui.menu,name:l10n_ec_niif.menu_action_l10n_ec_tax_support_tree_view model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_tax_support_search_view
 msgid "Ecuadorian Tax Supports"
-msgstr ""
+msgstr "Sustentos para impuesto Ecuatorianos"
 
 #. module: l10n_ec_niif
 #: model:ir.model,name:l10n_ec_niif.model_l10n_ec_withhold model:ir.model,name:l10n_ec_niif.model_l10n_ec_withhold_line
 msgid "Ecuadorian Withhold"
-msgstr ""
+msgstr "Retención de Impuestos Ecuatoriano"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_withhold_document_body
 msgid "Ejercicio Fiscal"
-msgstr ""
+msgstr "Ejercicio Fiscal"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields.selection,name:l10n_ec_niif.selection__account_move__l10n_ec_type_emission__electronic model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_point_of_emission__type_emission__electronic
 #: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_withhold__document_type__electronic
 msgid "Electronic"
-msgstr ""
+msgstr "Electrónico"
 
 #. module: l10n_ec_niif
 #: model:ir.ui.menu,name:l10n_ec_niif.sri_electronic_documents_menu
 msgid "Electronic Documents"
-msgstr ""
+msgstr "Documentos electrónico"
 
 #. module: l10n_ec_niif
 #: model:ir.actions.act_window,name:l10n_ec_niif.sri_key_type_action model:ir.ui.menu,name:l10n_ec_niif.sri_key_type_menu
 msgid "Electronic Signature Certs"
-msgstr ""
+msgstr "Certificados de firma electrónica"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__electronic_authorization
 msgid "Electronic authorization"
-msgstr ""
+msgstr "Autorización electrónica"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_account_invoice_refund__document_type__electronic
 msgid "Electrónico"
-msgstr ""
+msgstr "Electrónico"
 
 #. module: l10n_ec_niif
 #: model:ir.model,name:l10n_ec_niif.model_mail_template
@@ -1710,275 +1710,275 @@ msgstr "Plantillas de correo electrónico"
 #. module: l10n_ec_niif
 #: model:ir.model.fields.selection,name:l10n_ec_niif.selection__res_partner__l10n_ec_input_origins__v
 msgid "Empleado Privado"
-msgstr ""
+msgstr "Empleado Privado"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields.selection,name:l10n_ec_niif.selection__res_partner__l10n_ec_input_origins__b
 msgid "Empleado Público"
-msgstr ""
+msgstr "Empleado Público"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields.selection,name:l10n_ec_niif.selection__sri_xml_data__state__waiting
 msgid "En Espera de Autorización"
-msgstr ""
+msgstr "En Espera de Autorización"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_xml_version__xml_header_name
 msgid "Encabezado en XML"
-msgstr ""
+msgstr "Encabezado en XML"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields.selection,name:l10n_ec_niif.selection__sri_xml_data_send_try__type_send__send
 msgid "Enviado a Autorizar"
-msgstr ""
+msgstr "Enviado a Autorizar"
 
 #. module: l10n_ec_niif
 #: model:ir.actions.server,name:l10n_ec_niif.ir_cron_xml_electronic_sent_mail_ir_actions_server model:ir.cron,cron_name:l10n_ec_niif.ir_cron_xml_electronic_sent_mail model:ir.cron,name:l10n_ec_niif.ir_cron_xml_electronic_sent_mail
 msgid "Enviar Mail de Documentos electronicos"
-msgstr ""
+msgstr "Enviar Mail de Documentos electronicos"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_send_mail_from model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_send_mail_from
 msgid "Enviar Mail desde"
-msgstr ""
+msgstr "Enviar Mail desde"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_form_view
 msgid "Enviar mail a cliente"
-msgstr ""
+msgstr "Enviar mail a cliente"
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/sri_key_type.py:0
 #, python-format
 msgid "Error opening the signature, possibly the signature key has been entered incorrectly or the file is not supported"
-msgstr ""
+msgstr "Error abriendo la firma, es posible que la contraseña de la firma ha sido ingresada incorrectamente o el archivo no es soportado"
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/sri_key_type.py:0
 #, python-format
 msgid "Error opening the signature, possibly the signature key has been entered incorrectly or the file is not supported."
-msgstr ""
+msgstr "Error abriendo la firma, es posible que la contraseña de la firma ha sido ingresada incorrectamente o el archivo no es soportado"
 
 #. module: l10n_ec_niif
 #: model:ir.model,name:l10n_ec_niif.model_sri_error_code
 msgid "Errores SRI"
-msgstr ""
+msgstr "Errores SRI"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_is_environment_production
 msgid "Es Ambiente de Produccion?"
-msgstr ""
+msgstr "Es Ambiente de Produccion?"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,help:l10n_ec_niif.field_sri_error_code__change_key
 msgid "Es necesario regenerar la clave cuando se recibe este error"
-msgstr ""
+msgstr "Es necesario regenerar la clave cuando se recibe este error"
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/xml_data.py:0
 #, python-format
 msgid "Es obligatorio seleccionar el tipo de llave o archivo de cifrado usa para la firma de los documentos electrónicos, verificar la configuración de la compañia"
-msgstr ""
+msgstr "Es obligatorio seleccionar el tipo de llave o archivo de cifrado usa para la firma de los documentos electrónicos, verificar la configuración de la compañia"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_key_type__state model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__state model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_search_view
 msgid "Estado"
-msgstr ""
+msgstr "Estado"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,help:l10n_ec_niif.field_sri_xml_data__notification_active
 msgid "Esto permite activar o desactivar las notificaciones del presente documento"
-msgstr ""
+msgstr "Esto permite activar o desactivar las notificaciones del presente documento"
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/modules_mapping.py:0
 #, python-format
 msgid "Expense reimbursement"
-msgstr ""
+msgstr "Reembolso de Gastos"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_expiration_date model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization__expiration_date
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_supplier__expiration_date
 msgid "Expiration Date"
-msgstr ""
+msgstr "Fecha de expiración"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_account_bank_statement_import_journal_creation__l10n_ec_extended_type model:ir.model.fields,field_description:l10n_ec_niif.field_account_journal__l10n_ec_extended_type
 msgid "Extended Type"
-msgstr ""
+msgstr "Tipo extendido"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_legacy_document_date
 msgid "External Document Date"
-msgstr ""
+msgstr "Fecha de documento externo"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_legacy_document_number
 msgid "External Document Number"
-msgstr ""
+msgstr "Número de documento externo"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_credit_note_document_body model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_debit_note_document_body
 msgid "FACTURA"
-msgstr ""
+msgstr "FACTURA"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__invoice_out_id model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_point_of_emission_document_sequence__document_type__invoice
 msgid "Factura"
-msgstr ""
+msgstr "Factura"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_point_of_emission_document_sequence__document_type__credit_note
 msgid "Factura rectificativa"
-msgstr ""
+msgstr "Nota de Crédito"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_verificar_ruc_cedula_inh
 msgid "Facturación Electrónica"
-msgstr ""
+msgstr "Facturación Electrónica"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_xml_version__document_type__invoice model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_search_view model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
 msgid "Facturas"
-msgstr ""
+msgstr "Facturas"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_send_mail_invoice model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_send_mail_invoice
 msgid "Facturas electronicas?"
-msgstr ""
+msgstr "Facturas electronicas?"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__failed_message_ids model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__failed_message_ids
 msgid "Failed Messages"
-msgstr ""
+msgstr "Mensajes Fallidos"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.portal_my_withhold
 msgid "Fecha Autorización"
-msgstr ""
+msgstr "Fecha Autorización"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_search_view
 msgid "Fecha Creacion"
-msgstr ""
+msgstr "Fecha Creacion"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_search_view
 msgid "Fecha Emision"
-msgstr ""
+msgstr "Fecha Emision"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_authorization_date model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_common_document_electronic__l10n_ec_authorization_date
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__l10n_ec_authorization_date model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__l10n_ec_authorization_date
 msgid "Fecha de Autorización"
-msgstr ""
+msgstr "Fecha de Autorización"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_search_view
 msgid "Fecha de Creacion"
-msgstr ""
+msgstr "Fecha de Creacion"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__create_date model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data_message_line__create_date
 msgid "Fecha de Creación"
-msgstr ""
+msgstr "Fecha de Creación"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_key_type__emision_date model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_search_view
 msgid "Fecha de Emision"
-msgstr ""
+msgstr "Fecha de Emision"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_account_invoice_refund__date_invoice
 msgid "Fecha de Emisión"
-msgstr ""
+msgstr "Fecha de Emisión"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__send_date
 msgid "Fecha de Envío"
-msgstr ""
+msgstr "Fecha de Envío"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__signed_date
 msgid "Fecha de Firma"
-msgstr ""
+msgstr "Fecha de Firma"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__response_date
 msgid "Fecha de Respuesta"
-msgstr ""
+msgstr "Fecha de Respuesta"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_key_type__expire_date
 msgid "Fecha de Vencimiento"
-msgstr ""
+msgstr "Fecha de Vencimiento"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__cancel_date
 msgid "Fecha de cancelación"
-msgstr ""
+msgstr "Fecha de cancelación"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__date_emision_document
 msgid "Fecha de emision"
-msgstr ""
+msgstr "Fecha de emision"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_withhold_document_body
 msgid "Fecha de emisión"
-msgstr ""
+msgstr "Fecha de emisión"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields.selection,name:l10n_ec_niif.selection__res_partner__l10n_ec_sex__f
 msgid "Femenino"
-msgstr ""
+msgstr "Femenino"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_sri_payment_method_search_view
 msgid "Filters"
-msgstr ""
+msgstr "Filtros"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_search_view
 msgid "Filtros"
-msgstr ""
+msgstr "Filtros"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
 msgid "Firma Electrónica"
-msgstr ""
+msgstr "Firma Electrónica"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields.selection,name:l10n_ec_niif.selection__sri_key_type__state__valid
 msgid "Firma Valida"
-msgstr ""
+msgstr "Firma Valida"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields.selection,name:l10n_ec_niif.selection__sri_key_type__state__expired
 msgid "Firma Vencida"
-msgstr ""
+msgstr "Firma Vencida"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields.selection,name:l10n_ec_niif.selection__sri_xml_data__state__signed
 msgid "Firmado"
-msgstr ""
+msgstr "Firmado"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_line__first_sequence model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_sri_authorization_supplier__first_sequence
 msgid "First Sequence"
-msgstr ""
+msgstr "Primera Secuencia"
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
 #, python-format
 msgid "First sequence must be bigger than last sequence, please check the authorization %s start: % last:%s"
-msgstr ""
+msgstr "La primera secuencia debe ser mayor que la última secuencia, por favor verificar la autorización %s inicio: % último:%s"
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
 #, python-format
 msgid "First sequence must be bigger than zero, please check authorization %s"
-msgstr ""
+msgstr "La primera secuencia debe ser mayor que cero, por favor verificar autorización %s"
 
 #. module: l10n_ec_niif
 #: model:ir.model,name:l10n_ec_niif.model_account_fiscal_position
@@ -1988,68 +1988,68 @@ msgstr "Posición fiscal"
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__message_follower_ids model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "Seguidores"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__message_channel_ids model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Seguidores (Canales)"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__message_partner_ids model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Seguidores (Empresas)"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_res_partner__l10n_ec_foreign_type model:ir.model.fields,field_description:l10n_ec_niif.field_res_users__l10n_ec_foreign_type
 msgid "Foreign Type"
-msgstr ""
+msgstr "Tipo de Extranjero"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_foreign model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_account_invoice_refund__l10n_ec_foreign
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_res_partner__l10n_ec_foreign model:ir.model.fields,field_description:l10n_ec_niif.field_res_users__l10n_ec_foreign
 msgid "Foreign?"
-msgstr ""
+msgstr "Extranjero?"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.electronic_report_common_payment_info
 msgid "Forma de Pago"
-msgstr ""
+msgstr "Forma de Pago"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_sri_company_resolution_search_view model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_line_search_view model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_search_view
 msgid "Group By"
-msgstr ""
+msgstr "Agrupar por"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_xml_version__document_type__delivery_note
 msgid "Guias de Remision"
-msgstr ""
+msgstr "Guias de Remision"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__l10n_ec_related_document
 msgid "Have related document?"
-msgstr ""
+msgstr "Tiene documentos relativos?"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.portal_electronic_chatter
 msgid "History"
-msgstr ""
+msgstr "Historia"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.portal_document_electronic_error
 msgid "Hubo un error procesando su solicitud, intente mas tarde"
-msgstr ""
+msgstr "Hubo un error procesando su solicitud, intente mas tarde"
 
 #. module: l10n_ec_niif
 #: model:account.tax.group,name:l10n_ec_niif.tax_group_ice
 msgid "I.C.E."
-msgstr ""
+msgstr "I.C.E."
 
 #. module: l10n_ec_niif
 #: model:account.tax.group,name:l10n_ec_niif.tax_group_iva
 msgid "I.V.A. 12%"
-msgstr ""
+msgstr "I.V.A. 12%"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_account_invoice_refund__id model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_agency__id model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_common_document__id
@@ -2063,17 +2063,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_error_code__id model:ir.model.fields,field_description:l10n_ec_niif.field_sri_key_type__id model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__id
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data_message_line__id model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data_send_try__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: l10n_ec_niif
 #: model:account.tax.group,name:l10n_ec_niif.tax_group_irbpnr
 msgid "IRBPNR"
-msgstr ""
+msgstr "IRBPNR"
 
 #. module: l10n_ec_niif
 #: model:account.tax.group,name:l10n_ec_niif.tax_group_isd
 msgid "ISD"
-msgstr ""
+msgstr "ISD"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_iva model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_iva_currency
@@ -2083,152 +2083,152 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_withhold_line__type__iva model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_withhold_line_percent__type__iva
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_kanban_view model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_tree_no_create_view model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_tree_view
 msgid "IVA"
-msgstr ""
+msgstr "IVA"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
 msgid "IVA Account"
-msgstr ""
+msgstr "Cuenta IVA"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
 msgid "IVA Tag"
-msgstr ""
+msgstr "Etiqueta IVA"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__activity_exception_icon model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__activity_exception_icon
 msgid "Icon"
-msgstr ""
+msgstr "Icono"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,help:l10n_ec_niif.field_l10n_ec_withhold__activity_exception_icon model:ir.model.fields,help:l10n_ec_niif.field_sri_xml_data__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "El icono indicaba una excepción de actividad"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,help:l10n_ec_niif.field_l10n_ec_withhold__message_needaction model:ir.model.fields,help:l10n_ec_niif.field_l10n_ec_withhold__message_unread model:ir.model.fields,help:l10n_ec_niif.field_sri_xml_data__message_needaction
 #: model:ir.model.fields,help:l10n_ec_niif.field_sri_xml_data__message_unread
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Si esta seleccionado, nuevos mensajes requieren su atención"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,help:l10n_ec_niif.field_l10n_ec_withhold__message_has_error model:ir.model.fields,help:l10n_ec_niif.field_l10n_ec_withhold__message_has_sms_error model:ir.model.fields,help:l10n_ec_niif.field_sri_xml_data__message_has_error
 #: model:ir.model.fields,help:l10n_ec_niif.field_sri_xml_data__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Si esta seleccionado, algunos mensajes tienen un error de envío."
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_print_ride_aux_code model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_print_ride_aux_code
 msgid "Imprimir Codigo Auxiliar?"
-msgstr ""
+msgstr "Imprimir Codigo Auxiliar?"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_print_ride_main_code model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_print_ride_main_code
 msgid "Imprimir Codigo Principal?"
-msgstr ""
+msgstr "Imprimir Codigo Principal?"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_print_ride_detail1 model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_print_ride_detail1
 msgid "Imprimir Detalle Adicional 1?"
-msgstr ""
+msgstr "Imprimir Detalle Adicional 1?"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_print_ride_detail2 model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_print_ride_detail2
 msgid "Imprimir Detalle Adicional 2?"
-msgstr ""
+msgstr "Imprimir Detalle Adicional 2?"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_print_ride_detail3 model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_print_ride_detail3
 msgid "Imprimir Detalle Adicional 3?"
-msgstr ""
+msgstr "Imprimir Detalle Adicional 3?"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.e_withhold_document_body
 msgid "Impuesto"
-msgstr ""
+msgstr "Impuesto"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_sri_payment_method_search_view
 msgid "Inactive"
-msgstr ""
+msgstr "Inactivo"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields.selection,name:l10n_ec_niif.selection__res_partner__l10n_ec_input_origins__i
 msgid "Independiente"
-msgstr ""
+msgstr "Independiente"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,help:l10n_ec_niif.field_account_tax__l10n_ec_ats_code model:ir.model.fields,help:l10n_ec_niif.field_account_tax_template__l10n_ec_ats_code
 msgid "Indica el codigo usado en el Anexo Transaccional Simplificado del SRI"
-msgstr ""
+msgstr "Indica el codigo usado en el Anexo Transaccional Simplificado del SRI"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,help:l10n_ec_niif.field_account_tax__l10n_ec_xml_fe_code model:ir.model.fields,help:l10n_ec_niif.field_account_tax_template__l10n_ec_xml_fe_code
 msgid "Indica el codigo usado en el xml de facturacion electronica que se envia al SRI, en caso de no estar configrado se tomara el codigo de impuesto normal"
-msgstr ""
+msgstr "Indica el codigo usado en el xml de facturacion electronica que se envia al SRI, en caso de no estar configrado se tomara el codigo de impuesto normal"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_form_view
 msgid "Información"
-msgstr ""
+msgstr "Información"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data_message_line__other_info
 msgid "Información Adicional"
-msgstr ""
+msgstr "Información Adicional"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_form_view
 msgid "Information"
-msgstr ""
+msgstr "Información"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_point_of_emission_document_sequence__initial_sequence
 msgid "Initial Sequence"
-msgstr ""
+msgstr "Secuencia Inicial"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_point_of_emission__sequence_ids
 msgid "Initial Sequences"
-msgstr ""
+msgstr "Secuencias Inicial"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_res_partner__l10n_ec_input_origins model:ir.model.fields,field_description:l10n_ec_niif.field_res_users__l10n_ec_input_origins
 msgid "Input Origins"
-msgstr ""
+msgstr "Origen de Ingresos"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.sri_xml_data_form_view
 msgid "Intentos de Envío"
-msgstr ""
+msgstr "Intentos de Envío"
 
 #. module: l10n_ec_niif
 #: model:ir.model,name:l10n_ec_niif.model_sri_xml_data_send_try
 msgid "Intentos de envio a SRI"
-msgstr ""
+msgstr "Intentos de envio a SRI"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_max_intentos model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_max_intentos
 msgid "Intentos máximos de autorización"
-msgstr ""
+msgstr "Intentos máximos de autorización"
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
 #, python-format
 msgid "Invalid Format Number, this must be like 0123456789"
-msgstr ""
+msgstr "Número de formato inválido, este debe ser como 0123456789"
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
 #, python-format
 msgid "Invalid Number Format, this must be like 001"
-msgstr ""
+msgstr "Número de formato inválido, este debe ser como 001"
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
 #, python-format
 msgid "Invalid Number, that must be like 001-001-0123456789"
-msgstr ""
+msgstr "Número inválido, este debe ser como 001-001-0123456789"
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/agency.py:0 code:addons/l10n_ec_niif/models/authorization.py:0 code:addons/l10n_ec_niif/models/authorization_supplier.py:0 code:addons/l10n_ec_niif/models/modules_mapping.py:0
@@ -2241,95 +2241,95 @@ msgstr "Factura"
 #: code:addons/l10n_ec_niif/models/modules_mapping.py:0
 #, python-format
 msgid "Invoice / Document Type: %s is invalid, please check, get_document_type"
-msgstr ""
+msgstr "Factura / Tipo de Documento: %s es inválido, por favor verifica, get_document_type"
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/modules_mapping.py:0
 #, python-format
 msgid "Invoice / Document Type: %s is invalid, please check, get_invoice_type_reverse"
-msgstr ""
+msgstr "Factura / Tipo de documento: %s es inválido, por favor verifique, get_invoice_type_reverse"
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/modules_mapping.py:0
 #, python-format
 msgid "Invoice / Document Type: %s is invalid, please check, l10n_ec_get_invoice_type"
-msgstr ""
+msgstr "Factura / Tipo de Documento: %s es inválido, por favor verifica, l10n_ec_get_invoice_type"
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/modules_mapping.py:0
 #, python-format
 msgid "Invoice / Document Type: %s is not valid, please check. get_invoice_field_report"
-msgstr ""
+msgstr "Factura / Tipo de Documento: %s no es válido, por favor verifique. get_invoice_field_report"
 
 #. module: l10n_ec_niif
 #: model:ir.model,name:l10n_ec_niif.model_l10n_ec_account_invoice_refund model_terms:ir.ui.view,arch_db:l10n_ec_niif.account_invoice_liquidation_purchase_form_view
 msgid "Invoice Refund"
-msgstr ""
+msgstr "Factura de Reembolso"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_consumidor_final_limit model:ir.model.fields,field_description:l10n_ec_niif.field_res_config_settings__l10n_ec_consumidor_final_limit
 msgid "Invoice Sales Limit Final Consumer"
-msgstr ""
+msgstr "Limite de consumidor final para facturas de ventas"
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/account_move.py:0
 #, python-format
 msgid "Invoice date outside defined date range"
-msgstr ""
+msgstr "Fecha de factura fuera del rango definido"
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/account_move.py:0
 #, python-format
 msgid "Invoice date outside defined date range2"
-msgstr ""
+msgstr "Fecha de factura fuera del rango2 definido"
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/withhold.py:0
 #, python-format
 msgid "Invoice is already registered"
-msgstr ""
+msgstr "La factura ya se encuentra registrada"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_is_exportation
 msgid "Is Exportation?"
-msgstr ""
+msgstr "Es exportación?"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__l10n_ec_legacy_document
 msgid "Is External Doc. Modified?"
-msgstr ""
+msgstr "Es un documento externo modificado?"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__message_is_follower model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Es seguidor"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__l10n_ec_is_create_from_invoice
 msgid "Is created from invoice?"
-msgstr ""
+msgstr "Es creado desde la factura?"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_line_search_view model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_search_view
 msgid "Issue Date"
-msgstr ""
+msgstr "Fecha de emisión"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold__issue_date model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_withhold_line__issue_date
 msgid "Issue date"
-msgstr ""
+msgstr "Fecha de emisión"
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/agency.py:0
 #, python-format
 msgid "It is not possible to find authorization for the document type %s at the point of emission %s for the agency %s with date %s on company: %s"
-msgstr ""
+msgstr "No es posible para encontrar una autorización para el documento tipo %s para el punto de emisión %s en la agencia %s con fecha %s en la compañía: %s"
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/agency.py:0
 #, python-format
 msgid "It is not possible to find authorization for the document type %s at the point of issue %s for the agency %s with date %s"
-msgstr ""
+msgstr "No es posible para encontrar una autorización para el documento tipo %s para el punto de emisión %s en la agencia %s con fecha %s"
 
 #. module: l10n_ec_niif
 #: model:ir.model,name:l10n_ec_niif.model_account_journal model:ir.model.fields,field_description:l10n_ec_niif.field_account_move__journal_id model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
