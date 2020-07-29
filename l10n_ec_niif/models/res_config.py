@@ -216,3 +216,9 @@ class ResConfigSettings(models.TransientModel):
         related="company_id.l10n_ec_sri_payment_id",
         readonly=False,
     )
+    l10n_ec_sri_login_url = fields.Char(
+        related="company_id.l10n_ec_sri_login_url", readonly=False,
+    )
+    l10n_ec_sri_password = fields.Char(
+        related="company_id.l10n_ec_sri_password", readonly=False,
+    )

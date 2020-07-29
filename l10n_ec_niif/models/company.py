@@ -144,3 +144,11 @@ class ResCompany(models.Model):
             if not sri_resolution.date_to or sri_resolution.date_to >= date:
                 sri_resolution_rec = sri_resolution
         return sri_resolution_rec and sri_resolution_rec.resolution or ""
+
+    l10n_ec_sri_login_url = fields.Char(
+        string="Sri Login URL",
+        required=False,
+        default="https://srienlinea.sri.gob.ec/movil-servicios/api/v2.0/secured",
+    )
+
+    l10n_ec_sri_password = fields.Char(string="Sri Portal Password", required=False)

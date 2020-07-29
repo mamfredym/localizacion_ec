@@ -1,5 +1,7 @@
+import json
 import logging
 
+import requests
 from stdnum.ec import ci, ruc
 
 from odoo import SUPERUSER_ID, api, fields, models
@@ -278,6 +280,50 @@ class ResPartner(models.Model):
 
     def get_direccion_matriz(self, printer_point):
         return self.street or printer_point.agency_id.address_id.street or "NA"
+
+    @api.depends(
+        "country_id", "vat",
+    )
+    def _compute_sri_status(self):
+        for rec in self:
+            l10n_ec_sri_status = ""
+            if rec.vat:
+                response = False
+                try:
+                    response = requests.get(
+                        "https://srienlinea.sri.gob.ec/movil-servicios/api/v1.0/estadoTributario/%s"
+                        % rec.vat
+                    )
+                except Exception as e:
+                    _logger.debug("Error retrieving data from sri: %s" % str(e))
+                if response:
+                    data = response.json()
+                    if isinstance(data, dict):
+                        if "razonSocial" in data:
+                            l10n_ec_sri_status += (
+                                "<p><strong>Razon Social: </strong><span>%s</span></p>"
+                                % data.get("razonSocial", "")
+                            )
+                        if "descripcion" in data:
+                            l10n_ec_sri_status += (
+                                "<p><strong>Estado Tributario: </strong><span>%s</span></p>"
+                                % data.get("descripcion", "")
+                            )
+                        if "plazoVigenciaDoc" in data:
+                            l10n_ec_sri_status += (
+                                "<p><strong>Plazo de Vigencia: </strong><span>%s</span></p>"
+                                % data.get("plazoVigenciaDoc", "")
+                            )
+                        if "claseContribuyente" in data:
+                            l10n_ec_sri_status += (
+                                "<p><strong>Clase de Contribuyente: </strong><span>%s</span></p>"
+                                % data.get("claseContribuyente", "")
+                            )
+            rec.l10n_ec_sri_status = l10n_ec_sri_status
+
+    l10n_ec_sri_status = fields.Html(
+        string="SRI Status", readonly=True, compute="_compute_sri_status"
+    )
 
 
 ResPartner()
