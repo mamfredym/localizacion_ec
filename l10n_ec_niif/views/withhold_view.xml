@@ -274,6 +274,8 @@
                                 <field
                                     name="partner_authorization_id"
                                     attrs="{'invisible': ['|', ('document_type', 'not in', ('pre_printed', 'auto_printer')), ('type', '!=', 'sale')], 'required': [('document_type', 'in', ('pre_printed', 'auto_printer')), ('type', '=', 'sale')]}"
+                                    domain="[('document_type', '=', 'withholding'), ('commercial_partner_id', '=', partner_id)]"
+                                    context="{'document_type': 'withholding', 'type_emission': document_type}"
                                 />
                                 <field
                                     name="electronic_authorization"

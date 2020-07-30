@@ -258,6 +258,7 @@ class L10nEcWithhold(models.Model):
     def action_done(self):
         model_move = self.env["account.move"]
         model_aml = self.env["account.move.line"]
+        authorization_supplier_model = self.env["l10n_ec.sri.authorization.supplier"]
 
         def _create_move_line(
             move_id,
@@ -285,6 +286,23 @@ class L10nEcWithhold(models.Model):
 
         for rec in self:
             if rec.type == "sale":
+                authorization_supplier_model.validate_unique_document_partner(
+                    "withhold_sale", rec.number, rec.partner_id.id, rec.id,
+                )
+                if rec.document_type in ("pre_printed", "auto_printer"):
+                    if rec.partner_authorization_id:
+                        authorization_supplier_model.check_number_document(
+                            "withhold_sale",
+                            rec.number,
+                            rec.partner_authorization_id,
+                            rec.issue_date,
+                            rec.id,
+                            False,
+                        )
+                    else:
+                        raise UserError(
+                            _("You must enter the authorization of the third party")
+                        )
                 destination_account_id = rec.partner_id.property_account_receivable_id
                 if not rec.line_ids:
                     raise UserError(_("You must have at least one line to continue"))
@@ -601,6 +619,21 @@ class L10nEcWithhold(models.Model):
                             "There is already a withhold on sales with number %s please verify"
                         )
                         % (rec.number)
+                    )
+
+    @api.constrains("electronic_authorization")
+    def _check_duplicity_electronic_authorization(self):
+        for rec in self:
+            if rec.electronic_authorization:
+                other_docs = self.search(
+                    [("electronic_authorization", "=", rec.electronic_authorization,),]
+                )
+                if len(other_docs) > 1:
+                    raise ValidationError(
+                        _(
+                            "There is already a document with electronic authorization %s please verify"
+                        )
+                        % (rec.electronic_authorization)
                     )
 
 

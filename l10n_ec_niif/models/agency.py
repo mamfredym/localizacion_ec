@@ -423,7 +423,10 @@ class L10EcPointOfEmission(models.Model):
                 )
                 number_in_use = []
                 if recs:
-                    query = f"SELECT {field_name} FROM {res_model._table} WHERE id IN {tuple(recs.ids)} ORDER BY {field_name} "
+                    if len(recs.ids) == 1:
+                        query = f"SELECT {field_name} FROM {res_model._table} WHERE id = {recs.ids[0]} ORDER BY {field_name} "
+                    else:
+                        query = f"SELECT {field_name} FROM {res_model._table} WHERE id IN {tuple(recs.ids)} ORDER BY {field_name} "
                     self.env.cr.execute(query)
                     number_in_use = map(lambda x: x[0], self.env.cr.fetchall())
                 count = 0
