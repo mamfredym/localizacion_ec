@@ -3,7 +3,7 @@
     "version": "13.0.0.1.1",
     "category": "Localization",
     "author": "Spearhead",
-    "website": "https://www.vision-estrategica.com",
+    "website": "https://www.spearhead.global",
     "license": "LGPL-3",
     "depends": [
         "account",

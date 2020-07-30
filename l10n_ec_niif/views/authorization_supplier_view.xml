@@ -25,7 +25,6 @@
             <field name="arch" type="xml">
                 <form string="Third Party Authorization">
                     <group col="4">
-                        <field name="autoprinter" colspan="4" />
                         <field name="number" placeholder="0123456789" />
                         <field name="document_type" />
                         <field name="start_date" />
@@ -41,6 +40,7 @@
                             attrs="{'invisible': [('autoprinter', '=', True)], 'required': [('autoprinter', '=', False)]}"
                         />
                         <field name="padding" />
+                        <field name="autoprinter" />
                     </group>
                 </form>
             </field>

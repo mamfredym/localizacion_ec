@@ -707,6 +707,7 @@ class AccountMove(models.Model):
 
     def _check_document_values_for_ecuador(self):
         # TODO: se deberia agregar un campo en el grupo de impuesto para diferenciarlos(l10n_ec_type_ec)
+        supplier_authorization_model = self.env["l10n_ec.sri.authorization.supplier"]
         withhold_iva_group = self.env.ref("l10n_ec_niif.tax_group_iva_withhold")
         withhold_rent_group = self.env.ref("l10n_ec_niif.tax_group_renta_withhold")
         iva_group = self.env.ref("l10n_ec_niif.tax_group_iva")
@@ -740,6 +741,28 @@ class AccountMove(models.Model):
                         "You can't make bill or refund to final customer on ecuadorian company"
                     )
                 )
+        if self.l10n_ec_invoice_type in ("in_invoice", "in_refund", "debit_note_in"):
+            supplier_authorization_model.validate_unique_document_partner(
+                self.l10n_ec_invoice_type,
+                self.l10n_latam_document_number,
+                self.partner_id.id,
+            )
+            if self.l10n_ec_type_emission in ("pre_printed", "auto_printer"):
+                if self.l10n_ec_supplier_authorization_id:
+                    supplier_authorization_model.check_number_document(
+                        self.l10n_ec_invoice_type,
+                        self.l10n_latam_document_number,
+                        self.l10n_ec_supplier_authorization_id,
+                        self.invoice_date,
+                        self.id,
+                        self.commercial_partner_id.l10n_ec_foreign,
+                    )
+                else:
+                    raise UserError(
+                        _(
+                            "You must enter the authorization of the third party to continue"
+                        )
+                    )
         # validaciones en facturas de proveedor para emitir retenciones
         # * tener 1 impuesto de retencion IVA y 1 impuesto de retencion RENTA
         # * no permitir retener IVA si no hay impuesto de IVA(evitar IVA 0)
@@ -922,14 +945,15 @@ class AccountMove(models.Model):
             if move.company_id.country_id.code == "EC":
                 move._check_document_values_for_ecuador()
                 # proceso de retenciones en compra
-                if move.type == "in_invoice" and move.l10n_ec_withhold_required:
-                    current_withhold = withhold_model.create(
-                        move._prepare_withhold_values()
-                    )
-                    tax_data = move._prepare_withhold_lines_values(current_withhold)
-                    withhold_line_model.create(tax_data)
+                if move.type == "in_invoice":
+                    if move.l10n_ec_withhold_required:
+                        current_withhold = withhold_model.create(
+                            move._prepare_withhold_values()
+                        )
+                        tax_data = move._prepare_withhold_lines_values(current_withhold)
+                        withhold_line_model.create(tax_data)
 
-                    current_withhold.action_done()
+                        current_withhold.action_done()
                 # proceso de facturacion electronica
                 if move.is_invoice():
                     move.l10n_ec_action_create_xml_data()
@@ -2222,6 +2246,13 @@ class AccountMove(models.Model):
     l10n_ec_invoice_type = fields.Char(
         string="EC Invoice Type", compute="_compute_readonly_to_electronic_document"
     )
+    l10n_ec_supplier_authorization_id = fields.Many2one(
+        comodel_name="l10n_ec.sri.authorization.supplier",
+        string="Supplier Authorization",
+        required=False,
+    )
+
+    l10n_ec_electronic_authorization = fields.Char(readonly=False)
 
 
 AccountMove()

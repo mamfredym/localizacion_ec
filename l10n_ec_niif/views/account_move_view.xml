@@ -10,21 +10,29 @@
                 <xpath expr="//field[@name='ref']" position="after">
                     <field
                         name="l10n_ec_original_invoice_id"
-                        attrs="{'invisible': ['|', ('type', '!=', 'out_refund'), ('l10n_ec_legacy_document', '=', True)], 'required': [('type', '=', 'out_refund'), ('l10n_ec_legacy_document', '=', False)], 'readonly': [('state', '!=', 'draft')]}"
+                        attrs="{'invisible': ['|', ('type', '!=', 'out_refund'), ('l10n_ec_legacy_document', '=', True)],
+                        'required': [('type', '=', 'out_refund'), ('l10n_ec_legacy_document', '=', False)],
+                        'readonly': [('state', '!=', 'draft')]}"
                         domain="[('type', '=', 'in_invoice'), ('state', '=', 'posted'), ('commercial_partner_id', '=', commercial_partner_id)]"
                     />
                     <field
                         name="l10n_ec_original_invoice_id"
-                        attrs="{'invisible': ['|', ('type', '!=', 'in_refund'), ('l10n_ec_legacy_document', '=', True)], 'required': [('type', '=', 'in_refund'), ('l10n_ec_legacy_document', '=', False)], 'readonly': [('state', '!=', 'draft')]}"
+                        attrs="{'invisible': ['|', ('type', '!=', 'in_refund'), ('l10n_ec_legacy_document', '=', True)],
+                        'required': [('type', '=', 'in_refund'), ('l10n_ec_legacy_document', '=', False)],
+                        'readonly': [('state', '!=', 'draft')]}"
                         domain="[('type', '=', 'out_invoice'), ('state', '=', 'posted'), ('commercial_partner_id', '=', commercial_partner_id)]"
                     />
                     <field
                         name="l10n_ec_legacy_document_number"
-                        attrs="{'invisible': [('l10n_ec_legacy_document', '=', False)], 'required': [('l10n_ec_legacy_document', '=', True)], 'readonly': [('state', '!=', 'draft')]}"
+                        attrs="{'invisible': [('l10n_ec_legacy_document', '=', False)],
+                        'required': [('l10n_ec_legacy_document', '=', True)],
+                        'readonly': [('state', '!=', 'draft')]}"
                     />
                     <field
                         name="l10n_ec_legacy_document_date"
-                        attrs="{'invisible': [('l10n_ec_legacy_document', '=', False)], 'required': [('l10n_ec_legacy_document', '=', True)], 'readonly': [('state', '!=', 'draft')]}"
+                        attrs="{'invisible': [('l10n_ec_legacy_document', '=', False)],
+                        'required': [('l10n_ec_legacy_document', '=', True)],
+                        'readonly': [('state', '!=', 'draft')]}"
                     />
                     <field
                         name="l10n_ec_readonly_to_electronic_document"
@@ -33,8 +41,24 @@
                     <field name="l10n_ec_invoice_type" invisible="1" />
                     <field
                         name="l10n_ec_type_emission"
-                        attrs="{'required': [('l10n_latam_country_code', '=', 'EC'), '|', ('type', 'in', ('out_invoice', 'out_refund')), ('l10n_ec_liquidation', '=', True)], 'readonly': ['|', ('state', '!=', 'draft'), ('l10n_ec_invoice_type', 'in', ('out_invoice', 'out_refund', 'liquidation'))], 'invisible': [('l10n_ec_invoice_type', '=', '')]}"
+                        attrs="{'required': [('l10n_latam_country_code', '=', 'EC'), '|', ('type', 'in', ('out_invoice', 'out_refund')), ('l10n_ec_liquidation', '=', True)],
+                        'readonly': ['|', ('state', '!=', 'draft'), ('l10n_ec_invoice_type', 'in', ('out_invoice', 'out_refund', 'debit_note_out', 'liquidation'))],
+                        'invisible': [('l10n_ec_invoice_type', '=', '')]}"
                         force_save="1"
+                    />
+                    <field
+                        name="l10n_ec_electronic_authorization"
+                        attrs="{'invisible':['|', '|', ('l10n_ec_type_emission', '!=', 'electronic'), ('l10n_ec_invoice_type', 'not in', ('in_invoice', 'in_refund', 'debit_note_in')), '&amp;', ('l10n_ec_invoice_type', 'in', ('out_invoice', 'out_refund', 'debit_note_out', 'liquidation')), ('l10n_ec_xml_data_id','=',False)],
+                        'readonly': ['|', ('l10n_ec_invoice_type', 'in', ('out_invoice', 'out_refund', 'debit_note_out', 'liquidation')), '&amp;', ('l10n_ec_invoice_type', 'in', ('in_invoice', 'in_refund', 'debit_note_in')), ('state', '!=', 'draft')],
+                        'required': [('l10n_latam_country_code', '=', 'EC'), ('l10n_ec_type_emission', '=', 'electronic'), ('l10n_ec_invoice_type', 'in', ('in_invoice', 'in_refund', 'debit_note_in'))]}"
+                        force_save="1"
+                    />
+                    <field
+                        name="l10n_ec_supplier_authorization_id"
+                        attrs="{'required': [('l10n_latam_country_code', '=', 'EC'), ('l10n_ec_invoice_type', 'in', ('in_invoice', 'in_refund', 'debit_note_in')), ('l10n_ec_type_emission', 'in', ('pre_printed', 'auto_printer'))],
+                        'invisible': ['|', ('l10n_latam_country_code', '!=', 'EC'), '|', ('l10n_ec_invoice_type', 'not in', ('in_invoice', 'in_refund', 'debit_note_in')), ('l10n_ec_type_emission', 'not in', ('pre_printed', 'auto_printer'))],
+                        'readonly': [('state', '!=', 'draft')]}"
+                        context="{'document_type': l10n_ec_invoice_type, 'type_emission': l10n_ec_type_emission}"
                     />
                 </xpath>
                 <xpath expr="//field[@name='invoice_date']" position="attributes">
@@ -147,10 +171,6 @@
                         />
                         <field
                             name="l10n_ec_xml_key"
-                            attrs="{'invisible':[('l10n_ec_xml_data_id','=',False)]}"
-                        />
-                        <field
-                            name="l10n_ec_electronic_authorization"
                             attrs="{'invisible':[('l10n_ec_xml_data_id','=',False)]}"
                         />
                         <field

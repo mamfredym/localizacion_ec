@@ -15,15 +15,15 @@ class L10nECSriAuthorizationSupplier(models.Model):
     _name = "l10n_ec.sri.authorization.supplier"
     _description = "S.R.I. Authorization Suppliers"
 
-    def _get_name(self):
+    def _get_document_type(self):
         output = []
         doc_names = {
-            "invoice": _("Invoice"),
-            "delivery_note": _("Delivery Note"),
+            "in_invoice": _("Invoice"),
             "withholding": _("Withhold"),
             "liquidation": _("Liquidation of purchases"),
-            "credit_note": _("Credit Note"),
-            "debit_note": _("Debit Note"),
+            "in_refund": _("Credit Note"),
+            "debit_note_in": _("Debit Note"),
+            "delivery_note": _("Delivery Note"),
         }
         if not self.env.context.get("document_type", False):
             for doc in doc_names.keys():
@@ -203,7 +203,10 @@ class L10nECSriAuthorizationSupplier(models.Model):
         "Number", size=10, required=True, readonly=False, index=True, help="",
     )
     document_type = fields.Selection(
-        "_get_name", string="Document Type", required=True, help="",
+        "_get_document_type",
+        string="Document Type",
+        required=True,
+        default=lambda self: self.env.context.get("document_type", False),
     )
     agency = fields.Char("Agency", size=3, required=True, readonly=False, help="",)
     printer_point = fields.Char(
@@ -214,7 +217,13 @@ class L10nECSriAuthorizationSupplier(models.Model):
     first_sequence = fields.Integer("First Sequence", help="",)
     last_sequence = fields.Integer("Last Sequence", help="",)
     padding = fields.Integer("Padding", default=lambda *a: 9, help="",)
-    autoprinter = fields.Boolean("Autoprinter?", readonly=False, help="",)
+    autoprinter = fields.Boolean(
+        "Autoprinter?",
+        readonly=False,
+        help="",
+        default=lambda self: self.env.context.get("type_emission", False)
+        == "auto_printer",
+    )
 
     @api.model
     def check_number_document(

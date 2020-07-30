@@ -440,9 +440,6 @@ class L10EcPointOfEmission(models.Model):
             return next_seq, doc_finded
 
 
-L10EcPointOfEmission()
-
-
 class L10EcPointOfEmissionDocumentSequence(models.Model):
 
     _name = "l10n_ec.point.of.emission.document.sequence"
@@ -465,6 +462,3 @@ class L10EcPointOfEmissionDocumentSequence(models.Model):
         ],
         required=True,
     )
-
-
-L10EcPointOfEmissionDocumentSequence()

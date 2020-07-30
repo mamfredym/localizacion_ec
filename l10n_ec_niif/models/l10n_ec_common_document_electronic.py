@@ -28,6 +28,27 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
         "Fecha de Autorización", copy=False, index=True, readonly=True
     )
 
+    @api.constrains("l10n_ec_electronic_authorization")
+    def _check_duplicity_electronic_authorization(self):
+        for rec in self:
+            if rec.l10n_ec_electronic_authorization:
+                other_docs = self.search(
+                    [
+                        (
+                            "l10n_ec_electronic_authorization",
+                            "=",
+                            rec.l10n_ec_electronic_authorization,
+                        ),
+                    ]
+                )
+                if len(other_docs) > 1:
+                    raise ValidationError(
+                        _(
+                            "There is already a document with electronic authorization %s please verify"
+                        )
+                        % (rec.l10n_ec_electronic_authorization)
+                    )
+
     @api.model
     def get_identification_type_partner(self, partner):
         # codigos son tomados de la ficha tecnica del SRI, tabla 7

@@ -2,7 +2,7 @@ import re
 from xml.etree.ElementTree import SubElement
 
 from odoo import _, api, fields, models
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, UserError, ValidationError
 
 _STATES = {"draft": [("readonly", False)]}
 
@@ -581,6 +581,27 @@ class L10nEcWithhold(models.Model):
         return self._get_share_url(
             redirect=redirect, signup_partner=signup_partner, pid=pid
         )
+
+    @api.constrains(
+        "number", "type", "company_id",
+    )
+    def _check_number_duplicity(self):
+        for rec in self:
+            if rec.type == "purchase":
+                other_records = self.search(
+                    [
+                        ("type", "=", "purchase"),
+                        ("number", "=", rec.number),
+                        ("company_id", "=", rec.company_id.id),
+                    ]
+                )
+                if len(other_records) > 1:
+                    raise ValidationError(
+                        _(
+                            "There is already a withhold on sales with number %s please verify"
+                        )
+                        % (rec.number)
+                    )
 
 
 class L10nEcWithholdLinePercent(models.Model):
