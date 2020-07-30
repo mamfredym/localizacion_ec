@@ -125,11 +125,11 @@ class L10EcPointOfEmission(models.Model):
     def default_get(self, fields):
         values = super(L10EcPointOfEmission, self).default_get(fields)
         values["sequence_ids"] = [
-            (0, 0, {"document_type": "invoice", "initial_sequence": 1}),
+            (0, 0, {"document_type": "out_invoice", "initial_sequence": 1}),
             (0, 0, {"document_type": "withholding", "initial_sequence": 1}),
             (0, 0, {"document_type": "liquidation", "initial_sequence": 1}),
-            (0, 0, {"document_type": "credit_note", "initial_sequence": 1}),
-            (0, 0, {"document_type": "debit_note", "initial_sequence": 1}),
+            (0, 0, {"document_type": "out_refund", "initial_sequence": 1}),
+            (0, 0, {"document_type": "debit_note_out", "initial_sequence": 1}),
             (0, 0, {"document_type": "delivery_note", "initial_sequence": 1}),
         ]
         return values
@@ -456,11 +456,11 @@ class L10EcPointOfEmissionDocumentSequence(models.Model):
     document_type = fields.Selection(
         string="Document Type",
         selection=[
-            ("invoice", _("Invoice")),
+            ("out_invoice", _("Invoice")),
             ("withholding", _("Withhold")),
             ("liquidation", _("Liquidation of Purchases")),
-            ("credit_note", _("Credit Note")),
-            ("debit_note", _("Debit Note")),
+            ("out_refund", _("Credit Note")),
+            ("debit_note_out", _("Debit Note")),
             ("delivery_note", _("Delivery Note")),
         ],
         required=True,

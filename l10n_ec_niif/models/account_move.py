@@ -1,4 +1,3 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
 from xml.etree.ElementTree import SubElement
 
 from odoo import _, api, fields, models
@@ -539,6 +538,9 @@ class AccountMove(models.Model):
                             auth_line,
                         ) = move.l10n_ec_point_of_emission_id.get_next_value_sequence(
                             invoice_type, move.invoice_date, False
+                        )
+                        move.l10n_ec_type_emission = (
+                            move.l10n_ec_point_of_emission_id.type_emission
                         )
                         if next_number:
                             move.l10n_latam_document_number = next_number
@@ -2185,6 +2187,41 @@ class AccountMove(models.Model):
             if template:
                 res["context"]["default_template_id"] = template.id
         return res
+
+    @api.depends(
+        "type",
+        "l10n_ec_debit_note",
+        "l10n_ec_liquidation",
+        "l10n_ec_type_emission",
+        "company_id.country_id",
+    )
+    def _compute_readonly_to_electronic_document(self):
+        for rec in self:
+            l10n_ec_readonly_to_electronic_document = False
+            l10n_ec_invoice_type = ""
+            if rec.company_id.country_id.code == "EC":
+                l10n_ec_invoice_type = rec.l10n_ec_get_invoice_type()
+                if rec.l10n_ec_type_emission in (
+                    "electronic",
+                    "auto_printer",
+                ) and l10n_ec_invoice_type in (
+                    "out_invoice",
+                    "out_refund",
+                    "liquidation",
+                ):
+                    l10n_ec_readonly_to_electronic_document = True
+            rec.l10n_ec_readonly_to_electronic_document = (
+                l10n_ec_readonly_to_electronic_document
+            )
+            rec.l10n_ec_invoice_type = l10n_ec_invoice_type
+
+    l10n_ec_readonly_to_electronic_document = fields.Boolean(
+        string="Readonly Electronic Document",
+        compute="_compute_readonly_to_electronic_document",
+    )
+    l10n_ec_invoice_type = fields.Char(
+        string="EC Invoice Type", compute="_compute_readonly_to_electronic_document"
+    )
 
 
 AccountMove()

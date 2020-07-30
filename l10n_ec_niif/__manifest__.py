@@ -1,6 +1,6 @@
 {
     "name": "Ecuador - Accounting IFRS",
-    "version": "13.0.0.1.0",
+    "version": "13.0.0.1.1",
     "category": "Localization",
     "author": "Spearhead",
     "website": "https://www.vision-estrategica.com",

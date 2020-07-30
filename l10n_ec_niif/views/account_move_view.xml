@@ -26,16 +26,22 @@
                         name="l10n_ec_legacy_document_date"
                         attrs="{'invisible': [('l10n_ec_legacy_document', '=', False)], 'required': [('l10n_ec_legacy_document', '=', True)], 'readonly': [('state', '!=', 'draft')]}"
                     />
+                    <field
+                        name="l10n_ec_readonly_to_electronic_document"
+                        invisible="1"
+                    />
+                    <field name="l10n_ec_invoice_type" invisible="1" />
+                    <field
+                        name="l10n_ec_type_emission"
+                        attrs="{'required': [('l10n_latam_country_code', '=', 'EC'), '|', ('type', 'in', ('out_invoice', 'out_refund')), ('l10n_ec_liquidation', '=', True)], 'readonly': ['|', ('state', '!=', 'draft'), ('l10n_ec_invoice_type', 'in', ('out_invoice', 'out_refund', 'liquidation'))], 'invisible': [('l10n_ec_invoice_type', '=', '')]}"
+                        force_save="1"
+                    />
                 </xpath>
                 <xpath expr="//field[@name='invoice_date']" position="attributes">
                     <attribute
                         name="attrs"
-                    >{'readonly': [('l10n_ec_type_emission', 'in', ('electronic', 'auto_printer'))]}</attribute>
-                </xpath>
-                <xpath expr="//field[@name='invoice_date_due']" position="attributes">
-                    <attribute
-                        name="attrs"
-                    >{'readonly': [('l10n_ec_type_emission', 'in', ('electronic', 'auto_printer'))]}</attribute>
+                    >{'readonly': [('l10n_ec_readonly_to_electronic_document', '=', True)]}</attribute>
+                    <attribute name="force_save">1</attribute>
                 </xpath>
                 <xpath expr="//field[@name='journal_id']" position="attributes">
                     <attribute
@@ -71,11 +77,6 @@
                         />
                         <field name="l10n_ec_debit_note" invisible="1" />
                         <field name="l10n_ec_liquidation" invisible="1" />
-                        <field
-                            name="l10n_ec_type_emission"
-                            attrs="{'required': [('l10n_latam_country_code', '=', 'EC'), '|', ('type', 'in', ('out_invoice', 'out_refund')), ('l10n_ec_liquidation', '=', True)], 'readonly': [('state', '!=', 'draft')]}"
-                            force_save="1"
-                        />
                         <field
                             name="l10n_ec_authorization_line_id"
                             options="{'no_create': True}"
