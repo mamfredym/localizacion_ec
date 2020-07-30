@@ -199,6 +199,12 @@ class L10nECSriAuthorizationSupplier(models.Model):
     partner_id = fields.Many2one(
         "res.partner", "Partner", required=False, index=True, auto_join=True, help="",
     )
+    commercial_partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Commercial partner",
+        related="partner_id.commercial_partner_id",
+        store=True,
+    )
     number = fields.Char(
         "Number", size=10, required=True, readonly=False, index=True, help="",
     )

@@ -437,6 +437,7 @@ class AccountMove(models.Model):
                     .get("default_printer_default_id")
                 )
                 values["l10n_ec_point_of_emission_id"] = default_printer.id
+                values["l10n_ec_point_of_emission_withhold_id"] = default_printer.id
                 if default_printer:
                     values["l10n_ec_type_emission"] = default_printer.type_emission
                     if invoice_type == "in_invoice":
@@ -552,7 +553,9 @@ class AccountMove(models.Model):
         compute="_compute_l10n_ec_withhold_required",
         store=True,
     )
-    l10n_ec_withhold_date = fields.Date(string="Withhold Date", required=False)
+    l10n_ec_withhold_date = fields.Date(
+        string="Withhold Date", readonly=True, states={"draft": [("readonly", False)]},
+    )
 
     @api.depends(
         "type", "line_ids.tax_ids", "l10n_ec_debit_note", "l10n_ec_liquidation",
@@ -2254,8 +2257,12 @@ class AccountMove(models.Model):
 
     l10n_ec_electronic_authorization = fields.Char(readonly=False)
 
-
-AccountMove()
+    @api.onchange("invoice_date")
+    def _onchange_invoice_date(self):
+        res = super(AccountMove, self)._onchange_invoice_date()
+        if self.invoice_date:
+            self.l10n_ec_withhold_date = self.invoice_date
+        return res
 
 
 class AccountMoveLine(models.Model):

@@ -423,15 +423,8 @@ class L10EcPointOfEmission(models.Model):
                 )
                 number_in_use = []
                 if recs:
-                    query = "SELECT %(field_name)s FROM %(table)s WHERE id IN %(ids)s ORDER BY %(field_name)s "
-                    self.env.cr.execute(
-                        query,
-                        {
-                            "field_name": field_name,
-                            "table": res_model._table,
-                            "ids": tuple(recs.ids),
-                        },
-                    )
+                    query = f"SELECT {field_name} FROM {res_model._table} WHERE id IN {tuple(recs.ids)} ORDER BY {field_name} "
+                    self.env.cr.execute(query)
                     number_in_use = map(lambda x: x[0], self.env.cr.fetchall())
                 count = 0
                 while next_seq in number_in_use:
@@ -454,7 +447,7 @@ class L10EcPointOfEmissionDocumentSequence(models.Model):
         string="Document Type",
         selection=[
             ("out_invoice", _("Invoice")),
-            ("withholding", _("Withhold")),
+            ("withhold_purchase", _("Withhold")),
             ("liquidation", _("Liquidation of Purchases")),
             ("out_refund", _("Credit Note")),
             ("debit_note_out", _("Debit Note")),

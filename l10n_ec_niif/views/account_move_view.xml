@@ -58,6 +58,7 @@
                         attrs="{'required': [('l10n_latam_country_code', '=', 'EC'), ('l10n_ec_invoice_type', 'in', ('in_invoice', 'in_refund', 'debit_note_in')), ('l10n_ec_type_emission', 'in', ('pre_printed', 'auto_printer'))],
                         'invisible': ['|', ('l10n_latam_country_code', '!=', 'EC'), '|', ('l10n_ec_invoice_type', 'not in', ('in_invoice', 'in_refund', 'debit_note_in')), ('l10n_ec_type_emission', 'not in', ('pre_printed', 'auto_printer'))],
                         'readonly': [('state', '!=', 'draft')]}"
+                        domain="[('document_type', '=', l10n_ec_invoice_type), ('commercial_partner_id', '=', commercial_partner_id)]"
                         context="{'document_type': l10n_ec_invoice_type, 'type_emission': l10n_ec_type_emission}"
                     />
                 </xpath>
