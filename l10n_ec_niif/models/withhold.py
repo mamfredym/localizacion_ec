@@ -246,6 +246,7 @@ class L10nEcWithhold(models.Model):
         return True
 
     @api.onchange("number")
+    @api.constrains("number")
     def _onchange_number_sale_withhold(self):
         for rec in self:
             if rec.number:

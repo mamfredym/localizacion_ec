@@ -501,6 +501,7 @@ class AccountMove(models.Model):
         string="Withhold Number",
         required=False,
         readonly=True,
+        size=17,
         states={"draft": [("readonly", False)]},
     )
 
