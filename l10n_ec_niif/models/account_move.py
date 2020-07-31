@@ -749,6 +749,7 @@ class AccountMove(models.Model):
                 self.l10n_ec_invoice_type,
                 self.l10n_latam_document_number,
                 self.partner_id.id,
+                self.id,
             )
             if self.l10n_ec_type_emission in ("pre_printed", "auto_printer"):
                 if self.l10n_ec_supplier_authorization_id:
