@@ -35,6 +35,12 @@
                         'readonly': [('state', '!=', 'draft')]}"
                     />
                     <field
+                        name="l10n_ec_legacy_document_authorization"
+                        attrs="{'invisible': [('l10n_ec_legacy_document', '=', False)],
+                        'required': [('l10n_ec_legacy_document', '=', True)],
+                        'readonly': [('state', '!=', 'draft')]}"
+                    />
+                    <field
                         name="l10n_ec_readonly_to_electronic_document"
                         invisible="1"
                     />

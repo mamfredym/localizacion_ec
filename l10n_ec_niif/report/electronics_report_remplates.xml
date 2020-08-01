@@ -212,7 +212,7 @@
                     </td>
                     <td class="text-right amount-xl">
                         <span
-                            t-esc="payment_line['amount']"
+                            t-esc="payment_line['total']"
                             t-options='{"widget": "monetary", "display_currency": res_company.currency_id}'
                         />
                     </td>

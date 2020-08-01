@@ -260,6 +260,8 @@ class AccountInvoiceRefund(models.Model):
             if auth_ids:
                 self.document_number = auth_data.get("res_number", "")
                 self.l10n_ec_partner_authorization_id = auth_ids[0]
+            else:
+                self.l10n_ec_partner_authorization_id = False
         # si el numero esta ingresado, validar duplicidad
         invoice_number = auth_data.get("res_number", "")
         if len(invoice_number.split("-")) == 3 and auth_ids:

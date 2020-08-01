@@ -175,6 +175,9 @@ class AccountMove(models.Model):
     )
     l10n_ec_legacy_document_date = fields.Date(string="External Document Date")
     l10n_ec_legacy_document_number = fields.Char(string="External Document Number")
+    l10n_ec_legacy_document_authorization = fields.Char(
+        string="External Authorization Number", size=49
+    )
     l10n_ec_credit_days = fields.Integer(
         string="Días Crédito", compute="_compute_l10n_ec_credit_days", store=True
     )
@@ -1402,6 +1405,7 @@ class AccountMove(models.Model):
             if float_is_zero(amount, precision_rounding=self.currency_id.rounding):
                 continue
             payment_vals = {
+                "name": counterpart_line.payment_id.l10n_ec_sri_payment_id.name,
                 "formaPago": counterpart_line.payment_id.l10n_ec_sri_payment_id.code,
                 "total": amount,
             }
@@ -1427,6 +1431,7 @@ class AccountMove(models.Model):
                     )
                 )
             payment_vals = {
+                "name": l10n_ec_sri_payment.name,
                 "formaPago": l10n_ec_sri_payment.code,
                 "total": self.amount_total,
             }
@@ -1518,8 +1523,8 @@ class AccountMove(models.Model):
         if self.l10n_ec_identification_type_id:
             tipoIdentificacionComprador = self.l10n_ec_identification_type_id.code
         elif self.commercial_partner_id:
-            tipoIdentificacionComprador = self.get_identification_type_partner(
-                self.commercial_partner_id
+            tipoIdentificacionComprador = (
+                self.commercial_partner_id.l10n_ec_get_sale_identification_partner()
             )
         else:
             # si no tengo informacion paso por defecto consumiro final
@@ -1687,8 +1692,8 @@ class AccountMove(models.Model):
         if self.l10n_ec_identification_type_id:
             tipoIdentificacionComprador = self.l10n_ec_identification_type_id.code
         elif self.commercial_partner_id:
-            tipoIdentificacionComprador = self.get_identification_type_partner(
-                self.commercial_partner_id
+            tipoIdentificacionComprador = (
+                self.commercial_partner_id.l10n_ec_get_sale_identification_partner()
             )
         else:
             # si no tengo informacion paso por defecto consumiro final
@@ -1838,8 +1843,8 @@ class AccountMove(models.Model):
         if self.l10n_ec_identification_type_id:
             tipoIdentificacionComprador = self.l10n_ec_identification_type_id.code
         elif self.commercial_partner_id:
-            tipoIdentificacionComprador = self.get_identification_type_partner(
-                self.commercial_partner_id
+            tipoIdentificacionComprador = (
+                self.commercial_partner_id.l10n_ec_get_sale_identification_partner()
             )
         else:
             # si no tengo informacion paso por defecto consumiro final
@@ -1954,8 +1959,8 @@ class AccountMove(models.Model):
             company.partner_id.property_account_position_id
         )
         if self.commercial_partner_id:
-            tipoIdentificacionComprador = self.get_identification_type_partner(
-                self.commercial_partner_id
+            tipoIdentificacionComprador = (
+                self.commercial_partner_id.l10n_ec_get_sale_identification_partner()
             )
         else:
             # si no tengo informacion paso por defecto consumiro final
@@ -2133,8 +2138,8 @@ class AccountMove(models.Model):
             reembolsos = SubElement(node, "reembolsos")
             for refund in self.l10n_ec_refund_ids:
                 reembolso_detail = SubElement(reembolsos, "reembolsoDetalle")
-                tipoIdentificacionComprador = self.get_identification_type_partner(
-                    refund.partner_id.commercial_partner_id
+                tipoIdentificacionComprador = (
+                    refund.partner_id.commercial_partner_id.l10n_ec_get_sale_identification_partner()
                 )
                 SubElement(
                     reembolso_detail, "tipoIdentificacionProveedorReembolso"

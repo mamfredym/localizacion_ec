@@ -1,6 +1,11 @@
+import logging
+
 import pytz
 
-from odoo import api, fields, models, tools
+from odoo import _, api, fields, models, tools
+from odoo.exceptions import AccessError, UserError
+
+_logger = logging.getLogger(__name__)
 
 
 class L10necUtils(models.AbstractModel):
@@ -30,6 +35,36 @@ class L10necUtils(models.AbstractModel):
             return str_format.format(valor)
         else:
             return "0.00"
+
+    @api.model
+    def split_document_number(self, document_number, raise_error=False):
+        """
+        Separa un numero de la forma 001-001-000000001 en cada parte correspondiente a la agencia, punto de emision, secuencial
+        @param document_number: str con el numero,
+                si el numero no tiene el formato correcto se lanzara una excepcion si asi se pasa en el parametro raise_error
+                caso contrario se pasara los valores por defecto 001-001-000000999
+        @param raise_error: Opcional, si es True y el numero no tiene el formato adecuado, se lanzara una excepcion
+                Si es False, no se lanza excepcion y se devuelven los valores por defecto
+        @return: tuple(agencia, punto_emision, secuencial)
+        """
+        agency, printer_point, sequence_number = "", "", ""
+        try:
+            number_parts = document_number.split("-")
+        except Exception as ex:
+            _logger.error(tools.ustr(ex))
+            number_parts = []
+        if not number_parts or len(number_parts) != 3:
+            if raise_error:
+                raise UserError(
+                    _(
+                        "The document number es incorrect, must be 001-00X-000XXXXXX, where X is a number"
+                    )
+                )
+            else:
+                agency, printer_point, sequence_number = "001", "001", "000000999"
+        else:
+            agency, printer_point, sequence_number = number_parts
+        return agency, printer_point, sequence_number
 
     @api.model
     def get_obligado_contabilidad(self, fiscal_position=None):

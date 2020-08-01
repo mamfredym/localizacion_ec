@@ -507,8 +507,8 @@ class L10nEcWithhold(models.Model):
         )
         SubElement(
             infoCompRetencion, "tipoIdentificacionSujetoRetenido"
-        ).text = self.get_identification_type_partner(
-            self.partner_id.commercial_partner_id
+        ).text = (
+            self.partner_id.commercial_partner_id.l10n_ec_get_sale_identification_partner()
         )
         SubElement(
             infoCompRetencion, "razonSocialSujetoRetenido"

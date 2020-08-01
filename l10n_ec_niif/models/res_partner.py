@@ -325,5 +325,31 @@ class ResPartner(models.Model):
         string="SRI Status", readonly=True, compute="_compute_sri_status"
     )
 
+    def l10n_ec_get_sale_identification_partner(self):
+        return self._l10n_ec_get_sale_identification_partner(self.l10n_ec_type_sri)
+
+    @api.model
+    def _l10n_ec_get_sale_identification_partner(self, l10n_ec_type_sri):
+        # codigos son tomados de la ficha tecnica del SRI, tabla 7
+        # pasar por defecto consumidor final
+        tipoIdentificacion_sale = "07"
+        if l10n_ec_type_sri == "Ruc":
+            tipoIdentificacion_sale = "04"
+        elif l10n_ec_type_sri == "Cedula":
+            tipoIdentificacion_sale = "05"
+        elif l10n_ec_type_sri == "Pasaporte":
+            tipoIdentificacion_sale = "06"
+        return tipoIdentificacion_sale
+
+    def l10n_ec_get_purchase_identification_partner(self):
+        # codigos son tomados de la ficha tecnica del SRI(para ATS), tabla 2
+        if self.l10n_ec_type_sri == "Ruc":
+            tipoIdentificacion_purchase = "01"
+        elif self.l10n_ec_type_sri == "Cedula":
+            tipoIdentificacion_purchase = "02"
+        else:
+            tipoIdentificacion_purchase = "03"
+        return tipoIdentificacion_purchase
+
 
 ResPartner()

@@ -61,7 +61,7 @@
             />
         </t>
         <t t-set="comment" t-value="o.narration" />
-        <t t-set="payments_info" t-value="o.l10n_ec_get_pagos_data()" />
+        <t t-set="payments_info" t-value="o.l10n_ec_get_payment_data()" />
         <t t-set="tarifa_iva" t-value="o.l10n_ec_get_tarifa_iva()" />
         <div
             class="article"
