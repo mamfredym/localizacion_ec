@@ -2265,6 +2265,16 @@ class AccountMove(models.Model):
             self.l10n_ec_withhold_date = self.invoice_date
         return res
 
+    def _get_name_invoice_report(self, report_xml_id):
+        self.ensure_one()
+        if self.l10n_latam_use_documents and self.company_id.country_id.code == "EC":
+            custom_report = {
+                "account.report_invoice_document_with_payments": "l10n_ec_niif.report_invoice_document_with_payments_extension",
+                "account.report_invoice_document": "l10n_ec_niif.report_invoice_document_extension",
+            }
+            return custom_report.get(report_xml_id) or report_xml_id
+        return super()._get_name_invoice_report(report_xml_id)
+
 
 class AccountMoveLine(models.Model):
     _inherit = ["account.move.line", "l10n_ec.common.document.line"]
