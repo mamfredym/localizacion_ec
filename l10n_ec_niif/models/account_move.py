@@ -2,7 +2,7 @@ from xml.etree.ElementTree import SubElement
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import float_compare, float_round
+from odoo.tools import float_compare, float_is_zero, float_round
 from odoo.tools.safe_eval import safe_eval
 
 from ..models import modules_mapping
@@ -1373,9 +1373,73 @@ class AccountMove(models.Model):
         SubElement(tag, "valor").text = util_model.formato_numero(valor, 2)
         return tag
 
-    def l10n_ec_get_pagos_data(self):
-        # TODO: agregar informacion de pagos, considerar para ATS
-        return []
+    def l10n_ec_get_payment_data(self):
+        payment_data = []
+        foreign_currency = (
+            self.currency_id
+            if self.currency_id != self.company_id.currency_id
+            else False
+        )
+        pay_term_line_ids = self.line_ids.filtered(
+            lambda line: line.account_id.user_type_id.type in ("receivable", "payable")
+        )
+        partials = pay_term_line_ids.mapped(
+            "matched_debit_ids"
+        ) + pay_term_line_ids.mapped("matched_credit_ids")
+        for partial in partials:
+            counterpart_lines = partial.debit_move_id + partial.credit_move_id
+            counterpart_line = counterpart_lines.filtered(
+                lambda line: line not in self.line_ids
+            )
+            if not counterpart_line.payment_id.l10n_ec_sri_payment_id:
+                continue
+            if foreign_currency and partial.currency_id == foreign_currency:
+                amount = partial.amount_currency
+            else:
+                amount = partial.company_currency_id._convert(
+                    partial.amount, self.currency_id, self.company_id, self.date
+                )
+            if float_is_zero(amount, precision_rounding=self.currency_id.rounding):
+                continue
+            payment_vals = {
+                "formaPago": counterpart_line.payment_id.l10n_ec_sri_payment_id.code,
+                "total": amount,
+            }
+            if (
+                self.invoice_payment_term_id
+                and self.invoice_payment_term_id.l10n_ec_sri_type == "credito"
+                and self.l10n_ec_credit_days > 0
+            ):
+                payment_vals.update(
+                    {"plazo": self.l10n_ec_credit_days, "unidadTiempo": "dias",}
+                )
+            payment_data.append(payment_vals)
+        if not payment_data:
+            l10n_ec_sri_payment = self.l10n_ec_sri_payment_id
+            if not l10n_ec_sri_payment:
+                l10n_ec_sri_payment = self.commercial_partner_id.l10n_ec_sri_payment_id
+            if not l10n_ec_sri_payment:
+                l10n_ec_sri_payment = self.company_id.l10n_ec_sri_payment_id
+            if not l10n_ec_sri_payment:
+                raise UserError(
+                    _(
+                        "Debe configurar la forma de pago por defecto esto lo encuentra en Contabilidad / SRI / Configuración"
+                    )
+                )
+            payment_vals = {
+                "formaPago": l10n_ec_sri_payment.code,
+                "total": self.amount_total,
+            }
+            if (
+                self.invoice_payment_term_id
+                and self.invoice_payment_term_id.l10n_ec_sri_type == "credito"
+                and self.l10n_ec_credit_days > 0
+            ):
+                payment_vals.update(
+                    {"plazo": self.l10n_ec_credit_days, "unidadTiempo": "dias",}
+                )
+            payment_data.append(payment_vals)
+        return payment_data
 
     def l10n_ec_get_tarifa_iva(self):
         tarifa_iva = 0
@@ -1526,40 +1590,21 @@ class AccountMove(models.Model):
             self.company_id.currency_id.name or "DOLAR"
         )
         # Procesamiento de los pagos
-        pagos_data = self.l10n_ec_get_pagos_data()
-        if pagos_data:
-            pagos = SubElement(infoFactura, "pagos")
-            for payment_code in pagos_data.keys():
-                pago = SubElement(pagos, "pago")
-                SubElement(pago, "formaPago").text = payment_code
-                SubElement(pago, "total").text = util_model.formato_numero(
-                    pagos_data.get(payment_code, 0.0)
-                )
-        else:
-            if not company.l10n_ec_sri_payment_id:
-                raise UserError(
-                    _(
-                        "Debe configurar la forma de pago por defecto esto lo encuentra en Contabilidad / SRI / Configuración"
-                    )
-                )
-            pagos = SubElement(infoFactura, "pagos")
+        payments_data = self.l10n_ec_get_payment_data()
+        pagos = SubElement(infoFactura, "pagos")
+        for payment_data in payments_data:
             pago = SubElement(pagos, "pago")
-            payment_code = company.l10n_ec_sri_payment_id.code
-            if self.l10n_ec_sri_payment_id:
-                payment_code = self.l10n_ec_sri_payment_id.code
-            elif self.commercial_partner_id.l10n_ec_sri_payment_id:
-                payment_code = self.commercial_partner_id.l10n_ec_sri_payment_id.code
-            SubElement(pago, "formaPago").text = payment_code
+            SubElement(pago, "formaPago").text = payment_data["formaPago"]
             SubElement(pago, "total").text = util_model.formato_numero(
-                self.amount_total
+                payment_data["total"]
             )
-            if self.invoice_payment_term_id:
-                if self.invoice_payment_term_id.l10n_ec_sri_type == "credito":
-                    if self.l10n_ec_credit_days > 0:
-                        SubElement(pago, "plazo").text = util_model.formato_numero(
-                            self.l10n_ec_credit_days, 0
-                        )
-                        SubElement(pago, "unidadTiempo").text = "dias"
+            if payment_data.get("plazo"):
+                SubElement(pago, "plazo").text = util_model.formato_numero(
+                    payment_data.get("plazo"), 0
+                )
+                SubElement(pago, "unidadTiempo").text = (
+                    payment_data.get("unidadTiempo") or "dias"
+                )
         # Lineas de Factura
         detalles = SubElement(node, "detalles")
         for line in self.invoice_line_ids.filtered(lambda x: not x.display_type):
@@ -2004,39 +2049,21 @@ class AccountMove(models.Model):
         SubElement(
             infoLiquidacionCompra, "moneda"
         ).text = self.company_id.currency_id.name
-        pagos_data = self.l10n_ec_get_pagos_data()
+        payments_data = self.l10n_ec_get_payment_data()
         pagos = SubElement(infoLiquidacionCompra, "pagos")
-        if pagos_data:
-            for payment_code in pagos_data.keys():
-                pago = SubElement(pagos, "pago")
-                SubElement(pago, "formaPago").text = payment_code
-                SubElement(pago, "total").text = util_model.formato_numero(
-                    pagos_data.get(payment_code, 0.0)
-                )
-        else:
-            if not company.l10n_ec_sri_payment_id:
-                raise UserError(
-                    _(
-                        "Debe configurar la forma de pago por defecto esto lo encuentra en Contabilidad / SRI / Configuración"
-                    )
-                )
+        for payment_data in payments_data:
             pago = SubElement(pagos, "pago")
-            payment_code = company.l10n_ec_sri_payment_id.code
-            if self.l10n_ec_sri_payment_id:
-                payment_code = self.l10n_ec_sri_payment_id.code
-            elif self.commercial_partner_id.l10n_ec_sri_payment_id:
-                payment_code = self.commercial_partner_id.l10n_ec_sri_payment_id.code
-            SubElement(pago, "formaPago").text = payment_code
+            SubElement(pago, "formaPago").text = payment_data["formaPago"]
             SubElement(pago, "total").text = util_model.formato_numero(
-                self.amount_total
+                payment_data["total"]
             )
-            if self.invoice_payment_term_id:
-                if self.invoice_payment_term_id.l10n_ec_sri_type == "credito":
-                    if self.l10n_ec_credit_days > 0:
-                        SubElement(pago, "plazo").text = util_model.formato_numero(
-                            self.l10n_ec_credit_days, 0
-                        )
-                        SubElement(pago, "unidadTiempo").text = "dias"
+            if payment_data.get("plazo"):
+                SubElement(pago, "plazo").text = util_model.formato_numero(
+                    payment_data.get("plazo"), 0
+                )
+                SubElement(pago, "unidadTiempo").text = (
+                    payment_data.get("unidadTiempo") or "dias"
+                )
         detalles = SubElement(node, "detalles")
         for line in self.invoice_line_ids:
             detalle = SubElement(detalles, "detalle")

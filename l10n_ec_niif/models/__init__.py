@@ -18,6 +18,7 @@ from . import sri_error_code
 from . import sri_key_type
 from . import xml_data
 from . import company
+from . import account_payment
 from . import account_move
 from . import account_journal
 from . import withhold

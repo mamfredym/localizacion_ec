@@ -59,6 +59,7 @@
         "views/l10n_ec_sri_company_resolution_view.xml",
         "views/l10n_ec_sri_payment_method_view.xml",
         "views/account_journal_view.xml",
+        "views/account_payment_view.xml",
         "views/withhold_view.xml",
         "views/sri_error_code_view.xml",
         "views/sri_key_type_view.xml",

@@ -7,6 +7,9 @@ class AccountJournal(models.Model):
 
     _inherit = "account.journal"
 
+    l10n_ec_sri_payment_id = fields.Many2one(
+        "l10n_ec.sri.payment.method", "SRI Payment Method",
+    )
     l10n_ec_debit_note = fields.Boolean(string="Debit Note?")
     l10n_ec_liquidation = fields.Boolean(string="Liquidation of Purchases?")
 
