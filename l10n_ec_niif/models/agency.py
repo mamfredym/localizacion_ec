@@ -126,7 +126,7 @@ class L10EcPointOfEmission(models.Model):
         values = super(L10EcPointOfEmission, self).default_get(fields)
         values["sequence_ids"] = [
             (0, 0, {"document_type": "out_invoice", "initial_sequence": 1}),
-            (0, 0, {"document_type": "withholding", "initial_sequence": 1}),
+            (0, 0, {"document_type": "withhold_purchase", "initial_sequence": 1}),
             (0, 0, {"document_type": "liquidation", "initial_sequence": 1}),
             (0, 0, {"document_type": "out_refund", "initial_sequence": 1}),
             (0, 0, {"document_type": "debit_note_out", "initial_sequence": 1}),
