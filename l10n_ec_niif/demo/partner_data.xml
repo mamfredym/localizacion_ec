@@ -11,12 +11,14 @@
                 ref="l10n_ec_niif.it_cedula"
             />
             <field name="company_type">person</field>
+            <field name="vat">0915068258</field>
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="res.partner" id="partner_ruc">
             <field name="name">Empresa con Ruc</field>
             <field name="l10n_latam_identification_type_id" ref="l10n_ec_niif.it_ruc" />
             <field name="company_type">company</field>
+            <field name="vat">0915068258001</field>
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="res.partner" id="partner_person_passport">
@@ -26,6 +28,7 @@
                 ref="l10n_ec_niif.it_pasaporte"
             />
             <field name="l10n_ec_foreign_type">01</field>
+            <field name="vat">ABC123456</field>
             <field name="company_type">person</field>
         </record>
         <record model="res.partner" id="partner_enterprise_passport">
@@ -35,6 +38,7 @@
                 ref="l10n_ec_niif.it_pasaporte"
             />
             <field name="l10n_ec_foreign_type">02</field>
+            <field name="vat">DEF123456</field>
             <field name="company_type">company</field>
         </record>
     </data>

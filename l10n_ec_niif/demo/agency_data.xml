@@ -16,10 +16,10 @@
         </record>
         <record
             model="l10n_ec.point.of.emission"
-            id="demo_other_point_of_emmision_preprinted"
+            id="demo_other_point_of_emission_preprinted"
         >
             <field name="agency_id" ref="demo_other_agency" />
-            <field name="name">Demo Other Point of Emmision</field>
+            <field name="name">Demo Other Point of emission</field>
             <field name="number">001</field>
             <field name="type_emission">pre_printed</field>
         </record>
@@ -35,12 +35,30 @@
         </record>
         <record
             model="l10n_ec.point.of.emission"
-            id="demo_point_of_emmision_preprinted"
+            id="demo_point_of_emission_preprinted"
         >
             <field name="agency_id" ref="demo_agency" />
-            <field name="name">Demo Point of Emmision</field>
+            <field name="name">Demo Point of Emission</field>
             <field name="number">001</field>
             <field name="type_emission">pre_printed</field>
+        </record>
+        <record
+            model="l10n_ec.point.of.emission"
+            id="demo_point_of_emission_auto_printer"
+        >
+            <field name="agency_id" ref="demo_agency" />
+            <field name="name">Demo Point of Emission</field>
+            <field name="number">002</field>
+            <field name="type_emission">auto_printer</field>
+        </record>
+        <record
+            model="l10n_ec.point.of.emission"
+            id="demo_point_of_emission_electronic"
+        >
+            <field name="agency_id" ref="demo_agency" />
+            <field name="name">Demo Point of Emission</field>
+            <field name="number">003</field>
+            <field name="type_emission">electronic</field>
         </record>
         <record model="l10n_ec.agency" id="demo_agency2">
             <field name="name">Demo Agency 2</field>
@@ -54,19 +72,19 @@
         </record>
         <record
             model="l10n_ec.point.of.emission"
-            id="demo_point_of_emmision_preprinted2"
+            id="demo_point_of_emission_preprinted2"
         >
             <field name="agency_id" ref="demo_agency2" />
-            <field name="name">Demo Point of Emmision 2</field>
+            <field name="name">Demo Point of emission 2</field>
             <field name="number">001</field>
             <field name="type_emission">pre_printed</field>
         </record>
         <record
             model="l10n_ec.point.of.emission"
-            id="demo_point_of_emmision_preprinted3"
+            id="demo_point_of_emission_preprinted3"
         >
             <field name="agency_id" ref="demo_agency2" />
-            <field name="name">Demo Point of Emmision 3</field>
+            <field name="name">Demo Point of emission 3</field>
             <field name="number">002</field>
             <field name="type_emission">pre_printed</field>
         </record>
@@ -86,7 +104,7 @@
             <field name="authorization_id" ref="demo_preprinted_authorization" />
             <field
                 name="point_of_emission_id"
-                ref="demo_point_of_emmision_preprinted"
+                ref="demo_point_of_emission_preprinted"
             />
             <field name="document_type">invoice</field>
             <field name="first_sequence">1</field>
@@ -97,7 +115,7 @@
             <field name="authorization_id" ref="demo_preprinted_authorization" />
             <field
                 name="point_of_emission_id"
-                ref="demo_point_of_emmision_preprinted"
+                ref="demo_point_of_emission_preprinted"
             />
             <field name="document_type">withholding</field>
             <field name="first_sequence">1</field>
@@ -108,7 +126,7 @@
             <field name="authorization_id" ref="demo_preprinted_authorization" />
             <field
                 name="point_of_emission_id"
-                ref="demo_point_of_emmision_preprinted"
+                ref="demo_point_of_emission_preprinted"
             />
             <field name="document_type">liquidation</field>
             <field name="first_sequence">1</field>
@@ -119,7 +137,7 @@
             <field name="authorization_id" ref="demo_preprinted_authorization" />
             <field
                 name="point_of_emission_id"
-                ref="demo_point_of_emmision_preprinted"
+                ref="demo_point_of_emission_preprinted"
             />
             <field name="document_type">credit_note</field>
             <field name="first_sequence">1</field>
@@ -130,7 +148,7 @@
             <field name="authorization_id" ref="demo_preprinted_authorization" />
             <field
                 name="point_of_emission_id"
-                ref="demo_point_of_emmision_preprinted"
+                ref="demo_point_of_emission_preprinted"
             />
             <field name="document_type">debit_note</field>
             <field name="first_sequence">1</field>
@@ -141,7 +159,7 @@
             <field name="authorization_id" ref="demo_preprinted_authorization" />
             <field
                 name="point_of_emission_id"
-                ref="demo_point_of_emmision_preprinted2"
+                ref="demo_point_of_emission_preprinted2"
             />
             <field name="document_type">invoice</field>
             <field name="first_sequence">1</field>
@@ -152,7 +170,7 @@
             <field name="authorization_id" ref="demo_preprinted_authorization" />
             <field
                 name="point_of_emission_id"
-                ref="demo_point_of_emmision_preprinted2"
+                ref="demo_point_of_emission_preprinted2"
             />
             <field name="document_type">withholding</field>
             <field name="first_sequence">1</field>
@@ -163,7 +181,7 @@
             <field name="authorization_id" ref="demo_preprinted_authorization" />
             <field
                 name="point_of_emission_id"
-                ref="demo_point_of_emmision_preprinted2"
+                ref="demo_point_of_emission_preprinted2"
             />
             <field name="document_type">liquidation</field>
             <field name="first_sequence">1</field>
@@ -174,7 +192,7 @@
             <field name="authorization_id" ref="demo_preprinted_authorization" />
             <field
                 name="point_of_emission_id"
-                ref="demo_point_of_emmision_preprinted2"
+                ref="demo_point_of_emission_preprinted2"
             />
             <field name="document_type">credit_note</field>
             <field name="first_sequence">1</field>
@@ -185,7 +203,7 @@
             <field name="authorization_id" ref="demo_preprinted_authorization" />
             <field
                 name="point_of_emission_id"
-                ref="demo_point_of_emmision_preprinted2"
+                ref="demo_point_of_emission_preprinted2"
             />
             <field name="document_type">debit_note</field>
             <field name="first_sequence">1</field>
@@ -196,7 +214,7 @@
             <field name="authorization_id" ref="demo_preprinted_authorization" />
             <field
                 name="point_of_emission_id"
-                ref="demo_point_of_emmision_preprinted3"
+                ref="demo_point_of_emission_preprinted3"
             />
             <field name="document_type">invoice</field>
             <field name="first_sequence">1</field>
@@ -207,7 +225,7 @@
             <field name="authorization_id" ref="demo_preprinted_authorization" />
             <field
                 name="point_of_emission_id"
-                ref="demo_point_of_emmision_preprinted3"
+                ref="demo_point_of_emission_preprinted3"
             />
             <field name="document_type">withholding</field>
             <field name="first_sequence">1</field>
@@ -218,7 +236,7 @@
             <field name="authorization_id" ref="demo_preprinted_authorization" />
             <field
                 name="point_of_emission_id"
-                ref="demo_point_of_emmision_preprinted3"
+                ref="demo_point_of_emission_preprinted3"
             />
             <field name="document_type">liquidation</field>
             <field name="first_sequence">1</field>
@@ -229,7 +247,7 @@
             <field name="authorization_id" ref="demo_preprinted_authorization" />
             <field
                 name="point_of_emission_id"
-                ref="demo_point_of_emmision_preprinted3"
+                ref="demo_point_of_emission_preprinted3"
             />
             <field name="document_type">credit_note</field>
             <field name="first_sequence">1</field>
@@ -240,7 +258,7 @@
             <field name="authorization_id" ref="demo_preprinted_authorization" />
             <field
                 name="point_of_emission_id"
-                ref="demo_point_of_emmision_preprinted3"
+                ref="demo_point_of_emission_preprinted3"
             />
             <field name="document_type">debit_note</field>
             <field name="first_sequence">1</field>
