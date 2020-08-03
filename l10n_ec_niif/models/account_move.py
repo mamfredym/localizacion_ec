@@ -415,11 +415,11 @@ class AccountMove(models.Model):
             "l10n_ec_withhold_number",
             "l10n_latam_document_number" "l10n_ec_authorization_line_id",
         }
-        if type in (
-            "out_invoice",
-            "out_refund",
-            "in_invoice",
-        ) and fields_ec_to_fill.intersection(set(fields)):
+        if (
+            type in ("out_invoice", "out_refund", "in_invoice",)
+            and fields_ec_to_fill.intersection(set(fields))
+            and self.env.company.country_id.code == "EC"
+        ):
             invoice_type = modules_mapping.l10n_ec_get_invoice_type(
                 type,
                 values.get("l10n_ec_debit_note", self.l10n_ec_debit_note),
