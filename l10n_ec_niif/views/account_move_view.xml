@@ -45,6 +45,7 @@
                         invisible="1"
                     />
                     <field name="l10n_ec_invoice_type" invisible="1" />
+                    <field name="l10n_ec_inverse_invoice_type" invisible="1" />
                     <field
                         name="l10n_ec_type_emission"
                         attrs="{'required': [('l10n_latam_country_code', '=', 'EC'), '|', ('type', 'in', ('out_invoice', 'out_refund')), ('l10n_ec_liquidation', '=', True)],
@@ -111,8 +112,9 @@
                         <field
                             name="l10n_ec_authorization_line_id"
                             options="{'no_create': True}"
-                            attrs="{'invisible': ['|',('l10n_ec_type_emission', 'not in', ('pre_printed', 'auto_printer')), ('type', 'not in', ('out_invoice', 'out_refund'))],
-                               'required': [('l10n_ec_type_emission', 'in', ('pre_printed', 'auto_printer')), ('l10n_latam_country_code', '=', 'EC'), '|', ('type', 'in', ('out_invoice', 'out_refund')), ('l10n_ec_liquidation', '=', True)],
+                            domain="[('point_of_emission_id', '=', l10n_ec_point_of_emission_id), ('document_type', '=', l10n_ec_inverse_invoice_type)]"
+                            attrs="{'invisible': ['|',('l10n_ec_type_emission', 'not in', ('pre_printed', 'auto_printer')), ('l10n_ec_invoice_type', 'not in', ('out_invoice', 'out_refund', 'liquidation', 'debit_note_out'))],
+                               'required': [('l10n_ec_type_emission', 'in', ('pre_printed', 'auto_printer')), ('l10n_latam_country_code', '=', 'EC'), '|', ('l10n_ec_invoice_type', 'in', ('out_invoice', 'out_refund', 'liquidation', 'debit_note_out'))],
                                'readonly': [('state', '!=', 'draft')]}"
                             force_save="1"
                         />
@@ -123,8 +125,8 @@
                         <field
                             name="l10n_ec_point_of_emission_id"
                             options="{'no_create': True}"
-                            attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund'))],
-                               'required': [('type', 'in', ('out_invoice', 'out_refund')), ('l10n_latam_country_code', '=', 'EC')]}"
+                            attrs="{'invisible': [('l10n_ec_invoice_type', 'not in', ('out_invoice', 'out_refund', 'liquidation', 'debit_note_out'))],
+                               'required': [('l10n_ec_invoice_type', 'in', ('out_invoice', 'out_refund', 'liquidation', 'debit_note_out')), ('l10n_latam_country_code', '=', 'EC')]}"
                         />
                         <field
                             name="l10n_ec_agency_id"
@@ -366,14 +368,6 @@
                     >{'invisible': ['|', '|', ('l10n_latam_sequence_id', '!=', False), ('l10n_latam_use_documents', '=', False), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))],
                         'required': [('l10n_latam_sequence_id', '=', False), ('l10n_latam_use_documents', '=', True), ('type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))],
                         'readonly': ['|', ('state', '!=', 'draft'), '&amp;', '&amp;', ('l10n_latam_country_code', '=', 'EC'), ('type', 'in', ('out_invoice', 'out_refund', 'in_invoice')), ('l10n_ec_type_emission', 'in', ('electronic', 'auto_printer'))]}</attribute>
-                </xpath>
-                <xpath
-                    expr="//field[@name='l10n_ec_point_of_emission_id']"
-                    position="attributes"
-                >
-                    <attribute name="attrs">{}</attribute>
-                    <attribute name="required">True</attribute>
-                    <attribute name="invisible">False</attribute>
                 </xpath>
                 <xpath expr="//page[@id='other_tab']" position="before">
                     <page string="Invoice Refund" name="l10n_ec_reembolso">

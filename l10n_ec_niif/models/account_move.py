@@ -549,8 +549,7 @@ class AccountMove(models.Model):
                         )
                         if next_number:
                             move.l10n_latam_document_number = next_number
-                        if auth_line:
-                            move.l10n_ec_authorization_line_id = auth_line.id
+                        move.l10n_ec_authorization_line_id = auth_line.id
 
     l10n_ec_withhold_required = fields.Boolean(
         string="Withhold Required",
@@ -2260,8 +2259,13 @@ class AccountMove(models.Model):
         for rec in self:
             l10n_ec_readonly_to_electronic_document = False
             l10n_ec_invoice_type = ""
+            l10n_ec_inverse_invoice_type = ""
             if rec.company_id.country_id.code == "EC":
                 l10n_ec_invoice_type = rec.l10n_ec_get_invoice_type()
+                if l10n_ec_invoice_type:
+                    l10n_ec_inverse_invoice_type = modules_mapping.get_document_type(
+                        l10n_ec_invoice_type
+                    )
                 if rec.l10n_ec_type_emission in (
                     "electronic",
                     "auto_printer",
@@ -2275,6 +2279,7 @@ class AccountMove(models.Model):
                 l10n_ec_readonly_to_electronic_document
             )
             rec.l10n_ec_invoice_type = l10n_ec_invoice_type
+            rec.l10n_ec_inverse_invoice_type = l10n_ec_inverse_invoice_type
 
     l10n_ec_readonly_to_electronic_document = fields.Boolean(
         string="Readonly Electronic Document",
@@ -2282,6 +2287,10 @@ class AccountMove(models.Model):
     )
     l10n_ec_invoice_type = fields.Char(
         string="EC Invoice Type", compute="_compute_readonly_to_electronic_document"
+    )
+    l10n_ec_inverse_invoice_type = fields.Char(
+        string="EC Invoice Type(Inverse)",
+        compute="_compute_readonly_to_electronic_document",
     )
     l10n_ec_supplier_authorization_id = fields.Many2one(
         comodel_name="l10n_ec.sri.authorization.supplier",
