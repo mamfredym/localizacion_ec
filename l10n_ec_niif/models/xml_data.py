@@ -615,10 +615,10 @@ class SriXmlData(models.Model):
         company = self.env.company
         response = False
         try:
-            if (
-                tools.config.get("no_electronic_documents")
-                and company.l10n_ec_type_environment == "production"
-            ):
+            if not tools.get("send_sri_documents", False):
+                response = {"estado": "RECIBIDA"}
+                return response
+            if company.l10n_ec_type_environment == "production":
                 raise Exception(_("NOT SENT TO AUTHORIZE IN DEVELOPMENT MODE"))
             send = True
             # En caso de ya haber tratado de enviar anteriormente, no debe enviar 2 veces
@@ -1032,6 +1032,8 @@ class SriXmlData(models.Model):
         if self.state == "waiting" and not self.env.context.get("no_send", False):
             return True
         try:
+            if not tools.config.get("send_sri_documents", False):
+                return True
             receipt_client = self.get_current_wsClient(environment, "reception")
             auth_client = self.get_current_wsClient(environment, "authorization")
             response = self._send_xml_data_to_valid(
@@ -1116,10 +1118,7 @@ class SriXmlData(models.Model):
 
     def action_sing_xml_file(self):
         company = self.env.company
-        if (
-            tools.config.get("no_electronic_documents")
-            and company.l10n_ec_type_environment == "production"
-        ):
+        if company.l10n_ec_type_environment == "production":
             return True
         for xml_rec in self:
             vals = {}
