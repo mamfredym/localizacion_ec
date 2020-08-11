@@ -67,6 +67,24 @@ class AccountChartTemplate(models.Model):
                     "sequence": 14,
                     "l10n_ec_liquidation": True,
                 },
+                {
+                    "name": _("Customer Voucher"),
+                    "type": "sale",
+                    "code": _("SV"),
+                    "favorite": True,
+                    "color": 12,
+                    "sequence": 15,
+                    "l10n_latam_use_documents": False,
+                },
+                {
+                    "name": _("Vendor Voucher"),
+                    "type": "purchase",
+                    "code": _("VV"),
+                    "favorite": True,
+                    "color": 13,
+                    "sequence": 16,
+                    "l10n_latam_use_documents": False,
+                },
             ]
             for journal in journals:
                 vals = {
@@ -83,7 +101,9 @@ class AccountChartTemplate(models.Model):
                     "sequence": journal["sequence"],
                     "l10n_ec_debit_note": journal.get("l10n_ec_debit_note", False),
                     "l10n_ec_liquidation": journal.get("l10n_ec_liquidation", False),
-                    "l10n_latam_use_documents": True,
+                    "l10n_latam_use_documents": journal.get(
+                        "l10n_latam_use_documents", True
+                    ),
                 }
                 journal_data.append(vals)
         return journal_data

@@ -632,6 +632,32 @@ class AccountMove(models.Model):
     def _get_default_journal(self):
         journal_model = self.env["account.journal"]
         if self.env.context.get("default_type", False) in (
+            "out_receipt",
+            "in_receipt",
+        ):
+            journal = journal_model.search(
+                [
+                    (
+                        "company_id",
+                        "=",
+                        self._context.get("default_company_id", self.env.company.id),
+                    ),
+                    (
+                        "type",
+                        "=",
+                        self.env.context.get("default_type", False) == "out_receipt"
+                        and "sale"
+                        or "purchase",
+                    ),
+                    ("l10n_latam_use_documents", "=", False),
+                ],
+                limit=1,
+            )
+            if journal:
+                return super(
+                    AccountMove, self.with_context(default_journal_id=journal.id)
+                )._get_default_journal()
+        if self.env.context.get("default_type", False) in (
             "out_invoice",
             "out_refund",
             "in_invoice",
@@ -653,7 +679,8 @@ class AccountMove(models.Model):
                             ),
                         ),
                         ("l10n_ec_extended_type", "=", invoice_type),
-                    ]
+                    ],
+                    limit=1,
                 )
                 if journal:
                     return super(
