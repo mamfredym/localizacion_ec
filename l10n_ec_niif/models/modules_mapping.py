@@ -35,25 +35,26 @@ def get_document_type(invoice_type):
     return document_type
 
 
-def l10n_ec_get_invoice_type(
-    invoice_type, debit_note=False, liquidation=False, raise_exception=True
-):
+def l10n_ec_get_invoice_type(invoice_type, internal_type, raise_exception=True):
     """
     Devolver el tipo de factura
     con el concepto de notas de debito y liquidacion de compras,
     las facturas de clientes pueden ser notas de debito
     y las facturas de proveedor pueden ser liquidacion de compras
     @param invoice_type: para facturas, el tipo de factura(out_invoice. out_refund, in_invoice, in_refund)
-    @param debit_note: Boolean True si es nota de debito(segun el invoice_type se determina si es ND de cliente o de proveedor)
-    @param liquidation: Boolean True si es liquidacion de compras
+    @param internal_type: tipo interno segun latam.document.type:
+        * invoice
+        * debit_note
+        * credit_note
+        * liquidation
     @return: str, tipo de factura considerando los dos tipos de documentos adicionales(ND y liquidacion de compras)
     """
     document_type = ""
     # Factura de Proveedor
-    if invoice_type == "in_invoice" and not debit_note and not liquidation:
+    if invoice_type == "in_invoice" and internal_type == "invoice":
         document_type = "in_invoice"
     # Factura de Cliente
-    elif invoice_type == "out_invoice" and not debit_note:
+    elif invoice_type == "out_invoice" and internal_type == "invoice":
         document_type = "out_invoice"
     # NC de Cliente
     elif invoice_type == "out_refund":
@@ -62,13 +63,13 @@ def l10n_ec_get_invoice_type(
     elif invoice_type == "in_refund":
         document_type = "in_refund"
     # Liquidacion
-    elif invoice_type == "in_invoice" and liquidation:
+    elif invoice_type == "in_invoice" and internal_type == "liquidation":
         document_type = "liquidation"
     # ND Proveedor
-    elif invoice_type == "in_invoice" and debit_note:
+    elif invoice_type == "in_invoice" and internal_type == "debit_note":
         document_type = "debit_note_in"
     # ND Cliente
-    elif invoice_type == "out_invoice" and debit_note:
+    elif invoice_type == "out_invoice" and internal_type == "debit_note":
         document_type = "debit_note_out"
     if not document_type and raise_exception:
         raise Warning(
@@ -87,40 +88,41 @@ def get_invoice_type_reverse(invoice_type):
     las facturas de clientes pueden ser notas de debito
     y las facturas de proveedor pueden ser liquidacion de compras
     @param invoice_type: para facturas, el tipo de factura(out_invoice. out_refund, in_invoice, in_refund, debit_note_in, debit_note_out, liquidacion)
-    @return: tuple(invoice_type, debit_note, liquidation)
-        Tupla de 3 elementos, el tipo de factura tal como se guarda en la BD
-            debit_note si es nota de debito(de cliente o proveedor)
-            liquidation si es liquidacion de compras
+    @return: tuple(invoice_type, internal_type)
+        Tupla de 2 elementos:
+            1) el tipo de factura tal como se guarda en la BD(campo type)
+            2) el tipo interno(campo l10n_latam_internal_type)
     """
     invoice_type_reverse = ""
-    debit_note, liquidation = False, False
+    l10n_latam_internal_type = ""
     # Liquidacion
     if invoice_type == "liquidation":
         invoice_type_reverse = "in_invoice"
-        liquidation = True
-        debit_note = False
+        l10n_latam_internal_type = "liquidation"
     # ND Proveedor
     elif invoice_type == "debit_note_in":
         invoice_type_reverse = "in_invoice"
-        liquidation = False
-        debit_note = True
+        l10n_latam_internal_type = "debit_note"
     # ND Cliente
     elif invoice_type == "debit_note_out":
         invoice_type_reverse = "out_invoice"
-        liquidation = False
-        debit_note = True
+        l10n_latam_internal_type = "debit_note"
     # Factura de Proveedor
     elif invoice_type in ("in_invoice", "invoice_reembolso"):
         invoice_type_reverse = "in_invoice"
+        l10n_latam_internal_type = "invoice"
     # Factura de Cliente
     elif invoice_type == "out_invoice":
         invoice_type_reverse = "out_invoice"
+        l10n_latam_internal_type = "invoice"
     # NC de Cliente
     elif invoice_type == "out_refund":
         invoice_type_reverse = "out_refund"
+        l10n_latam_internal_type = "credit_note"
     # NC de Proveedor
     elif invoice_type == "in_refund":
         invoice_type_reverse = "in_refund"
+        l10n_latam_internal_type = "credit_note"
     elif invoice_type in ("withhold_sale", "withhold_purchase"):
         invoice_type_reverse = "withhold"
     elif invoice_type == "delivery_note":
@@ -132,59 +134,7 @@ def get_invoice_type_reverse(invoice_type):
             )
             % (invoice_type)
         )
-    return invoice_type_reverse, debit_note, liquidation
-
-
-def get_invoice_field_report(invoice_type):
-    """
-    Devolver el nombre del campo que tiene el reporte del documento
-    con el concepto de notas de debito y liquidacion de compras,
-    las facturas de clientes pueden ser notas de debito
-    y las facturas de proveedor pueden ser liquidacion de compras
-    @param invoice_type: para facturas, el tipo de factura(out_invoice. out_refund, in_invoice, in_refund)
-    @param debit_note: Boolean True si es nota de debito(segun el invoice_type se determina si es ND de cliente o de proveedor)
-    @param liquidation: Boolean True si es liquidacion de compras
-    @return: str, tipo de factura considerando los dos tipos de documentos adicionales(ND y liquidacion de compras)
-    """
-    field_report_name = ""
-    # Factura de Cliente
-    if invoice_type == "out_invoice":
-        field_report_name = "report_out_invoice_id"
-    # NC de Cliente
-    elif invoice_type == "out_refund":
-        field_report_name = "report_out_refund_id"
-    # Liquidacion
-    elif invoice_type == "liquidation":
-        field_report_name = "report_liquidation_id"
-    # ND Cliente
-    elif invoice_type == "debit_note_out":
-        field_report_name = "report_debit_note_out_id"
-    if not field_report_name:
-        raise Warning(
-            _(
-                "Invoice / Document Type: %s is not valid, please check. get_invoice_field_report"
-            )
-            % (invoice_type)
-        )
-    return field_report_name
-
-
-def get_invoice_view_id(invoice_type):
-    """
-    Devolver el id_xml de la vista para la factura segun el tipo de documento
-    @param invoice_type: el tipo de factura considerando los dos tipos de documentos adicionales(ND y liquidacion de compras)
-    @return: tuple(module, id_xml), False, False si el tipo de factura no es correcto
-    """
-    views_data = {
-        "out_invoice": ("account", "invoice_form"),
-        "in_invoice": ("account", "invoice_supplier_form"),
-        "out_refund": ("account", "invoice_form"),
-        "in_refund": ("account", "invoice_supplier_form"),
-        "liquidation": ("account", "invoice_supplier_form"),
-        "debit_note_out": ("account", "invoice_form"),
-        "debit_note_in": ("account", "invoice_supplier_form"),
-    }
-    return views_data.get(invoice_type, (False, False))
+    return invoice_type_reverse, l10n_latam_internal_type
 
 
 def get_document_name(document_type):
@@ -241,48 +191,13 @@ def get_field_name(document_type):
     return field_name.get(document_type, "")
 
 
-def get_field_authorization(document_type):
-    """
-    Devolver el nombre del campo que tiene la autorizacion del modelo segun el tipo de documento(el que usa los documentos de autorizaciones)
-    @param document_type: el tipo de documento(el que usa los documentos de autorizaciones)
-    @return: str, el nombre tecnico del campo que tiene la autorizacion del modelo para usar ORM
-    """
-    authorization_name = {
-        "invoice": "authorization_owner_id",
-        "credit_note": "authorization_owner_id",
-        "debit_note": "authorization_owner_id",
-        "liquidation": "authorization_owner_id",
-        "withholding": "authorization_owner_id",
-        "delivery_note": "authorization_owner_id",
-    }
-    return authorization_name.get(document_type, "")
-
-
-def get_field_journal(invoice_type):
-    """
-    Devolver el nombre del campo que tiene la autorizacion del modelo segun el tipo de documento(el que usa los documentos de autorizaciones)
-    @param invoice_type: el tipo de factura considerando los dos tipos de documentos adicionales(ND y liquidacion de compras)
-    @return: str, el nombre tecnico del campo que tiene el diario en la agencia, para usar ORM
-    """
-    journal_field_name = {
-        "out_invoice": "sales_journal_id",
-        "in_invoice": "purchases_journal_id",
-        "out_refund": "sales_journal_id",
-        "in_refund": "purchases_journal_id",
-        "liquidation": "liquidation_journal_id",
-        "debit_note_in": "debit_note_purchase_journal_id",
-        "debit_note_out": "debit_note_sale_journal_id",
-    }
-    return journal_field_name.get(invoice_type, "")
-
-
 def get_domain(invoice_type, include_state=True):
     """
     Devolver un domain para usarse en busquedas segun el tipo de documento(el que usa los documentos de autorizaciones de clientes)
     @param invoice_type: el tipo de documento(el que usa los documentos de autorizaciones de clientes)
     @return: lista de tuplas con domain valido para hacer busquedas con ORM
     """
-    invoice_type_bd, debit_note, liquidation = get_invoice_type_reverse(invoice_type)
+    invoice_type_bd, l10n_latam_internal_type = get_invoice_type_reverse(invoice_type)
     domain_state_data = {
         "out_invoice": [("state", "=", "posted")],
         "out_refund": [("state", "=", "posted")],
@@ -296,8 +211,7 @@ def get_domain(invoice_type, include_state=True):
     }
     common_domain = [
         ("type", "=", invoice_type_bd),
-        ("l10n_ec_debit_note", "=", debit_note),
-        ("l10n_ec_liquidation", "=", liquidation),
+        ("l10n_latam_internal_type", "=", l10n_latam_internal_type),
     ]
     domain_state = []
     if include_state:

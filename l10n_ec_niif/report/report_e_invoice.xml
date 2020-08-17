@@ -47,19 +47,10 @@
         <t t-set="emision_date" t-value="o.invoice_date" />
         <t t-set="printer_point" t-value="o.l10n_ec_point_of_emission_id" />
         <t t-set="partner" t-value="o.commercial_partner_id" />
-        <t t-set="document_string" t-value="'FACTURA'" />
-        <t t-if="o.type == 'out_refund'">
-            <t t-set="document_string" t-value="'NOTA DE CRÉDITO'" />
-        </t>
-        <t t-if="o.type == 'out_invoice' and o.l10n_ec_debit_note">
-            <t t-set="document_string" t-value="'NOTA DE DÉBITO'" />
-        </t>
-        <t t-if="o.type == 'in_invoice' and o.l10n_ec_liquidation">
-            <t
-                t-set="document_string"
-                t-value="'LIQUIDACIÓN DE COMPRA DE BIENES Y PRESTACION DE SERVICIOS'"
-            />
-        </t>
+        <t
+            t-set="document_string"
+            t-value="o.l10n_latam_document_type_id.report_name or 'FACTURA'"
+        />
         <t t-set="comment" t-value="o.narration" />
         <t t-set="payments_info" t-value="o.l10n_ec_get_payment_data()" />
         <t t-set="tarifa_iva" t-value="o.l10n_ec_get_tarifa_iva()" />
@@ -70,16 +61,22 @@
             t-att-data-oe-lang="o and o.env.context.get('lang')"
         >
             <t t-call="l10n_ec_niif.electronic_report_common_head" />
-            <t t-if="o.type == 'out_invoice' and not o.l10n_ec_debit_note">
+            <t
+                t-if="o.type == 'out_invoice' and o.l10n_latam_internal_type == 'invoice'"
+            >
                 <t t-call="l10n_ec_niif.e_invoice_document_body" />
             </t>
-            <t t-if="o.type == 'out_invoice' and o.l10n_ec_debit_note">
+            <t
+                t-if="o.type == 'out_invoice' and o.l10n_latam_internal_type == 'debit_note'"
+            >
                 <t t-call="l10n_ec_niif.e_debit_note_document_body" />
             </t>
             <t t-if="o.type == 'out_refund'">
                 <t t-call="l10n_ec_niif.e_credit_note_document_body" />
             </t>
-            <t t-if="o.type == 'in_invoice' and o.l10n_ec_liquidation">
+            <t
+                t-if="o.type == 'in_invoice' and o.l10n_latam_internal_type == 'liquidation'"
+            >
                 <t t-call="l10n_ec_niif.e_liquidation_document_body" />
             </t>
             <p style="page-break-after:always;" />

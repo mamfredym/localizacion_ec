@@ -38,6 +38,10 @@ class AccountChartTemplate(models.Model):
         journal_data = super(AccountChartTemplate, self)._prepare_all_journals(
             acc_template_ref, company, journals_dict
         )
+        if company._localization_use_documents():
+            for vals_journal in journal_data:
+                if vals_journal["type"] in ["sale", "purchase"]:
+                    vals_journal["l10n_latam_internal_type"] = "invoice"
         if company.country_id.code == "EC":
             journals = [
                 {
@@ -47,7 +51,7 @@ class AccountChartTemplate(models.Model):
                     "favorite": True,
                     "color": 11,
                     "sequence": 12,
-                    "l10n_ec_debit_note": True,
+                    "l10n_latam_internal_type": "debit_note",
                 },
                 {
                     "name": _("Vendor Debit Notes"),
@@ -56,7 +60,7 @@ class AccountChartTemplate(models.Model):
                     "favorite": True,
                     "color": 11,
                     "sequence": 13,
-                    "l10n_ec_debit_note": True,
+                    "l10n_latam_internal_type": "debit_note",
                 },
                 {
                     "name": _("Liquidation of Purchases"),
@@ -65,7 +69,7 @@ class AccountChartTemplate(models.Model):
                     "favorite": True,
                     "color": 11,
                     "sequence": 14,
-                    "l10n_ec_liquidation": True,
+                    "l10n_latam_internal_type": "liquidation",
                 },
                 {
                     "name": _("Customer Voucher"),
@@ -99,8 +103,7 @@ class AccountChartTemplate(models.Model):
                     "show_on_dashboard": journal["favorite"],
                     "color": journal.get("color", False),
                     "sequence": journal["sequence"],
-                    "l10n_ec_debit_note": journal.get("l10n_ec_debit_note", False),
-                    "l10n_ec_liquidation": journal.get("l10n_ec_liquidation", False),
+                    "l10n_latam_internal_type": journal.get("l10n_latam_internal_type"),
                     "l10n_latam_use_documents": journal.get(
                         "l10n_latam_use_documents", True
                     ),

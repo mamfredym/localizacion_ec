@@ -89,10 +89,7 @@ class AccountMove(models.Model):
     _name = "account.move"
 
     @api.depends(
-        "type",
-        "l10n_ec_point_of_emission_id",
-        "l10n_ec_debit_note",
-        "l10n_ec_liquidation",
+        "type", "l10n_ec_point_of_emission_id", "l10n_latam_document_type_id",
     )
     def _compute_l10n_ec_is_environment_production(self):
         xml_model = self.env["sri.xml.data"]
@@ -160,13 +157,18 @@ class AccountMove(models.Model):
     l10n_ec_foreign = fields.Boolean(
         "Foreign?", related="partner_id.l10n_ec_foreign", store=True
     )
-    l10n_ec_debit_note = fields.Boolean(
-        string="Debit Note?",
-        default=lambda self: self.env.context.get("default_l10n_ec_debit_note", False),
-    )
-    l10n_ec_liquidation = fields.Boolean(
-        string="Liquidation of Purchases?",
-        default=lambda self: self.env.context.get("default_l10n_ec_liquidation", False),
+    # TODO: ideal que este campo estuviera en el modulo l10n_latam_invoice_document
+    # proponerlo en rama master de ser posible
+    l10n_latam_internal_type = fields.Selection(
+        [
+            ("invoice", "Invoices"),
+            ("debit_note", "Debit Notes"),
+            ("credit_note", "Credit Notes"),
+            ("liquidation", "Liquidtion"),
+        ],
+        string="Latam internal type",
+        compute="_compute_l10n_latam_document_type",
+        store=True,
     )
     l10n_ec_rise = fields.Char("R.I.S.E", copy=False)
     l10n_ec_legacy_document = fields.Boolean(
@@ -202,129 +204,118 @@ class AccountMove(models.Model):
             date_due = invoice.invoice_date_due or date_invoice
             invoice.l10n_ec_credit_days = (date_due - date_invoice).days
 
+    def _get_l10n_latam_documents_domain(self):
+        if self.company_id.country_id.code != "EC":
+            return super(AccountMove, self)._get_l10n_latam_documents_domain()
+        if self.env.context.get("internal_type", "") == "liquidation":
+            internal_types = ["liquidation"]
+            domain = [
+                ("internal_type", "in", internal_types),
+                ("country_id", "=", self.company_id.country_id.id),
+            ]
+        else:
+            domain = super(AccountMove, self)._get_l10n_latam_documents_domain()
+        latam_type = (
+            self.l10n_latam_internal_type
+            or self.env.context.get("internal_type")
+            or "invoice"
+        )
+        if self.type in ("out_refund", "in_refund"):
+            latam_type = "credit_note"
+        if latam_type and self.l10n_ec_identification_type_id.document_type_ids:
+            domain.append(
+                (
+                    "id",
+                    "in",
+                    self.l10n_ec_identification_type_id.document_type_ids.filtered(
+                        lambda x: x.internal_type == latam_type
+                    ).ids,
+                )
+            )
+        return domain
+
+    @api.depends("l10n_latam_available_document_type_ids")
+    @api.depends_context("internal_type")
+    def _compute_l10n_latam_document_type(self):
+        super(AccountMove, self)._compute_l10n_latam_document_type()
+        for move in self.filtered(lambda x: x.state == "draft"):
+            if (
+                move.l10n_ec_identification_type_id
+                and not move.l10n_latam_document_type_id
+            ):
+                if move.type == "in_invoice":
+                    move.l10n_latam_document_type_id = (
+                        move.l10n_ec_identification_type_id.purchase_invoice_document_type_id.id
+                    )
+                elif move.type == "in_refund":
+                    move.l10n_latam_document_type_id = (
+                        move.l10n_ec_identification_type_id.purchase_credit_note_document_type_id.id
+                    )
+                elif move.type == "out_invoice":
+                    move.l10n_latam_document_type_id = (
+                        move.l10n_ec_identification_type_id.sale_invoice_document_type_id.id
+                    )
+                elif move.type == "out_refund":
+                    move.l10n_latam_document_type_id = (
+                        move.l10n_ec_identification_type_id.sale_credit_note_document_type_id.id
+                    )
+            move.l10n_latam_internal_type = (
+                move.l10n_latam_document_type_id.internal_type
+            )
+
     @api.depends(
-        "partner_id.l10n_ec_type_sri",
-        "l10n_ec_point_of_emission_id",
-        "l10n_ec_is_exportation",
-        "l10n_ec_debit_note",
-        "l10n_ec_liquidation",
-        "type",
-        "company_id",
+        "partner_id.l10n_ec_type_sri", "l10n_ec_is_exportation", "type", "company_id",
     )
     def _compute_l10n_ec_identification_type(self):
-        def get_identification(code):
-            identification_model = self.env["l10n_ec.identification.type"]
-            identification = identification_model.search([("code", "=", code)])
-            return identification and identification.id or False
+        identification_model = self.env["l10n_ec.identification.type"]
+        for move in self:
+            move.l10n_ec_identification_type_id = False
+            if (
+                move.company_id.country_id.code != "EC"
+                or not move.partner_id.l10n_ec_type_sri
+            ):
+                continue
+            identification_code = False
+            if move.type in ("in_invoice", "in_refund"):
+                if move.partner_id.l10n_ec_type_sri == "Ruc":
+                    identification_code = "01"
+                elif move.partner_id.l10n_ec_type_sri == "Cedula":
+                    identification_code = "02"
+                elif move.partner_id.l10n_ec_type_sri == "Pasaporte":
+                    identification_code = "03"
+            elif move.type in ("out_invoice", "out_refund"):
+                if not move.l10n_ec_is_exportation:
+                    if move.partner_id.l10n_ec_type_sri == "Ruc":
+                        identification_code = "04"
+                    elif move.partner_id.l10n_ec_type_sri == "Cedula":
+                        identification_code = "05"
+                    elif move.partner_id.l10n_ec_type_sri == "Pasaporte":
+                        identification_code = "06"
+                    elif move.partner_id.l10n_ec_type_sri == "Consumidor":
+                        identification_code = "07"
+                else:
+                    if move.partner_id.l10n_ec_type_sri == "Ruc":
+                        identification_code = "20"
+                    elif move.partner_id.l10n_ec_type_sri == "Pasaporte":
+                        identification_code = "21"
+            if identification_code:
+                move.l10n_ec_identification_type_id = identification_model.search(
+                    [("code", "=", identification_code)], limit=1
+                )
 
+    @api.depends("l10n_latam_document_type_id",)
+    def _compute_l10n_ec_tax_support_domain(self):
         tax_support_model = self.env["l10n_ec.tax.support"]
         for move in self:
-            if move.company_id.country_id.code == "EC":
-                supports = tax_support_model.sudo()
-                if move.partner_id.l10n_ec_type_sri:
-                    if move.type in ("in_invoice", "in_refund"):
-                        if move.partner_id.l10n_ec_type_sri == "Ruc":
-                            move.l10n_ec_identification_type_id = get_identification(
-                                "01"
-                            )
-                        elif move.partner_id.l10n_ec_type_sri == "Cedula":
-                            move.l10n_ec_identification_type_id = get_identification(
-                                "02"
-                            )
-                        elif move.partner_id.l10n_ec_type_sri == "Pasaporte":
-                            move.l10n_ec_identification_type_id = get_identification(
-                                "03"
-                            )
-                        else:
-                            move.l10n_ec_identification_type_id = False
-                    elif move.type in ("out_invoice", "out_refund"):
-                        if not move.l10n_ec_is_exportation:
-                            if move.partner_id.l10n_ec_type_sri == "Ruc":
-                                move.l10n_ec_identification_type_id = get_identification(
-                                    "04"
-                                )
-                            elif move.partner_id.l10n_ec_type_sri == "Cedula":
-                                move.l10n_ec_identification_type_id = get_identification(
-                                    "05"
-                                )
-                            elif move.partner_id.l10n_ec_type_sri == "Pasaporte":
-                                move.l10n_ec_identification_type_id = get_identification(
-                                    "06"
-                                )
-                            elif move.partner_id.l10n_ec_type_sri == "Consumidor":
-                                move.l10n_ec_identification_type_id = get_identification(
-                                    "07"
-                                )
-                            else:
-                                move.l10n_ec_identification_type_id = False
-                        else:
-                            if move.partner_id.l10n_ec_type_sri == "Ruc":
-                                move.l10n_ec_identification_type_id = get_identification(
-                                    "20"
-                                )
-                            elif move.partner_id.l10n_ec_type_sri == "Pasaporte":
-                                move.l10n_ec_identification_type_id = get_identification(
-                                    "21"
-                                )
-                            else:
-                                move.l10n_ec_identification_type_id = False
-                else:
-                    move.l10n_ec_identification_type_id = False
-                if move.l10n_ec_identification_type_id:
-                    latam_type = "invoice"
-                    if move.type in ("out_refund", "in_refund"):
-                        latam_type = "credit_note"
-                    if move.l10n_ec_debit_note:
-                        latam_type = "debit_note"
-                    move.l10n_latam_available_document_type_ids = [
-                        (
-                            6,
-                            0,
-                            move.l10n_ec_identification_type_id.document_type_ids.filtered(
-                                lambda x: x.internal_type == latam_type
-                            ).ids,
-                        )
-                    ]
-                    if (
-                        move.l10n_latam_available_document_type_ids
-                        and move.l10n_latam_document_type_id.id
-                        not in move.l10n_latam_available_document_type_ids.ids
-                    ):
-                        if move.type == "in_invoice":
-                            move.l10n_latam_document_type_id = (
-                                move.purchase_invoice_document_type_id.id
-                            )
-                        elif move.type == "in_refund":
-                            move.l10n_latam_document_type_id = (
-                                move.purchase_credit_note_document_type_id.id
-                            )
-                        elif move.type == "out_invoice":
-                            move.l10n_latam_document_type_id = (
-                                move.sale_invoice_document_type_id.id
-                            )
-                        elif move.type == "out_refund":
-                            move.l10n_latam_document_type_id = (
-                                move.sale_credit_note_document_type_id.id
-                            )
-                    if move.l10n_latam_document_type_id:
-                        supports = tax_support_model.search(
-                            [
-                                (
-                                    "document_type_ids",
-                                    "in",
-                                    move.l10n_latam_document_type_id.ids,
-                                )
-                            ]
-                        )
-                else:
-                    move.l10n_latam_available_document_type_ids = []
-                if supports:
-                    move.l10n_ec_tax_support_domain_ids = supports.ids
-                else:
-                    move.l10n_ec_tax_support_domain_ids = []
-            else:
-                move.l10n_latam_available_document_type_ids = []
-                move.l10n_ec_tax_support_domain_ids = []
+            move.l10n_ec_tax_support_domain_ids = []
+            if move.company_id.country_id.code != "EC":
+                continue
+            supports = tax_support_model.browse()
+            if move.l10n_latam_document_type_id:
+                supports = tax_support_model.search(
+                    [("document_type_ids", "in", move.l10n_latam_document_type_id.ids,)]
+                )
+            move.l10n_ec_tax_support_domain_ids = supports.ids
 
     l10n_ec_identification_type_id = fields.Many2one(
         "l10n_ec.identification.type",
@@ -336,7 +327,7 @@ class AccountMove(models.Model):
     l10n_ec_tax_support_domain_ids = fields.Many2many(
         comodel_name="l10n_ec.tax.support",
         string="Tax Support Domain",
-        compute="_compute_l10n_ec_identification_type",
+        compute="_compute_l10n_ec_tax_support_domain",
         compute_sudo=True,
     )
     # replace field from Abstract class for change attributes(readonly and states)
@@ -409,21 +400,24 @@ class AccountMove(models.Model):
     @api.model
     def default_get(self, fields):
         values = super(AccountMove, self).default_get(fields)
-        type = values.get("type", self.type)
+        inv_type = values.get("type", self.type)
+        internal_type = (
+            values.get("internal_type")
+            or self.env.context.get("internal_type")
+            or "invoice"
+        )
         fields_ec_to_fill = {
             "l10n_ec_point_of_emission_id",
             "l10n_ec_withhold_number",
             "l10n_latam_document_number" "l10n_ec_authorization_line_id",
         }
         if (
-            type in ("out_invoice", "out_refund", "in_invoice",)
+            inv_type in ("out_invoice", "out_refund", "in_invoice",)
             and fields_ec_to_fill.intersection(set(fields))
             and self.env.company.country_id.code == "EC"
         ):
             invoice_type = modules_mapping.l10n_ec_get_invoice_type(
-                type,
-                values.get("l10n_ec_debit_note", self.l10n_ec_debit_note),
-                values.get("l10n_ec_liquidation", self.l10n_ec_liquidation),
+                inv_type, internal_type,
             )
             if invoice_type in (
                 "out_invoice",
@@ -472,14 +466,13 @@ class AccountMove(models.Model):
             default = {}
         if self.filtered(lambda x: x.company_id.country_id.code == "EC"):
             inv_type = default.get("type") or self.type
-            l10n_ec_debit_note = (
-                default.get("l10n_ec_debit_note") or self.l10n_ec_debit_note
-            )
-            l10n_ec_liquidation = (
-                default.get("l10n_ec_liquidation") or self.l10n_ec_liquidation
+            internal_type = (
+                default.get("l10n_latam_internal_type")
+                or self.env.context.get("internal_type")
+                or self.l10n_latam_internal_type
             )
             invoice_type = modules_mapping.l10n_ec_get_invoice_type(
-                inv_type, l10n_ec_debit_note, l10n_ec_liquidation, False
+                inv_type, internal_type, False
             )
             if self.l10n_ec_point_of_emission_id and invoice_type in (
                 "out_invoice",
@@ -507,8 +500,7 @@ class AccountMove(models.Model):
 
     @api.onchange(
         "type",
-        "l10n_ec_debit_note",
-        "l10n_ec_liquidation",
+        "l10n_latam_document_type_id",
         "l10n_ec_point_of_emission_id",
         "invoice_date",
     )
@@ -560,9 +552,7 @@ class AccountMove(models.Model):
         string="Withhold Date", readonly=True, states={"draft": [("readonly", False)]},
     )
 
-    @api.depends(
-        "type", "line_ids.tax_ids", "l10n_ec_debit_note", "l10n_ec_liquidation",
-    )
+    @api.depends("type", "line_ids.tax_ids")
     def _compute_l10n_ec_withhold_required(self):
         group_iva_withhold = self.env.ref("l10n_ec_niif.tax_group_iva_withhold")
         group_rent_withhold = self.env.ref("l10n_ec_niif.tax_group_renta_withhold")
@@ -580,8 +570,7 @@ class AccountMove(models.Model):
         "l10n_ec_document_number",
         "company_id",
         "type",
-        "l10n_ec_debit_note",
-        "l10n_ec_liquidation",
+        "l10n_latam_document_type_id",
     )
     def _check_l10n_ec_document_number_duplicity(self):
         auth_line_model = self.env["l10n_ec.sri.authorization.line"]
@@ -600,92 +589,45 @@ class AccountMove(models.Model):
                 move.id,
             )
 
-    @api.depends(
-        "type", "l10n_ec_debit_note", "l10n_ec_liquidation",
-    )
-    def _compute_l10n_ec_invoice_filter_type_domain(self):
-        for move in self:
-            if move.is_sale_document(include_receipts=True):
-                if not move.l10n_ec_debit_note:
-                    move.l10n_ec_invoice_filter_type_domain = "sale"
-                else:
-                    move.l10n_ec_invoice_filter_type_domain = "debit_note_out"
-            elif move.is_purchase_document(include_receipts=True):
-                if not move.l10n_ec_debit_note and not move.l10n_ec_liquidation:
-                    move.l10n_ec_invoice_filter_type_domain = "purchase"
-                elif move.l10n_ec_debit_note and not move.l10n_ec_liquidation:
-                    move.l10n_ec_invoice_filter_type_domain = "debit_note_in"
-                elif not move.l10n_ec_debit_note and move.l10n_ec_liquidation:
-                    move.l10n_ec_invoice_filter_type_domain = "liquidation"
-                else:
-                    move.l10n_ec_invoice_filter_type_domain = "purchase"
-            else:
-                move.l10n_ec_invoice_filter_type_domain = False
-
-    l10n_ec_invoice_filter_type_domain = fields.Char(
-        string="Journal Domain",
-        required=False,
-        compute="_compute_l10n_ec_invoice_filter_type_domain",
-    )
-
     @api.model
     def _get_default_journal(self):
         journal_model = self.env["account.journal"]
-        if self.env.context.get("default_type", False) in (
-            "out_receipt",
-            "in_receipt",
-        ):
-            journal = journal_model.search(
-                [
-                    (
-                        "company_id",
-                        "=",
-                        self._context.get("default_company_id", self.env.company.id),
-                    ),
-                    (
-                        "type",
-                        "=",
-                        self.env.context.get("default_type", False) == "out_receipt"
-                        and "sale"
-                        or "purchase",
-                    ),
-                    ("l10n_latam_use_documents", "=", False),
-                ],
-                limit=1,
-            )
-            if journal:
-                return super(
-                    AccountMove, self.with_context(default_journal_id=journal.id)
-                )._get_default_journal()
-        if self.env.context.get("default_type", False) in (
-            "out_invoice",
-            "out_refund",
-            "in_invoice",
-            "in_refund",
-        ):
-            invoice_type = modules_mapping.l10n_ec_get_invoice_type(
-                self.env.context.get("default_type", False),
-                self.env.context.get("default_l10n_ec_debit_note", False),
-                self.env.context.get("default_l10n_ec_liquidation", False),
-            )
-            if invoice_type in ("debit_note_in", "debit_note_out", "liquidation"):
-                journal = journal_model.search(
-                    [
-                        (
-                            "company_id",
-                            "=",
-                            self._context.get(
-                                "default_company_id", self.env.company.id
-                            ),
-                        ),
-                        ("l10n_ec_extended_type", "=", invoice_type),
-                    ],
-                    limit=1,
+        domain = []
+        company_id = self._context.get("default_company_id") or self.env.company.id
+        internal_type = self._context.get("internal_type", "")
+        move_type = self._context.get("default_type", "entry")
+        journal_type = "general"
+        if move_type in self.get_sale_types(include_receipts=True):
+            journal_type = "sale"
+        elif move_type in self.get_purchase_types(include_receipts=True):
+            journal_type = "purchase"
+        if self.env.context.get("default_type", "") in ("out_receipt", "in_receipt"):
+            domain = [
+                ("company_id", "=", company_id),
+                (
+                    "type",
+                    "=",
+                    "sale"
+                    if self.env.context.get("default_type") == "out_receipt"
+                    else "purchase",
+                ),
+                ("l10n_latam_use_documents", "=", False),
+            ]
+        elif internal_type in ("invoice", "debit_note", "credit_note", "liquidation",):
+            domain = [
+                ("company_id", "=", company_id),
+                ("type", "=", journal_type),
+            ]
+            if internal_type == "credit_note":
+                domain.append(
+                    ("l10n_latam_internal_type", "in", ("invoice", internal_type))
                 )
-                if journal:
-                    return super(
-                        AccountMove, self.with_context(default_journal_id=journal.id)
-                    )._get_default_journal()
+            else:
+                domain.append(("l10n_latam_internal_type", "=", internal_type))
+        if domain:
+            journal = journal_model.search(domain, limit=1)
+            if journal:
+                self = self.with_context(default_journal_id=journal.id)
         return super(AccountMove, self)._get_default_journal()
 
     journal_id = fields.Many2one(default=_get_default_journal)
@@ -1184,7 +1126,7 @@ class AccountMove(models.Model):
     def l10n_ec_get_invoice_type(self):
         self.ensure_one()
         return modules_mapping.l10n_ec_get_invoice_type(
-            self.type, self.l10n_ec_debit_note, self.l10n_ec_liquidation, False
+            self.type, self.l10n_latam_document_type_id.internal_type, False
         )
 
     def l10n_ec_validate_fields_required_fe(self):
@@ -1210,7 +1152,7 @@ class AccountMove(models.Model):
                 f"Debe asignar la forma de pago del SRI en el documento: {self.display_name}, por favor verifique."
             )
         # validaciones para reembolso en liquidacion de compras
-        if self.l10n_ec_liquidation and self.l10n_ec_refund_ids:
+        if self.l10n_latam_internal_type == "liquidation" and self.l10n_ec_refund_ids:
             for refund in self.l10n_ec_refund_ids:
                 if not refund.partner_id.commercial_partner_id.vat:
                     message_list.append(
@@ -2277,47 +2219,23 @@ class AccountMove(models.Model):
 
     @api.depends(
         "type",
-        "l10n_ec_debit_note",
-        "l10n_ec_liquidation",
+        "partner_id",
+        "l10n_latam_document_type_id",
         "l10n_ec_type_emission",
         "company_id.country_id",
     )
-    def _compute_readonly_to_electronic_document(self):
+    def _compute_ecuadorian_invoice_type(self):
         for rec in self:
-            l10n_ec_readonly_to_electronic_document = False
             l10n_ec_invoice_type = ""
-            l10n_ec_inverse_invoice_type = ""
             if rec.company_id.country_id.code == "EC":
                 l10n_ec_invoice_type = rec.l10n_ec_get_invoice_type()
-                if l10n_ec_invoice_type:
-                    l10n_ec_inverse_invoice_type = modules_mapping.get_document_type(
-                        l10n_ec_invoice_type
-                    )
-                if rec.l10n_ec_type_emission in (
-                    "electronic",
-                    "auto_printer",
-                ) and l10n_ec_invoice_type in (
-                    "out_invoice",
-                    "out_refund",
-                    "liquidation",
-                ):
-                    l10n_ec_readonly_to_electronic_document = True
-            rec.l10n_ec_readonly_to_electronic_document = (
-                l10n_ec_readonly_to_electronic_document
-            )
             rec.l10n_ec_invoice_type = l10n_ec_invoice_type
-            rec.l10n_ec_inverse_invoice_type = l10n_ec_inverse_invoice_type
+            rec.l10n_latam_internal_type = rec.l10n_latam_document_type_id.internal_type
 
-    l10n_ec_readonly_to_electronic_document = fields.Boolean(
-        string="Readonly Electronic Document",
-        compute="_compute_readonly_to_electronic_document",
-    )
     l10n_ec_invoice_type = fields.Char(
-        string="EC Invoice Type", compute="_compute_readonly_to_electronic_document"
-    )
-    l10n_ec_inverse_invoice_type = fields.Char(
-        string="EC Invoice Type(Inverse)",
-        compute="_compute_readonly_to_electronic_document",
+        string="EC Invoice Type",
+        compute="_compute_ecuadorian_invoice_type",
+        store=True,
     )
     l10n_ec_supplier_authorization_id = fields.Many2one(
         comodel_name="l10n_ec.sri.authorization.supplier",

@@ -14,19 +14,14 @@
                     position="after"
                 >
                     <field
-                        name="l10n_ec_debit_note"
-                        attrs="{'invisible': [('l10n_latam_country_code', '!=', 'EC')]}"
-                    />
-                    <field
-                        name="l10n_ec_liquidation"
-                        attrs="{'invisible': [('l10n_latam_country_code', '!=', 'EC')]}"
+                        name="l10n_latam_internal_type"
+                        attrs="{'invisible': ['|', '|', ('l10n_latam_country_code', '!=', 'EC'), ('type', 'not in', ('sale', 'purchase')), ('l10n_latam_use_documents', '=', False)], 'required': [('l10n_latam_country_code', '=', 'EC'), ('type', 'in', ('sale', 'purchase')), ('l10n_latam_use_documents', '=', True)]}"
                     />
                     <field
                         name="l10n_ec_sri_payment_id"
                         options="{'no_create': True}"
                         attrs="{'invisible': [('type', 'not in', ('bank', 'cash'))],'required': [('type', 'in', ('bank', 'cash'))]}"
                     />
-                    <field name="l10n_ec_extended_type" invisible="1" />
                 </xpath>
             </field>
         </record>

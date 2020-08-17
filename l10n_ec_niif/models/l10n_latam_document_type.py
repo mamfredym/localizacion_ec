@@ -9,6 +9,7 @@ class L10nLatamDocumentType(models.Model):
     _inherit = "l10n_latam.document.type"
 
     l10n_ec_check_format = fields.Boolean(string="Check Format EC", default=False)
+    internal_type = fields.Selection(selection_add=[("liquidation", "Liquidation")])
 
     def _format_document_number(self, document_number):
         self.ensure_one()
