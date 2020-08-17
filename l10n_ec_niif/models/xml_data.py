@@ -931,26 +931,36 @@ class SriXmlData(models.Model):
         # si tengo xml firmado, a ese anexarle la autorizacion
         if self.state == "authorized" and self.xml_authorization and self.xml_file:
             tree = ET.fromstring(self.get_file())
-            root = Element("RespuestaAutorizacion")
-            authorizacion_ele = SubElement(root, "estado")
-            authorizacion_ele.text = "AUTORIZADO"
-            # anexar la fecha y numero de autorizacion
-            authorizacion_ele = SubElement(root, "numeroAutorizacion")
-            authorizacion_ele.text = self.xml_authorization
-            authorizacion_ele = SubElement(root, "fechaAutorizacion")
-            authorizacion_ele.text = fields.Datetime.context_timestamp(
-                self, self.l10n_ec_authorization_date
-            ).strftime(DTF)
-            authorizacion_ele = SubElement(root, "ambiente")
-            authorizacion_ele.text = (
-                "PRODUCCION"
-                if self.l10n_ec_type_environment == "production"
-                else "PRUEBAS"
+            self._create_file_authorized(
+                tree,
+                self.xml_authorization,
+                fields.Datetime.context_timestamp(
+                    self, self.l10n_ec_authorization_date
+                ),
+                self.l10n_ec_type_environment,
             )
-            # agregar el resto del xml
-            comprobante_node = SubElement(root, "comprobante")
-            comprobante_node.text = tostring(tree).decode()
-            xml_authorized = tostring(root).decode()
+        return xml_authorized
+
+    @api.model
+    def _create_file_authorized(
+        self, tree, authorization_number, authorization_date, environment
+    ):
+        root = Element("RespuestaAutorizacion")
+        authorizacion_ele = SubElement(root, "estado")
+        authorizacion_ele.text = "AUTORIZADO"
+        # anexar la fecha y numero de autorizacion
+        authorizacion_ele = SubElement(root, "numeroAutorizacion")
+        authorizacion_ele.text = authorization_number
+        authorizacion_ele = SubElement(root, "fechaAutorizacion")
+        authorizacion_ele.text = authorization_date.strftime(DTF)
+        authorizacion_ele = SubElement(root, "ambiente")
+        authorizacion_ele.text = (
+            "PRODUCCION" if environment == "production" else "PRUEBAS"
+        )
+        # agregar el resto del xml
+        comprobante_node = SubElement(root, "comprobante")
+        comprobante_node.text = tostring(tree).decode()
+        xml_authorized = tostring(root).decode()
         return xml_authorized
 
     def action_create_file_authorized(self):
