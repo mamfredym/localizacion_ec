@@ -953,22 +953,12 @@ class AccountMove(models.Model):
         return super(AccountMove, self).button_draft()
 
     def unlink(self):
-        if self.env.context.get("skip_recurtion", False):
-            return super(AccountMove, self).unlink()
-        for move in self:
-            if move.company_id.country_id.code == "EC":
-                if move.type in (
-                    "out_invoice",
-                    "out_refund",
-                    "in_invoice",
-                    "in_refund",
-                ):
-                    if move.state != "draft":
-                        raise UserError(_("You only delete invoices in draft state"))
-                    else:
-                        move.with_context(
-                            skip_recurtion=True, force_delete=True
-                        ).unlink()
+        ecuadorian_moves = self.filtered(lambda x: x.company_id.country_id.code == "EC")
+        for move in ecuadorian_moves:
+            if move.is_invoice() and move.state != "draft":
+                raise UserError(_("You only delete invoices in draft state"))
+            super(AccountMove, move.with_context(force_delete=True)).unlink()
+        return super(AccountMove, self - ecuadorian_moves).unlink()
 
     @api.depends(
         "line_ids.price_subtotal",
