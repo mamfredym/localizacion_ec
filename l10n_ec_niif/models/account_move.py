@@ -686,6 +686,9 @@ class AccountMove(models.Model):
         withhold_iva_group = self.env.ref("l10n_ec_niif.tax_group_iva_withhold")
         withhold_rent_group = self.env.ref("l10n_ec_niif.tax_group_renta_withhold")
         iva_group = self.env.ref("l10n_ec_niif.tax_group_iva")
+        iva_no_apply_group = self.env.ref("l10n_ec_niif.tax_group_iva_no_apply")
+        iva_exempt_group = self.env.ref("l10n_ec_niif.tax_group_iva_exempt")
+        iva_group_0 = self.env.ref("l10n_ec_niif.tax_group_iva_0")
         error_list = []
         # validaciones para consumidor final
         # * no permitir factura de ventas mayor a un monto configurado(200 USD por defecto)
@@ -748,7 +751,9 @@ class AccountMove(models.Model):
                     lambda x: x.tax_group_id.id == iva_group.id and x.amount > 0
                 )
                 iva_0_taxes = line.tax_ids.filtered(
-                    lambda x: x.tax_group_id.id == iva_group.id and x.amount == 0
+                    lambda x: x.tax_group_id.id
+                    in (iva_group_0.id, iva_no_apply_group.id, iva_exempt_group.id)
+                    and x.amount == 0
                 )
                 withhold_iva_taxes = line.tax_ids.filtered(
                     lambda x: x.tax_group_id.id == withhold_iva_group.id
@@ -961,29 +966,29 @@ class AccountMove(models.Model):
         return super(AccountMove, self - ecuadorian_moves).unlink()
 
     @api.depends(
-        "line_ids.price_subtotal",
-        "line_ids.tax_base_amount",
-        "line_ids.tax_line_id",
+        "invoice_line_ids.price_unit",
+        "invoice_line_ids.product_id",
+        "invoice_line_ids.quantity",
+        "invoice_line_ids.discount",
+        "invoice_line_ids.tax_ids",
         "partner_id",
         "currency_id",
+        "company_id",
+        "invoice_date",
     )
     def _compute_l10n_ec_amounts(self):
         for move in self:
-            move_date = move.date or fields.Date.context_today(move)
-            l10n_ec_base_iva_0 = 0.0
-            l10n_ec_base_iva = 0.0
-            l10n_ec_iva = 0.0
+            move_date = move.invoice_date or fields.Date.context_today(move)
+            l10n_ec_base_iva_0 = sum(
+                line.l10n_ec_base_iva_0 for line in move.invoice_line_ids
+            )
+            l10n_ec_base_iva = sum(
+                line.l10n_ec_base_iva for line in move.invoice_line_ids
+            )
+            l10n_ec_iva = sum(line.l10n_ec_iva for line in move.invoice_line_ids)
             l10n_ec_discount_total = 0.0
             for line in move.invoice_line_ids:
                 l10n_ec_discount_total += line._l10n_ec_get_discount_total()
-            for group in move.amount_by_group:
-                iva_group = self.env.ref("l10n_ec_niif.tax_group_iva")
-                if group[6] == iva_group.id:
-                    if group[2] != 0 and group[1] == 0:
-                        l10n_ec_base_iva_0 = group[2]
-                    else:
-                        l10n_ec_base_iva = group[2]
-                        l10n_ec_iva = group[1]
             move.l10n_ec_base_iva_0 = l10n_ec_base_iva_0
             move.l10n_ec_base_iva = l10n_ec_base_iva
             move.l10n_ec_iva = l10n_ec_iva
@@ -2301,12 +2306,12 @@ class AccountMoveLine(models.Model):
                 for tax_data in taxes_res["taxes"]:
                     tax = self.env["account.tax"].browse(tax_data["id"])
                     iva_group = self.env.ref("l10n_ec_niif.tax_group_iva")
+                    iva_0_group = self.env.ref("l10n_ec_niif.tax_group_iva_0")
                     if tax.tax_group_id.id == iva_group.id:
-                        if tax_data["base"] != 0 and tax_data["amount"] == 0:
-                            l10n_ec_base_iva_0 = tax_data["base"]
-                        else:
-                            l10n_ec_base_iva = tax_data["base"]
-                            l10n_ec_iva = tax_data["amount"]
+                        l10n_ec_base_iva = tax_data["base"]
+                        l10n_ec_iva = tax_data["amount"]
+                    if tax.tax_group_id.id == iva_0_group.id:
+                        l10n_ec_base_iva_0 = tax_data["base"]
             else:
                 l10n_ec_base_iva_0 = taxes_res["total_excluded"]
             move_line.l10n_ec_base_iva_0 = l10n_ec_base_iva_0

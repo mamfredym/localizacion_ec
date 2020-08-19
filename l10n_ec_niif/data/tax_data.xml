@@ -7,6 +7,10 @@
         <record id="tax_group_iva_exempt" model="account.tax.group">
             <field name="name">I.V.A. Exento</field>
         </record>
+        <record id="tax_group_iva_0" model="account.tax.group">
+            <field name="name">I.V.A. 0%</field>
+            <field name="l10n_ec_xml_fe_code">2</field>
+        </record>
         <record id="tax_group_iva" model="account.tax.group">
             <field name="name">I.V.A. 12%</field>
             <field name="l10n_ec_xml_fe_code">2</field>
@@ -123,7 +127,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
             <field name="l10n_ec_xml_fe_code">0</field>
-            <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva" />
+            <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva_0" />
             <field
                 name="invoice_repartition_line_ids"
                 eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f104_413')]}),(0,0, {'factor_percent': 0,'repartition_type': 'tax',}),]"
@@ -143,7 +147,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
             <field name="l10n_ec_xml_fe_code">0</field>
-            <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva" />
+            <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva_0" />
             <field
                 name="invoice_repartition_line_ids"
                 eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f104_414')]}),(0,0, {'factor_percent': 0,'repartition_type': 'tax',}),]"
@@ -163,7 +167,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
             <field name="l10n_ec_xml_fe_code">0</field>
-            <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva" />
+            <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva_0" />
             <field
                 name="invoice_repartition_line_ids"
                 eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f104_415')]}),(0,0, {'factor_percent': 0,'repartition_type': 'tax',}),]"
@@ -183,7 +187,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
             <field name="l10n_ec_xml_fe_code">0</field>
-            <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva" />
+            <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva_0" />
             <field
                 name="invoice_repartition_line_ids"
                 eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f104_416')]}),(0,0, {'factor_percent': 0,'repartition_type': 'tax',}),]"
@@ -438,7 +442,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
             <field name="l10n_ec_xml_fe_code">0</field>
-            <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva" />
+            <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva_0" />
             <field
                 name="invoice_repartition_line_ids"
                 eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f104_516')]}),(0,0, {'factor_percent': 0,'repartition_type': 'tax',}),]"
@@ -458,7 +462,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
             <field name="l10n_ec_xml_fe_code">0</field>
-            <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva" />
+            <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva_0" />
             <field
                 name="invoice_repartition_line_ids"
                 eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f104_517')]}),(0,0, {'factor_percent': 0,'repartition_type': 'tax',}),]"
@@ -476,7 +480,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
             <field name="l10n_ec_xml_fe_code">6</field>
-            <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva" />
+            <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva_0" />
             <field
                 name="invoice_repartition_line_ids"
                 eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f104_518')]}),(0,0, {'factor_percent': 0,'repartition_type': 'tax',}),]"
@@ -494,7 +498,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
             <field name="l10n_ec_xml_fe_code">6</field>
-            <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva" />
+            <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva_no_apply" />
             <field
                 name="invoice_repartition_line_ids"
                 eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f104_541')]}),(0,0, {'factor_percent': 0,'repartition_type': 'tax',}),]"

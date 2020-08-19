@@ -7,6 +7,11 @@
             <field name="priority">100</field>
             <field name="inherit_id" ref="l10n_latam_invoice_document.view_move_form" />
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='invoice_payments_widget']" position="after">
+                    <field name="l10n_ec_base_iva" invisible="1" />
+                    <field name="l10n_ec_base_iva_0" invisible="1" />
+                    <field name="l10n_ec_iva" invisible="1" />
+                </xpath>
                 <xpath expr="//field[@name='ref']" position="after">
                     <field
                         name="l10n_ec_original_invoice_id"
