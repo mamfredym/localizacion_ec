@@ -668,6 +668,7 @@ class AccountTax(models.Model):
 
     _inherit = "account.tax"
 
+    @api.model_create_multi
     def create(self, vals):
         recs = super(AccountTax, self).create(vals)
         withhold_iva_group = self.env.ref("l10n_ec_niif.tax_group_iva_withhold")
