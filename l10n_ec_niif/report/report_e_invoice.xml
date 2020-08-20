@@ -79,7 +79,6 @@
             >
                 <t t-call="l10n_ec_niif.e_liquidation_document_body" />
             </t>
-            <p style="page-break-after:always;" />
             <table class="table table-sm table-no-border">
                 <tbody>
                     <tr>
