@@ -112,7 +112,7 @@
                             options="{'no_create': True}"
                             domain="[('point_of_emission_id', '=', l10n_ec_point_of_emission_id), ('document_type', '=', l10n_latam_internal_type)]"
                             attrs="{'invisible': ['|',('l10n_ec_type_emission', 'not in', ('pre_printed', 'auto_printer')), ('l10n_ec_invoice_type', 'not in', ('out_invoice', 'out_refund', 'liquidation', 'debit_note_out'))],
-                               'required': [('l10n_ec_type_emission', 'in', ('pre_printed', 'auto_printer')), ('l10n_latam_country_code', '=', 'EC'), '|', ('l10n_ec_invoice_type', 'in', ('out_invoice', 'out_refund', 'liquidation', 'debit_note_out'))],
+                               'required': [('l10n_ec_type_emission', 'in', ('pre_printed', 'auto_printer')), ('l10n_latam_country_code', '=', 'EC'), ('l10n_ec_invoice_type', 'in', ('out_invoice', 'out_refund', 'liquidation', 'debit_note_out'))],
                                'readonly': [('state', '!=', 'draft')]}"
                             force_save="1"
                         />
