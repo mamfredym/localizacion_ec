@@ -344,6 +344,16 @@ class AccountMove(models.Model):
         readonly=True,
         states={"draft": [("readonly", False)]},
     )
+    l10n_ec_type_emission_withhold = fields.Selection(
+        string="Type emission withhold",
+        selection=[
+            ("electronic", "Electronic"),
+            ("pre_printed", "Pre Printed"),
+            ("auto_printer", "Auto Printer"),
+        ],
+        required=False,
+    )
+
     l10n_ec_authorization_line_id = fields.Many2one(
         comodel_name="l10n_ec.sri.authorization.line",
         string="Own Ecuadorian Authorization Line",
@@ -437,6 +447,9 @@ class AccountMove(models.Model):
                 values["l10n_ec_point_of_emission_withhold_id"] = default_printer.id
                 if default_printer:
                     values["l10n_ec_type_emission"] = default_printer.type_emission
+                    values[
+                        "l10n_ec_type_emission_withhold"
+                    ] = default_printer.type_emission
                     if invoice_type == "in_invoice":
                         (
                             next_number,
@@ -827,9 +840,9 @@ class AccountMove(models.Model):
             "partner_id": self.partner_id.id,
             "invoice_id": self.id,
             "type": "purchase",
-            "document_type": self.l10n_ec_type_emission,
             "point_of_emission_id": self.l10n_ec_point_of_emission_withhold_id.id,
             "authorization_line_id": self.l10n_ec_authorization_line_id.id,
+            "document_type": self.l10n_ec_type_emission_withhold,
             "state": "draft",
         }
         return withhold_values
