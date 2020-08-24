@@ -1,5 +1,26 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
+    <template id="report_invoice" inherit_id="account.report_invoice">
+        <t t-call="web.html_container" position="before">
+            <t
+                t-if="docs.mapped('l10n_ec_xml_data_id') and len(docs) == len(docs.mapped('l10n_ec_xml_data_id'))"
+            >
+                <t t-set="data_report_margin_top">5</t>
+            </t>
+        </t>
+    </template>
+    <template
+        id="report_invoice_with_payments"
+        inherit_id="account.report_invoice_with_payments"
+    >
+        <t t-call="web.html_container" position="before">
+            <t
+                t-if="docs.mapped('l10n_ec_xml_data_id') and len(docs) == len(docs.mapped('l10n_ec_xml_data_id'))"
+            >
+                <t t-set="data_report_margin_top">5</t>
+            </t>
+        </t>
+    </template>
     <template id="report_invoice_document_with_payments_extension">
         <t t-set="call_report_original" t-value="True" />
         <t
@@ -42,8 +63,6 @@
         <t t-if="not o or not 'company_id' in o">
             <t t-set="company" t-value="res_company" />
         </t>
-        <!-- como no se imprime el encabezado, pasar explicitamente el margen superior para no dejar en blanco el espacio del encabezado -->
-        <t t-set="data_report_margin_top" t-value="10" />
         <t t-set="emision_date" t-value="o.invoice_date" />
         <t t-set="printer_point" t-value="o.l10n_ec_point_of_emission_id" />
         <t t-set="partner" t-value="o.commercial_partner_id" />

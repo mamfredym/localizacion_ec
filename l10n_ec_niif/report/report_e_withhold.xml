@@ -22,7 +22,6 @@
         >
             <t t-call="l10n_ec_niif.electronic_report_common_head" />
             <t t-call="l10n_ec_niif.e_withhold_document_body" />
-            <p style="page-break-after:always;" />
             <table class="table table-sm table-no-border">
                 <tbody>
                     <tr>

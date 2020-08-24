@@ -110,12 +110,10 @@
                             <br />
                             <span t-field="o.l10n_ec_electronic_authorization" />
                             <br /><br />
-                            <t t-if="o.l10n_ec_authorization_date">
-                                <strong>Fecha y hora de autorización: </strong>
-                                <span t-field="o.l10n_ec_authorization_date" />
-                                <br />
-                                <br />
-                            </t>
+                            <strong>Fecha y hora de autorización: </strong>
+                            <span t-field="o.l10n_ec_authorization_date" />
+                            <br />
+                            <br />
                             <strong>AMBIENTE: </strong>
                             <span
                                 t-field="o.l10n_ec_xml_data_id.l10n_ec_type_environment"
