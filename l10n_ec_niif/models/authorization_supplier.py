@@ -182,7 +182,7 @@ class L10nECSriAuthorizationSupplier(models.Model):
                 invoice_recs = invoice_model.search(
                     [  # TODO: filtrar estado???
                         ("state", "not in", ("draft", "cancel")),
-                        ("authorization_third_id", "in", self.ids),
+                        ("l10n_ec_supplier_authorization_id", "in", self.ids),
                     ]
                 )
                 if invoice_recs or retention_recs:
