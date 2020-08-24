@@ -99,13 +99,14 @@ class L10nECSriAuthorizationSupplier(models.Model):
                 )
             elif not auth.autoprinter:
                 args = [
-                    ("partner_id", "=", auth.partner_id.id),
+                    ("commercial_partner_id", "=", auth.commercial_partner_id.id),
                     ("number", "=", auth.number),
                     ("document_type", "=", auth.document_type),
                     ("agency", "=", auth.agency),
                     ("printer_point", "=", auth.printer_point),
-                    ("id", "!=", auth.id),
                 ]
+                if not isinstance(auth.id, models.NewId):
+                    args.append(("id", "!=", auth.id))
                 other_auth_recs = auth.search(args)
                 is_valid = True
                 for other_auth in other_auth_recs:
