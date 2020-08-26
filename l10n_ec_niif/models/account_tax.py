@@ -4,22 +4,20 @@ from odoo import api, fields, models
 class AccountTaxGroup(models.Model):
     _inherit = "account.tax.group"
 
-    l10n_ec_xml_fe_code = fields.Char(u"Codigo en Facturacion electronica", size=5)
+    l10n_ec_xml_fe_code = fields.Char("Tax Code for Electronic Documents", size=5)
 
 
 class AccountTax(models.Model):
     _inherit = "account.tax"
 
     l10n_ec_ats_code = fields.Char(
-        "Código en A.T.S.",
-        size=10,
-        help="Indica el codigo usado en el Anexo Transaccional Simplificado del SRI",
+        "A.T.S. Code", size=10, help="Tax Code used into A.T.S. report",
     )
     l10n_ec_xml_fe_code = fields.Char(
-        "Código en Facturacion electronica",
+        "Tax Code for Electronic Documents",
         size=10,
-        help="Indica el codigo usado en el xml de facturacion electronica que se envia al SRI, "
-        "en caso de no estar configrado se tomara el codigo de impuesto normal",
+        help="Tax Code used into xml files for electronic documents sent to S.R.I., "
+        "If field is empty, description field are used instead",
     )
 
 
@@ -27,15 +25,13 @@ class AccountTaxTemplate(models.Model):
     _inherit = "account.tax.template"
 
     l10n_ec_ats_code = fields.Char(
-        "Código en A.T.S.",
-        size=10,
-        help="Indica el codigo usado en el Anexo Transaccional Simplificado del SRI",
+        "A.T.S. Code", size=10, help="Tax Code used into A.T.S. report",
     )
     l10n_ec_xml_fe_code = fields.Char(
-        "Código en Facturacion electronica",
+        "Tax Code for Electronic Documents",
         size=10,
-        help="Indica el codigo usado en el xml de facturacion electronica que se envia al SRI, "
-        "en caso de no estar configrado se tomara el codigo de impuesto normal",
+        help="Tax Code used into xml files for electronic documents sent to S.R.I., "
+        "If field is empty, description field are used instead",
     )
 
     def _get_tax_vals(self, company, tax_template_to_tax):
