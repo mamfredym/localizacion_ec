@@ -41,7 +41,10 @@ class AccountJournal(models.Model):
         count=False,
         access_rights_uid=None,
     ):
-        if self.env.context.get("internal_type"):
+        if (
+            self.env.context.get("internal_type")
+            and self.env.company.country_id.code == "EC"
+        ):
             internal_type = self.env.context.get("internal_type")
             if internal_type == "credit_note":
                 args.append(

@@ -607,6 +607,8 @@ class AccountMove(models.Model):
         journal_model = self.env["account.journal"]
         domain = []
         company_id = self._context.get("default_company_id") or self.env.company.id
+        if self.env["res.company"].browse(company_id).country_id.code != "EC":
+            return super(AccountMove, self)._get_default_journal()
         internal_type = self._context.get("internal_type", "")
         move_type = self._context.get("default_type", "entry")
         journal_type = "general"
