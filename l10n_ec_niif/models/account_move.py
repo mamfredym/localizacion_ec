@@ -1133,9 +1133,12 @@ class AccountMove(models.Model):
 
     def l10n_ec_get_invoice_type(self):
         self.ensure_one()
-        return modules_mapping.l10n_ec_get_invoice_type(
-            self.type, self.l10n_latam_document_type_id.internal_type, False
+        internal_type = (
+            self.l10n_latam_document_type_id.internal_type
+            or self.env.context.get("internal_type")
+            or "invoice"
         )
+        return modules_mapping.l10n_ec_get_invoice_type(self.type, internal_type, False)
 
     def l10n_ec_validate_fields_required_fe(self):
         message_list = []
