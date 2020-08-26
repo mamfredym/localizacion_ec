@@ -48,3 +48,12 @@ class AccountTaxTemplate(models.Model):
             }
         )
         return val
+
+
+class AccountTaxRepartitionLine(models.Model):
+    _inherit = "account.tax.repartition.line"
+
+    # replace field for change copy attribute
+    # at duplicate tax raise error for duplicity
+    # on test is need duplicate taxes
+    tag_ids = fields.Many2many(copy=False)
