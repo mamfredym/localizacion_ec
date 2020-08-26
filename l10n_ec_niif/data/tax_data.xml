@@ -747,7 +747,7 @@
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
             <field name="name">Servicios Publicidad y comunicación</field>
             <field name="description">309</field>
-            <field name="amount">-1</field>
+            <field name="amount">-1.75</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
@@ -804,6 +804,26 @@
                 name="name"
             >Transferencia de bienes muebles de naturaleza corporal</field>
             <field name="description">312</field>
+            <field name="amount">-1.75</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
+            <field
+                name="invoice_repartition_line_ids"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_312')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_362')]}),]"
+            />
+            <field
+                name="refund_repartition_line_ids"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_312')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_362')]}),]"
+            />
+        </record>
+        <record model="account.tax.template" id="tax_312a">
+            <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
+            <field
+                name="name"
+            >Compra de bienes de origen agrícola, avícola, pecuario, apícola, cunícula, bioacuático, forestal y carnes en estado natural</field>
+            <field name="description">312A</field>
+            <field name="l10n_ec_ats_code">312A</field>
             <field name="amount">-1</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
@@ -840,7 +860,7 @@
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
             <field name="name">Arrendamiento Mercantil</field>
             <field name="description">319</field>
-            <field name="amount">-1</field>
+            <field name="amount">-1.75</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
@@ -874,7 +894,7 @@
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
             <field name="name">Seguros y reaseguros (primas y cesiones)</field>
             <field name="description">322</field>
-            <field name="amount">-1</field>
+            <field name="amount">-1.75</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
@@ -1141,11 +1161,68 @@
                 eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_343')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_393')]}),]"
             />
         </record>
-        <record model="account.tax.template" id="tax_344">
+        <record model="account.tax.template" id="tax_343a">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field name="name">Aplicables el 2%</field>
-            <field name="description">344</field>
-            <field name="amount">-2</field>
+            <field name="name">Energía eléctrica</field>
+            <field name="description">343A</field>
+            <field name="amount">-1</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
+            <field
+                name="invoice_repartition_line_ids"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_343')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_393')]}),]"
+            />
+            <field
+                name="refund_repartition_line_ids"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_343')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_393')]}),]"
+            />
+        </record>
+        <record model="account.tax.template" id="tax_343b">
+            <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
+            <field
+                name="name"
+            >Actividades de construcción de obra material inmueble, urbanización, lotización o actividades similares</field>
+            <field name="description">343B</field>
+            <field name="l10n_ec_ats_code">343B</field>
+            <field name="amount">-1.75</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
+            <field
+                name="invoice_repartition_line_ids"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_343')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_393')]}),]"
+            />
+            <field
+                name="refund_repartition_line_ids"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_343')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_393')]}),]"
+            />
+        </record>
+        <record model="account.tax.template" id="tax_343c">
+            <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
+            <field
+                name="name"
+            >Impuesto Redimible a las botellas plásticas - IRBP</field>
+            <field name="description">343C</field>
+            <field name="l10n_ec_ats_code">343C</field>
+            <field name="amount">-1</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
+            <field
+                name="invoice_repartition_line_ids"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_343')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_393')]}),]"
+            />
+            <field
+                name="refund_repartition_line_ids"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_343')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_393')]}),]"
+            />
+        </record>
+        <record model="account.tax.template" id="tax_3440">
+            <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
+            <field name="name">Otras retenciones aplicables el 2,75%</field>
+            <field name="description">3440</field>
+            <field name="amount">-2.75</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
