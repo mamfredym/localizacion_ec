@@ -1,13 +1,30 @@
-import datetime
+from datetime import date
+
+from dateutil.relativedelta import relativedelta
 
 from odoo.exceptions import UserError, ValidationError
-from odoo.tests import common
+from odoo.tests import tagged
+
+from odoo.addons.account.tests.account_test_savepoint import AccountTestInvoicingCommon
 
 
-class TestModule(common.TransactionCase):
+@tagged("post_install", "-at_install")
+class EcuadorianNiifTest(AccountTestInvoicingCommon):
+    @classmethod
+    def setUpClass(cls, chart_template_ref="l10n_ec_niif.ec_chart_template"):
+        super().setUpClass(chart_template_ref=chart_template_ref)
+        ec_chart_template = cls.env.ref("l10n_ec_niif.ec_chart_template")
+        cls.env.company.write({"chart_template_id": ec_chart_template.id})
+        cls.company_data = cls.setup_company_data(
+            "company_EC_data", ec_chart_template, country_id=cls.env.ref("base.ec").id
+        )
+        cls.company = cls.company_data["company"]
+        cls.env.user.write(
+            {"company_id": cls.company.id,}
+        )
+
     def setUp(self):
-        super(TestModule, self).setUp()
-
+        super(EcuadorianNiifTest, self).setUp()
         self.test_obj1 = self.env["l10n_ec.agency"]
         self.test_agency1 = self.test_obj1.create(
             {"name": "Agency001", "number": 999, "active": True,}
@@ -74,92 +91,28 @@ class TestModule(common.TransactionCase):
             }
         )
 
-        self.test_obj5 = self.env["account.move"]
+        self.test_obj5 = self.env["account.move"].with_context(
+            internal_type="invoice", default_type="out_invoice",
+        )
         self.test_invoice1 = self.test_obj5.create(
             {
+                "type": "out_invoice",
                 "l10n_ec_point_of_emission_id": self.test_pofe1.id,
-                "l10n_ec_agency_id": self.test_agency1.id,
                 "l10n_ec_authorization_line_id": self.test_doc1.id,
             }
         )
 
     def test_creation_data(self):
         self.assertEqual(
-            self.test_agency1.name, "Agency001", "Agency name does not match"
-        )
-        self.assertEqual(
-            self.test_agency1.number, "999", "Agency number does not match"
-        )
-        # SUCCESSFUL AGENCY
-
-        self.assertEqual(self.test_pofe1.name, "PofE001", "PofE name does not match")
-        self.assertEqual(self.test_pofe1.number, "001", "PofE number does not match")
-        self.assertEqual(
-            self.test_pofe1.agency_id.id,
-            self.test_agency1.id,
-            "Agency/PofE relationship is wrong",
-        )
-        self.assertIn(
-            self.test_pofe1.type_emission,
-            ["electronic", "pre_printed", "auto_printer"],
-            "The type of issue is not within the established rates",
-        )
-        # 2 SUCCESSFULLY POINT OF EMISSION
-
-        self.assertEqual(
-            self.test_auth1.number, "AUTH001", "Authorization name does not match"
-        )
-        self.assertEqual(
-            self.test_auth1.start_date,
-            datetime.date(2020, 8, 1),
-            "Start date does not match",
-        )
-        self.assertEqual(
-            self.test_auth1.expiration_date,
-            datetime.date(2020, 8, 20),
-            "The effective date does not match",
-        )
-        # 3 SUCCESSFULLY AUTHORIZATION
-
-        self.assertEqual(
-            self.test_doc1.point_of_emission_id.id,
-            self.test_pofe1.id,
-            "The Document/PofE relationship is incorrect",
-        )
-        self.assertEqual(
-            self.test_doc1.authorization_id.id,
-            self.test_auth1.id,
-            "The Document/authorization relationship is incorrect",
-        )
-        self.assertEqual(
-            self.test_doc1.first_sequence, 1, "The first sequence number does not match"
-        )
-        self.assertEqual(
-            self.test_doc1.last_sequence, 100, "The last sequence number does not match"
-        )
-        self.assertIn(
-            self.test_doc1.document_type,
-            ["invoice", "withholding", "liquidation", "credit_note", "debit_note"],
-            "he document type is not within the established types",
-        )
-        # 4 SUCCESSFULLY DOCUMENT
-
-        self.assertEqual(
             self.test_invoice1.l10n_ec_point_of_emission_id.id,
             self.test_pofe1.id,
             "The PofE/Invoice relationship is incorrect",
-        )
-        self.assertEqual(
-            self.test_invoice1.l10n_ec_agency_id.id,
-            self.test_agency1.id,
-            "The Agency/Invoice relationship is incorrect",
         )
         self.assertEqual(
             self.test_invoice1.l10n_ec_authorization_id.id,
             self.test_auth1.id,
             "The Authorization/Invoice relationship is incorrect",
         )
-        # 5 SUCCESSFUL INVOICE
 
     def test_relationship_active_fiel_agency_pofe(self):
         self.assertIs(
@@ -167,7 +120,6 @@ class TestModule(common.TransactionCase):
             self.test_agency2.active,
             "The relationship of the active field of the Agency / PofE is incorrect",
         )
-        # 6 Check the relationship of the "active" field in the Agency and the PofE
 
     def test_delete_agency_with_invoice(self):
         """User should never be able to delete a agency with invoice"""
@@ -189,19 +141,13 @@ class TestModule(common.TransactionCase):
     def test_duplicate_or_cross_date_ranges(self):
         with self.assertRaises(UserError):
             self.test_auth2.write(
-                {"start_date": "2020-8-1", "expiration_date": "2020-8-20",}
-            )
-
-    def test_check_logic_dates_authorization(self):
-        with self.assertRaises(ValidationError):
-            self.test_auth2.write(
-                {"start_date": "2020-8-20", "expiration_date": "2020-8-1",}
+                {"start_date": "2020-08-01", "expiration_date": "2020-08-20",}
             )
 
     def test_invoice_date_range_outside(self):
         with self.assertRaises(UserError):
             self.test_invoice1.write(
-                {"invoice_date": "2020-9-1",}
+                {"invoice_date": "2020-09-01",}
             )
 
     def test_check_duplicate_sequence(self):
