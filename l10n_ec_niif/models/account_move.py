@@ -1,3 +1,4 @@
+import re
 from xml.etree.ElementTree import SubElement
 
 from odoo import _, api, fields, models
@@ -342,6 +343,7 @@ class AccountMove(models.Model):
         comodel_name="l10n_ec.point.of.emission",
         string="Point of emission",
         readonly=True,
+        copy=False,
         states={"draft": [("readonly", False)]},
     )
     l10n_ec_type_emission_withhold = fields.Selection(
@@ -353,9 +355,21 @@ class AccountMove(models.Model):
         ],
         required=False,
     )
+    l10n_ec_authorization_line_withhold_id = fields.Many2one(
+        comodel_name="l10n_ec.sri.authorization.line",
+        copy=False,
+        string="Own Ecuadorian Authorization Line(Withhold)",
+    )
+    l10n_ec_authorization_withhold_id = fields.Many2one(
+        comodel_name="l10n_ec.sri.authorization",
+        string="Own Ecuadorian Authorization(Withhold)",
+        related="l10n_ec_authorization_line_withhold_id.authorization_id",
+        store=True,
+    )
 
     l10n_ec_authorization_line_id = fields.Many2one(
         comodel_name="l10n_ec.sri.authorization.line",
+        copy=False,
         string="Own Ecuadorian Authorization Line",
     )
     l10n_ec_authorization_id = fields.Many2one(
@@ -418,8 +432,8 @@ class AccountMove(models.Model):
         )
         fields_ec_to_fill = {
             "l10n_ec_point_of_emission_id",
-            "l10n_ec_withhold_number",
-            "l10n_latam_document_number" "l10n_ec_authorization_line_id",
+            "l10n_latam_document_number",
+            "l10n_ec_authorization_line_id",
         }
         if (
             inv_type in ("out_invoice", "out_refund", "in_invoice",)
@@ -444,24 +458,9 @@ class AccountMove(models.Model):
                     .get("default_printer_default_id")
                 )
                 values["l10n_ec_point_of_emission_id"] = default_printer.id
-                values["l10n_ec_point_of_emission_withhold_id"] = default_printer.id
                 if default_printer:
                     values["l10n_ec_type_emission"] = default_printer.type_emission
-                    values[
-                        "l10n_ec_type_emission_withhold"
-                    ] = default_printer.type_emission
-                    if invoice_type == "in_invoice":
-                        (
-                            next_number,
-                            auth_line,
-                        ) = default_printer.get_next_value_sequence(
-                            "withhold_purchase", False, False
-                        )
-                        if next_number:
-                            values["l10n_ec_withhold_number"] = next_number
-                        if auth_line:
-                            values["l10n_ec_authorization_line_id"] = auth_line.id
-                    else:
+                    if invoice_type != "in_invoice":
                         (
                             next_number,
                             auth_line,
@@ -507,6 +506,7 @@ class AccountMove(models.Model):
         string="Withhold Number",
         required=False,
         readonly=True,
+        copy=False,
         size=17,
         states={"draft": [("readonly", False)]},
     )
@@ -531,18 +531,7 @@ class AccountMove(models.Model):
                     "liquidation",
                     "in_invoice",
                 ):
-                    if invoice_type == "in_invoice":
-                        (
-                            next_number,
-                            auth_line,
-                        ) = move.l10n_ec_point_of_emission_id.get_next_value_sequence(
-                            "withhold_purchase", move.invoice_date, False
-                        )
-                        if next_number:
-                            move.l10n_ec_withhold_number = next_number
-                        if auth_line:
-                            move.l10n_ec_authorization_line_id = auth_line.id
-                    else:
+                    if invoice_type not in ["in_invoice"]:
                         (
                             next_number,
                             auth_line,
@@ -555,6 +544,65 @@ class AccountMove(models.Model):
                         if next_number:
                             move.l10n_latam_document_number = next_number
                         move.l10n_ec_authorization_line_id = auth_line.id
+
+    @api.onchange(
+        "l10n_ec_point_of_emission_withhold_id", "l10n_ec_withhold_date",
+    )
+    def _onchange_point_of_emission_withhold(self):
+        warning = {}
+        for move in self.filtered(
+            lambda x: x.company_id.country_id.code == "EC" and x.type == "in_invoice"
+        ):
+            if (
+                move.l10n_ec_withhold_date
+                and move.invoice_date
+                and move.l10n_ec_withhold_required
+            ):
+                if move.l10n_ec_withhold_date < move.invoice_date:
+                    move.l10n_ec_withhold_date = move.invoice_date
+                    warning = {
+                        "title": _("Information for User"),
+                        "message": _("Withhold date can not be less to Invoice Date"),
+                    }
+            if (
+                move.l10n_ec_point_of_emission_withhold_id
+                and move.l10n_ec_withhold_required
+            ):
+                move.l10n_ec_type_emission_withhold = (
+                    move.l10n_ec_point_of_emission_withhold_id.type_emission
+                )
+                (
+                    next_number,
+                    auth_line,
+                ) = move.l10n_ec_point_of_emission_withhold_id.get_next_value_sequence(
+                    "withhold_purchase", move.l10n_ec_withhold_date, True
+                )
+                if next_number:
+                    move.l10n_ec_withhold_number = next_number
+                if auth_line:
+                    move.l10n_ec_authorization_line_withhold_id = auth_line.id
+            else:
+                move.l10n_ec_type_emission_withhold = False
+                move.l10n_ec_withhold_number = False
+                move.l10n_ec_authorization_line_withhold_id = False
+        return {"warning": warning}
+
+    @api.constrains("l10n_ec_withhold_number")
+    @api.onchange("l10n_ec_withhold_number")
+    def _check_l10n_ec_withhold_number(self):
+        for invoice in self:
+            if (
+                invoice.company_id.country_id.code == "EC"
+                and invoice.l10n_ec_withhold_number
+                and invoice.l10n_ec_withhold_required
+            ):
+                if not re.match(r"\d{3}-\d{3}-\d{9}$", invoice.l10n_ec_withhold_number):
+                    raise UserError(
+                        _(
+                            "Ecuadorian Document for Withhold %s must be like 001-001-123456789"
+                        )
+                        % (invoice.l10n_ec_withhold_number)
+                    )
 
     l10n_ec_withhold_required = fields.Boolean(
         string="Withhold Required",
@@ -843,7 +891,7 @@ class AccountMove(models.Model):
             "invoice_id": self.id,
             "type": "purchase",
             "point_of_emission_id": self.l10n_ec_point_of_emission_withhold_id.id,
-            "authorization_line_id": self.l10n_ec_authorization_line_id.id,
+            "authorization_line_id": self.l10n_ec_authorization_line_withhold_id.id,
             "document_type": self.l10n_ec_type_emission_withhold,
             "state": "draft",
         }
@@ -1160,7 +1208,10 @@ class AccountMove(models.Model):
             message_list.append(
                 f"Debe asignar la direccion en la Empresa: {self.commercial_partner_id.name}, por favor verifique."
             )
-        if not self.l10n_ec_sri_payment_id:
+        if (
+            self.l10n_ec_invoice_type != "in_invoice"
+            and not self.l10n_ec_sri_payment_id
+        ):
             message_list.append(
                 f"Debe asignar la forma de pago del SRI en el documento: {self.display_name}, por favor verifique."
             )
@@ -1212,6 +1263,9 @@ class AccountMove(models.Model):
                     if not retention.no_number:
                         # si el documento esta habilitado, hacer el proceso electronico
                         if xml_model._is_document_authorized("withhold_purchase"):
+                            message_list = invoice.l10n_ec_validate_fields_required_fe()
+                            if message_list:
+                                raise UserError("\n".join(message_list))
                             company = retention.company_id or self.env.company
                             sri_xml_vals = retention._prepare_l10n_ec_sri_xml_values(
                                 company
