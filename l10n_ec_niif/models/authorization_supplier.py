@@ -1,5 +1,8 @@
 import logging
 import re
+from datetime import datetime
+
+import requests
 
 from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import ValidationError, Warning
@@ -473,6 +476,37 @@ class L10nECSriAuthorizationSupplier(models.Model):
             name = "{} ({} - {})".format(rec.number, rec.agency, rec.printer_point)
             res.append((rec.id, name))
         return res
+
+    def validate_authorization_into_sri(self, document_number, document_date):
+        response_json = {}
+        document_types_sri = {
+            "in_invoice": "FAC",
+            "withholding": "CDR",
+            "liquidation": "LCB",
+            "in_refund": "NDC",
+            "debit_note_in": "NDD",
+            "delivery_note": "GRD",
+        }
+        try:
+            if not isinstance(document_date, datetime):
+                document_date = fields.Datetime.context_timestamp(
+                    self, fields.Datetime.to_datetime(document_date)
+                )
+            tipoDocumento = document_types_sri.get(self.document_type)
+            params = {
+                "tipoDocumento": tipoDocumento,
+                "autorizacion": self.number,
+                "emision": int(document_date.timestamp() * 1000),
+                "ruc": self.partner_id.vat,
+            }
+            response = requests.get(
+                f"https://srienlinea.sri.gob.ec/movil-servicios/api/v1.0/documentoValido/{document_number}",
+                params=params,
+            )
+            response_json = response.json()
+        except Exception as e:
+            _logger.debug("Error Validating authorization into sri: %s" % str(e))
+        return response_json
 
 
 L10nECSriAuthorizationSupplier()

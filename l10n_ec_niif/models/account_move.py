@@ -1,12 +1,15 @@
+import logging
 import re
 from xml.etree.ElementTree import SubElement
 
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare, float_is_zero, float_round
 from odoo.tools.safe_eval import safe_eval
 
 from ..models import modules_mapping
+
+_logger = logging.getLogger(__name__)
 
 
 class L10nECIdentificationType(models.Model):
@@ -165,7 +168,7 @@ class AccountMove(models.Model):
             ("invoice", "Invoices"),
             ("debit_note", "Debit Notes"),
             ("credit_note", "Credit Notes"),
-            ("liquidation", "Liquidtion"),
+            ("liquidation", "Liquidation"),
         ],
         string="Latam internal type",
         compute="_compute_l10n_latam_document_type",
@@ -389,6 +392,17 @@ class AccountMove(models.Model):
         default=False,
         readonly=True,
         states={"draft": [("readonly", False)]},
+    )
+    l10n_ec_sri_authorization_state = fields.Selection(
+        string="Authorization state on SRI",
+        selection=[
+            ("to_check", "To Check"),
+            ("valid", "Valid"),
+            ("invalid", "Invalid"),
+        ],
+        readonly=True,
+        copy=False,
+        default="to_check",
     )
 
     @api.depends(
@@ -783,6 +797,11 @@ class AccountMove(models.Model):
                     )
                 )
         if self.l10n_ec_invoice_type in ("in_invoice", "in_refund", "debit_note_in"):
+            if not self.commercial_partner_id.vat:
+                raise UserError(
+                    _("Must be configure RUC to Partner: %s.")
+                    % (self.commercial_partner_id.name)
+                )
             supplier_authorization_model.validate_unique_document_partner(
                 self.l10n_ec_invoice_type,
                 self.l10n_latam_document_number,
@@ -877,6 +896,108 @@ class AccountMove(models.Model):
                     )
         if error_list:
             raise UserError("\n".join(error_list))
+        return True
+
+    @api.model
+    def l10n_ec_validate_supplier_documents_sri(self):
+        invoices = self.search(
+            [
+                (
+                    "l10n_ec_invoice_type",
+                    "in",
+                    ("in_invoice", "in_refund", "debit_note_in",),
+                ),
+                ("l10n_ec_sri_authorization_state", "=", "to_check"),
+                ("state", "=", "posted"),
+                ("company_id.country_id.code", "=", "EC"),
+            ]
+        )
+        for invoice in invoices:
+            invoice._l10n_ec_action_validate_authorization_sri()
+        withholding = self.env["l10n_ec.withhold"].search(
+            [
+                ("type", "=", "sale"),
+                ("l10n_ec_sri_authorization_state", "=", "to_check"),
+                ("state", "=", "done"),
+            ]
+        )
+        for withhold in withholding:
+            withhold._l10n_ec_action_validate_authorization_sri()
+        return True
+
+    def _l10n_ec_action_validate_authorization_sri(self):
+        # intentar validar el documento en linea con el SRI
+        if self.l10n_ec_invoice_type in ("in_invoice", "in_refund", "debit_note_in",):
+            if (
+                self.l10n_ec_type_emission in ("pre_printed", "auto_printer")
+                and self.l10n_ec_supplier_authorization_id
+            ):
+                response_sri = {}
+                try:
+                    response_sri = self.l10n_ec_supplier_authorization_id.validate_authorization_into_sri(
+                        self.l10n_ec_get_document_number(),
+                        self.l10n_ec_get_document_date(),
+                    )
+                except Exception as ex:
+                    _logger.error(tools.ustr(ex))
+                if "estado" in response_sri:
+                    # el estado es un texto que no serviria para comparacion, puede cambiar en cualquier momento
+                    # usar los datos del contribuyente en su lugar
+                    if not response_sri.get("contribuyente"):
+                        raise UserError(
+                            _(
+                                "Document was reviewed online with SRI and Authorization is invalid. %s"
+                            )
+                            % response_sri.get("estado")
+                        )
+                    else:
+                        self.write({"l10n_ec_sri_authorization_state": "valid"})
+            elif (
+                self.l10n_ec_type_emission == "electronic"
+                and self.l10n_ec_electronic_authorization
+            ):
+                xml_data = self.env["sri.xml.data"]
+                try:
+                    limit_days = int(
+                        self.env["ir.config_parameter"].get_param(
+                            "sri.days.to_validate_documents", 3
+                        )
+                    )
+                except Exception as ex:
+                    limit_days = 3
+                    _logger.error(
+                        "Error get parameter sri.days.to_validate_documents %s",
+                        tools.ustr(ex),
+                    )
+                is_authorized = False
+                try:
+                    client_ws = xml_data.get_current_wsClient("2", "authorization")
+                    response = client_ws.service.autorizacionComprobante(
+                        claveAccesoComprobante=self.l10n_ec_electronic_authorization
+                    )
+                    autorizacion_list = []
+                    if (
+                        hasattr(response, "autorizaciones")
+                        and response.autorizaciones is not None
+                    ):
+                        if not isinstance(response.autorizaciones.autorizacion, list):
+                            autorizacion_list = [response.autorizaciones.autorizacion]
+                        else:
+                            autorizacion_list = response.autorizaciones.autorizacion
+                    for doc in autorizacion_list:
+                        if doc.estado == "AUTORIZADO" and doc.comprobante:
+                            is_authorized = True
+                            break
+                except Exception as ex:
+                    _logger.error(tools.ustr(ex))
+                # en documentos electronicos no lanzar excepcion, puede ser emitido offline
+                if is_authorized:
+                    self.write({"l10n_ec_sri_authorization_state": "valid"})
+                else:
+                    # si ya pasaron N dias y aun no ha sido autorizado, marcarlo como documento invalido
+                    date_delta = fields.Date.context_today(self) - self.invoice_date
+                    if date_delta.days > limit_days:
+                        self.write({"l10n_ec_sri_authorization_state": "invalid"})
         return True
 
     def _prepare_withhold_values(self):
@@ -988,6 +1109,7 @@ class AccountMove(models.Model):
         for move in self:
             if move.company_id.country_id.code == "EC":
                 move._check_document_values_for_ecuador()
+                move._l10n_ec_action_validate_authorization_sri()
                 # proceso de retenciones en compra
                 if move.type == "in_invoice":
                     if move.l10n_ec_withhold_required:
@@ -1018,6 +1140,7 @@ class AccountMove(models.Model):
                 move.l10n_ec_withhold_ids.with_context(
                     cancel_from_invoice=True
                 ).unlink()
+        self.write({"l10n_ec_sri_authorization_state": "to_check"})
         return super(AccountMove, self).button_draft()
 
     def unlink(self):
@@ -1194,37 +1317,43 @@ class AccountMove(models.Model):
         message_list = []
         if not self.company_id.partner_id.vat:
             message_list.append(
-                f"Debe asignar el RUC en la Compañia: {self.company_id.partner_id.name}, por favor verifique."
+                _("Must be configure RUC to Company: %s.")
+                % (self.company_id.partner_id.name)
             )
         if not self.company_id.partner_id.street:
             message_list.append(
-                f"Debe asignar la direccion en la Compañia: {self.company_id.partner_id.name}, por favor verifique."
+                _("Must be configure Street to Company: %s.")
+                % (self.company_id.partner_id.name)
             )
         if not self.commercial_partner_id.vat:
             message_list.append(
-                f"Debe asignar el RUC en la Empresa: {self.commercial_partner_id.name}, por favor verifique."
+                _("Must be configure RUC to Partner: %s.")
+                % (self.commercial_partner_id.name)
             )
         if not self.commercial_partner_id.street:
             message_list.append(
-                f"Debe asignar la direccion en la Empresa: {self.commercial_partner_id.name}, por favor verifique."
+                _("Must be configure Street to Partner: %s.")
+                % (self.commercial_partner_id.name)
             )
         if (
             self.l10n_ec_invoice_type != "in_invoice"
             and not self.l10n_ec_sri_payment_id
         ):
             message_list.append(
-                f"Debe asignar la forma de pago del SRI en el documento: {self.display_name}, por favor verifique."
+                _("Must be configure Payment Method SRI on document: %s.")
+                % (self.display_name)
             )
         # validaciones para reembolso en liquidacion de compras
         if self.l10n_latam_internal_type == "liquidation" and self.l10n_ec_refund_ids:
             for refund in self.l10n_ec_refund_ids:
                 if not refund.partner_id.commercial_partner_id.vat:
                     message_list.append(
-                        f"En Reembolsos debe asignar el RUC en la Empresa: {refund.partner_id.commercial_partner_id.name}, por favor verifique."
+                        _("On refunds must be configure RUC for partner: %s.")
+                        % (refund.partner_id.commercial_partner_id.name)
                     )
                 if refund.currency_id.is_zero(refund.total_invoice):
                     message_list.append(
-                        "El total del reembolso debe ser mayor a cero, por favor verifique."
+                        _("Amount total for refunds must be greater than zero.")
                     )
         if self.type == "out_refund":
             if (
@@ -1232,8 +1361,8 @@ class AccountMove(models.Model):
                 and not self.l10n_ec_legacy_document_number
             ):
                 message_list.append(
-                    f"La Nota de Credito: {self.display_name} no esta asociada "
-                    f"a ningun documento que modifique tributariamente, por favor verifique"
+                    _("Credit Note: %s has not document to modified, please review.")
+                    % (self.display_name)
                 )
             # validar que la factura este autorizada electronicamente
             if (
@@ -1241,9 +1370,10 @@ class AccountMove(models.Model):
                 and not self.l10n_ec_original_invoice_id.l10n_ec_xml_data_id
             ):
                 message_list.append(
-                    f"No puede generar una Nota de credito, "
-                    f"cuya factura rectificativa: {self.l10n_ec_original_invoice_id.display_name} "
-                    f"no esta autorizada electronicamente!"
+                    _(
+                        "You cannot create Credit Note electronic if original document : %s has not electronic authorization"
+                    )
+                    % (self.l10n_ec_original_invoice_id.display_name)
                 )
         return message_list
 

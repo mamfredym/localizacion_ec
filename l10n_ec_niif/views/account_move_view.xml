@@ -67,13 +67,13 @@
                         'invisible': ['|', ('l10n_latam_country_code', '!=', 'EC'), '|', ('l10n_ec_invoice_type', 'not in', ('in_invoice', 'in_refund', 'debit_note_in')), ('l10n_ec_type_emission', 'not in', ('pre_printed', 'auto_printer'))],
                         'readonly': [('state', '!=', 'draft')]}"
                         domain="[('document_type', '=', l10n_ec_invoice_type), ('commercial_partner_id', '=', commercial_partner_id)]"
-                        context="{'document_type': l10n_ec_invoice_type, 'type_emission': l10n_ec_type_emission}"
+                        context="{'document_type': l10n_ec_invoice_type, 'type_emission': l10n_ec_type_emission, 'default_partner_id': partner_id}"
                     />
                 </xpath>
                 <xpath expr="//field[@name='invoice_date']" position="attributes">
                     <attribute
                         name="attrs"
-                    >{'readonly': ['|', ('l10n_ec_is_environment_production', '=', True), '&amp;', ('l10n_ec_invoice_type', 'in', ('out_invoice', 'out_refund', 'debit_note_out', 'liquidation')),  ('l10n_ec_type_emission', '=', 'auto_printer')]}</attribute>
+                    >{'readonly': ['|', '|', ('state', '!=', 'draft'), ('l10n_ec_is_environment_production', '=', True), '&amp;', ('l10n_ec_invoice_type', 'in', ('out_invoice', 'out_refund', 'debit_note_out', 'liquidation')),  ('l10n_ec_type_emission', '=', 'auto_printer')]}</attribute>
                     <attribute name="force_save">1</attribute>
                 </xpath>
                 <!-- propagate context from action to field-->
@@ -188,6 +188,30 @@
                             name="l10n_ec_xml_data_id"
                             attrs="{'invisible':[('l10n_ec_xml_data_id','=',False)]}"
                         />
+                        <label
+                            for="l10n_ec_sri_authorization_state"
+                            attrs="{'invisible':[('type', 'not in', ('in_invoice', 'in_refund'))]}"
+                        />
+                        <div
+                            attrs="{'invisible':[('type', 'not in', ('in_invoice', 'in_refund'))]}"
+                        >
+                            <span
+                                class="badge badge-pill"
+                                attrs="{'invisible': [('l10n_ec_sri_authorization_state', '!=', 'to_check')]}"
+                            >To Check</span>
+                            <span
+                                class="badge badge-pill badge-success"
+                                attrs="{'invisible': [('l10n_ec_sri_authorization_state', '!=', 'valid')]}"
+                            >Valid</span>
+                            <span
+                                class="badge badge-pill badge-danger"
+                                attrs="{'invisible': [('l10n_ec_sri_authorization_state', '!=', 'invalid')]}"
+                            >Invalid</span>
+                            <field
+                                name="l10n_ec_sri_authorization_state"
+                                invisible="1"
+                            />
+                        </div>
                         <field name="l10n_ec_is_environment_production" invisible="1" />
                         <field name="l10n_ec_withhold_required" invisible="1" />
                     </group>

@@ -1,10 +1,12 @@
+import logging
 import re
 from xml.etree.ElementTree import SubElement
 
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, tools
 from odoo.exceptions import AccessError, UserError, ValidationError
 
 _STATES = {"draft": [("readonly", False)]}
+_logger = logging.getLogger(__name__)
 
 
 class L10nEcWithhold(models.Model):
@@ -138,6 +140,17 @@ class L10nEcWithhold(models.Model):
         ondelete="restrict",
         readonly=True,
         states=_STATES,
+    )
+    l10n_ec_sri_authorization_state = fields.Selection(
+        string="Authorization state on SRI",
+        selection=[
+            ("to_check", "To Check"),
+            ("valid", "Valid"),
+            ("invalid", "Invalid"),
+        ],
+        readonly=True,
+        copy=False,
+        default="to_check",
     )
     concept = fields.Char(
         string="Concept", readonly=True, states=_STATES, required=False, tracking=True
@@ -304,6 +317,8 @@ class L10nEcWithhold(models.Model):
                         raise UserError(
                             _("You must enter the authorization of the third party")
                         )
+                    # intentar validar el documento en linea con el SRI
+                    rec._l10n_ec_action_validate_authorization_sri()
                 destination_account_id = rec.partner_id.property_account_receivable_id
                 if not rec.line_ids:
                     raise UserError(_("You must have at least one line to continue"))
@@ -408,7 +423,84 @@ class L10nEcWithhold(models.Model):
                     current_move = rec.move_id
                     rec.move_id = False
                     current_move.unlink()
-        return self.write({"state": "cancelled"})
+        return self.write(
+            {"state": "cancelled", "l10n_ec_sri_authorization_state": "to_check"}
+        )
+
+    def _l10n_ec_action_validate_authorization_sri(self):
+        # intentar validar el documento en linea con el SRI
+        if self.type == "sale":
+            if (
+                self.document_type in ("pre_printed", "auto_printer")
+                and self.partner_authorization_id
+            ):
+                response_sri = {}
+                try:
+                    response_sri = self.partner_authorization_id.validate_authorization_into_sri(
+                        self.l10n_ec_get_document_number(),
+                        self.l10n_ec_get_document_date(),
+                    )
+                except Exception as ex:
+                    _logger.error(tools.ustr(ex))
+                if "estado" in response_sri:
+                    # el estado es un texto que no serviria para comparacion, puede cambiar en cualquier momento
+                    # usar los datos del contribuyente en su lugar
+                    if not response_sri.get("contribuyente"):
+                        raise UserError(
+                            _(
+                                "Document was reviewed online with SRI and Authorization is invalid. %s"
+                            )
+                            % response_sri.get("estado")
+                        )
+                    else:
+                        self.write({"l10n_ec_sri_authorization_state": "valid"})
+            elif (
+                self.document_type == "electronic"
+                and self.l10n_ec_electronic_authorization
+            ):
+                xml_data = self.env["sri.xml.data"]
+                try:
+                    limit_days = int(
+                        self.env["ir.config_parameter"].get_param(
+                            "sri.days.to_validate_documents", 3
+                        )
+                    )
+                except Exception as ex:
+                    limit_days = 3
+                    _logger.error(
+                        "Error get parameter sri.days.to_validate_documents %s",
+                        tools.ustr(ex),
+                    )
+                is_authorized = False
+                try:
+                    client_ws = xml_data.get_current_wsClient("2", "authorization")
+                    response = client_ws.service.autorizacionComprobante(
+                        claveAccesoComprobante=self.l10n_ec_electronic_authorization
+                    )
+                    autorizacion_list = []
+                    if (
+                        hasattr(response, "autorizaciones")
+                        and response.autorizaciones is not None
+                    ):
+                        if not isinstance(response.autorizaciones.autorizacion, list):
+                            autorizacion_list = [response.autorizaciones.autorizacion]
+                        else:
+                            autorizacion_list = response.autorizaciones.autorizacion
+                    for doc in autorizacion_list:
+                        if doc.estado == "AUTORIZADO" and doc.comprobante:
+                            is_authorized = True
+                            break
+                except Exception as ex:
+                    _logger.error(tools.ustr(ex))
+                # en documentos electronicos no lanzar excepcion, puede ser emitido offline
+                if is_authorized:
+                    self.write({"l10n_ec_sri_authorization_state": "valid"})
+                else:
+                    # si ya pasaron N dias y aun no ha sido autorizado, marcarlo como documento invalido
+                    date_delta = fields.Date.context_today(self) - self.issue_date
+                    if date_delta.days > limit_days:
+                        self.write({"l10n_ec_sri_authorization_state": "invalid"})
+        return True
 
     @api.depends("move_ids",)
     def _compute_l10n_ec_withhold_ids(self):
