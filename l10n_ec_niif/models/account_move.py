@@ -1253,6 +1253,9 @@ class AccountMove(models.Model):
             default_partner_id=self.partner_id.id,
             default_invoice_id=self.id,
         )
+        # no mostrar botones de crear/editar en retenciones de compra
+        if self.type == "in_invoice":
+            action["context"].update({"create": False, "edit": False})
         return action
 
     def create_withhold_customer(self):
@@ -1264,11 +1267,12 @@ class AccountMove(models.Model):
             (self.env.ref("l10n_ec_niif.l10n_ec_withhold_form_view").id, "form")
         ]
         ctx = safe_eval(action["context"])
+        ctx.pop("default_type", False)
         ctx.update(
             {
                 "default_partner_id": self.partner_id.id,
                 "default_invoice_id": self.id,
-                "default_type": "sale",
+                "withhold_type": "sale",
                 "default_issue_date": self.invoice_date,
                 "default_document_type": self.l10n_ec_type_emission,
                 "default_l10n_ec_is_create_from_invoice": True,

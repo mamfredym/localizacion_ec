@@ -96,7 +96,7 @@ class L10nEcWithhold(models.Model):
         ],
         required=True,
         readonly=True,
-        deafult=lambda self: self.env.context.get("withhold_type", "sale"),
+        default=lambda self: self.env.context.get("withhold_type", "sale"),
     )
     document_type = fields.Selection(
         string="Document type",
@@ -317,8 +317,8 @@ class L10nEcWithhold(models.Model):
                         raise UserError(
                             _("You must enter the authorization of the third party")
                         )
-                    # intentar validar el documento en linea con el SRI
-                    rec._l10n_ec_action_validate_authorization_sri()
+                # intentar validar el documento en linea con el SRI
+                rec._l10n_ec_action_validate_authorization_sri()
                 destination_account_id = rec.partner_id.property_account_receivable_id
                 if not rec.line_ids:
                     raise UserError(_("You must have at least one line to continue"))
@@ -454,10 +454,7 @@ class L10nEcWithhold(models.Model):
                         )
                     else:
                         self.write({"l10n_ec_sri_authorization_state": "valid"})
-            elif (
-                self.document_type == "electronic"
-                and self.l10n_ec_electronic_authorization
-            ):
+            elif self.document_type == "electronic" and self.electronic_authorization:
                 xml_data = self.env["sri.xml.data"]
                 try:
                     limit_days = int(
@@ -475,7 +472,7 @@ class L10nEcWithhold(models.Model):
                 try:
                     client_ws = xml_data.get_current_wsClient("2", "authorization")
                     response = client_ws.service.autorizacionComprobante(
-                        claveAccesoComprobante=self.l10n_ec_electronic_authorization
+                        claveAccesoComprobante=self.electronic_authorization
                     )
                     autorizacion_list = []
                     if (
@@ -880,12 +877,12 @@ class L10nEcWithholdLine(models.Model):
     )
     def _onchange_amount(self):
         if self.percent_id:
-            self.base_amount_currency = self.partner_currency_id.compute(
-                self.base_amount, self.currency_id
+            self.base_amount_currency = self.partner_currency_id._convert(
+                self.base_amount, self.currency_id, self.company_id, self.issue_date
             )
             self.tax_amount = (self.percent_id.percent / 100.0) * self.base_amount
-            self.tax_amount_currency = self.partner_currency_id.compute(
-                self.tax_amount, self.currency_id
+            self.tax_amount_currency = self.partner_currency_id._convert(
+                self.tax_amount, self.currency_id, self.company_id, self.issue_date
             )
 
     def get_retention_code(self):

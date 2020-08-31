@@ -289,11 +289,12 @@
                         </group>
                         <notebook colspan="4">
                             <page name="withhold_lines" string="Lines">
-                                <field name="line_ids" colspan="4">
-                                    <tree
-                                        editable="bottom"
-                                        context="{'default_invoice_id': invoice_id}"
-                                    >
+                                <field
+                                    name="line_ids"
+                                    colspan="4"
+                                    context="{'default_invoice_id': invoice_id}"
+                                >
+                                    <tree editable="bottom">
                                         <field
                                             name="invoice_id"
                                             options="{'no_create': True}"
@@ -526,7 +527,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">l10n_ec.withhold</field>
             <field name="view_mode">tree,kanban,form,pivot</field>
-            <field name="context">{"default_type": 'purchase'}</field>
+            <field name="context">{"withhold_type": 'purchase'}</field>
             <field name="domain">[('type', '=', 'purchase')]</field>
         </record>
         <menuitem
@@ -541,7 +542,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">l10n_ec.withhold</field>
             <field name="view_mode">tree,kanban,form,pivot</field>
-            <field name="context">{"default_type": 'sale'}</field>
+            <field name="context">{"withhold_type": 'sale'}</field>
             <field name="domain">[('type', '=', 'sale')]</field>
             <field name="view_id" ref="l10n_ec_withhold_tree_view" />
         </record>
