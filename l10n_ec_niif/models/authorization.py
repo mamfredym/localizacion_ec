@@ -114,8 +114,12 @@ class L10nECSriAuthorizationLine(models.Model):
             ("credit_note", _("Credit Note")),
             ("debit_note", _("Debit Note")),
         ]
-        if self.env["ir.module.module"].search(
-            [("name", "=", "l10n_ec_delivery_note"), ("state", "=", "installed")]
+        if (
+            self.env["ir.module.module"]
+            .sudo()
+            .search(
+                [("name", "=", "l10n_ec_delivery_note"), ("state", "=", "installed")]
+            )
         ):
             types.append(("delivery_note", _("Delivery Note")))
         return types
