@@ -146,6 +146,34 @@ class L10EcPointOfEmission(models.Model):
             res.append((printer["id"], name))
         return res
 
+    @api.model
+    def _l10n_ec_get_extra_domain_user(self):
+        domain = []
+        if (
+            not self.env.is_admin()
+            and self.env.company.country_id.code == "EC"
+            and self.env.context.get("filter_point_emission")
+        ):
+            user_data = self.env.user.get_default_point_of_emission()
+            domain.append(("id", "in", user_data["all_printer_ids"].ids,))
+        return domain
+
+    @api.model
+    def _search(
+        self,
+        args,
+        offset=0,
+        limit=None,
+        order=None,
+        count=False,
+        access_rights_uid=None,
+    ):
+        args.extend(self._l10n_ec_get_extra_domain_user())
+        res = super(L10EcPointOfEmission, self)._search(
+            args, offset, limit, order, count, access_rights_uid
+        )
+        return res
+
     _sql_constraints = [
         (
             "number_uniq",

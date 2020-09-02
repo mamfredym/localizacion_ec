@@ -1,14 +1,9 @@
-#
-
 from odoo import api, fields, models
 from odoo.exceptions import RedirectWarning, ValidationError, Warning
 from odoo.tools.translate import _
 
-import odoo.addons.decimal_precision as dp
-
 
 class ResUsers(models.Model):
-
     _inherit = "res.users"
 
     l10n_ec_agency_ids = fields.Many2many("l10n_ec.agency", string="Allowed Agencies")
@@ -20,11 +15,9 @@ class ResUsers(models.Model):
     def get_default_point_of_emission(
         self, user_id=False, get_all=True, raise_exception=True
     ):
-        user = self.browse()
+        user = self.env.user
         if user_id:
             user = self.browse(user_id)
-        else:
-            user = self.env.user
         printer_model = self.env["l10n_ec.point.of.emission"]
         res = {
             "default_printer_default_id": printer_model.browse(),
@@ -40,11 +33,15 @@ class ResUsers(models.Model):
                     res["all_printer_ids"] |= printer
                     break
                 break
-        if not res or get_all:
+        if not res["default_printer_default_id"] or get_all:
             for agency in user.l10n_ec_agency_ids:
                 for printer in agency.printer_point_ids:
                     res["all_printer_ids"] |= printer
-        if not res and raise_exception and user.company_id.country_id.code == "EC":
+        if (
+            not res["default_printer_default_id"]
+            and raise_exception
+            and user.company_id.country_id.code == "EC"
+        ):
             raise Warning(
                 _(
                     "Your user does not have the permissions "
@@ -52,6 +49,3 @@ class ResUsers(models.Model):
                 )
             )
         return res
-
-
-ResUsers()
