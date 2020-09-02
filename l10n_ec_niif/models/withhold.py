@@ -433,7 +433,7 @@ class L10nEcWithhold(models.Model):
             if (
                 self.document_type in ("pre_printed", "auto_printer")
                 and self.partner_authorization_id
-            ):
+            ) and tools.config.get("validate_authorization_sri", True):
                 response_sri = {}
                 try:
                     response_sri = self.partner_authorization_id.validate_authorization_into_sri(
