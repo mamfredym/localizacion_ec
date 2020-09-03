@@ -431,8 +431,14 @@ class AccountMove(models.Model):
     @api.onchange("partner_id")
     def _onchange_partner_id(self):
         res = super(AccountMove, self)._onchange_partner_id()
-        if self.partner_id and self.partner_id.l10n_ec_sri_payment_id:
-            self.l10n_ec_sri_payment_id = self.partner_id.l10n_ec_sri_payment_id.id
+        if self.partner_id:
+            if self.partner_id.l10n_ec_sri_payment_id:
+                self.l10n_ec_sri_payment_id = self.partner_id.l10n_ec_sri_payment_id.id
+            if (
+                self.l10n_ec_supplier_authorization_id
+                and self.l10n_ec_supplier_authorization_id.partner_id != self.partner_id
+            ):
+                self.l10n_ec_supplier_authorization_id = False
         return res
 
     @api.model
@@ -818,7 +824,7 @@ class AccountMove(models.Model):
                         self.id,
                         self.commercial_partner_id.l10n_ec_foreign,
                     )
-                else:
+                elif not self.l10n_ec_supplier_authorization_number:
                     raise UserError(
                         _(
                             "You must enter the authorization of the third party to continue"
@@ -932,13 +938,19 @@ class AccountMove(models.Model):
             "in_refund",
             "debit_note_in",
         ) and tools.config.get("validate_authorization_sri", True):
-            if (
-                self.l10n_ec_type_emission in ("pre_printed", "auto_printer")
-                and self.l10n_ec_supplier_authorization_id
-            ):
+            if self.l10n_ec_type_emission in ("pre_printed", "auto_printer"):
+                if self.l10n_ec_supplier_authorization_id:
+                    authorization_number = self.l10n_ec_supplier_authorization_id.number
+                else:
+                    authorization_number = self.l10n_ec_supplier_authorization_number
                 response_sri = {}
                 try:
-                    response_sri = self.l10n_ec_supplier_authorization_id.validate_authorization_into_sri(
+                    response_sri = self.env[
+                        "l10n_ec.sri.authorization.supplier"
+                    ].validate_authorization_into_sri(
+                        authorization_number,
+                        self.commercial_partner_id.vat,
+                        self.l10n_ec_invoice_type,
                         self.l10n_ec_get_document_number(),
                         self.l10n_ec_get_document_date(),
                     )
@@ -2447,8 +2459,27 @@ class AccountMove(models.Model):
         string="Supplier Authorization",
         required=False,
     )
+    l10n_ec_supplier_authorization_number = fields.Char(
+        string="Supplier Authorization", required=False, size=10
+    )
+    l10n_ec_type_supplier_authorization = fields.Selection(
+        related="company_id.l10n_ec_type_supplier_authorization"
+    )
 
     l10n_ec_electronic_authorization = fields.Char(readonly=False)
+
+    @api.constrains("l10n_ec_supplier_authorization_number",)
+    def _check_l10n_ec_supplier_authorization_number(self):
+        cadena = r"(\d{10})"
+        for move in self:
+            if move.l10n_ec_supplier_authorization_number and not re.match(
+                cadena, move.l10n_ec_supplier_authorization_number
+            ):
+                raise ValidationError(
+                    _(
+                        "Invalid supplier authorization number, this must be like 0123456789"
+                    )
+                )
 
     @api.onchange("invoice_date")
     def _onchange_invoice_date(self):

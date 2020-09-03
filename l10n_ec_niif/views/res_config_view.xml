@@ -121,9 +121,7 @@
                                 </div>
                             </div>
                         </div>
-                        <h2
-                            name="l10n_ec_electronic_logo"
-                        >Logo para Documentos Electrónicos</h2>
+                        <h2 name="l10n_ec_electronic_logo">Logo for RIDE</h2>
                         <div class="row mt16 o_settings_container">
                             <div
                                 id="l10n_ec_electronic_logo"
@@ -140,12 +138,12 @@
                                         class="text-muted"
                                         attrs="{'invisible' : [('l10n_ec_electronic_logo','!=',False)]}"
                                     >
-                                        Use un tamaño de 450x150 píxeles aprox.
+                                        Please use image with size 450x150 px aprox.
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <h2 name="conection">Conexión</h2>
+                        <h2 name="conection">Connection</h2>
                         <div class="row mt16 o_settings_container">
                             <div id="conection" class="col-12 col-md-6 o_setting_box">
                                 <div class="o_setting_left_pane">
@@ -153,7 +151,7 @@
                                 <div class="o_setting_right_pane">
                                     <label
                                         for="l10n_ec_type_environment"
-                                        string="Tipo de Ambiente"
+                                        string="Environment Type"
                                         class="col-md-5"
                                     />
                                     <field
@@ -164,12 +162,12 @@
                                     <div class="text-muted">
                                         <ul>
                                             <li>
-                                                <b>Pruebas:</b>
-                                                Los documentos no tienen validez Tributaria
+                                                <b>Testing:</b>
+                                                The documents have no tributary validity
                                             </li>
                                             <li>
-                                                <b>Producción:</b>
-                                                Los documentos tienen validez Tributaria
+                                                <b>Production:</b>
+                                                The documents have tributary validity
                                             </li>
                                         </ul>
                                     </div>
@@ -205,7 +203,7 @@
                                 <div class="o_setting_right_pane">
                                     <label
                                         for="l10n_ec_type_conection_sri"
-                                        string="Tipo de conexion con SRI"
+                                        string="Connection type with SRI"
                                         class="col-3"
                                     />
                                     <field
@@ -217,17 +215,17 @@
                                         <ul>
                                             <li>
                                                 <b>On-Line:</b>
-                                                Los documentos se autorizan en linea con el SRI
+                                                Documents are authorized on real time with SRI
                                             </li>
                                             <li>
                                                 <b>Off-Line:</b>
-                                                Los documentos se autorizan en un maximo de 24 horas con el SRI
+                                                Documents are authorized on max time of 24 hours with SRI
                                             </li>
                                         </ul>
                                     </div>
                                     <span
                                         class="o_form_label col-12"
-                                    >URL de Web Services</span>
+                                    >Web Services URL</span>
                                     <div
                                         class="col-12 col-md-12"
                                         attrs="{'invisible' : [('l10n_ec_type_environment','!=','production')]}"
@@ -235,7 +233,7 @@
                                         <div class="row">
                                             <label
                                                 for="l10n_ec_ws_receipt_production"
-                                                string="Recepción de Documentos"
+                                                string="Reception of Documents"
                                                 class="col-5 o_light_label"
                                             />
                                             <field
@@ -245,7 +243,7 @@
                                         <div class="row">
                                             <label
                                                 for="l10n_ec_ws_auth_production"
-                                                string="Autorización de Documentos"
+                                                string="Authorization of Documents"
                                                 class="col-5 o_light_label"
                                             />
                                             <field name="l10n_ec_ws_auth_production" />
@@ -258,7 +256,7 @@
                                         <div class="row">
                                             <label
                                                 for="l10n_ec_ws_receipt_test"
-                                                string="Recepción de Documentos"
+                                                string="Reception of Documents"
                                                 class="col-5 o_light_label"
                                             />
                                             <field name="l10n_ec_ws_receipt_test" />
@@ -266,7 +264,7 @@
                                         <div class="row">
                                             <label
                                                 for="l10n_ec_ws_auth_test"
-                                                string="Autorización de Documentos"
+                                                string="Authorization of Documents"
                                                 class="col-5 o_light_label"
                                             />
                                             <field name="l10n_ec_ws_auth_test" />
@@ -275,7 +273,7 @@
                                 </div>
                             </div>
                         </div>
-                        <h2 name="signer">Firma Electrónica</h2>
+                        <h2 name="signer">Electronic Certificate File</h2>
                         <div class="row mt16 o_settings_container">
                             <div id="signer" class="col-12 col-md-6 o_setting_box">
                                 <div class="o_setting_left_pane">
@@ -312,10 +310,32 @@
                                         />
                                         <field name="l10n_ec_sri_payment_id" />
                                     </div>
+                                    <div class="row">
+                                        <label
+                                            for="l10n_ec_type_supplier_authorization"
+                                            class="col-5"
+                                        />
+                                        <field
+                                            name="l10n_ec_type_supplier_authorization"
+                                            widget="radio"
+                                        />
+                                        <div class="text-muted">
+                                            <ul>
+                                                <li>
+                                                    <b>Simple:</b>
+                                                    You only must be enter Authorization number, validations are done online with SRI
+                                                </li>
+                                                <li>
+                                                    <b>Complete:</b>
+                                                    You must be enter all information need to create supplier authorization, Validations are done local and online with SRI
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <h2 name="documents">Documentos Autorizados</h2>
+                        <h2 name="documents">Authorized documents</h2>
                         <div class="row mt16 o_settings_container">
                             <div
                                 id="document_invoice"
@@ -327,7 +347,7 @@
                                 <div class="o_setting_right_pane">
                                     <label
                                         for="l10n_ec_electronic_invoice"
-                                        string="Facturas"
+                                        string="Invoice"
                                     />
                                     <label
                                         for="l10n_ec_invoice_version_xml_id"
@@ -353,7 +373,7 @@
                                 <div class="o_setting_right_pane">
                                     <label
                                         for="l10n_ec_electronic_withhold"
-                                        string="Retenciones"
+                                        string="Withholding"
                                     />
                                     <label
                                         for="l10n_ec_withholding_version_xml_id"
@@ -379,7 +399,7 @@
                                 <div class="o_setting_right_pane">
                                     <label
                                         for="l10n_ec_electronic_credit_note"
-                                        string="Notas de Crédito"
+                                        string="Credit Note"
                                     />
                                     <label
                                         for="l10n_ec_credit_note_version_xml_id"
@@ -405,7 +425,7 @@
                                 <div class="o_setting_right_pane">
                                     <label
                                         for="l10n_ec_electronic_debit_note"
-                                        string="Notas de Débito"
+                                        string="Debit Note"
                                     />
                                     <label
                                         for="l10n_ec_debit_note_version_xml_id"
@@ -431,7 +451,7 @@
                                 <div class="o_setting_right_pane">
                                     <label
                                         for="l10n_ec_electronic_liquidation"
-                                        string="Liquidacion de compras"
+                                        string="Purchase Liquidation"
                                     />
                                     <label
                                         for="l10n_ec_liquidation_version_xml_id"
@@ -448,7 +468,7 @@
                                 </div>
                             </div>
                         </div>
-                        <h2 name="email">Notificaciones por Correo</h2>
+                        <h2 name="email">Notifications by email</h2>
                         <div class="row mt16 o_settings_container">
                             <div
                                 id="l10n_ec_send_mail_from"
@@ -482,7 +502,7 @@
                                             name="open_company"
                                             icon="fa-arrow-right"
                                             type="object"
-                                            string="Configurar Plantillas de Correo"
+                                            string="Email templates"
                                             class="btn-link"
                                         />
                                     </div>
@@ -498,7 +518,7 @@
                                 <div class="o_setting_right_pane">
                                     <label
                                         for="l10n_ec_send_mail_invoice"
-                                        string="Facturas"
+                                        string="Invoice"
                                     />
                                 </div>
                             </div>
@@ -512,7 +532,7 @@
                                 <div class="o_setting_right_pane">
                                     <label
                                         for="l10n_ec_send_mail_retention"
-                                        string="Retenciones"
+                                        string="Withholding"
                                     />
                                 </div>
                             </div>
@@ -526,7 +546,7 @@
                                 <div class="o_setting_right_pane">
                                     <label
                                         for="l10n_ec_send_mail_credit_note"
-                                        string="Notas de Crédito"
+                                        string="Credit Note"
                                     />
                                 </div>
                             </div>
@@ -540,7 +560,7 @@
                                 <div class="o_setting_right_pane">
                                     <label
                                         for="l10n_ec_send_mail_debit_note"
-                                        string="Notas de Débito"
+                                        string="Debit Note"
                                     />
                                 </div>
                             </div>
@@ -554,12 +574,12 @@
                                 <div class="o_setting_right_pane">
                                     <label
                                         for="l10n_ec_send_mail_liquidation"
-                                        string="Liquidacion de compras"
+                                        string="Purchase Liquidation"
                                     />
                                 </div>
                             </div>
                         </div>
-                        <h2 name="email">Portal de Clientes</h2>
+                        <h2 name="email">Customers Portal</h2>
                         <div class="row mt16 o_settings_container">
                             <div
                                 id="l10n_ec_create_login_for_partners"
@@ -571,15 +591,15 @@
                                 <div class="o_setting_right_pane">
                                     <label
                                         for="l10n_ec_create_login_for_partners"
-                                        string="Crear Usuarios para portal?"
+                                        string="Create login for portal user?"
                                     />
                                     <div class="text-muted">
-                                        Marque esta opcion si desea crear automaticamente un usuario por cada cliente para que puedan ver sus documentos en el portal.
+                                        Mark option if do you want create login for new customers to see your documents into portal
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <h2 name="email">Opciones de Impresion RIDE</h2>
+                        <h2 name="email">Options for print RIDE</h2>
                         <div class="row mt16 o_settings_container">
                             <div
                                 id="option_l10n_ec_print_ride_main_code"
@@ -642,7 +662,7 @@
             </field>
         </record>
         <record id="action_sri_account_config" model="ir.actions.act_window">
-            <field name="name">Configuraciones SRI</field>
+            <field name="name">S.R.I. Configurations</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.config.settings</field>
             <field name="view_mode">form</field>
@@ -652,7 +672,7 @@
         </record>
         <menuitem
             id="menu_account_config"
-            name="Configuraciones SRI"
+            name="S.R.I. Configurations"
             parent="sri_config_menu"
             sequence="1"
             action="action_sri_account_config"

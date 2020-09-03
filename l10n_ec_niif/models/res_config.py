@@ -40,74 +40,75 @@ class ResConfigSettings(models.TransientModel):
         related="company_id.l10n_ec_withhold_journal_id",
         readonly=False,
     )
+    l10n_ec_type_supplier_authorization = fields.Selection(
+        related="company_id.l10n_ec_type_supplier_authorization", readonly=False
+    )
     # configuracion para facturacion electronica
     l10n_ec_type_environment = fields.Selection(
-        [("test", "Pruebas"), ("production", "Producción"),],
-        string="Tipo de Ambiente de Documentos Electronicos",
+        [("test", "Test"), ("production", "Production"),],
+        string="Environment  type for electronic documents",
         related="company_id.l10n_ec_type_environment",
         readonly=False,
     )
     l10n_ec_type_conection_sri = fields.Selection(
         [("online", "On-Line"), ("offline", "Off-Line"),],
-        string=u"Tipo de conexion con SRI",
+        string="Connection type with SRI",
         related="company_id.l10n_ec_type_conection_sri",
         readonly=False,
     )
     l10n_ec_key_type_id = fields.Many2one(
         "sri.key.type",
-        "Tipo de Llave",
+        "Certificate File",
         related="company_id.l10n_ec_key_type_id",
         readonly=False,
     )
     l10n_ec_ws_receipt_test = fields.Char(
-        "URL del WS de Pruebas de SRI para Recepción de Documentos",
+        "URL WS for testing on SRI for documents reception",
         config_parameter="l10n_ec_ws_receipt_test",
     )
     l10n_ec_ws_auth_test = fields.Char(
-        "URL del WS de Pruebas de SRI para Autorización de Documentos",
+        "URL WS for Testing environment on SRI for documents authorization",
         config_parameter="l10n_ec_ws_auth_test",
     )
     l10n_ec_ws_receipt_production = fields.Char(
-        "URL del WS de Producción de SRI para Recepción de Documentos",
+        "URL WS for Production environment on SRI for documents reception",
         config_parameter="l10n_ec_ws_receipt_production",
     )
     l10n_ec_ws_auth_production = fields.Char(
-        "URL del WS de Producción SRI para Autorización de Documentos",
+        "URL WS for Production environment on SRI for documents authorization",
         config_parameter="l10n_ec_ws_auth_production",
     )
     l10n_ec_electronic_invoice = fields.Boolean(
-        "Autorizado Facturas?",
+        "Authorized for Invoice?",
         related="company_id.l10n_ec_electronic_invoice",
         readonly=False,
     )
     l10n_ec_electronic_withhold = fields.Boolean(
-        "Autorizado Retenciones?",
+        "Authorized for Withholding?",
         related="company_id.l10n_ec_electronic_withhold",
         readonly=False,
     )
     l10n_ec_electronic_credit_note = fields.Boolean(
-        "Autorizado Notas de Crédito?",
+        "Authorized for Credit Note?",
         related="company_id.l10n_ec_electronic_credit_note",
         readonly=False,
     )
     l10n_ec_electronic_debit_note = fields.Boolean(
-        "Autorizado Notas de Débito?",
+        "Authorized for Debit Note?",
         related="company_id.l10n_ec_electronic_debit_note",
         readonly=False,
     )
     l10n_ec_electronic_liquidation = fields.Boolean(
-        "Autorizado Liquidacion de compras?",
+        "Authorized for Purchase Liquidation?",
         related="company_id.l10n_ec_electronic_liquidation",
         readonly=False,
     )
     # campo para la imagen que va en los documentos electronicos
     l10n_ec_electronic_logo = fields.Binary(
-        "Logo de Documentos electrónicos",
-        related="company_id.l10n_ec_electronic_logo",
-        readonly=False,
+        "Logo for RIDE", related="company_id.l10n_ec_electronic_logo", readonly=False,
     )
     l10n_ec_max_intentos = fields.Integer(
-        "Intentos máximos de autorización",
+        "Maximum attempts for authorization",
         related="company_id.l10n_ec_max_intentos",
         readonly=False,
     )
@@ -120,93 +121,91 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
     )
     l10n_ec_send_mail_from = fields.Datetime(
-        "Enviar Mail desde", related="company_id.l10n_ec_send_mail_from", readonly=False
+        "Sent mail from", related="company_id.l10n_ec_send_mail_from", readonly=False
     )
     l10n_ec_send_mail_invoice = fields.Boolean(
-        "Facturas electronicas?",
-        related="company_id.l10n_ec_send_mail_invoice",
-        readonly=False,
+        "Invoice?", related="company_id.l10n_ec_send_mail_invoice", readonly=False,
     )
     l10n_ec_send_mail_credit_note = fields.Boolean(
-        "Notas de Crédito?",
+        "Credit Note?",
         related="company_id.l10n_ec_send_mail_credit_note",
         readonly=False,
     )
     l10n_ec_send_mail_debit_note = fields.Boolean(
-        "Notas de Débito?",
+        "Debit Note?",
         related="company_id.l10n_ec_send_mail_debit_note",
         readonly=False,
     )
     l10n_ec_send_mail_retention = fields.Boolean(
-        "Retenciones?", related="company_id.l10n_ec_send_mail_retention", readonly=False
+        "Withholding?", related="company_id.l10n_ec_send_mail_retention", readonly=False
     )
     l10n_ec_send_mail_liquidation = fields.Boolean(
-        "Retenciones?",
+        "Purchase liquidation?",
         related="company_id.l10n_ec_send_mail_liquidation",
         readonly=False,
     )
     l10n_ec_create_login_for_partners = fields.Boolean(
-        "Crear Usuario para portal?",
+        "Create login for portal user?",
         related="company_id.l10n_ec_create_login_for_partners",
         readonly=False,
     )
     l10n_ec_invoice_version_xml_id = fields.Many2one(
         "l10n_ec.xml.version",
-        string="Version del XML Facturas",
+        string="XML Version for Invoice",
         domain=[("document_type", "=", "invoice")],
         related="company_id.l10n_ec_invoice_version_xml_id",
         readonly=False,
     )
     l10n_ec_withholding_version_xml_id = fields.Many2one(
         "l10n_ec.xml.version",
-        string="Version del XML Retencion",
+        string="XML Version for Withholding",
         domain=[("document_type", "=", "withholding")],
         related="company_id.l10n_ec_withholding_version_xml_id",
         readonly=False,
     )
     l10n_ec_credit_note_version_xml_id = fields.Many2one(
         "l10n_ec.xml.version",
-        string="Version del XML Nota de Credito",
+        string="XML Version for Credit Note",
         domain=[("document_type", "=", "credit_note")],
         related="company_id.l10n_ec_credit_note_version_xml_id",
         readonly=False,
     )
     l10n_ec_debit_note_version_xml_id = fields.Many2one(
         "l10n_ec.xml.version",
-        string="Version del XML Nota de Debito",
+        string="XML Version for Debit Note",
         domain=[("document_type", "=", "debit_note")],
         related="company_id.l10n_ec_debit_note_version_xml_id",
         readonly=False,
     )
     l10n_ec_liquidation_version_xml_id = fields.Many2one(
         "l10n_ec.xml.version",
-        string="Version del XML Liquidacion de compras",
+        string="XML Version for Purchase Liquidation",
         domain=[("document_type", "=", "liquidation")],
         related="company_id.l10n_ec_liquidation_version_xml_id",
         readonly=False,
     )
     l10n_ec_print_ride_main_code = fields.Boolean(
-        "Imprimir Codigo Principal?",
+        "Print main product code?",
         related="company_id.l10n_ec_print_ride_main_code",
         readonly=False,
     )
     l10n_ec_print_ride_aux_code = fields.Boolean(
-        "Imprimir Codigo Auxiliar?",
+        "Print secondary code?",
         related="company_id.l10n_ec_print_ride_aux_code",
         readonly=False,
     )
     l10n_ec_print_ride_detail1 = fields.Boolean(
-        "Imprimir Detalle Adicional 1?",
+        "Print detail additional 1?",
         related="company_id.l10n_ec_print_ride_detail1",
         readonly=False,
     )
     l10n_ec_print_ride_detail2 = fields.Boolean(
-        "Imprimir Detalle Adicional 2?",
+        "Print detail additional 2?",
         related="company_id.l10n_ec_print_ride_detail2",
         readonly=False,
     )
     l10n_ec_print_ride_detail3 = fields.Boolean(
-        "Imprimir Detalle Adicional 3?",
+        "Print detail additional 3?",
         related="company_id.l10n_ec_print_ride_detail3",
         readonly=False,
     )

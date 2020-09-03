@@ -47,6 +47,7 @@
                     />
                     <field name="l10n_ec_invoice_type" invisible="1" />
                     <field name="l10n_latam_internal_type" invisible="1" />
+                    <field name="l10n_ec_type_supplier_authorization" invisible="1" />
                     <field
                         name="l10n_ec_type_emission"
                         attrs="{'required': [('l10n_latam_country_code', '=', 'EC'), ('l10n_ec_invoice_type', 'in', ('out_invoice', 'out_refund', 'debit_note_out', 'liquidation'))],
@@ -63,11 +64,35 @@
                     />
                     <field
                         name="l10n_ec_supplier_authorization_id"
-                        attrs="{'required': [('l10n_latam_country_code', '=', 'EC'), ('l10n_ec_invoice_type', 'in', ('in_invoice', 'in_refund', 'debit_note_in')), ('l10n_ec_type_emission', 'in', ('pre_printed', 'auto_printer'))],
-                        'invisible': ['|', ('l10n_latam_country_code', '!=', 'EC'), '|', ('l10n_ec_invoice_type', 'not in', ('in_invoice', 'in_refund', 'debit_note_in')), ('l10n_ec_type_emission', 'not in', ('pre_printed', 'auto_printer'))],
+                        attrs="{'required': [('l10n_latam_country_code', '=', 'EC'),
+                                            ('l10n_ec_type_supplier_authorization', '=', 'complete'),
+                                            ('l10n_ec_invoice_type', 'in', ('in_invoice', 'in_refund', 'debit_note_in')),
+                                            ('l10n_ec_type_emission', 'in', ('pre_printed', 'auto_printer'))],
+                        'invisible': ['|',
+                                        ('l10n_latam_country_code', '!=', 'EC'),
+                                        '|',
+                                        ('l10n_ec_type_supplier_authorization', '!=', 'complete'),
+                                        '|',
+                                        ('l10n_ec_invoice_type', 'not in', ('in_invoice', 'in_refund', 'debit_note_in')),
+                                        ('l10n_ec_type_emission', 'not in', ('pre_printed', 'auto_printer'))],
                         'readonly': [('state', '!=', 'draft')]}"
                         domain="[('document_type', '=', l10n_ec_invoice_type), ('commercial_partner_id', '=', commercial_partner_id)]"
                         context="{'document_type': l10n_ec_invoice_type, 'type_emission': l10n_ec_type_emission, 'default_partner_id': partner_id}"
+                    />
+                    <field
+                        name="l10n_ec_supplier_authorization_number"
+                        attrs="{'required': [('l10n_latam_country_code', '=', 'EC'),
+                                            ('l10n_ec_type_supplier_authorization', '=', 'simple'),
+                                            ('l10n_ec_invoice_type', 'in', ('in_invoice', 'in_refund', 'debit_note_in')),
+                                            ('l10n_ec_type_emission', 'in', ('pre_printed', 'auto_printer'))],
+                        'invisible': ['|',
+                                        ('l10n_latam_country_code', '!=', 'EC'),
+                                        '|',
+                                        ('l10n_ec_type_supplier_authorization', '!=', 'simple'),
+                                        '|',
+                                        ('l10n_ec_invoice_type', 'not in', ('in_invoice', 'in_refund', 'debit_note_in')),
+                                        ('l10n_ec_type_emission', 'not in', ('pre_printed', 'auto_printer'))],
+                        'readonly': [('state', '!=', 'draft')]}"
                     />
                 </xpath>
                 <xpath expr="//field[@name='invoice_date']" position="attributes">

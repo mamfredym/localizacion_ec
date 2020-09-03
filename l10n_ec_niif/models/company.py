@@ -48,86 +48,89 @@ class ResCompany(models.Model):
     l10n_ec_withhold_journal_id = fields.Many2one(
         comodel_name="account.journal", string="Withhold Journal", required=False
     )
+    l10n_ec_type_supplier_authorization = fields.Selection(
+        [("simple", "Simple"), ("complete", "Complete"),],
+        string="Type of Suppliers authorization",
+        default="simple",
+    )
     # campos para facturacion electronica
     l10n_ec_type_environment = fields.Selection(
-        [("test", "Pruebas"), ("production", "Producción"),],
-        string="Tipo de Ambiente de Documentos Electronicos",
+        [("test", "Test"), ("production", "Production"),],
+        string="Environment  type for electronic documents",
         default="test",
     )
     l10n_ec_type_conection_sri = fields.Selection(
         [("online", "On-Line"), ("offline", "Off-Line"),],
-        string="Tipo de conexion con SRI",
+        string="Connection type with SRI",
         default="offline",
     )
     l10n_ec_key_type_id = fields.Many2one(
-        "sri.key.type", "Tipo de Llave", ondelete="restrict"
+        "sri.key.type", "Certificate File", ondelete="restrict"
     )
-    l10n_ec_electronic_invoice = fields.Boolean("Autorizado Facturas?")
-    l10n_ec_electronic_withhold = fields.Boolean("Autorizado Retenciones?")
-    l10n_ec_electronic_credit_note = fields.Boolean("Autorizado Notas de Crédito?")
-    l10n_ec_electronic_debit_note = fields.Boolean("Autorizado Notas de Débito?")
+    l10n_ec_electronic_invoice = fields.Boolean("Authorized for Invoice?")
+    l10n_ec_electronic_withhold = fields.Boolean("Authorized for Withholding?")
+    l10n_ec_electronic_credit_note = fields.Boolean("Authorized for Credit Note?")
+    l10n_ec_electronic_debit_note = fields.Boolean("Authorized for Debit Note?")
     l10n_ec_electronic_liquidation = fields.Boolean(
-        "Autorizado Liquidacion de compras?"
+        "Authorized for Purchase Liquidation?"
     )
     l10n_ec_invoice_version_xml_id = fields.Many2one(
         "l10n_ec.xml.version",
-        string="Version del XML Facturas",
+        string="XML Version for Invoice",
         domain=[("document_type", "=", "invoice")],
     )
     l10n_ec_withholding_version_xml_id = fields.Many2one(
         "l10n_ec.xml.version",
-        string="Version del XML Retencion",
+        string="XML Version for Withholding",
         domain=[("document_type", "=", "withholding")],
     )
     l10n_ec_credit_note_version_xml_id = fields.Many2one(
         "l10n_ec.xml.version",
-        string="Version del XML Nota de Credito",
+        string="XML Version for Credit Note",
         domain=[("document_type", "=", "credit_note")],
     )
     l10n_ec_debit_note_version_xml_id = fields.Many2one(
         "l10n_ec.xml.version",
-        string="Version del XML Nota de Debito",
+        string="XML Version for Debit Note",
         domain=[("document_type", "=", "debit_note")],
     )
     l10n_ec_liquidation_version_xml_id = fields.Many2one(
         "l10n_ec.xml.version",
-        string="Version del XML Liquidacion de compras",
+        string="XML Version for Purchase Liquidation",
         domain=[("document_type", "=", "liquidation")],
     )
     # campo para la imagen que va en los documentos electronicos
-    l10n_ec_electronic_logo = fields.Binary("Logo de Documentos electrónicos")
-    l10n_ec_max_intentos = fields.Integer("Intentos máximos de autorización")
+    l10n_ec_electronic_logo = fields.Binary("Logo for RIDE")
+    l10n_ec_max_intentos = fields.Integer("Maximum attempts for authorization")
     l10n_ec_ws_timeout = fields.Integer("Timeout Web Service", default=30)
     l10n_ec_cron_process = fields.Integer(
         "Number Documents Process in Cron", default=100
     )
     l10n_ec_send_mail_from = fields.Datetime(
-        "Enviar Mail desde", default=lambda self: fields.Datetime.now()
+        "Sent mail from", default=lambda self: fields.Datetime.now()
     )
-    l10n_ec_send_mail_invoice = fields.Boolean("Facturas electronicas?", default=True,)
-    l10n_ec_send_mail_credit_note = fields.Boolean("Notas de Crédito?", default=True)
-    l10n_ec_send_mail_debit_note = fields.Boolean("Notas de Débito?", default=True)
-    l10n_ec_send_mail_retention = fields.Boolean("Retenciones?", default=True)
+    l10n_ec_send_mail_invoice = fields.Boolean("Invoice?", default=True,)
+    l10n_ec_send_mail_credit_note = fields.Boolean("Credit Note?", default=True)
+    l10n_ec_send_mail_debit_note = fields.Boolean("Debit Note?", default=True)
+    l10n_ec_send_mail_retention = fields.Boolean("Withholding?", default=True)
     l10n_ec_send_mail_liquidation = fields.Boolean(
-        "Liquidacion de compras?", default=True
+        "Purchase liquidation?", default=True
     )
     l10n_ec_create_login_for_partners = fields.Boolean(
-        "Crear Usuario para portal?", default=False,
+        "Create login for portal user?", default=False,
     )
     l10n_ec_print_ride_main_code = fields.Boolean(
-        "Imprimir Codigo Principal?", default=True
+        "Print main product code?", default=True
     )
-    l10n_ec_print_ride_aux_code = fields.Boolean(
-        "Imprimir Codigo Auxiliar?", default=False
-    )
+    l10n_ec_print_ride_aux_code = fields.Boolean("Print secondary code?", default=False)
     l10n_ec_print_ride_detail1 = fields.Boolean(
-        "Imprimir Detalle Adicional 1?", default=True
+        "Print detail additional 1?", default=True
     )
     l10n_ec_print_ride_detail2 = fields.Boolean(
-        "Imprimir Detalle Adicional 2?", default=False
+        "Print detail additional 2?", default=False
     )
     l10n_ec_print_ride_detail3 = fields.Boolean(
-        "Imprimir Detalle Adicional 3?", default=False
+        "Print detail additional 3?", default=False
     )
     l10n_ec_sri_payment_id = fields.Many2one(
         "l10n_ec.sri.payment.method", string=u"S.R.I Payment Method"

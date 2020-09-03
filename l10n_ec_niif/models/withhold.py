@@ -87,6 +87,16 @@ class L10nEcWithhold(models.Model):
         required=False,
         tracking=True,
     )
+    l10n_ec_supplier_authorization_number = fields.Char(
+        string="Supplier Authorization",
+        required=False,
+        size=10,
+        readonly=True,
+        states=_STATES,
+    )
+    l10n_ec_type_supplier_authorization = fields.Selection(
+        related="company_id.l10n_ec_type_supplier_authorization"
+    )
     type = fields.Selection(
         string="Type",
         selection=[
@@ -216,6 +226,19 @@ class L10nEcWithhold(models.Model):
         string="Move Count", compute="_compute_l10n_ec_withhold_ids", store=False
     )
 
+    @api.constrains("l10n_ec_supplier_authorization_number",)
+    def _check_l10n_ec_supplier_authorization_number(self):
+        cadena = r"(\d{10})"
+        for withold in self:
+            if withold.l10n_ec_supplier_authorization_number and not re.match(
+                cadena, withold.l10n_ec_supplier_authorization_number
+            ):
+                raise ValidationError(
+                    _(
+                        "Invalid supplier authorization number, this must be like 0123456789"
+                    )
+                )
+
     @api.constrains("l10n_ec_legacy_document_number")
     @api.onchange("l10n_ec_legacy_document_number")
     def _check_l10n_ec_legacy_document_number(self):
@@ -313,7 +336,7 @@ class L10nEcWithhold(models.Model):
                             rec.id,
                             False,
                         )
-                    else:
+                    elif not rec.l10n_ec_supplier_authorization_number:
                         raise UserError(
                             _("You must enter the authorization of the third party")
                         )
@@ -432,11 +455,19 @@ class L10nEcWithhold(models.Model):
         if self.type == "sale":
             if (
                 self.document_type in ("pre_printed", "auto_printer")
-                and self.partner_authorization_id
             ) and tools.config.get("validate_authorization_sri", True):
+                if self.partner_authorization_id:
+                    authorization_number = self.partner_authorization_id.number
+                else:
+                    authorization_number = self.l10n_ec_supplier_authorization_number
                 response_sri = {}
                 try:
-                    response_sri = self.partner_authorization_id.validate_authorization_into_sri(
+                    response_sri = self.env[
+                        "l10n_ec.sri.authorization.supplier"
+                    ].validate_authorization_into_sri(
+                        authorization_number,
+                        self.commercial_partner_id.vat,
+                        "withholding",
                         self.l10n_ec_get_document_number(),
                         self.l10n_ec_get_document_date(),
                     )

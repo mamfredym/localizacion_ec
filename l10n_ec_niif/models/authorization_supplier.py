@@ -1,6 +1,6 @@
 import logging
 import re
-from datetime import datetime
+from datetime import datetime, time
 
 import requests
 
@@ -477,7 +477,15 @@ class L10nECSriAuthorizationSupplier(models.Model):
             res.append((rec.id, name))
         return res
 
-    def validate_authorization_into_sri(self, document_number, document_date):
+    @api.model
+    def validate_authorization_into_sri(
+        self,
+        authorization_number,
+        partner_vat,
+        document_type,
+        document_number,
+        document_date,
+    ):
         response_json = {}
         document_types_sri = {
             "in_invoice": "FAC",
@@ -489,15 +497,13 @@ class L10nECSriAuthorizationSupplier(models.Model):
         }
         try:
             if not isinstance(document_date, datetime):
-                document_date = fields.Datetime.context_timestamp(
-                    self, fields.Datetime.to_datetime(document_date)
-                )
-            tipoDocumento = document_types_sri.get(self.document_type)
+                document_date = datetime.combine(document_date, time.max)
+            tipoDocumento = document_types_sri.get(document_type)
             params = {
                 "tipoDocumento": tipoDocumento,
-                "autorizacion": self.number,
+                "autorizacion": authorization_number,
                 "emision": int(document_date.timestamp() * 1000),
-                "ruc": self.partner_id.vat,
+                "ruc": partner_vat,
             }
             response = requests.get(
                 f"https://srienlinea.sri.gob.ec/movil-servicios/api/v1.0/documentoValido/{document_number}",
@@ -505,7 +511,7 @@ class L10nECSriAuthorizationSupplier(models.Model):
             )
             response_json = response.json()
         except Exception as e:
-            _logger.debug("Error Validating authorization into sri: %s" % str(e))
+            _logger.info("Error Validating authorization into sri: %s" % str(e))
         return response_json
 
 
