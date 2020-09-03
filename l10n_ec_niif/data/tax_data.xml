@@ -666,11 +666,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_303')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_353')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_303')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_353')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_303')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_353')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_303')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_353')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_303">
@@ -683,11 +683,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_303')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_353')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_303')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_353')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_303')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_353')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_303')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_353')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_304">
@@ -700,11 +700,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_304')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_354')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_304')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_354')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_304')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_354')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_304')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_354')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_307">
@@ -717,11 +717,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_307')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_357')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_307')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_357')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_307')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_357')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_307')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_357')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_308">
@@ -736,11 +736,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_308')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_358')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_308')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_358')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_308')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_358')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_308')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_358')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_309">
@@ -753,11 +753,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_309')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_359')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_309')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_359')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_309')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_359')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_309')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_359')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_310">
@@ -772,11 +772,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_310')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_360')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_310')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_360')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_310')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_360')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_310')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_360')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_311">
@@ -791,11 +791,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_311')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_361')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_311')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_361')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_311')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_361')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_311')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_361')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_312">
@@ -810,11 +810,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_312')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_362')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_312')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_362')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_312')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_362')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_312')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_362')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_312a">
@@ -830,11 +830,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_312')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_362')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_312')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_362')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_312')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_362')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_312')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_362')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_314">
@@ -849,11 +849,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_314')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_364')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_314')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_364')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_314')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_364')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_314')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_364')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_319">
@@ -866,11 +866,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_319')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_369')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_319')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_369')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_319')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_369')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_319')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_369')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_320">
@@ -883,11 +883,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_320')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_370')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_320')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_370')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_320')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_370')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_320')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_370')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_322">
@@ -900,11 +900,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_322')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_372')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_322')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_372')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_322')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_372')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_322')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_372')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_323">
@@ -917,11 +917,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_323')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_373')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_323')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_373')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_323')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_373')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_323')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_373')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_324">
@@ -936,11 +936,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_324')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_374')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_324')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_374')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_324')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_374')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_324')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_374')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_325">
@@ -953,11 +953,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_325')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_375')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_325')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_375')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_325')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_375')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_325')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_375')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_326">
@@ -1101,11 +1101,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_333')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_383')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_333')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_383')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_333')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_383')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_333')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_383')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_334">
@@ -1120,11 +1120,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_334')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_384')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_334')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_384')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_334')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_384')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_334')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_384')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_335">
@@ -1137,11 +1137,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_335')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_385')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_335')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_385')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_335')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_385')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_335')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_385')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_343">
@@ -1154,11 +1154,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_343')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_393')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_343')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_393')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_343')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_393')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_343')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_393')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_343a">
@@ -1172,11 +1172,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_343')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_393')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_343')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_393')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_343')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_393')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_343')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_393')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_343b">
@@ -1192,11 +1192,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_343')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_393')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_343')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_393')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_343')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_393')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_343')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_393')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_343c">
@@ -1212,11 +1212,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_343')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_393')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_343')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_393')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_343')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_393')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_343')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_393')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_3440">
@@ -1229,11 +1229,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_344')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_394')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_344')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_394')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_344')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_394')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_344')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_394')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_345">
@@ -1246,11 +1246,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_345')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_395')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_345')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_395')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_345')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_395')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_345')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_395')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_346">
@@ -1280,11 +1280,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_402')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_452')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_402')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_452')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_402')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_452')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_402')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_452')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_403">
@@ -1299,11 +1299,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_403')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_453')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_403')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_453')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_403')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_453')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_403')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_453')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_404">
@@ -1318,11 +1318,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_404')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_454')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_404')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_454')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_404')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_454')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_404')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_454')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_405">
@@ -1356,11 +1356,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_406')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_456')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_406')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_456')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_406')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_456')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_406')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_456')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_407">
@@ -1375,11 +1375,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_407')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_457')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_407')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_457')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_407')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_457')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_407')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_457')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_408">
@@ -1394,11 +1394,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_408')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_458')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_408')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_458')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_408')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_458')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_408')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_458')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_409">
@@ -1413,11 +1413,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_409')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_459')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_409')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_459')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_409')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_459')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_409')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_459')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_410">
@@ -1432,11 +1432,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_410')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_460')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_410')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_460')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_410')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_460')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_410')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_460')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_411">
@@ -1451,11 +1451,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_411')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_461')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_411')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_461')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_411')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_461')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_411')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_461')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_412">
@@ -1489,11 +1489,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_413')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_463')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_413')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_463')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_413')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_463')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_413')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_463')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_414">
@@ -1508,11 +1508,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_414')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_464')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_414')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_464')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_414')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_464')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_414')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_464')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_415">
@@ -1527,11 +1527,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_415')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_465')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_415')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_465')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_415')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_465')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_415')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_465')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_416">
@@ -1565,11 +1565,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_417')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_467')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_417')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_467')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_417')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_467')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_417')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_467')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_418">
@@ -1584,11 +1584,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_418')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_468')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_418')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_468')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_418')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_468')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_418')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_468')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_419">
@@ -1603,11 +1603,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_419')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_469')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_419')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_469')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_419')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_469')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_419')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_469')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_420">
@@ -1622,11 +1622,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_420')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_470')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_420')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_470')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_420')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_470')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_420')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_470')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_421">
@@ -1641,11 +1641,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_421')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_471')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_421')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_471')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_421')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_471')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_421')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_471')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_422">
@@ -1660,11 +1660,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_422')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_472')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_422')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_472')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_422')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_472')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_422')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_472')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_423">
@@ -1698,11 +1698,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_424')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_474')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_424')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_474')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_424')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_474')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_424')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_474')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_425">
@@ -1717,11 +1717,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_425')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_475')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_425')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_475')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_425')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_475')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_425')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_475')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_426">
@@ -1736,11 +1736,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_426')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_476')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_426')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_476')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_426')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_476')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_426')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_476')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_427">
@@ -1755,11 +1755,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_427')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_477')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_427')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_477')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_427')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_477')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_427')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_477')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_428">
@@ -1774,11 +1774,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_428')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_478')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_428')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_478')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_428')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_478')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_428')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_478')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_429">
@@ -1793,11 +1793,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_429')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_479')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_429')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_479')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_429')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_479')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_429')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_479')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_430">
@@ -1812,11 +1812,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_430')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_480')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_430')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_480')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_430')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_480')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_430')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_480')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_431">
@@ -1831,11 +1831,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_431')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_481')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_431')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_481')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_431')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_481')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_431')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_481')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_432">
@@ -1850,11 +1850,11 @@
             <field name="tax_group_id" ref="l10n_ec_niif.tax_group_renta_withhold" />
             <field
                 name="invoice_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_432')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_482')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_432')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_482')]}),]"
             />
             <field
                 name="refund_repartition_line_ids"
-                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_432')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('101050201'),'tag_ids': [ref('tag_f103_482')]}),]"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f103_432')]}), (0,0, {'factor_percent': 100,'repartition_type': 'tax','account_id': ref('201070106'),'tag_ids': [ref('tag_f103_482')]}),]"
             />
         </record>
         <record model="account.tax.template" id="tax_433">
