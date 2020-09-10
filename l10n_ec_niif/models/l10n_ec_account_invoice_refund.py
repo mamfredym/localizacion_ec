@@ -1,8 +1,11 @@
+import logging
 import re
 
-from odoo import api, fields, models
+from odoo import api, fields, models, tools
 from odoo.exceptions import ValidationError
 from odoo.tools.translate import _
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountInvoiceRefund(models.Model):
@@ -146,64 +149,65 @@ class AccountInvoiceRefund(models.Model):
         domain = {}
         warning = {}
         auth_supplier_model = self.env["l10n_ec.sri.authorization.supplier"]
-        util_model = self.env["l10n_ec.utils"]
+        UtilModel = self.env["l10n_ec.utils"]
         auth_ids = False
         invoice_number = self.document_number
         date_invoice = self.date_invoice or fields.Date.context_today(self)
+        if self.partner_id.l10n_ec_foreign:
+            return
+        if not self.document_number and not self.document_type:
+            return
+        if self.document_number and not self.partner_id:
+            self.document_number = False
+            warning = {
+                "title": _("Information for user"),
+                "message": _("Please select partner first"),
+            }
+            return {"domain": domain, "warning": warning}
+        padding = self.l10n_ec_partner_authorization_id.padding or 9
         if self.document_type == "electronic":
             self.l10n_ec_partner_authorization_id = False
             # si es electronico y ya tengo agencia y punto de impresion, completar el numero
             if invoice_number:
-                number_data = invoice_number.split("-")
-                if len(number_data) == 3:
-                    try:
-                        number_last = int(number_data[2])
-                    except Exception:
-                        warning = {
-                            "title": _("Warning!!!"),
-                            "message": _(
-                                "The document number is not correct, it must be of the form 00X-00X-000XXXXXX, X is a number"
-                            ),
-                        }
-                        number_last = False
-                    if number_last:
-                        # cuando deberia ser el padding(9 por defecto)
-                        invoice_number = "{}-{}-{}".format(
-                            number_data[0],
-                            number_data[1],
-                            auth_supplier_model.fill_padding(number_last, 9),
-                        )
-                        self.document_number = invoice_number
-                else:
+                try:
+                    (
+                        agency,
+                        printer_point,
+                        sequence_number,
+                    ) = UtilModel.split_document_number(invoice_number, True)
+                    sequence_number = int(sequence_number)
+                    sequence_number = auth_supplier_model.fill_padding(
+                        sequence_number, padding
+                    )
+                    self.document_number = f"{agency}-{printer_point}-{sequence_number}"
+                    # validar la duplicidad de documentos electronicos
+                    auth_supplier_model.validate_unique_document_partner(
+                        "invoice_reembolso",
+                        self.document_number,
+                        self.partner_id.id,
+                        UtilModel.ensure_id(self),
+                    )
+                except Exception as ex:
+                    _logger.error(tools.ustr(ex))
                     warning = {
-                        "title": _("Warning!!!"),
+                        "title": _("Information for User"),
                         "message": _(
-                            "The document number is not correct, it must be of the form 00X-00X-000XXXXXX, X is a number"
+                            "The document number is not valid, must be as 00X-00X-000XXXXXX, Where X is a number"
                         ),
                     }
-            return {"domain": domain, "warning": warning}
-        if invoice_number and not self.partner_id:
-            self.document_number = ""
-            warning = {
-                "title": _("Warning!!!"),
-                "message": _(
-                    "You must select company first to continue with this action"
-                ),
-            }
-            return {"domain": domain, "warning": warning}
-        if self.partner_id and self.partner_id.l10n_ec_foreign:
+                    return {"domain": domain, "warning": warning}
             return {"domain": domain, "warning": warning}
         auth_data = auth_supplier_model.get_supplier_authorizations(
-            "invoice", self.partner_id.id, invoice_number, date_invoice
+            "in_invoice", self.partner_id.id, invoice_number, date_invoice,
         )
-
         # si hay multiples autorizaciones, pero una de ellas es la que el usuario ha seleccionado, tomar esa autorizacion
         # xq sino, nunca se podra seleccionar una autorizacion
         if auth_data.get("multi_auth", False):
             if (
                 self.l10n_ec_partner_authorization_id
-                and self.l10n_ec_partner_authorization_id
+                and self.l10n_ec_partner_authorization_id.id
                 in auth_data.get("auth_ids", [])
+                and invoice_number
             ):
                 auth_use = self.l10n_ec_partner_authorization_id
                 number_data = invoice_number.split("-")
@@ -213,21 +217,19 @@ class AccountInvoiceRefund(models.Model):
                 elif len(number_data) == 1:
                     try:
                         number_to_check = str(int(number_data[0]))
-                    except Exception:
+                    except Exception as ex:
+                        _logger.error(tools.ustr(ex))
                         pass
                 if (
                     number_to_check
                     and int(number_to_check) >= auth_use.first_sequence
                     and int(number_to_check) <= auth_use.last_sequence
                 ):
+                    invoice_number = auth_supplier_model.fill_padding(
+                        number_to_check, auth_use.padding
+                    )
                     invoice_number = (
-                        auth_use.agency
-                        + "-"
-                        + auth_use.printer_point
-                        + "-"
-                        + auth_supplier_model.fill_padding(
-                            invoice_number, auth_use.padding
-                        )
+                        f"{auth_use.agency}-{auth_use.printer_point}-{invoice_number}"
                     )
                     self.document_number = invoice_number
                     # si hay ids pasar el id para validar sin considerar el documento actual
@@ -236,25 +238,31 @@ class AccountInvoiceRefund(models.Model):
                         invoice_number,
                         auth_use,
                         date_invoice,
-                        util_model.ensure_id(self),
+                        UtilModel.ensure_id(self),
+                        self.l10n_ec_foreign,
                     )
+                    # Si ya escogio una autorizacion, ya deberia dejar de mostrar el mensaje
+                    if auth_data.get("message"):
+                        auth_data.update({"message": ""})
                 else:
                     self.document_number = ""
+                    self.l10n_ec_partner_authorization_id = False
             else:
                 self.document_number = ""
             if auth_data.get("message", ""):
                 warning = {
-                    "title": _("Warning!!!"),
+                    "title": _("Information for User"),
                     "message": auth_data.get("message", ""),
                 }
             return {"domain": domain, "warning": warning}
         if not auth_data.get("auth_ids", []) and self.partner_id and invoice_number:
+            self.l10n_ec_partner_authorization_id = False
             if auth_data.get("message", ""):
                 warning = {
-                    "title": _("Warning!!!"),
+                    "title": _("Information for User"),
                     "message": auth_data.get("message", ""),
                 }
-                return {"domain": domain, "warning": warning}
+            return {"domain": domain, "warning": warning}
         else:
             auth_ids = auth_data.get("auth_ids", [])
             if auth_ids:
@@ -272,6 +280,7 @@ class AccountInvoiceRefund(models.Model):
                 invoice_number,
                 auth,
                 date_invoice,
-                util_model.ensure_id(self),
+                UtilModel.ensure_id(self),
+                self.l10n_ec_foreign,
             )
         return {"domain": domain, "warning": warning}

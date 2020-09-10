@@ -58,14 +58,14 @@ class L10necUtils(models.AbstractModel):
             if raise_error:
                 raise UserError(
                     _(
-                        "The document number es incorrect, must be 001-00X-000XXXXXX, where X is a number"
+                        "The document number is incorrect, must be as 001-00X-000XXXXXX, where X is a number"
                     )
                 )
             else:
                 agency, printer_point, sequence_number = "001", "001", "000000999"
         else:
             agency, printer_point, sequence_number = number_parts
-        return agency, printer_point, sequence_number
+        return agency.rjust(3, "0"), printer_point.rjust(3, "0"), sequence_number
 
     @api.model
     def get_obligado_contabilidad(self, fiscal_position=None):

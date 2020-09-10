@@ -391,7 +391,7 @@ class L10nECSriAuthorizationSupplier(models.Model):
 
     @api.model
     def get_supplier_authorizations(
-        self, document_type, partner_id, number=None, date=None
+        self, invoice_type, partner_id, number=None, date=None
     ):
         partner_model = self.env["res.partner"]
         res = {
@@ -399,23 +399,26 @@ class L10nECSriAuthorizationSupplier(models.Model):
             "multi_auth": False,
             "res_number": "",
         }
-        if not document_type or not partner_id:
+        if not invoice_type or not partner_id:
             return res
         if not date:
             date = fields.Date.context_today(self)
+        document_type = modules_mapping.get_document_type(invoice_type)
         model_description = modules_mapping.get_document_name(document_type)
         partner = partner_model.browse(partner_id)
         message = ""
         criteria = [
             ("start_date", "<=", date),
             ("expiration_date", ">=", date),
-            ("document_type", "=", document_type),
+            ("document_type", "=", invoice_type),
             ("partner_id", "=", partner_id),
         ]
         agency, printer_point, seq_number = "", "", ""
         if number:
             try:
                 agency, printer_point, seq_number = number.split("-")
+                agency = agency.rjust(3, "0")
+                printer_point = printer_point.rjust(3, "0")
                 seq_number = int(seq_number)
             except Exception:
                 try:
