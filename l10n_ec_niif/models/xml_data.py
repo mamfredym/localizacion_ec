@@ -609,11 +609,9 @@ class SriXmlData(models.Model):
             self.write(values)
         return messages_error, raise_error
 
-    def _send_xml_data_to_valid(self, xml_field, client_ws, client_ws_auth):
+    def _send_xml_data_to_valid(self, client_ws, client_ws_auth):
         """
         Enviar a validar el comprobante con la clave de acceso
-        :param xml_field: este debe ser
-            xml_signed_file : Archivo Firmado
         :param client_ws: instancia del webservice para realizar el proceso
         """
         try_model = self.env["sri.xml.data.send.try"]
@@ -760,11 +758,9 @@ class SriXmlData(models.Model):
             previous_authorized = True
         return ok, msj_res, error, previous_authorized
 
-    def _send_xml_data_to_autorice(self, xml_field, client_ws):
+    def _send_xml_data_to_autorice(self, client_ws):
         """
         Envia a autorizar el archivo
-        :param xml_field: este debe ser
-            xml_signed_file : Archivo Firmado
         :param client_ws: direccion del webservice para realizar el proceso
         """
         try:
@@ -1003,24 +999,19 @@ class SriXmlData(models.Model):
         return url_data
 
     def action_send_xml_to_check(self):
-        xml_field = "file_signed"
         l10n_ec_max_intentos = 1
         for xml_rec in self:
             environment = xml_rec._get_environment()
             xml_rec.with_context(no_send=True).send_xml_data_to_check(
-                environment, xml_field, l10n_ec_max_intentos
+                environment, l10n_ec_max_intentos
             )
         return True
 
-    def send_xml_data_to_check(
-        self, environment, xml_field="file_signed", l10n_ec_max_intentos=1
-    ):
+    def send_xml_data_to_check(self, environment, l10n_ec_max_intentos=1):
         """Envia al web service indicado el xml a ser verificado
         :param environment: Puede ser los siguientes ambientes :
             1 : Pruebas
             2 : Produccion
-        :param xml_field: este debe ser
-            xml_signed_file : Archivo Firmado
         :rtype: code of message
         """
 
@@ -1034,9 +1025,7 @@ class SriXmlData(models.Model):
             elif send_again:
                 # si no supera el maximo de intentos, volve a intentar
                 return self.send_xml_data_to_check(
-                    environment,
-                    xml_field,
-                    l10n_ec_max_intentos=l10n_ec_max_intentos + 1,
+                    environment, l10n_ec_max_intentos=l10n_ec_max_intentos + 1
                 )
             return True
 
@@ -1051,9 +1040,7 @@ class SriXmlData(models.Model):
                 return True
             receipt_client = self.get_current_wsClient(environment, "reception")
             auth_client = self.get_current_wsClient(environment, "authorization")
-            response = self._send_xml_data_to_valid(
-                xml_field, receipt_client, auth_client
-            )
+            response = self._send_xml_data_to_valid(receipt_client, auth_client)
             (
                 res_ws_valid,
                 msj,
@@ -1065,12 +1052,12 @@ class SriXmlData(models.Model):
             if not res_ws_valid and not raise_error:
                 send_again = True
             elif res_ws_valid and not previous_authorized:
-                response_auth = self._send_xml_data_to_autorice(xml_field, auth_client)
+                response_auth = self._send_xml_data_to_autorice(auth_client)
                 # si el sri no me respondio o no es la respuesta que esperaba
                 # verificar si quedo en procesamiento antes de volver a autorizar
                 if not response_auth or isinstance(response_auth.autorizaciones, str):
                     response_check = self._send_xml_data_to_valid(
-                        xml_field, receipt_client, auth_client
+                        receipt_client, auth_client
                     )
                     (
                         res_ws_valid,
@@ -1170,7 +1157,7 @@ class SriXmlData(models.Model):
     def action_send_xml_file(self):
         for xml_rec in self:
             environment = xml_rec._get_environment()
-            xml_rec.send_xml_data_to_check(environment, "file_signed")
+            xml_rec.send_xml_data_to_check(environment)
         return True
 
     # @api.model
@@ -1295,7 +1282,6 @@ class SriXmlData(models.Model):
         # si no hay documentos evitar establecer conexion con el SRI
         if not xml_recs:
             return True
-        xml_field = "file_signed"
         environment = self._get_environment()
         receipt_client = self.get_current_wsClient(environment, "reception")
         auth_client = self.get_current_wsClient(environment, "authorization")
@@ -1324,9 +1310,7 @@ class SriXmlData(models.Model):
             # enviar a firmar el xml
             xml_data.action_sing_xml_file()
             # enviar a autorizar el xml(si se autorizo, enviara el mail a los involucrados)
-            response = xml_data._send_xml_data_to_valid(
-                xml_field, receipt_client, auth_client
-            )
+            response = xml_data._send_xml_data_to_valid(receipt_client, auth_client)
             (
                 ok,
                 messages,
@@ -1335,7 +1319,7 @@ class SriXmlData(models.Model):
             ) = xml_data._process_response_check(response)
             # si recibio la solicitud, enviar a autorizar
             if ok:
-                response = xml_data._send_xml_data_to_autorice(xml_field, auth_client)
+                response = xml_data._send_xml_data_to_autorice(auth_client)
                 ok, messages = xml_data._process_response_autorization(response)
             xml_data._create_messaje_response(messages, ok, raise_error)
             # TODO: si no se puede autorizar, que se debe hacer??
@@ -1426,7 +1410,6 @@ class SriXmlData(models.Model):
                 continue
         if not xml_recs:
             return True
-        xml_field = "file_signed"
         environment = self._get_environment()
         receipt_client = self.get_current_wsClient(environment, "reception")
         auth_client = self.get_current_wsClient(environment, "authorization")
@@ -1448,9 +1431,7 @@ class SriXmlData(models.Model):
             document = xml_data.get_current_document()
             if not document:
                 continue
-            response = xml_data._send_xml_data_to_valid(
-                xml_field, receipt_client, auth_client
-            )
+            response = xml_data._send_xml_data_to_valid(receipt_client, auth_client)
             (
                 ok,
                 messages,
@@ -1459,7 +1440,7 @@ class SriXmlData(models.Model):
             ) = xml_data._process_response_check(response)
             # si recibio la solicitud, enviar a autorizar
             if ok:
-                response = xml_data._send_xml_data_to_autorice(xml_field, auth_client)
+                response = xml_data._send_xml_data_to_autorice(auth_client)
                 ok, messages = xml_data._process_response_autorization(response)
             xml_data._create_messaje_response(messages, ok, raise_error)
             # TODO: si no se puede autorizar, que se debe hacer??
