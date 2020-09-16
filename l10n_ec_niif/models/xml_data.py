@@ -279,7 +279,8 @@ class SriXmlData(models.Model):
         return res
 
     @api.model
-    def _get_environment(self, company):
+    def _get_environment(self):
+        company = self.company_id or self.env.company
         # Si no esta configurado el campo, x defecto tomar pruebas
         res = "1"
         if company.l10n_ec_type_environment == "production":
@@ -320,11 +321,10 @@ class SriXmlData(models.Model):
         @requires: bool True si el documento esta habilidado para facturacion electronica y en modo produccion
             False caso contrario
         """
-        company = self.env.company
         res = False
         if printer_emission.type_emission != "electronic":
             return False
-        environment = self._get_environment(company)
+        environment = self._get_environment()
         if environment == "2" and self._is_document_authorized(invoice_type):
             res = True
         return res
@@ -354,6 +354,7 @@ class SriXmlData(models.Model):
     @api.model
     def get_single_key(
         self,
+        company,
         document_code_sri,
         environment,
         printer_point,
@@ -361,6 +362,7 @@ class SriXmlData(models.Model):
         date_document=None,
     ):
         """Devuelve la clave para archivo xml a enviar a firmar en comprobantes unicos
+        :paran: company: browse_record(res.company)
         :param document_code_sri: Puede ser los siguientes tipos :
             01 : Factura
             04 : Nota de Credito
@@ -374,7 +376,6 @@ class SriXmlData(models.Model):
         :param sequence: El secuencial del Documento debe ser tipo numerico
         :rtype: clave para adjuntar al xml a ser firmado
         """
-        company = self.env.company
         if not date_document:
             date_document = fields.Date.context_today(self)
         emission = "1"  # emision normal, ya no se admite contingencia(2)
@@ -430,7 +431,12 @@ class SriXmlData(models.Model):
         clave_acceso = self.l10n_ec_xml_key
         if not clave_acceso:
             clave_acceso = self.get_single_key(
-                document_code_sri, environment, printer, sequence, date_document
+                company,
+                document_code_sri,
+                environment,
+                printer,
+                sequence,
+                date_document,
             )
         SubElement(infoTributaria, "claveAcceso").text = clave_acceso
         SubElement(infoTributaria, "codDoc").text = document_code_sri
@@ -475,9 +481,9 @@ class SriXmlData(models.Model):
         # Cuando se encuentre en un ambiente de pruebas el sistema se debera usar para la razon social
         # PRUEBAS SERVICIO DE RENTAS INTERNAS
         util_model = self.env["l10n_ec.utils"]
-        company = self.env.company
+        company = self.company_id or self.env.company
         sign_now = self.env.context.get("sign_now", True)
-        environment = self._get_environment(company)
+        environment = self._get_environment()
         xml_version = document.l10n_ec_get_document_version_xml()
         partner_id = document.partner_id
         root = Element(
@@ -612,7 +618,7 @@ class SriXmlData(models.Model):
         """
         try_model = self.env["sri.xml.data.send.try"]
         self.write({"send_date": time.strftime(DTF)})
-        company = self.env.company
+        company = self.company_id or self.env.company
         response = False
         try:
             if not tools.get("send_sri_documents", False):
@@ -997,11 +1003,10 @@ class SriXmlData(models.Model):
         return url_data
 
     def action_send_xml_to_check(self):
-        company = self.env.company
-        environment = self._get_environment(company)
         xml_field = "file_signed"
         l10n_ec_max_intentos = 1
         for xml_rec in self:
+            environment = xml_rec._get_environment()
             xml_rec.with_context(no_send=True).send_xml_data_to_check(
                 environment, xml_field, l10n_ec_max_intentos
             )
@@ -1035,7 +1040,7 @@ class SriXmlData(models.Model):
                 )
             return True
 
-        company = self.env.company
+        company = self.company_id or self.env.company
         send_again, authorized, raise_error = False, False, True
         messages_error, message_data = [], []
         # si esta esperando autorizacion, una tarea cron debe encargarse de eso
@@ -1163,10 +1168,8 @@ class SriXmlData(models.Model):
         return True
 
     def action_send_xml_file(self):
-        company = self.env.company
-        environment = self._get_environment(company)
         for xml_rec in self:
-            # TODO: tomar el tipo de ambiente segun configuracion, no 1 estatico
+            environment = xml_rec._get_environment()
             xml_rec.send_xml_data_to_check(environment, "file_signed")
         return True
 
@@ -1214,7 +1217,7 @@ class SriXmlData(models.Model):
                 if document.l10n_ec_action_sent_mail_electronic():
                     documents_sended |= xml_rec
             except Exception as e:
-                if self.env.context.get("from_function", False):
+                if self.env.context.get("l10n_ec_xml_call_from_cron", False):
                     _logger.warning(
                         "Error send mail to partner. ERROR: %s", tools.ustr(e)
                     )
@@ -1267,17 +1270,25 @@ class SriXmlData(models.Model):
 
     @api.model
     def send_documents_offline(self):
+        all_companies = self.env["res.company"].search([])
+        # pasar flag: l10n_ec_xml_call_from_cron para que los errores salgan x log y no por excepcion
+        # pasar flag: no_change_state para que en caso de no autorizar, no me cambie estado del documento y seguir intentado
+        for company in all_companies:
+            self.with_context(
+                allowed_company_ids=company.ids,
+                l10n_ec_xml_call_from_cron=True,
+                no_change_state=True,
+            )._send_documents_offline()
+        return True
+
+    @api.model
+    def _send_documents_offline(self):
         """
         Procesar los documentos emitidos en modo offline
         """
         company = self.env.company
-        ctx = self.env.context.copy()
-        # pasar flag para que los errores salgan x log y no por excepcion
-        ctx["l10n_ec_xml_call_from_cron"] = True
-        # pasar flag para que en caso de no autorizar, no me cambie estado del documento y seguir intentado
-        ctx["no_change_state"] = True
-        xml_recs = self.with_context(ctx).search(
-            [("state", "=", "draft"),],
+        xml_recs = self.search(
+            [("state", "=", "draft"), ("company_id", "=", company.id)],
             order="number_document",
             limit=company.l10n_ec_cron_process,
         )
@@ -1285,7 +1296,7 @@ class SriXmlData(models.Model):
         if not xml_recs:
             return True
         xml_field = "file_signed"
-        environment = self._get_environment(company)
+        environment = self._get_environment()
         receipt_client = self.get_current_wsClient(environment, "reception")
         auth_client = self.get_current_wsClient(environment, "authorization")
         if receipt_client is None or auth_client is None:
@@ -1324,31 +1335,13 @@ class SriXmlData(models.Model):
             ) = xml_data._process_response_check(response)
             # si recibio la solicitud, enviar a autorizar
             if ok:
-                response = xml_data.with_context(ctx)._send_xml_data_to_autorice(
-                    xml_field, auth_client
-                )
-                ok, messages = xml_data.with_context(
-                    ctx
-                )._process_response_autorization(response)
-            xml_data.with_context(ctx)._create_messaje_response(
-                messages, ok, raise_error
-            )
+                response = xml_data._send_xml_data_to_autorice(xml_field, auth_client)
+                ok, messages = xml_data._process_response_autorization(response)
+            xml_data._create_messaje_response(messages, ok, raise_error)
             # TODO: si no se puede autorizar, que se debe hacer??
             # por ahora, no hago nada para que la tarea siga intentando en una nueva llamada
             if not ok and messages:
                 xml_to_notify_no_autorize |= xml_data
-        # if xml_to_notify_no_autorize:
-        #     template = self.env.ref('ecua_documentos_electronicos.et_documents_electronics_to_notify')
-        #     ctx = self.env.context.copy()
-        #     ctx['xml_to_notify'] = xml_to_notify_no_autorize
-        #     ctx['title'] = "Los siguientes Documentos no se han podido autorizar con el SRI, " \
-        #                    "es necesario que los revise, corrija y envie manualmente de lo contrario no se autorizaran:"
-        #     template.with_context(ctx).l10n_ec_action_sent_mail_electronic(company)
-        # if xml_to_notify:
-        #     template = self.env.ref('ecua_documentos_electronicos.et_documents_electronics_no_valid')
-        #     ctx = self.env.context.copy()
-        #     ctx['xml_to_notify'] = xml_to_notify
-        #     template.with_context(ctx).l10n_ec_action_sent_mail_electronic(company)
         return True
 
     @api.model
@@ -1358,7 +1351,10 @@ class SriXmlData(models.Model):
         algunos xml electronicos se elimina el documento original y se quedan huerfanos
         """
         xml_recs = self.search(
-            [("state", "in", ("returned", "rejected"))],
+            [
+                ("state", "in", ("returned", "rejected")),
+                ("company_id", "=", company.id),
+            ],
             limit=company.l10n_ec_cron_process,
         )
         xml_recs = xml_recs.filtered(lambda x: x.get_current_document())
@@ -1369,22 +1365,32 @@ class SriXmlData(models.Model):
         """
         Enviar mail de documentos rechazados o devueltos
         """
-        company = self.env.company
-        xml_rejected = self._get_documents_rejected(company)
-        if xml_rejected:
-            template = self.env.ref(
-                "ecua_documentos_electronicos.et_documents_electronics_to_notify"
+        all_companies = self.env["res.company"].search([])
+        for company in all_companies:
+            xml_rejected = self.with_context(
+                allowed_company_ids=company.ids, l10n_ec_xml_call_from_cron=True,
+            )._get_documents_rejected(company)
+            # TODO: agregar notificacion por correo de documentos rechazados
+            _logger.info(
+                f"{len(xml_rejected)} Documentos electronicos rechazados a notificar"
             )
-            ctx = self.env.context.copy()
-            ctx["xml_to_notify"] = xml_rejected
-            ctx[
-                "title"
-            ] = "Los siguientes Documentos presentan problemas y han sido rechazados por el SRI, reviselos y corrija manualmente:"
-            template.with_context(ctx).l10n_ec_action_sent_mail_electronic(company)
         return True
 
     @api.model
     def send_documents_waiting_autorization(self):
+        all_companies = self.env["res.company"].search([])
+        # pasar flag: l10n_ec_xml_call_from_cron para que los errores salgan x log y no por excepcion
+        # pasar flag: no_change_state para que en caso de no autorizar, no me cambie estado del documento y seguir intentado
+        for company in all_companies:
+            self.with_context(
+                allowed_company_ids=company.ids,
+                l10n_ec_xml_call_from_cron=True,
+                no_change_state=True,
+            )._send_documents_waiting_autorization()
+        return True
+
+    @api.model
+    def _send_documents_waiting_autorization(self):
         """
         Procesar documentos que no fueron autorizados
         pero recibieron error 70(en espera de autorizacion)
@@ -1393,12 +1399,13 @@ class SriXmlData(models.Model):
         """
         company = self.env.company
         xml_recs = self.search(
-            [("state", "=", "waiting")], limit=company.l10n_ec_cron_process
+            [("state", "=", "waiting"), ("company_id", "=", company.id)],
+            limit=company.l10n_ec_cron_process,
         )
         # en algunas ocaciones los documentos se envian a autorizar, pero se quedan como firmados
         # buscar los documentos firmados que se hayan enviado a autorizar para verificar si fueron autorizados o no
         xml_signed_recs = self.search(
-            [("state", "in", ("signed", "rejected"))],
+            [("state", "in", ("signed", "rejected")), ("company_id", "=", company.id)],
             limit=company.l10n_ec_cron_process,
         )
         xml_send_to_autorice = False
@@ -1420,10 +1427,7 @@ class SriXmlData(models.Model):
         if not xml_recs:
             return True
         xml_field = "file_signed"
-        ctx = self.env.context.copy()
-        # pasar flag para que en caso de no autorizar, no me cambie estado del documento y seguir intentado
-        ctx["no_change_state"] = True
-        environment = self._get_environment(company)
+        environment = self._get_environment()
         receipt_client = self.get_current_wsClient(environment, "reception")
         auth_client = self.get_current_wsClient(environment, "authorization")
         if receipt_client is None or auth_client is None:
@@ -1455,26 +1459,13 @@ class SriXmlData(models.Model):
             ) = xml_data._process_response_check(response)
             # si recibio la solicitud, enviar a autorizar
             if ok:
-                response = xml_data.with_context(ctx)._send_xml_data_to_autorice(
-                    xml_field, auth_client
-                )
-                ok, messages = xml_data.with_context(
-                    ctx
-                )._process_response_autorization(response)
-            xml_data.with_context(ctx)._create_messaje_response(
-                messages, ok, raise_error
-            )
+                response = xml_data._send_xml_data_to_autorice(xml_field, auth_client)
+                ok, messages = xml_data._process_response_autorization(response)
+            xml_data._create_messaje_response(messages, ok, raise_error)
             # TODO: si no se puede autorizar, que se debe hacer??
             # por ahora, no hago nada para que la tarea siga intentando en una nueva llamada
             if not ok and messages:
                 xml_to_notify |= xml_data
-        # if xml_to_notify:
-        #     template = self.env.ref('ecua_documentos_electronicos.et_documents_electronics_to_notify')
-        #     ctx = self.env.context.copy()
-        #     ctx['xml_to_notify'] = xml_to_notify
-        #     ctx['title'] = "Los siguientes Documentos no se han podido autorizar con el SRI, " \
-        #                    "es necesario que los revise, corrija y envie manualmente de lo contrario no se autorizaran:"
-        #     template.with_context(ctx).l10n_ec_action_sent_mail_electronic(company)
         return True
 
     @api.model
@@ -1500,6 +1491,16 @@ class SriXmlData(models.Model):
 
     @api.model
     def send_mail_to_partner(self):
+        all_companies = self.env["res.company"].search([])
+        # pasar flag: l10n_ec_xml_call_from_cron para que los errores salgan x log y no por excepcion
+        for company in all_companies:
+            self.with_context(
+                allowed_company_ids=company.ids, l10n_ec_xml_call_from_cron=True,
+            )._send_mail_to_partner()
+        return True
+
+    @api.model
+    def _send_mail_to_partner(self):
         company = self.env.company
         if company.l10n_ec_type_environment != "production":
             _logger.info(
@@ -1512,9 +1513,7 @@ class SriXmlData(models.Model):
         domain = self._prepare_domain_for_send_mail(company, date_from)
         xml_to_send = self.search(domain, limit=company.l10n_ec_cron_process)
         if xml_to_send:
-            documents_send = xml_to_send.with_context(
-                from_function=True
-            )._action_send_mail_partner()
+            documents_send = xml_to_send._action_send_mail_partner()
             if documents_send:
                 documents_send.write({"send_mail": True})
                 # enviar a crear usuario de los que aun no tienen
