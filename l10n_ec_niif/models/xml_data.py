@@ -616,14 +616,8 @@ class SriXmlData(models.Model):
         """
         try_model = self.env["sri.xml.data.send.try"]
         self.write({"send_date": time.strftime(DTF)})
-        company = self.company_id or self.env.company
         response = False
         try:
-            if not tools.get("send_sri_documents", False):
-                response = {"estado": "RECIBIDA"}
-                return response
-            if company.l10n_ec_type_environment == "production":
-                raise Exception(_("NOT SENT TO AUTHORIZE IN DEVELOPMENT MODE"))
             send = True
             # En caso de ya haber tratado de enviar anteriormente, no debe enviar 2 veces
             if len(self.try_ids) >= 1:
@@ -1037,6 +1031,9 @@ class SriXmlData(models.Model):
             return True
         try:
             if not tools.config.get("send_sri_documents", False):
+                _logger.warning(
+                    "Envio de documentos electronicos desactivado, verifique su archivo de configuracion"
+                )
                 return True
             receipt_client = self.get_current_wsClient(environment, "reception")
             auth_client = self.get_current_wsClient(environment, "authorization")
@@ -1119,10 +1116,8 @@ class SriXmlData(models.Model):
         return xml_to_sign, xml_to_notify
 
     def action_sing_xml_file(self):
-        company = self.env.company
-        if company.l10n_ec_type_environment == "production":
-            return True
         for xml_rec in self:
+            company = xml_rec.company_id
             vals = {}
             try:
                 if not company.l10n_ec_key_type_id:
@@ -1257,6 +1252,11 @@ class SriXmlData(models.Model):
 
     @api.model
     def send_documents_offline(self):
+        if not tools.config.get("send_sri_documents", False):
+            _logger.warning(
+                "Envio de documentos electronicos desactivado, verifique su archivo de configuracion"
+            )
+            return True
         all_companies = self.env["res.company"].search([])
         # pasar flag: l10n_ec_xml_call_from_cron para que los errores salgan x log y no por excepcion
         # pasar flag: no_change_state para que en caso de no autorizar, no me cambie estado del documento y seguir intentado
@@ -1349,6 +1349,11 @@ class SriXmlData(models.Model):
         """
         Enviar mail de documentos rechazados o devueltos
         """
+        if not tools.config.get("send_sri_documents", False):
+            _logger.warning(
+                "Envio de documentos electronicos desactivado, verifique su archivo de configuracion"
+            )
+            return True
         all_companies = self.env["res.company"].search([])
         for company in all_companies:
             xml_rejected = self.with_context(
@@ -1362,6 +1367,11 @@ class SriXmlData(models.Model):
 
     @api.model
     def send_documents_waiting_autorization(self):
+        if not tools.config.get("send_sri_documents", False):
+            _logger.warning(
+                "Envio de documentos electronicos desactivado, verifique su archivo de configuracion"
+            )
+            return True
         all_companies = self.env["res.company"].search([])
         # pasar flag: l10n_ec_xml_call_from_cron para que los errores salgan x log y no por excepcion
         # pasar flag: no_change_state para que en caso de no autorizar, no me cambie estado del documento y seguir intentado
