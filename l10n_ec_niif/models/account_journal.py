@@ -42,10 +42,10 @@ class AccountJournal(models.Model):
         access_rights_uid=None,
     ):
         if (
-            self.env.context.get("internal_type")
+            self.env.context.get("l10n_latam_internal_type")
             and self.env.company.country_id.code == "EC"
         ):
-            internal_type = self.env.context.get("internal_type")
+            internal_type = self.env.context.get("l10n_latam_internal_type")
             if internal_type == "credit_note":
                 args.append(
                     ("l10n_latam_internal_type", "in", ("invoice", internal_type))

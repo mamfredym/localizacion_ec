@@ -107,7 +107,7 @@
                 <xpath expr="//field[@name='journal_id']" position="attributes">
                     <attribute
                         name="context"
-                    >{'internal_type': context.get('internal_type')}</attribute>
+                    >{'l10n_latam_internal_type': context.get('internal_type')}</attribute>
                 </xpath>
                 <xpath
                     expr="//field[@name='l10n_latam_document_type_id']"
