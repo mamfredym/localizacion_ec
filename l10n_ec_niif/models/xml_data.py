@@ -638,6 +638,8 @@ class SriXmlData(models.Model):
                     response = {"estado": "RECIBIDA"}
                     # Si ya fue recibida y autorizada, no tengo que volver a enviarla
                     send = False
+                elif msgs:
+                    self._create_messaje_response(msgs, ok, False)
             if self.env.context.get("no_send") and self.try_ids:
                 send = False
             if send:
