@@ -531,6 +531,257 @@ class AccountMove(models.Model):
         states={"draft": [("readonly", False)]},
     )
 
+    def _onchange_l10n_ec_document_number_in(self):
+        domain = {}
+        warning = {}
+        auth_supplier_model = self.env["l10n_ec.sri.authorization.supplier"]
+        UtilModel = self.env["l10n_ec.utils"]
+        auth_ids = False
+        l10n_latam_document_number = self.l10n_latam_document_number
+        invoice_date = self.invoice_date or fields.Date.context_today(self)
+        if self.partner_id.l10n_ec_foreign:
+            return
+        if not self.l10n_latam_document_number and not self.l10n_ec_type_emission:
+            return
+        if self.l10n_latam_document_number and not self.partner_id:
+            self.l10n_latam_document_number = False
+            warning = {
+                "title": _("Information for user"),
+                "message": _("Please select partner first"),
+            }
+            return {"domain": domain, "warning": warning}
+        padding = self.l10n_ec_supplier_authorization_id.padding or 9
+        if self.l10n_ec_type_emission == "electronic":
+            self.l10n_ec_supplier_authorization_id = False
+            # si es electronico y ya tengo agencia y punto de impresion, completar el numero
+            if l10n_latam_document_number:
+                try:
+                    (
+                        agency,
+                        printer_point,
+                        sequence_number,
+                    ) = UtilModel.split_document_number(
+                        l10n_latam_document_number, True
+                    )
+                    sequence_number = int(sequence_number)
+                    sequence_number = auth_supplier_model.fill_padding(
+                        sequence_number, padding
+                    )
+                    l10n_latam_document_number = (
+                        f"{agency}-{printer_point}-{sequence_number}"
+                    )
+                    # no provocar el inverse nuevamente si el valor del campo es el mismo
+                    if self.l10n_latam_document_number != l10n_latam_document_number:
+                        self.l10n_latam_document_number = l10n_latam_document_number
+                except Exception as ex:
+                    _logger.error(tools.ustr(ex))
+                    warning = {
+                        "title": _("Information for User"),
+                        "message": _(
+                            "The document number is not valid, must be as 00X-00X-000XXXXXX, Where X is a number"
+                        ),
+                    }
+                    return {"domain": domain, "warning": warning}
+                # validar la duplicidad de documentos electronicos
+                auth_supplier_model.validate_unique_document_partner(
+                    self.l10n_ec_invoice_type,
+                    self.l10n_latam_document_number,
+                    self.partner_id.id,
+                    UtilModel.ensure_id(self),
+                )
+            return {"domain": domain, "warning": warning}
+        auth_data = auth_supplier_model.get_supplier_authorizations(
+            self.l10n_ec_invoice_type,
+            self.partner_id.id,
+            l10n_latam_document_number,
+            invoice_date,
+        )
+        # si hay multiples autorizaciones, pero una de ellas es la que el usuario ha seleccionado, tomar esa autorizacion
+        # xq sino, nunca se podra seleccionar una autorizacion
+        if auth_data.get("multi_auth", False):
+            if (
+                self.l10n_ec_supplier_authorization_id
+                and self.l10n_ec_supplier_authorization_id.id
+                in auth_data.get("auth_ids", [])
+                and l10n_latam_document_number
+            ):
+                auth_use = self.l10n_ec_supplier_authorization_id
+                number_data = l10n_latam_document_number.split("-")
+                number_to_check = ""
+                if len(number_data) == 3:
+                    number_to_check = number_data[2]
+                elif len(number_data) == 1:
+                    try:
+                        number_to_check = str(int(number_data[0]))
+                    except Exception as ex:
+                        _logger.error(tools.ustr(ex))
+                        pass
+                if (
+                    number_to_check
+                    and int(number_to_check) >= auth_use.first_sequence
+                    and int(number_to_check) <= auth_use.last_sequence
+                ):
+                    l10n_latam_document_number = auth_supplier_model.fill_padding(
+                        number_to_check, auth_use.padding
+                    )
+                    l10n_latam_document_number = f"{auth_use.agency}-{auth_use.printer_point}-{l10n_latam_document_number}"
+                    # no provocar el inverse nuevamente si el valor del campo es el mismo
+                    if self.l10n_latam_document_number != l10n_latam_document_number:
+                        self.l10n_latam_document_number = l10n_latam_document_number
+                    # si hay ids pasar el id para validar sin considerar el documento actual
+                    auth_supplier_model.check_number_document(
+                        self.l10n_ec_invoice_type,
+                        l10n_latam_document_number,
+                        auth_use,
+                        invoice_date,
+                        UtilModel.ensure_id(self),
+                        self.l10n_ec_foreign,
+                    )
+                    # Si ya escogio una autorizacion, ya deberia dejar de mostrar el mensaje
+                    if auth_data.get("message"):
+                        auth_data.update({"message": ""})
+                else:
+                    self.l10n_latam_document_number = ""
+                    self.l10n_ec_supplier_authorization_id = False
+            else:
+                self.l10n_latam_document_number = ""
+            if auth_data.get("message", ""):
+                warning = {
+                    "title": _("Information for User"),
+                    "message": auth_data.get("message", ""),
+                }
+            return {"domain": domain, "warning": warning}
+        if (
+            not auth_data.get("auth_ids", [])
+            and self.partner_id
+            and l10n_latam_document_number
+        ):
+            self.l10n_ec_supplier_authorization_id = False
+            if auth_data.get("message", ""):
+                warning = {
+                    "title": _("Information for User"),
+                    "message": auth_data.get("message", ""),
+                }
+            return {"domain": domain, "warning": warning}
+        else:
+            auth_ids = auth_data.get("auth_ids", [])
+            if auth_ids:
+                l10n_latam_document_number = auth_data.get("res_number", "")
+                # no provocar el inverse nuevamente si el valor del campo es el mismo
+                if self.l10n_latam_document_number != l10n_latam_document_number:
+                    self.l10n_latam_document_number = l10n_latam_document_number
+                self.l10n_ec_supplier_authorization_id = auth_ids[0]
+            else:
+                self.l10n_ec_supplier_authorization_id = False
+        # si el numero esta ingresado, validar duplicidad
+        l10n_latam_document_number = auth_data.get("res_number", "")
+        if len(l10n_latam_document_number.split("-")) == 3 and auth_ids:
+            auth = auth_supplier_model.browse(auth_ids[0])
+            # si hay ids pasar el id para validar sin considerar el documento actual
+            auth_supplier_model.check_number_document(
+                self.l10n_ec_invoice_type,
+                l10n_latam_document_number,
+                auth,
+                invoice_date,
+                UtilModel.ensure_id(self),
+                self.l10n_ec_foreign,
+            )
+        return {"domain": domain, "warning": warning}
+
+    def _onchange_l10n_ec_document_number_out(self):
+        UtilModel = self.env["l10n_ec.utils"]
+        auth_line_model = self.env["l10n_ec.sri.authorization.line"]
+        domain = {}
+        warning = {}
+        prefijo = ""
+        if self.l10n_ec_point_of_emission_id:
+            prefijo = f"{self.l10n_ec_point_of_emission_id.agency_id.number}-{self.l10n_ec_point_of_emission_id.number}-"
+        if (
+            not self.l10n_latam_document_number
+            or self.l10n_latam_document_number == prefijo
+        ):
+            return {"domain": domain, "warning": warning}
+        if self.l10n_ec_point_of_emission_id:
+            l10n_latam_document_number = self.l10n_ec_point_of_emission_id.complete_number(
+                self.l10n_latam_document_number
+            )
+            # no provocar el inverse nuevamente si el valor del campo es el mismo
+            if self.l10n_latam_document_number != l10n_latam_document_number:
+                self.l10n_latam_document_number = l10n_latam_document_number
+        doc_find = self.l10n_ec_point_of_emission_id.get_authorization_for_number(
+            self.l10n_ec_invoice_type,
+            self.l10n_latam_document_number,
+            self.invoice_date,
+            self.company_id,
+        )
+        if doc_find:
+            self.l10n_ec_authorization_line_id = doc_find
+        if len(self.l10n_latam_document_number.split("-")) == 3:
+            auth_line_model.validate_unique_value_document(
+                self.l10n_ec_invoice_type,
+                self.l10n_latam_document_number,
+                self.company_id.id,
+                UtilModel.ensure_id(self),
+            )
+        return {"domain": domain, "warning": warning}
+
+    @api.onchange("l10n_ec_type_emission",)
+    def onchange_l10n_ec_type_emission(self):
+        if self.l10n_ec_type_emission == "electronic":
+            self.l10n_ec_supplier_authorization_id = False
+            self.l10n_ec_supplier_authorization_number = False
+
+    @api.onchange("l10n_ec_supplier_authorization_id",)
+    def onchange_l10n_ec_supplier_authorization_id(self):
+        auth_supplier_model = self.env["l10n_ec.sri.authorization.supplier"]
+        UtilModel = self.env["l10n_ec.utils"]
+        # al cambiar la autorizacion, si la agencia y punto de impresion
+        # no coinciden con el de la autorizacion, pasar esos datos y borrar el numero  actual
+        if self.l10n_ec_supplier_authorization_id:
+            # si el numero esta completo, verificar si la autorizacion seleccionada es valida para el numero ingresado
+            # si es valida no cambiar el numero,
+            # pero si no es valida, cambiar el numero para que el usuario ingrese el numero correcto para la autorizacion seleccionada
+            is_valid = True
+            try:
+                agency, printer_point, sequence = self.l10n_latam_document_number.split(
+                    "-"
+                )
+                sequence = int(sequence)
+                auth_supplier_model.check_number_document(
+                    self.l10n_ec_invoice_type,
+                    self.l10n_latam_document_number,
+                    self.l10n_ec_supplier_authorization_id,
+                    self.invoice_date,
+                    UtilModel.ensure_id(self),
+                    self.l10n_ec_foreign,
+                )
+            except Exception as ex:
+                _logger.error(tools.ustr(ex))
+                is_valid = False
+            if not is_valid:
+                self.l10n_latam_document_number = "{}-{}-".format(
+                    self.l10n_ec_supplier_authorization_id.agency,
+                    self.l10n_ec_supplier_authorization_id.printer_point,
+                )
+
+    @api.onchange("l10n_latam_document_type_id", "l10n_latam_document_number")
+    def _inverse_l10n_latam_document_number(self):
+        # sobreescribir funcion para validar y dar formato al numero de documento
+        # es una funcion inverse de un campo compute, pero tiene decorador onchange asi que reutilizarla
+        # no se hace en otro onchange ya que por prioridades primero se ejecutaria esta funcion y luego nuestro nuevo onchange
+        # y esta funcion llama al metodo _format_document_number el cual lanza excepcion cuando el numero de documento no tiene formato correcto
+        # lo que impediria darle formato antes de validarlo
+        if self.l10n_ec_invoice_type in ("in_invoice", "in_refund", "debit_note_in"):
+            res = self._onchange_l10n_ec_document_number_in()
+        else:
+            res = self._onchange_l10n_ec_document_number_out()
+        # cuando hay mensajes desde el onchange, devolver esos mensajes antes de llamada super
+        # ya que en la llamada super se podria lanzar excepcion y los mensajes nunca se mostrarian al usuario
+        if res and res.get("warning", {}).get("message"):
+            return res
+        super(AccountMove, self)._inverse_l10n_latam_document_number()
+        return res
+
     @api.onchange(
         "type",
         "l10n_latam_document_type_id",

@@ -151,7 +151,7 @@ class AccountInvoiceRefund(models.Model):
         auth_supplier_model = self.env["l10n_ec.sri.authorization.supplier"]
         UtilModel = self.env["l10n_ec.utils"]
         auth_ids = False
-        invoice_number = self.document_number
+        l10n_latam_document_number = self.document_number
         date_invoice = self.date_invoice or fields.Date.context_today(self)
         if self.partner_id.l10n_ec_foreign:
             return
@@ -168,25 +168,20 @@ class AccountInvoiceRefund(models.Model):
         if self.document_type == "electronic":
             self.l10n_ec_partner_authorization_id = False
             # si es electronico y ya tengo agencia y punto de impresion, completar el numero
-            if invoice_number:
+            if l10n_latam_document_number:
                 try:
                     (
                         agency,
                         printer_point,
                         sequence_number,
-                    ) = UtilModel.split_document_number(invoice_number, True)
+                    ) = UtilModel.split_document_number(
+                        l10n_latam_document_number, True
+                    )
                     sequence_number = int(sequence_number)
                     sequence_number = auth_supplier_model.fill_padding(
                         sequence_number, padding
                     )
                     self.document_number = f"{agency}-{printer_point}-{sequence_number}"
-                    # validar la duplicidad de documentos electronicos
-                    auth_supplier_model.validate_unique_document_partner(
-                        "invoice_reembolso",
-                        self.document_number,
-                        self.partner_id.id,
-                        UtilModel.ensure_id(self),
-                    )
                 except Exception as ex:
                     _logger.error(tools.ustr(ex))
                     warning = {
@@ -196,9 +191,16 @@ class AccountInvoiceRefund(models.Model):
                         ),
                     }
                     return {"domain": domain, "warning": warning}
+                # validar la duplicidad de documentos electronicos
+                auth_supplier_model.validate_unique_document_partner(
+                    "invoice_reembolso",
+                    self.document_number,
+                    self.partner_id.id,
+                    UtilModel.ensure_id(self),
+                )
             return {"domain": domain, "warning": warning}
         auth_data = auth_supplier_model.get_supplier_authorizations(
-            "in_invoice", self.partner_id.id, invoice_number, date_invoice,
+            "in_invoice", self.partner_id.id, l10n_latam_document_number, date_invoice,
         )
         # si hay multiples autorizaciones, pero una de ellas es la que el usuario ha seleccionado, tomar esa autorizacion
         # xq sino, nunca se podra seleccionar una autorizacion
@@ -207,10 +209,10 @@ class AccountInvoiceRefund(models.Model):
                 self.l10n_ec_partner_authorization_id
                 and self.l10n_ec_partner_authorization_id.id
                 in auth_data.get("auth_ids", [])
-                and invoice_number
+                and l10n_latam_document_number
             ):
                 auth_use = self.l10n_ec_partner_authorization_id
-                number_data = invoice_number.split("-")
+                number_data = l10n_latam_document_number.split("-")
                 number_to_check = ""
                 if len(number_data) == 3:
                     number_to_check = number_data[2]
@@ -225,17 +227,15 @@ class AccountInvoiceRefund(models.Model):
                     and int(number_to_check) >= auth_use.first_sequence
                     and int(number_to_check) <= auth_use.last_sequence
                 ):
-                    invoice_number = auth_supplier_model.fill_padding(
+                    l10n_latam_document_number = auth_supplier_model.fill_padding(
                         number_to_check, auth_use.padding
                     )
-                    invoice_number = (
-                        f"{auth_use.agency}-{auth_use.printer_point}-{invoice_number}"
-                    )
-                    self.document_number = invoice_number
+                    l10n_latam_document_number = f"{auth_use.agency}-{auth_use.printer_point}-{l10n_latam_document_number}"
+                    self.document_number = l10n_latam_document_number
                     # si hay ids pasar el id para validar sin considerar el documento actual
                     auth_supplier_model.check_number_document(
                         "invoice_reembolso",
-                        invoice_number,
+                        l10n_latam_document_number,
                         auth_use,
                         date_invoice,
                         UtilModel.ensure_id(self),
@@ -255,7 +255,11 @@ class AccountInvoiceRefund(models.Model):
                     "message": auth_data.get("message", ""),
                 }
             return {"domain": domain, "warning": warning}
-        if not auth_data.get("auth_ids", []) and self.partner_id and invoice_number:
+        if (
+            not auth_data.get("auth_ids", [])
+            and self.partner_id
+            and l10n_latam_document_number
+        ):
             self.l10n_ec_partner_authorization_id = False
             if auth_data.get("message", ""):
                 warning = {
@@ -271,13 +275,13 @@ class AccountInvoiceRefund(models.Model):
             else:
                 self.l10n_ec_partner_authorization_id = False
         # si el numero esta ingresado, validar duplicidad
-        invoice_number = auth_data.get("res_number", "")
-        if len(invoice_number.split("-")) == 3 and auth_ids:
+        l10n_latam_document_number = auth_data.get("res_number", "")
+        if len(l10n_latam_document_number.split("-")) == 3 and auth_ids:
             auth = auth_supplier_model.browse(auth_ids[0])
             # si hay ids pasar el id para validar sin considerar el documento actual
             auth_supplier_model.check_number_document(
                 "invoice_reembolso",
-                invoice_number,
+                l10n_latam_document_number,
                 auth,
                 date_invoice,
                 UtilModel.ensure_id(self),
