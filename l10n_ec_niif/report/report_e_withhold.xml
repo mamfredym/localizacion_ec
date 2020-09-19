@@ -26,9 +26,7 @@
                 <tbody>
                     <tr>
                         <td style="width: 50%">
-                            <t
-                                t-call="l10n_ec_niif.electronic_report_common_info_aditional"
-                            />
+                            <t t-call="l10n_ec_niif.electronic_report_common_info_aditional" />
                         </td>
                         <td style="width: 40%">
 
@@ -71,9 +69,7 @@
                     <th class="text-center amount-xl">Número</th>
                     <th class="text-center amount-sm">Fecha de emisión</th>
                     <th class="text-center amount-sm">Ejercicio Fiscal</th>
-                    <th
-                        class="text-center amount-xl"
-                    >Base Imponible para la Retención</th>
+                    <th class="text-center amount-xl">Base Imponible para la Retención</th>
                     <th class="text-center amount-sm">Impuesto</th>
                     <th class="text-center amount-sm">Porcentaje de Retención</th>
                     <th class="text-center amount-xl">Valor Retenido</th>
@@ -83,23 +79,16 @@
                 <t t-foreach="o.line_ids" t-as="line">
                     <tr style="font-size: 9px;">
                         <td>
-                            <span
-                                t-field="line.invoice_id.l10n_latam_document_type_id.name"
-                            />
+                            <span t-field="line.invoice_id.l10n_latam_document_type_id.name" />
                         </td>
                         <td>
-                            <span
-                                t-field="line.invoice_id.l10n_latam_document_number"
-                            />
+                            <span t-field="line.invoice_id.l10n_latam_document_number" />
                         </td>
                         <td>
                             <span t-field="line.invoice_id.invoice_date" />
                         </td>
                         <td class="text-right">
-                            <span
-                                t-field="line.issue_date"
-                                t-options="{'widget': 'date', 'format': 'yyyy'}"
-                            />
+                            <span t-field="line.issue_date" t-options="{'widget': 'date', 'format': 'yyyy'}" />
                         </td>
                         <td class="text-right">
                             <span t-field="line.base_amount" />

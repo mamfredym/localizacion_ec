@@ -3,8 +3,8 @@ import logging
 
 import pytz
 
-from odoo import _, api, fields, models, tools
-from odoo.exceptions import AccessError, UserError
+from odoo import _, api, models, tools
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -57,9 +57,7 @@ class L10necUtils(models.AbstractModel):
         if not number_parts or len(number_parts) != 3:
             if raise_error:
                 raise UserError(
-                    _(
-                        "The document number is incorrect, must be as 001-00X-000XXXXXX, where X is a number"
-                    )
+                    _("The document number is incorrect, must be as 001-00X-000XXXXXX, where X is a number")
                 )
             else:
                 agency, printer_point, sequence_number = "001", "001", "000000999"

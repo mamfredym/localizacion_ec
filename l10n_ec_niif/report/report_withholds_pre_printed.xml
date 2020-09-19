@@ -22,9 +22,7 @@
                             </td>
                             <td t-if="o.authorization_line_id.authorization_id" />
                             <td t-if="o.authorization_line_id.authorization_id">
-                                <span
-                                    t-field="o.authorization_line_id.authorization_id"
-                                />
+                                <span t-field="o.authorization_line_id.authorization_id" />
                             </td>
                         </tr>
                         <tr>

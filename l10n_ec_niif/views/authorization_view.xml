@@ -29,25 +29,13 @@
                         <group>
                             <field name="active" invisible="1" />
                             <group>
-                                <field
-                                    name="company_id"
-                                    groups="base.group_multi_company"
-                                />
-                                <field
-                                    name="number"
-                                    attrs="{'readonly': [('count_invoice', '>', '0')]}"
-                                />
+                                <field name="company_id" groups="base.group_multi_company" />
+                                <field name="number" attrs="{'readonly': [('count_invoice', '>', '0')]}" />
                                 <field name="count_invoice" invisible="1" />
                             </group>
                             <group>
-                                <field
-                                    name="start_date"
-                                    attrs="{'readonly': [('count_invoice', '>', '0')]}"
-                                />
-                                <field
-                                    name="expiration_date"
-                                    attrs="{'readonly': [('count_invoice', '>', '0')]}"
-                                />
+                                <field name="start_date" attrs="{'readonly': [('count_invoice', '>', '0')]}" />
+                                <field name="expiration_date" attrs="{'readonly': [('count_invoice', '>', '0')]}" />
                             </group>
                         </group>
                         <notebook colspan="4">
@@ -86,14 +74,8 @@
                                                     attrs="{'readonly': [('count_invoice', '>', '0')]}"
                                                 />
                                                 <field name="agency_id" />
-                                                <field
-                                                    name="count_invoice"
-                                                    invisible="1"
-                                                />
-                                                <field
-                                                    name="active"
-                                                    widget="boolean_toggle"
-                                                />
+                                                <field name="count_invoice" invisible="1" />
+                                                <field name="active" widget="boolean_toggle" />
                                             </group>
                                         </sheet>
                                     </form>
@@ -113,10 +95,7 @@
                 </search>
             </field>
         </record>
-        <record
-            id="action_l10n_ec_sri_authorization_tree_view"
-            model="ir.actions.act_window"
-        >
+        <record id="action_l10n_ec_sri_authorization_tree_view" model="ir.actions.act_window">
             <field name="name">Authorizations</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">l10n_ec.sri.authorization</field>

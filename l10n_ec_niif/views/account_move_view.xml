@@ -105,20 +105,12 @@
                 <!-- is used on _search of account.journal-->
                 <!-- for filter specfic journals according document type-->
                 <xpath expr="//field[@name='journal_id']" position="attributes">
-                    <attribute
-                        name="context"
-                    >{'l10n_latam_internal_type': context.get('internal_type')}</attribute>
+                    <attribute name="context">{'l10n_latam_internal_type': context.get('internal_type')}</attribute>
                 </xpath>
-                <xpath
-                    expr="//field[@name='l10n_latam_document_type_id']"
-                    position="attributes"
-                >
+                <xpath expr="//field[@name='l10n_latam_document_type_id']" position="attributes">
                     <attribute name="attrs">{}</attribute>
                 </xpath>
-                <xpath
-                    expr="//field[@name='l10n_latam_document_number']"
-                    position="attributes"
-                >
+                <xpath expr="//field[@name='l10n_latam_document_number']" position="attributes">
                     <attribute name="force_save">1</attribute>
                     <attribute
                         name="attrs"
@@ -178,11 +170,7 @@
                         />
                         <field name="l10n_ec_start_date" invisible="1" />
                         <field name="l10n_ec_expiration_date" invisible="1" />
-                        <field
-                            name="l10n_ec_tax_support_domain_ids"
-                            widget="many2many_tags"
-                            invisible="True"
-                        />
+                        <field name="l10n_ec_tax_support_domain_ids" widget="many2many_tags" invisible="True" />
                         <field
                             name="l10n_ec_tax_support_id"
                             options="{'no_create': True}"
@@ -201,25 +189,17 @@
                             name="l10n_ec_pago_exterior_sujeto_retencion"
                             attrs="{'invisible':['|', ('l10n_ec_foreign','=',False), ('type', 'not in', ('in_invoice', 'in_refund'))]}"
                         />
-                        <field
-                            name="l10n_ec_xml_key"
-                            attrs="{'invisible':[('l10n_ec_xml_data_id','=',False)]}"
-                        />
+                        <field name="l10n_ec_xml_key" attrs="{'invisible':[('l10n_ec_xml_data_id','=',False)]}" />
                         <field
                             name="l10n_ec_authorization_date"
                             attrs="{'invisible':[('l10n_ec_xml_data_id','=',False)]}"
                         />
-                        <field
-                            name="l10n_ec_xml_data_id"
-                            attrs="{'invisible':[('l10n_ec_xml_data_id','=',False)]}"
-                        />
+                        <field name="l10n_ec_xml_data_id" attrs="{'invisible':[('l10n_ec_xml_data_id','=',False)]}" />
                         <label
                             for="l10n_ec_sri_authorization_state"
                             attrs="{'invisible':[('type', 'not in', ('in_invoice', 'in_refund'))]}"
                         />
-                        <div
-                            attrs="{'invisible':[('type', 'not in', ('in_invoice', 'in_refund'))]}"
-                        >
+                        <div attrs="{'invisible':[('type', 'not in', ('in_invoice', 'in_refund'))]}">
                             <span
                                 class="badge badge-pill"
                                 attrs="{'invisible': [('l10n_ec_sri_authorization_state', '!=', 'to_check')]}"
@@ -232,19 +212,13 @@
                                 class="badge badge-pill badge-danger"
                                 attrs="{'invisible': [('l10n_ec_sri_authorization_state', '!=', 'invalid')]}"
                             >Invalid</span>
-                            <field
-                                name="l10n_ec_sri_authorization_state"
-                                invisible="1"
-                            />
+                            <field name="l10n_ec_sri_authorization_state" invisible="1" />
                         </div>
                         <field name="l10n_ec_is_environment_production" invisible="1" />
                         <field name="l10n_ec_withhold_required" invisible="1" />
                     </group>
                 </xpath>
-                <xpath
-                    expr="//h1[@class='mt0']//field[@name='name']/../../h1[1]"
-                    position="replace"
-                >
+                <xpath expr="//h1[@class='mt0']//field[@name='name']/../../h1[1]" position="replace">
                     <h1>
                         <span
                             attrs="{'invisible': ['|', '|', ('l10n_ec_invoice_type', '!=', 'out_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/')]}"
@@ -332,10 +306,7 @@
                         attrs="{'invisible': ['|', '|', ('l10n_ec_withhold_count', '!=', 0), ('type', '!=', 'out_invoice'), ('state', '!=', 'posted')]}"
                     />
                 </div>
-                <xpath
-                    expr="//field[@name='invoice_line_ids']/tree//field[@name='tax_ids']"
-                    position="after"
-                >
+                <xpath expr="//field[@name='invoice_line_ids']/tree//field[@name='tax_ids']" position="after">
                     <field name="l10n_ec_base_iva_0" optional="hide" />
                     <field name="l10n_ec_base_iva" optional="hide" />
                     <field name="l10n_ec_iva" optional="hide" />
@@ -359,32 +330,20 @@
         </record>
         <!-- reemplazar acciones para agregar al context internal_type para filtrar diarios correctamente-->
         <record id="account.action_move_out_invoice_type" model="ir.actions.act_window">
-            <field
-                name="domain"
-            >[('type', '=', 'out_invoice'), ('l10n_latam_internal_type', '=', 'invoice')]</field>
-            <field
-                name="context"
-            >{'default_type': 'out_invoice', 'internal_type': 'invoice'}</field>
+            <field name="domain">[('type', '=', 'out_invoice'), ('l10n_latam_internal_type', '=', 'invoice')]</field>
+            <field name="context">{'default_type': 'out_invoice', 'internal_type': 'invoice'}</field>
         </record>
         <record id="account.action_move_in_refund_type" model="ir.actions.act_window">
-            <field
-                name="context"
-            >{'default_type': 'in_refund', 'internal_type': 'credit_note'}</field>
+            <field name="context">{'default_type': 'in_refund', 'internal_type': 'credit_note'}</field>
         </record>
         <record id="account.action_move_out_refund_type" model="ir.actions.act_window">
-            <field
-                name="context"
-            >{'default_type': 'out_refund', 'internal_type': 'credit_note'}</field>
+            <field name="context">{'default_type': 'out_refund', 'internal_type': 'credit_note'}</field>
         </record>
         <record id="account.action_move_in_receipt_type" model="ir.actions.act_window">
-            <field
-                name="context"
-            >{'default_type': 'in_receipt', 'internal_type': 'in_receipt'}</field>
+            <field name="context">{'default_type': 'in_receipt', 'internal_type': 'in_receipt'}</field>
         </record>
         <record id="account.action_move_out_receipt_type" model="ir.actions.act_window">
-            <field
-                name="context"
-            >{'default_type': 'out_receipt', 'internal_type': 'out_receipt'}</field>
+            <field name="context">{'default_type': 'out_receipt', 'internal_type': 'out_receipt'}</field>
         </record>
         <record id="action_move_debit_note_out_type" model="ir.actions.act_window">
             <field name="name">Debit Notes</field>
@@ -392,12 +351,8 @@
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="account.view_invoice_tree" />
             <field name="search_view_id" ref="account.view_account_invoice_filter" />
-            <field
-                name="domain"
-            >[('type', '=', 'out_invoice'), ('l10n_latam_internal_type', '=', 'debit_note')]</field>
-            <field
-                name="context"
-            >{'default_type': 'out_invoice', 'internal_type': 'debit_note'}</field>
+            <field name="domain">[('type', '=', 'out_invoice'), ('l10n_latam_internal_type', '=', 'debit_note')]</field>
+            <field name="context">{'default_type': 'out_invoice', 'internal_type': 'debit_note'}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Create a customer debit note
@@ -423,11 +378,7 @@
                         string="Point of emission"
                         context="{'group_by':'l10n_ec_point_of_emission_id'}"
                     />
-                    <filter
-                        name="l10n_ec_agency_id"
-                        string="Agency"
-                        context="{'group_by':'l10n_ec_agency_id'}"
-                    />
+                    <filter name="l10n_ec_agency_id" string="Agency" context="{'group_by':'l10n_ec_agency_id'}" />
                     <filter
                         name="l10n_ec_authorization_id"
                         string="Authorization"
@@ -445,10 +396,7 @@
             <field name="inherit_id" ref="account.view_move_form" />
             <field name="arch" type="xml">
                 <!--                cambiar atributo para que en liquidacion de compras si es electronica no se permita cambiar el numero de documento-->
-                <xpath
-                    expr="//field[@name='l10n_latam_document_number']"
-                    position="attributes"
-                >
+                <xpath expr="//field[@name='l10n_latam_document_number']" position="attributes">
                     <attribute
                         name="attrs"
                     >{'invisible': ['|', '|', ('l10n_latam_sequence_id', '!=', False), ('l10n_latam_use_documents', '=', False), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))],
@@ -463,28 +411,15 @@
                                 <field name="partner_id" />
                                 <field name="date_invoice" />
                                 <field name="document_type" optional="hide" />
-                                <field
-                                    name="l10n_ec_partner_authorization_id"
-                                    optional="hide"
-                                />
-                                <field
-                                    name="electronic_authorization"
-                                    optional="hide"
-                                />
+                                <field name="l10n_ec_partner_authorization_id" optional="hide" />
+                                <field name="electronic_authorization" optional="hide" />
                                 <field name="total_base_iva" sum="Total Base IVA" />
                                 <field name="total_base_iva0" sum="Total Base IVA 0" />
-                                <field
-                                    name="total_base_no_iva"
-                                    sum="Total Base No IVA"
-                                    optional="hide"
-                                />
+                                <field name="total_base_no_iva" sum="Total Base No IVA" optional="hide" />
                                 <field name="total_iva" sum="Total IVA" />
                                 <field name="total_ice" sum="Total ICE" />
                                 <field name="total_invoice" sum="Total Facturas" />
-                                <field
-                                    name="company_id"
-                                    groups="base.group_multi_company"
-                                />
+                                <field name="company_id" groups="base.group_multi_company" />
                                 <field name="currency_id" invisible="1" />
                             </tree>
                             <form>
@@ -495,10 +430,7 @@
                                             name="document_type"
                                             attrs="{'invisible': [('l10n_ec_foreign','=', True)]}"
                                         />
-                                        <field
-                                            name="company_id"
-                                            groups="base.group_multi_company"
-                                        />
+                                        <field name="company_id" groups="base.group_multi_company" />
                                         <field name="currency_id" invisible="1" />
                                     </group>
                                     <group>
@@ -527,10 +459,7 @@
                                     <field name="total_base_no_iva" />
                                     <field name="total_iva" />
                                     <field name="total_ice" />
-                                    <field
-                                        name="total_invoice"
-                                        class="oe_subtotal_footer_separator"
-                                    />
+                                    <field name="total_invoice" class="oe_subtotal_footer_separator" />
                                 </group>
                             </form>
                         </field>
@@ -545,12 +474,8 @@
             sequence="5"
         />
         <record id="account.action_move_in_invoice_type" model="ir.actions.act_window">
-            <field
-                name="domain"
-            >[('type', '=', 'in_invoice'), ('l10n_latam_internal_type', '=', 'invoice')]</field>
-            <field
-                name="context"
-            >{'default_type': 'in_invoice', 'internal_type': 'invoice'}</field>
+            <field name="domain">[('type', '=', 'in_invoice'), ('l10n_latam_internal_type', '=', 'invoice')]</field>
+            <field name="context">{'default_type': 'in_invoice', 'internal_type': 'invoice'}</field>
         </record>
         <record id="action_move_debit_note_in_type" model="ir.actions.act_window">
             <field name="name">Debit Notes</field>
@@ -558,12 +483,8 @@
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="account.view_invoice_tree" />
             <field name="search_view_id" ref="account.view_account_invoice_filter" />
-            <field
-                name="domain"
-            >[('type', '=', 'in_invoice'), ('l10n_latam_internal_type', '=', 'debit_note')]</field>
-            <field
-                name="context"
-            >{'default_type': 'in_invoice', 'internal_type': 'debit_note'}</field>
+            <field name="domain">[('type', '=', 'in_invoice'), ('l10n_latam_internal_type', '=', 'debit_note')]</field>
+            <field name="context">{'default_type': 'in_invoice', 'internal_type': 'debit_note'}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Create a vendor debit note
@@ -579,21 +500,14 @@
             parent="account.menu_finance_payables"
             sequence="5"
         />
-        <record
-            id="action_move_liquidation_of_purchases_type"
-            model="ir.actions.act_window"
-        >
+        <record id="action_move_liquidation_of_purchases_type" model="ir.actions.act_window">
             <field name="name">Liquidation of Purchase</field>
             <field name="res_model">account.move</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="account.view_invoice_tree" />
             <field name="search_view_id" ref="account.view_account_invoice_filter" />
-            <field
-                name="domain"
-            >[('type', '=', 'in_invoice'), ('l10n_latam_internal_type', '=', 'liquidation')]</field>
-            <field
-                name="context"
-            >{'default_type': 'in_invoice', 'internal_type': 'liquidation'}</field>
+            <field name="domain">[('type', '=', 'in_invoice'), ('l10n_latam_internal_type', '=', 'liquidation')]</field>
+            <field name="context">{'default_type': 'in_invoice', 'internal_type': 'liquidation'}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Create a vendor liquidation of purchases
@@ -603,32 +517,17 @@
             </p>
             </field>
         </record>
-        <record
-            id="action_move_liquidation_purchase_tree"
-            model="ir.actions.act_window.view"
-        >
+        <record id="action_move_liquidation_purchase_tree" model="ir.actions.act_window.view">
             <field name="sequence" eval="1" />
             <field name="view_mode">tree</field>
             <field name="view_id" ref="account.view_invoice_tree" />
-            <field
-                name="act_window_id"
-                ref="action_move_liquidation_of_purchases_type"
-            />
+            <field name="act_window_id" ref="action_move_liquidation_of_purchases_type" />
         </record>
-        <record
-            id="action_move_liquidation_purchase_form"
-            model="ir.actions.act_window.view"
-        >
+        <record id="action_move_liquidation_purchase_form" model="ir.actions.act_window.view">
             <field name="sequence" eval="4" />
             <field name="view_mode">form</field>
-            <field
-                name="view_id"
-                ref="account_invoice_liquidation_purchase_form_view"
-            />
-            <field
-                name="act_window_id"
-                ref="action_move_liquidation_of_purchases_type"
-            />
+            <field name="view_id" ref="account_invoice_liquidation_purchase_form_view" />
+            <field name="act_window_id" ref="action_move_liquidation_of_purchases_type" />
         </record>
         <menuitem
             id="menu_action_move_liquidation_of_purchases_type"

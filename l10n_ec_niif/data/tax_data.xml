@@ -38,9 +38,7 @@
         </record>
         <record model="account.tax.template" id="tax_411_iva">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field
-                name="name"
-            >Ventas locales (excluye activos fijos) gravadas tarifa diferente de cero</field>
+            <field name="name">Ventas locales (excluye activos fijos) gravadas tarifa diferente de cero</field>
             <field name="description">IVA 12%</field>
             <field name="amount">12</field>
             <field name="amount_type">percent</field>
@@ -59,9 +57,7 @@
         </record>
         <record model="account.tax.template" id="tax_412_iva">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field
-                name="name"
-            >Ventas de activos fijos gravadas tarifa diferente de cero</field>
+            <field name="name">Ventas de activos fijos gravadas tarifa diferente de cero</field>
             <field name="description">IVA AF 12%</field>
             <field name="amount">12</field>
             <field name="amount_type">percent</field>
@@ -179,9 +175,7 @@
         </record>
         <record model="account.tax.template" id="tax_416_iva">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field
-                name="name"
-            >Ventas de activos fijos gravadas tarifa 0% que dan derecho a crédito tributario</field>
+            <field name="name">Ventas de activos fijos gravadas tarifa 0% que dan derecho a crédito tributario</field>
             <field name="description">IVA AF 0%</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -334,9 +328,7 @@
         </record>
         <record model="account.tax.template" id="tax_513_iva">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field
-                name="name"
-            >Importaciones de servicios y/o derechos gravados tarifa diferente de cero</field>
+            <field name="name">Importaciones de servicios y/o derechos gravados tarifa diferente de cero</field>
             <field name="description">IVA 12% IS</field>
             <field name="amount">12</field>
             <field name="amount_type">percent</field>
@@ -354,9 +346,7 @@
         </record>
         <record model="account.tax.template" id="tax_514_iva">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field
-                name="name"
-            >Importaciones de bienes (excluye activos fijos) gravados tarifa diferente de cero</field>
+            <field name="name">Importaciones de bienes (excluye activos fijos) gravados tarifa diferente de cero</field>
             <field name="description">IVA 12% IB</field>
             <field name="amount">12</field>
             <field name="amount_type">percent</field>
@@ -374,9 +364,7 @@
         </record>
         <record model="account.tax.template" id="tax_515_iva">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field
-                name="name"
-            >Importaciones de activos fijos gravados tarifa diferente de cero</field>
+            <field name="name">Importaciones de activos fijos gravados tarifa diferente de cero</field>
             <field name="description">IVA 12% AF</field>
             <field name="amount">12</field>
             <field name="amount_type">percent</field>
@@ -434,9 +422,7 @@
         </record>
         <record model="account.tax.template" id="tax_516_iva">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field
-                name="name"
-            >Importaciones de bienes (incluye activos fijos) gravados tarifa 0%</field>
+            <field name="name">Importaciones de bienes (incluye activos fijos) gravados tarifa 0%</field>
             <field name="description">IVA 0% IB</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -454,9 +440,7 @@
         </record>
         <record model="account.tax.template" id="tax_517_iva">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field
-                name="name"
-            >Adquisiciones y pagos (incluye activos fijos) gravados tarifa 0%</field>
+            <field name="name">Adquisiciones y pagos (incluye activos fijos) gravados tarifa 0%</field>
             <field name="description">IVA 0%</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -656,9 +640,7 @@
         </record>
         <record model="account.tax.template" id="tax_302">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field
-                name="name"
-            >En relación de dependencia que supera o no la base desgravada</field>
+            <field name="name">En relación de dependencia que supera o no la base desgravada</field>
             <field name="description">302</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -726,9 +708,7 @@
         </record>
         <record model="account.tax.template" id="tax_308">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field
-                name="name"
-            >Servicios Utilización o aprovechamiento de la imagen o renombre</field>
+            <field name="name">Servicios Utilización o aprovechamiento de la imagen o renombre</field>
             <field name="description">308</field>
             <field name="amount">-10</field>
             <field name="amount_type">percent</field>
@@ -762,9 +742,7 @@
         </record>
         <record model="account.tax.template" id="tax_310">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field
-                name="name"
-            >Servicios Transporte privado de pasajeros o servicio público o privado de carga</field>
+            <field name="name">Servicios Transporte privado de pasajeros o servicio público o privado de carga</field>
             <field name="description">310</field>
             <field name="amount">-1</field>
             <field name="amount_type">percent</field>
@@ -781,9 +759,7 @@
         </record>
         <record model="account.tax.template" id="tax_311">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field
-                name="name"
-            >A través de liquidaciones de compra (nivel cultural o rusticidad)</field>
+            <field name="name">A través de liquidaciones de compra (nivel cultural o rusticidad)</field>
             <field name="description">311</field>
             <field name="amount">-2</field>
             <field name="amount_type">percent</field>
@@ -800,9 +776,7 @@
         </record>
         <record model="account.tax.template" id="tax_312">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field
-                name="name"
-            >Transferencia de bienes muebles de naturaleza corporal</field>
+            <field name="name">Transferencia de bienes muebles de naturaleza corporal</field>
             <field name="description">312</field>
             <field name="amount">-1.75</field>
             <field name="amount_type">percent</field>
@@ -839,9 +813,7 @@
         </record>
         <record model="account.tax.template" id="tax_314">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field
-                name="name"
-            >Por regalías, derechos de autor, marcas, patentes y similares</field>
+            <field name="name">Por regalías, derechos de autor, marcas, patentes y similares</field>
             <field name="description">314</field>
             <field name="amount">-8</field>
             <field name="amount_type">percent</field>
@@ -981,9 +953,7 @@
         </record>
         <record model="account.tax.template" id="tax_327">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field
-                name="name"
-            >Dividendos distribuidos a personas naturales residentes</field>
+            <field name="name">Dividendos distribuidos a personas naturales residentes</field>
             <field name="description">327</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -1072,9 +1042,7 @@
         </record>
         <record model="account.tax.template" id="tax_332">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field
-                name="name"
-            >Pagos de bienes y servicios no sujetos a retención</field>
+            <field name="name">Pagos de bienes y servicios no sujetos a retención</field>
             <field name="description">332</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -1201,9 +1169,7 @@
         </record>
         <record model="account.tax.template" id="tax_343c">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field
-                name="name"
-            >Impuesto Redimible a las botellas plásticas - IRBP</field>
+            <field name="name">Impuesto Redimible a las botellas plásticas - IRBP</field>
             <field name="description">343C</field>
             <field name="l10n_ec_ats_code">343C</field>
             <field name="amount">-1</field>
@@ -1289,9 +1255,7 @@
         </record>
         <record model="account.tax.template" id="tax_403">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field
-                name="name"
-            >Con convenio de doble tributación Intereses de créditos</field>
+            <field name="name">Con convenio de doble tributación Intereses de créditos</field>
             <field name="description">403</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -1308,9 +1272,7 @@
         </record>
         <record model="account.tax.template" id="tax_404">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field
-                name="name"
-            >Con convenio de doble tributación Anticipo de dividendos</field>
+            <field name="name">Con convenio de doble tributación Anticipo de dividendos</field>
             <field name="description">404</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -1327,9 +1289,7 @@
         </record>
         <record model="account.tax.template" id="tax_405">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field
-                name="name"
-            >Con convenio de doble tributación Dividendos distribuidos a personas naturales</field>
+            <field name="name">Con convenio de doble tributación Dividendos distribuidos a personas naturales</field>
             <field name="description">405</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -1346,9 +1306,7 @@
         </record>
         <record model="account.tax.template" id="tax_406">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field
-                name="name"
-            >Con convenio de doble tributación Dividendos distribuidos a sociedades</field>
+            <field name="name">Con convenio de doble tributación Dividendos distribuidos a sociedades</field>
             <field name="description">406</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -1365,9 +1323,7 @@
         </record>
         <record model="account.tax.template" id="tax_407">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field
-                name="name"
-            >Con convenio de doble tributación Dividendos distribuidos a fideicomisos</field>
+            <field name="name">Con convenio de doble tributación Dividendos distribuidos a fideicomisos</field>
             <field name="description">407</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -1403,9 +1359,7 @@
         </record>
         <record model="account.tax.template" id="tax_409">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field
-                name="name"
-            >Con convenio de doble tributación Seguros y reaseguros (primas y cesiones)</field>
+            <field name="name">Con convenio de doble tributación Seguros y reaseguros (primas y cesiones)</field>
             <field name="description">409</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -1441,9 +1395,7 @@
         </record>
         <record model="account.tax.template" id="tax_411">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field
-                name="name"
-            >Con convenio de doble tributación Otros conceptos de ingresos gravados</field>
+            <field name="name">Con convenio de doble tributación Otros conceptos de ingresos gravados</field>
             <field name="description">411</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -1460,9 +1412,7 @@
         </record>
         <record model="account.tax.template" id="tax_412">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field
-                name="name"
-            >Con convenio de doble tributación Otros pagos al exterior no sujetos a retención</field>
+            <field name="name">Con convenio de doble tributación Otros pagos al exterior no sujetos a retención</field>
             <field name="description">412</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -1479,9 +1429,7 @@
         </record>
         <record model="account.tax.template" id="tax_413">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field
-                name="name"
-            >Sin convenio de doble tributación Intereses por financiamiento de proveedores</field>
+            <field name="name">Sin convenio de doble tributación Intereses por financiamiento de proveedores</field>
             <field name="description">413</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -1498,9 +1446,7 @@
         </record>
         <record model="account.tax.template" id="tax_414">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field
-                name="name"
-            >Sin convenio de doble tributación Intereses de créditos</field>
+            <field name="name">Sin convenio de doble tributación Intereses de créditos</field>
             <field name="description">414</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -1517,9 +1463,7 @@
         </record>
         <record model="account.tax.template" id="tax_415">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field
-                name="name"
-            >Sin convenio de doble tributación Anticipo de dividendos</field>
+            <field name="name">Sin convenio de doble tributación Anticipo de dividendos</field>
             <field name="description">415</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -1536,9 +1480,7 @@
         </record>
         <record model="account.tax.template" id="tax_416">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field
-                name="name"
-            >Sin convenio de doble tributación Dividendos distribuidos a personas naturales</field>
+            <field name="name">Sin convenio de doble tributación Dividendos distribuidos a personas naturales</field>
             <field name="description">416</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -1555,9 +1497,7 @@
         </record>
         <record model="account.tax.template" id="tax_417">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field
-                name="name"
-            >Sin convenio de doble tributación Dividendos distribuidos a sociedades</field>
+            <field name="name">Sin convenio de doble tributación Dividendos distribuidos a sociedades</field>
             <field name="description">417</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -1574,9 +1514,7 @@
         </record>
         <record model="account.tax.template" id="tax_418">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field
-                name="name"
-            >Sin convenio de doble tributación Dividendos distribuidos a fideicomisos</field>
+            <field name="name">Sin convenio de doble tributación Dividendos distribuidos a fideicomisos</field>
             <field name="description">418</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -1612,9 +1550,7 @@
         </record>
         <record model="account.tax.template" id="tax_420">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field
-                name="name"
-            >Sin convenio de doble tributación Seguros y reaseguros (primas y cesiones)</field>
+            <field name="name">Sin convenio de doble tributación Seguros y reaseguros (primas y cesiones)</field>
             <field name="description">420</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -1650,9 +1586,7 @@
         </record>
         <record model="account.tax.template" id="tax_422">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field
-                name="name"
-            >Sin convenio de doble tributación Otros conceptos de ingresos gravados</field>
+            <field name="name">Sin convenio de doble tributación Otros conceptos de ingresos gravados</field>
             <field name="description">422</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -1669,9 +1603,7 @@
         </record>
         <record model="account.tax.template" id="tax_423">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field
-                name="name"
-            >Sin convenio de doble tributación Otros pagos al exterior no sujetos a retención</field>
+            <field name="name">Sin convenio de doble tributación Otros pagos al exterior no sujetos a retención</field>
             <field name="description">423</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -1707,9 +1639,7 @@
         </record>
         <record model="account.tax.template" id="tax_425">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field
-                name="name"
-            >En paraísos fiscales o regímenes fiscales preferentes Anticipo de dividendos</field>
+            <field name="name">En paraísos fiscales o regímenes fiscales preferentes Anticipo de dividendos</field>
             <field name="description">425</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>

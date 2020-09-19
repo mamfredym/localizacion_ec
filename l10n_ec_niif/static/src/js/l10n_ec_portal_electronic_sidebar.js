@@ -17,19 +17,13 @@ odoo.define("l10n_ec_niif.ElectronicPortalSidebar", function(require) {
         start: function() {
             var def = this._super.apply(this, arguments);
 
-            var $electronic_report_html = this.$el.find(
-                "iframe#electronic_report_html"
-            );
-            var updateIframeSize = this._updateIframeSize.bind(
-                this,
-                $electronic_report_html
-            );
+            var $electronic_report_html = this.$el.find("iframe#electronic_report_html");
+            var updateIframeSize = this._updateIframeSize.bind(this, $electronic_report_html);
 
             $(window).on("resize", updateIframeSize);
 
             var iframeDoc =
-                $electronic_report_html[0].contentDocument ||
-                $electronic_report_html[0].contentWindow.document;
+                $electronic_report_html[0].contentDocument || $electronic_report_html[0].contentWindow.document;
             if (iframeDoc.readyState === "complete") {
                 updateIframeSize();
             } else {

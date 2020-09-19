@@ -1,7 +1,3 @@
-from datetime import date
-
-from dateutil.relativedelta import relativedelta
-
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests import tagged
 
@@ -26,49 +22,25 @@ class EcuadorianNiifTest(AccountTestInvoicingCommon):
     def setUp(self):
         super(EcuadorianNiifTest, self).setUp()
         self.test_obj1 = self.env["l10n_ec.agency"]
-        self.test_agency1 = self.test_obj1.create(
-            {"name": "Agency001", "number": 999, "active": True,}
-        )
-        self.test_agency2 = self.test_obj1.create(
-            {"name": "Agency002", "number": 998, "active": False,}
-        )
+        self.test_agency1 = self.test_obj1.create({"name": "Agency001", "number": 999, "active": True,})
+        self.test_agency2 = self.test_obj1.create({"name": "Agency002", "number": 998, "active": False,})
 
         self.test_obj2 = self.env["l10n_ec.point.of.emission"]
         self.test_pofe1 = self.test_obj2.create(
-            {
-                "name": "PofE001",
-                "number": "001",
-                "agency_id": self.test_agency1.id,
-                "type_emission": "pre_printed",
-            }
+            {"name": "PofE001", "number": "001", "agency_id": self.test_agency1.id, "type_emission": "pre_printed",}
         )
 
         self.test_pofe2 = self.test_obj2.create(
-            {
-                "name": "PofE002",
-                "number": "001",
-                "agency_id": self.test_agency2.id,
-                "type_emission": "pre_printed",
-            }
+            {"name": "PofE002", "number": "001", "agency_id": self.test_agency2.id, "type_emission": "pre_printed",}
         )
 
         self.test_obj3 = self.env["l10n_ec.sri.authorization"]
         self.test_auth1 = self.test_obj3.create(
-            {
-                "number": "AUTH001",
-                "start_date": "2020-8-1",
-                "expiration_date": "2020-8-20",
-                "active": True,
-            }
+            {"number": "AUTH001", "start_date": "2020-8-1", "expiration_date": "2020-8-20", "active": True,}
         )
 
         self.test_auth2 = self.test_obj3.create(
-            {
-                "number": "AUTH002",
-                "start_date": "2020-9-1",
-                "expiration_date": "2020-9-20",
-                "active": True,
-            }
+            {"number": "AUTH002", "start_date": "2020-9-1", "expiration_date": "2020-9-20", "active": True,}
         )
 
         self.test_obj4 = self.env["l10n_ec.sri.authorization.line"]
@@ -91,9 +63,7 @@ class EcuadorianNiifTest(AccountTestInvoicingCommon):
             }
         )
 
-        self.test_obj5 = self.env["account.move"].with_context(
-            internal_type="invoice", default_type="out_invoice",
-        )
+        self.test_obj5 = self.env["account.move"].with_context(internal_type="invoice", default_type="out_invoice",)
         self.test_invoice1 = self.test_obj5.create(
             {
                 "type": "out_invoice",
@@ -134,9 +104,7 @@ class EcuadorianNiifTest(AccountTestInvoicingCommon):
     def test_delete_authorization_with_invoice_see_error(self):
         """User should never be able to delete a authorization with invoice"""
         with self.assertRaises(UserError):
-            self.env["l10n_ec.sri.authorization"].search(
-                [("id", "=", self.test_auth1.id)]
-            ).unlink()
+            self.env["l10n_ec.sri.authorization"].search([("id", "=", self.test_auth1.id)]).unlink()
 
     def test_duplicate_or_cross_date_ranges(self):
         with self.assertRaises(UserError):
@@ -153,9 +121,5 @@ class EcuadorianNiifTest(AccountTestInvoicingCommon):
     def test_check_duplicate_sequence(self):
         with self.assertRaises(ValidationError):
             self.test_doc2.write(
-                {
-                    "first_sequence": "1",
-                    "last_sequence": "100",
-                    "point_of_emission_id": self.test_pofe1.id,
-                }
+                {"first_sequence": "1", "last_sequence": "100", "point_of_emission_id": self.test_pofe1.id,}
             )

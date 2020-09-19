@@ -2,21 +2,14 @@
 <odoo>
     <template id="report_invoice" inherit_id="account.report_invoice">
         <t t-call="web.html_container" position="before">
-            <t
-                t-if="docs.mapped('l10n_ec_xml_data_id') and len(docs) == len(docs.mapped('l10n_ec_xml_data_id'))"
-            >
+            <t t-if="docs.mapped('l10n_ec_xml_data_id') and len(docs) == len(docs.mapped('l10n_ec_xml_data_id'))">
                 <t t-set="data_report_margin_top">5</t>
             </t>
         </t>
     </template>
-    <template
-        id="report_invoice_with_payments"
-        inherit_id="account.report_invoice_with_payments"
-    >
+    <template id="report_invoice_with_payments" inherit_id="account.report_invoice_with_payments">
         <t t-call="web.html_container" position="before">
-            <t
-                t-if="docs.mapped('l10n_ec_xml_data_id') and len(docs) == len(docs.mapped('l10n_ec_xml_data_id'))"
-            >
+            <t t-if="docs.mapped('l10n_ec_xml_data_id') and len(docs) == len(docs.mapped('l10n_ec_xml_data_id'))">
                 <t t-set="data_report_margin_top">5</t>
             </t>
         </t>
@@ -66,10 +59,7 @@
         <t t-set="emision_date" t-value="o.invoice_date" />
         <t t-set="printer_point" t-value="o.l10n_ec_point_of_emission_id" />
         <t t-set="partner" t-value="o.commercial_partner_id" />
-        <t
-            t-set="document_string"
-            t-value="o.l10n_latam_document_type_id.report_name or 'FACTURA'"
-        />
+        <t t-set="document_string" t-value="o.l10n_latam_document_type_id.report_name or 'FACTURA'" />
         <t t-set="comment" t-value="o.narration" />
         <t t-set="payments_info" t-value="o.l10n_ec_get_payment_data()" />
         <t t-set="tarifa_iva" t-value="o.l10n_ec_get_tarifa_iva()" />
@@ -80,31 +70,23 @@
             t-att-data-oe-lang="o and o.env.context.get('lang')"
         >
             <t t-call="l10n_ec_niif.electronic_report_common_head" />
-            <t
-                t-if="o.type == 'out_invoice' and o.l10n_latam_internal_type == 'invoice'"
-            >
+            <t t-if="o.type == 'out_invoice' and o.l10n_latam_internal_type == 'invoice'">
                 <t t-call="l10n_ec_niif.e_invoice_document_body" />
             </t>
-            <t
-                t-if="o.type == 'out_invoice' and o.l10n_latam_internal_type == 'debit_note'"
-            >
+            <t t-if="o.type == 'out_invoice' and o.l10n_latam_internal_type == 'debit_note'">
                 <t t-call="l10n_ec_niif.e_debit_note_document_body" />
             </t>
             <t t-if="o.type == 'out_refund'">
                 <t t-call="l10n_ec_niif.e_credit_note_document_body" />
             </t>
-            <t
-                t-if="o.type == 'in_invoice' and o.l10n_latam_internal_type == 'liquidation'"
-            >
+            <t t-if="o.type == 'in_invoice' and o.l10n_latam_internal_type == 'liquidation'">
                 <t t-call="l10n_ec_niif.e_liquidation_document_body" />
             </t>
             <table class="table table-sm table-no-border">
                 <tbody>
                     <tr>
                         <td style="width: 50%">
-                            <t
-                                t-call="l10n_ec_niif.electronic_report_common_info_aditional"
-                            />
+                            <t t-call="l10n_ec_niif.electronic_report_common_info_aditional" />
                             <br />
                             <t
                                 t-if="o.type in ('out_invoice', 'in_invoice')"
@@ -112,9 +94,7 @@
                             />
                         </td>
                         <td style="width: 40%">
-                            <t
-                                t-call="l10n_ec_niif.electronic_report_common_total_info"
-                            />
+                            <t t-call="l10n_ec_niif.electronic_report_common_total_info" />
                         </td>
                     </tr>
                 </tbody>
@@ -153,43 +133,23 @@
         <table class="table table-sm table-bordered-black">
             <thead>
                 <tr style="font-size: 10px;">
-                    <th
-                        class="amount-md"
-                        t-if="company.l10n_ec_print_ride_main_code"
-                    >Código Principal</th>
-                    <th
-                        class="amount-sm"
-                        t-if="company.l10n_ec_print_ride_aux_code"
-                    >Código Auxiliar</th>
+                    <th class="amount-md" t-if="company.l10n_ec_print_ride_main_code">Código Principal</th>
+                    <th class="amount-sm" t-if="company.l10n_ec_print_ride_aux_code">Código Auxiliar</th>
                     <th class="amount-sm">Cantidad</th>
                     <th class="">Descripción</th>
-                    <th
-                        class="amount-sm"
-                        t-if="company.l10n_ec_print_ride_detail1"
-                    >Detalle adicional</th>
-                    <th
-                        class="amount-sm"
-                        t-if="company.l10n_ec_print_ride_detail2"
-                    >Detalle adicional</th>
-                    <th
-                        class="amount-sm"
-                        t-if="company.l10n_ec_print_ride_detail3"
-                    >Detalle adicional</th>
+                    <th class="amount-sm" t-if="company.l10n_ec_print_ride_detail1">Detalle adicional</th>
+                    <th class="amount-sm" t-if="company.l10n_ec_print_ride_detail2">Detalle adicional</th>
+                    <th class="amount-sm" t-if="company.l10n_ec_print_ride_detail3">Detalle adicional</th>
                     <th class="amount-sm">Precio Unitario</th>
                     <th class="amount-sm">Descuento</th>
                     <th class="amount-md">Precio Total</th>
                 </tr>
             </thead>
             <tbody>
-                <t
-                    t-foreach="o.invoice_line_ids.filtered(lambda x: not x.display_type)"
-                    t-as="line"
-                >
+                <t t-foreach="o.invoice_line_ids.filtered(lambda x: not x.display_type)" t-as="line">
                     <tr style="font-size: 9px;">
                         <td t-if="company.l10n_ec_print_ride_main_code">
-                            <span
-                                t-esc="line.product_id and line.product_id.default_code or 'S/N'"
-                            />
+                            <span t-esc="line.product_id and line.product_id.default_code or 'S/N'" />
                         </td>
                         <td t-if="company.l10n_ec_print_ride_aux_code" />
                         <td class="text-right">
@@ -248,9 +208,7 @@
                         </td>
                         <td>
                             FACTURA
-                            <span
-                                t-field="o.l10n_ec_original_invoice_id.l10n_latam_document_number"
-                            />
+                            <span t-field="o.l10n_ec_original_invoice_id.l10n_latam_document_number" />
                         </td>
                     </tr>
                     <tr>
@@ -258,9 +216,7 @@
                             <strong>Fecha Emisión(Comprobante a modificar): </strong>
                         </td>
                         <td>
-                            <span
-                                t-field="o.l10n_ec_original_invoice_id.invoice_date"
-                            />
+                            <span t-field="o.l10n_ec_original_invoice_id.invoice_date" />
                         </td>
                     </tr>
                     <tr>
@@ -278,43 +234,23 @@
         <table class="table table-sm table-bordered-black">
             <thead>
                 <tr style="font-size: 10px;">
-                    <th
-                        class="amount-md"
-                        t-if="company.l10n_ec_print_ride_main_code"
-                    >Código Principal</th>
-                    <th
-                        class="amount-sm"
-                        t-if="company.l10n_ec_print_ride_aux_code"
-                    >Código Auxiliar</th>
+                    <th class="amount-md" t-if="company.l10n_ec_print_ride_main_code">Código Principal</th>
+                    <th class="amount-sm" t-if="company.l10n_ec_print_ride_aux_code">Código Auxiliar</th>
                     <th class="amount-sm">Cantidad</th>
                     <th class="">Descripción</th>
-                    <th
-                        class="amount-sm"
-                        t-if="company.l10n_ec_print_ride_detail1"
-                    >Detalle adicional</th>
-                    <th
-                        class="amount-sm"
-                        t-if="company.l10n_ec_print_ride_detail2"
-                    >Detalle adicional</th>
-                    <th
-                        class="amount-sm"
-                        t-if="company.l10n_ec_print_ride_detail3"
-                    >Detalle adicional</th>
+                    <th class="amount-sm" t-if="company.l10n_ec_print_ride_detail1">Detalle adicional</th>
+                    <th class="amount-sm" t-if="company.l10n_ec_print_ride_detail2">Detalle adicional</th>
+                    <th class="amount-sm" t-if="company.l10n_ec_print_ride_detail3">Detalle adicional</th>
                     <th class="amount-sm">Precio Unitario</th>
                     <th class="amount-sm">Descuento</th>
                     <th class="amount-md">Precio Total</th>
                 </tr>
             </thead>
             <tbody>
-                <t
-                    t-foreach="o.invoice_line_ids.filtered(lambda x: not x.display_type)"
-                    t-as="line"
-                >
+                <t t-foreach="o.invoice_line_ids.filtered(lambda x: not x.display_type)" t-as="line">
                     <tr style="font-size: 9px;">
                         <td t-if="company.l10n_ec_print_ride_main_code">
-                            <span
-                                t-esc="line.product_id and line.product_id.default_code or 'S/N'"
-                            />
+                            <span t-esc="line.product_id and line.product_id.default_code or 'S/N'" />
                         </td>
                         <td t-if="company.l10n_ec_print_ride_aux_code" />
                         <td class="text-right">
@@ -373,9 +309,7 @@
                         </td>
                         <td>
                             FACTURA
-                            <span
-                                t-field="o.l10n_ec_original_invoice_id.l10n_latam_document_number"
-                            />
+                            <span t-field="o.l10n_ec_original_invoice_id.l10n_latam_document_number" />
                         </td>
                     </tr>
                     <tr>
@@ -383,9 +317,7 @@
                             <strong>Fecha Emisión(Comprobante a modificar): </strong>
                         </td>
                         <td>
-                            <span
-                                t-field="o.l10n_ec_original_invoice_id.invoice_date"
-                            />
+                            <span t-field="o.l10n_ec_original_invoice_id.invoice_date" />
                         </td>
                     </tr>
                 </tbody>
@@ -400,10 +332,7 @@
                 </tr>
             </thead>
             <tbody>
-                <t
-                    t-foreach="o.invoice_line_ids.filtered(lambda x: not x.display_type)"
-                    t-as="line"
-                >
+                <t t-foreach="o.invoice_line_ids.filtered(lambda x: not x.display_type)" t-as="line">
                     <tr style="font-size: 9px;">
                         <td>
                             <span t-field="line.name" />
@@ -448,43 +377,23 @@
         <table class="table table-sm table-bordered-black">
             <thead>
                 <tr style="font-size: 10px;">
-                    <th
-                        class="amount-md"
-                        t-if="company.l10n_ec_print_ride_main_code"
-                    >Código Principal</th>
-                    <th
-                        class="amount-sm"
-                        t-if="company.l10n_ec_print_ride_aux_code"
-                    >Código Auxiliar</th>
+                    <th class="amount-md" t-if="company.l10n_ec_print_ride_main_code">Código Principal</th>
+                    <th class="amount-sm" t-if="company.l10n_ec_print_ride_aux_code">Código Auxiliar</th>
                     <th class="amount-sm">Cantidad</th>
                     <th class="">Descripción</th>
-                    <th
-                        class="amount-sm"
-                        t-if="company.l10n_ec_print_ride_detail1"
-                    >Detalle adicional</th>
-                    <th
-                        class="amount-sm"
-                        t-if="company.l10n_ec_print_ride_detail2"
-                    >Detalle adicional</th>
-                    <th
-                        class="amount-sm"
-                        t-if="company.l10n_ec_print_ride_detail3"
-                    >Detalle adicional</th>
+                    <th class="amount-sm" t-if="company.l10n_ec_print_ride_detail1">Detalle adicional</th>
+                    <th class="amount-sm" t-if="company.l10n_ec_print_ride_detail2">Detalle adicional</th>
+                    <th class="amount-sm" t-if="company.l10n_ec_print_ride_detail3">Detalle adicional</th>
                     <th class="amount-sm">Precio Unitario</th>
                     <th class="amount-sm">Descuento</th>
                     <th class="amount-md">Precio Total</th>
                 </tr>
             </thead>
             <tbody>
-                <t
-                    t-foreach="o.invoice_line_ids.filtered(lambda x: not x.display_type)"
-                    t-as="line"
-                >
+                <t t-foreach="o.invoice_line_ids.filtered(lambda x: not x.display_type)" t-as="line">
                     <tr style="font-size: 9px;">
                         <td t-if="company.l10n_ec_print_ride_main_code">
-                            <span
-                                t-esc="line.product_id and line.product_id.default_code or 'S/N'"
-                            />
+                            <span t-esc="line.product_id and line.product_id.default_code or 'S/N'" />
                         </td>
                         <td t-if="company.l10n_ec_print_ride_aux_code" />
                         <td class="text-right">

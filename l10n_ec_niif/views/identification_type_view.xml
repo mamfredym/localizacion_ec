@@ -28,42 +28,17 @@
                         <group>
                             <field name="code" />
                             <field name="name" />
-                            <field
-                                name="sale_invoice_document_type_id"
-                                options="{'no_create': True}"
-                            />
-                            <field
-                                name="sale_credit_note_document_type_id"
-                                options="{'no_create': True}"
-                            />
-                            <field
-                                name="sale_debit_note_document_type_id"
-                                options="{'no_create': True}"
-                            />
-                            <field
-                                name="purchase_invoice_document_type_id"
-                                options="{'no_create': True}"
-                            />
-                            <field
-                                name="purchase_credit_note_document_type_id"
-                                options="{'no_create': True}"
-                            />
-                            <field
-                                name="purchase_debit_note_document_type_id"
-                                options="{'no_create': True}"
-                            />
-                            <field
-                                name="purchase_liquidation_document_type_id"
-                                options="{'no_create': True}"
-                            />
+                            <field name="sale_invoice_document_type_id" options="{'no_create': True}" />
+                            <field name="sale_credit_note_document_type_id" options="{'no_create': True}" />
+                            <field name="sale_debit_note_document_type_id" options="{'no_create': True}" />
+                            <field name="purchase_invoice_document_type_id" options="{'no_create': True}" />
+                            <field name="purchase_credit_note_document_type_id" options="{'no_create': True}" />
+                            <field name="purchase_debit_note_document_type_id" options="{'no_create': True}" />
+                            <field name="purchase_liquidation_document_type_id" options="{'no_create': True}" />
                         </group>
                         <notebook>
                             <page name="document_types" string="Document Types">
-                                <field
-                                    name="document_type_ids"
-                                    colspan="4"
-                                    nolabel="1"
-                                />
+                                <field name="document_type_ids" colspan="4" nolabel="1" />
                             </page>
                         </notebook>
                     </sheet>
@@ -80,10 +55,7 @@
                 </search>
             </field>
         </record>
-        <record
-            id="action_l10n_ec_identification_type_tree_view"
-            model="ir.actions.act_window"
-        >
+        <record id="action_l10n_ec_identification_type_tree_view" model="ir.actions.act_window">
             <field name="name">Ecuadorian Move Identification Type</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">l10n_ec.identification.type</field>

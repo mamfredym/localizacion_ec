@@ -4,38 +4,28 @@
         <record id="l10n_ec_agency_comp_rule" model="ir.rule">
             <field name="name">Ecuadorian Agency Multi Company</field>
             <field name="model_id" ref="model_l10n_ec_agency" />
-            <field
-                name="domain_force"
-            >['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+            <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
         </record>
         <record id="l10n_ec_point_emission_comp_rule" model="ir.rule">
             <field name="name">Ecuadorian Point Emission Multi Company</field>
             <field name="model_id" ref="model_l10n_ec_point_of_emission" />
-            <field
-                name="domain_force"
-            >['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+            <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
         </record>
         <record id="l10n_ec_sri_authorization_comp_rule" model="ir.rule">
             <field name="name">SRI Authorization Multi Company</field>
             <field name="model_id" ref="model_l10n_ec_sri_authorization" />
-            <field
-                name="domain_force"
-            >['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+            <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
         </record>
         <record id="l10n_ec_withhold_comp_rule" model="ir.rule">
             <field name="name">Withholds Multi Company</field>
             <field name="model_id" ref="model_l10n_ec_withhold" />
-            <field
-                name="domain_force"
-            >['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+            <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
         </record>
         <!-- Portal for withhold -->
         <record id="l10n_ec_withhold_rule_portal" model="ir.rule">
             <field name="name">Portal Personal Withhold</field>
             <field name="model_id" ref="model_l10n_ec_withhold" />
-            <field
-                name="domain_force"
-            >[('message_partner_ids','child_of',[user.commercial_partner_id.id])]</field>
+            <field name="domain_force">[('message_partner_ids','child_of',[user.commercial_partner_id.id])]</field>
             <field name="groups" eval="[(4, ref('base.group_portal'))]" />
         </record>
         <record id="l10n_ec_withhold_line_rule_portal" model="ir.rule">
@@ -49,9 +39,7 @@
         <record id="l10n_ec_key_type_comp_rule" model="ir.rule">
             <field name="name">Ecuadorian Electronic signature Multi Company</field>
             <field name="model_id" ref="model_sri_key_type" />
-            <field
-                name="domain_force"
-            >['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+            <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
         </record>
     </data>
 </odoo>

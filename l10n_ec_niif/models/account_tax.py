@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class AccountTaxGroup(models.Model):
@@ -10,9 +10,7 @@ class AccountTaxGroup(models.Model):
 class AccountTax(models.Model):
     _inherit = "account.tax"
 
-    l10n_ec_ats_code = fields.Char(
-        "A.T.S. Code", size=10, help="Tax Code used into A.T.S. report",
-    )
+    l10n_ec_ats_code = fields.Char("A.T.S. Code", size=10, help="Tax Code used into A.T.S. report",)
     l10n_ec_xml_fe_code = fields.Char(
         "Tax Code for Electronic Documents",
         size=10,
@@ -24,9 +22,7 @@ class AccountTax(models.Model):
 class AccountTaxTemplate(models.Model):
     _inherit = "account.tax.template"
 
-    l10n_ec_ats_code = fields.Char(
-        "A.T.S. Code", size=10, help="Tax Code used into A.T.S. report",
-    )
+    l10n_ec_ats_code = fields.Char("A.T.S. Code", size=10, help="Tax Code used into A.T.S. report",)
     l10n_ec_xml_fe_code = fields.Char(
         "Tax Code for Electronic Documents",
         size=10,
@@ -38,14 +34,9 @@ class AccountTaxTemplate(models.Model):
         """ This method generates a dictionnary of all the values for the tax that will be created.
         """
         self.ensure_one()
-        val = super(AccountTaxTemplate, self)._get_tax_vals(
-            company, tax_template_to_tax
-        )
+        val = super(AccountTaxTemplate, self)._get_tax_vals(company, tax_template_to_tax)
         val.update(
-            {
-                "l10n_ec_ats_code": self.l10n_ec_ats_code,
-                "l10n_ec_xml_fe_code": self.l10n_ec_xml_fe_code,
-            }
+            {"l10n_ec_ats_code": self.l10n_ec_ats_code, "l10n_ec_xml_fe_code": self.l10n_ec_xml_fe_code,}
         )
         return val
 

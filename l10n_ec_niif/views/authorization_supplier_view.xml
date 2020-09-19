@@ -45,10 +45,7 @@
                 </form>
             </field>
         </record>
-        <record
-            model="ir.ui.view"
-            id="l10n_ec_sri_authorization_supplier_documents_form_view"
-        >
+        <record model="ir.ui.view" id="l10n_ec_sri_authorization_supplier_documents_form_view">
             <field name="name">l10n_ec.sri.authorization.supplier.form</field>
             <field name="model">l10n_ec.sri.authorization.supplier</field>
             <field name="priority">17</field>

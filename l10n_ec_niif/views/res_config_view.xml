@@ -30,10 +30,7 @@
                                             for="l10n_ec_consumidor_final_limit"
                                             class="col-lg-3 o_light_label"
                                         />
-                                        <field
-                                            name="l10n_ec_consumidor_final_limit"
-                                            class="text-center oe_inline"
-                                        />
+                                        <field name="l10n_ec_consumidor_final_limit" class="text-center oe_inline" />
                                     </div>
                                 </div>
                             </div>
@@ -54,9 +51,7 @@
                                             for="l10n_ec_withhold_sale_iva_account_id"
                                             class="col-lg-3 o_light_label"
                                         />
-                                        <field
-                                            name="l10n_ec_withhold_sale_iva_account_id"
-                                        />
+                                        <field name="l10n_ec_withhold_sale_iva_account_id" />
                                     </div>
                                     <div class="row mt16">
                                         <label
@@ -64,9 +59,7 @@
                                             for="l10n_ec_withhold_sale_iva_tag_id"
                                             class="col-lg-3 o_light_label"
                                         />
-                                        <field
-                                            name="l10n_ec_withhold_sale_iva_tag_id"
-                                        />
+                                        <field name="l10n_ec_withhold_sale_iva_tag_id" />
                                     </div>
                                     <div class="row mt16">
                                         <label
@@ -74,9 +67,7 @@
                                             for="l10n_ec_withhold_sale_rent_account_id"
                                             class="col-lg-3 o_light_label"
                                         />
-                                        <field
-                                            name="l10n_ec_withhold_sale_rent_account_id"
-                                        />
+                                        <field name="l10n_ec_withhold_sale_rent_account_id" />
                                     </div>
                                     <div class="row mt16">
                                         <label
@@ -96,44 +87,23 @@
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <div class="row mt16">
-                                        <label
-                                            string="Login Url"
-                                            for="l10n_ec_sri_login_url"
-                                            class="col-md-5"
-                                        />
-                                        <field
-                                            name="l10n_ec_sri_login_url"
-                                            class="o_light_label"
-                                        />
+                                        <label string="Login Url" for="l10n_ec_sri_login_url" class="col-md-5" />
+                                        <field name="l10n_ec_sri_login_url" class="o_light_label" />
                                     </div>
                                     <div class="row mt16">
-                                        <label
-                                            string="Portal Password"
-                                            for="l10n_ec_sri_password"
-                                            class="col-lg-5"
-                                        />
-                                        <field
-                                            name="l10n_ec_sri_password"
-                                            password="1"
-                                            class="o_light_label"
-                                        />
+                                        <label string="Portal Password" for="l10n_ec_sri_password" class="col-lg-5" />
+                                        <field name="l10n_ec_sri_password" password="1" class="o_light_label" />
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <h2 name="l10n_ec_electronic_logo">Logo for RIDE</h2>
                         <div class="row mt16 o_settings_container">
-                            <div
-                                id="l10n_ec_electronic_logo"
-                                class="col-12 col-md-6 o_setting_box"
-                            >
+                            <div id="l10n_ec_electronic_logo" class="col-12 col-md-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <field
-                                        name="l10n_ec_electronic_logo"
-                                        widget="image"
-                                    />
+                                    <field name="l10n_ec_electronic_logo" widget="image" />
                                     <div
                                         class="text-muted"
                                         attrs="{'invisible' : [('l10n_ec_electronic_logo','!=',False)]}"
@@ -149,16 +119,8 @@
                                 <div class="o_setting_left_pane">
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label
-                                        for="l10n_ec_type_environment"
-                                        string="Environment Type"
-                                        class="col-md-5"
-                                    />
-                                    <field
-                                        name="l10n_ec_type_environment"
-                                        widget="radio"
-                                        class="o_light_label"
-                                    />
+                                    <label for="l10n_ec_type_environment" string="Environment Type" class="col-md-5" />
+                                    <field name="l10n_ec_type_environment" widget="radio" class="o_light_label" />
                                     <div class="text-muted">
                                         <ul>
                                             <li>
@@ -178,17 +140,11 @@
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <div class="row">
-                                        <label
-                                            for="l10n_ec_max_intentos"
-                                            class="col-5"
-                                        />
+                                        <label for="l10n_ec_max_intentos" class="col-5" />
                                         <field name="l10n_ec_max_intentos" />
                                     </div>
                                     <div class="row">
-                                        <label
-                                            for="l10n_ec_cron_process"
-                                            class="col-5"
-                                        />
+                                        <label for="l10n_ec_cron_process" class="col-5" />
                                         <field name="l10n_ec_cron_process" />
                                     </div>
                                     <div class="row">
@@ -206,11 +162,7 @@
                                         string="Connection type with SRI"
                                         class="col-3"
                                     />
-                                    <field
-                                        name="l10n_ec_type_conection_sri"
-                                        widget="radio"
-                                        class="o_light_label"
-                                    />
+                                    <field name="l10n_ec_type_conection_sri" widget="radio" class="o_light_label" />
                                     <div class="text-muted">
                                         <ul>
                                             <li>
@@ -223,9 +175,7 @@
                                             </li>
                                         </ul>
                                     </div>
-                                    <span
-                                        class="o_form_label col-12"
-                                    >Web Services URL</span>
+                                    <span class="o_form_label col-12">Web Services URL</span>
                                     <div
                                         class="col-12 col-md-12"
                                         attrs="{'invisible' : [('l10n_ec_type_environment','!=','production')]}"
@@ -236,9 +186,7 @@
                                                 string="Reception of Documents"
                                                 class="col-5 o_light_label"
                                             />
-                                            <field
-                                                name="l10n_ec_ws_receipt_production"
-                                            />
+                                            <field name="l10n_ec_ws_receipt_production" />
                                         </div>
                                         <div class="row">
                                             <label
@@ -280,10 +228,7 @@
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <div class="row">
-                                        <label
-                                            for="l10n_ec_key_type_id"
-                                            class="col-5"
-                                        />
+                                        <label for="l10n_ec_key_type_id" class="col-5" />
                                         <field
                                             name="l10n_ec_key_type_id"
                                             domain="[('state', '=', 'valid')]"
@@ -296,29 +241,17 @@
                         </div>
                         <h2 name="documents">Default Values</h2>
                         <div class="row mt16 o_settings_container">
-                            <div
-                                id="sri_default_values"
-                                class="col-12 col-md-6 o_setting_box"
-                            >
+                            <div id="sri_default_values" class="col-12 col-md-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <div class="row">
-                                        <label
-                                            for="l10n_ec_sri_payment_id"
-                                            class="col-5"
-                                        />
+                                        <label for="l10n_ec_sri_payment_id" class="col-5" />
                                         <field name="l10n_ec_sri_payment_id" />
                                     </div>
                                     <div class="row">
-                                        <label
-                                            for="l10n_ec_type_supplier_authorization"
-                                            class="col-5"
-                                        />
-                                        <field
-                                            name="l10n_ec_type_supplier_authorization"
-                                            widget="radio"
-                                        />
+                                        <label for="l10n_ec_type_supplier_authorization" class="col-5" />
+                                        <field name="l10n_ec_type_supplier_authorization" widget="radio" />
                                         <div class="text-muted">
                                             <ul>
                                                 <li>
@@ -337,18 +270,12 @@
                         </div>
                         <h2 name="documents">Authorized documents</h2>
                         <div class="row mt16 o_settings_container">
-                            <div
-                                id="document_invoice"
-                                class="col-12 col-md-6 o_setting_box"
-                            >
+                            <div id="document_invoice" class="col-12 col-md-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="l10n_ec_electronic_invoice" />
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label
-                                        for="l10n_ec_electronic_invoice"
-                                        string="Invoice"
-                                    />
+                                    <label for="l10n_ec_electronic_invoice" string="Invoice" />
                                     <label
                                         for="l10n_ec_invoice_version_xml_id"
                                         string="Version"
@@ -363,18 +290,12 @@
                                     />
                                 </div>
                             </div>
-                            <div
-                                id="document_withhold"
-                                class="col-12 col-md-6 o_setting_box"
-                            >
+                            <div id="document_withhold" class="col-12 col-md-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="l10n_ec_electronic_withhold" />
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label
-                                        for="l10n_ec_electronic_withhold"
-                                        string="Withholding"
-                                    />
+                                    <label for="l10n_ec_electronic_withhold" string="Withholding" />
                                     <label
                                         for="l10n_ec_withholding_version_xml_id"
                                         string="Version"
@@ -389,18 +310,12 @@
                                     />
                                 </div>
                             </div>
-                            <div
-                                id="document_credit_note"
-                                class="col-12 col-md-6 o_setting_box"
-                            >
+                            <div id="document_credit_note" class="col-12 col-md-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="l10n_ec_electronic_credit_note" />
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label
-                                        for="l10n_ec_electronic_credit_note"
-                                        string="Credit Note"
-                                    />
+                                    <label for="l10n_ec_electronic_credit_note" string="Credit Note" />
                                     <label
                                         for="l10n_ec_credit_note_version_xml_id"
                                         string="Version"
@@ -415,18 +330,12 @@
                                     />
                                 </div>
                             </div>
-                            <div
-                                id="document_debit_note"
-                                class="col-12 col-md-6 o_setting_box"
-                            >
+                            <div id="document_debit_note" class="col-12 col-md-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="l10n_ec_electronic_debit_note" />
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label
-                                        for="l10n_ec_electronic_debit_note"
-                                        string="Debit Note"
-                                    />
+                                    <label for="l10n_ec_electronic_debit_note" string="Debit Note" />
                                     <label
                                         for="l10n_ec_debit_note_version_xml_id"
                                         string="Version"
@@ -441,18 +350,12 @@
                                     />
                                 </div>
                             </div>
-                            <div
-                                id="document_liquidation"
-                                class="col-12 col-md-6 o_setting_box"
-                            >
+                            <div id="document_liquidation" class="col-12 col-md-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="l10n_ec_electronic_liquidation" />
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label
-                                        for="l10n_ec_electronic_liquidation"
-                                        string="Purchase Liquidation"
-                                    />
+                                    <label for="l10n_ec_electronic_liquidation" string="Purchase Liquidation" />
                                     <label
                                         for="l10n_ec_liquidation_version_xml_id"
                                         string="Version"
@@ -470,29 +373,17 @@
                         </div>
                         <h2 name="email">Notifications by email</h2>
                         <div class="row mt16 o_settings_container">
-                            <div
-                                id="l10n_ec_send_mail_from"
-                                class="col-12 col-md-6 o_setting_box"
-                            >
+                            <div id="l10n_ec_send_mail_from" class="col-12 col-md-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <div class="row">
-                                        <label
-                                            for="l10n_ec_send_mail_from"
-                                            class="col-5"
-                                        />
-                                        <field
-                                            name="l10n_ec_send_mail_from"
-                                            class="o_light_label"
-                                        />
+                                        <label for="l10n_ec_send_mail_from" class="col-5" />
+                                        <field name="l10n_ec_send_mail_from" class="o_light_label" />
                                     </div>
                                 </div>
                             </div>
-                            <div
-                                id="email_open_company"
-                                class="col-12 col-md-6 o_setting_box"
-                            >
+                            <div id="email_open_company" class="col-12 col-md-6 o_setting_box">
                                 <div class="o_setting_left_pane">
 
                                 </div>
@@ -508,83 +399,50 @@
                                     </div>
                                 </div>
                             </div>
-                            <div
-                                id="email_invoice"
-                                class="col-12 col-md-6 o_setting_box"
-                            >
+                            <div id="email_invoice" class="col-12 col-md-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="l10n_ec_send_mail_invoice" />
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label
-                                        for="l10n_ec_send_mail_invoice"
-                                        string="Invoice"
-                                    />
+                                    <label for="l10n_ec_send_mail_invoice" string="Invoice" />
                                 </div>
                             </div>
-                            <div
-                                id="email_withhold"
-                                class="col-12 col-md-6 o_setting_box"
-                            >
+                            <div id="email_withhold" class="col-12 col-md-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="l10n_ec_send_mail_retention" />
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label
-                                        for="l10n_ec_send_mail_retention"
-                                        string="Withholding"
-                                    />
+                                    <label for="l10n_ec_send_mail_retention" string="Withholding" />
                                 </div>
                             </div>
-                            <div
-                                id="email_credit_note"
-                                class="col-12 col-md-6 o_setting_box"
-                            >
+                            <div id="email_credit_note" class="col-12 col-md-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="l10n_ec_send_mail_credit_note" />
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label
-                                        for="l10n_ec_send_mail_credit_note"
-                                        string="Credit Note"
-                                    />
+                                    <label for="l10n_ec_send_mail_credit_note" string="Credit Note" />
                                 </div>
                             </div>
-                            <div
-                                id="email_debit_note"
-                                class="col-12 col-md-6 o_setting_box"
-                            >
+                            <div id="email_debit_note" class="col-12 col-md-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="l10n_ec_send_mail_debit_note" />
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label
-                                        for="l10n_ec_send_mail_debit_note"
-                                        string="Debit Note"
-                                    />
+                                    <label for="l10n_ec_send_mail_debit_note" string="Debit Note" />
                                 </div>
                             </div>
-                            <div
-                                id="email_liquidation"
-                                class="col-12 col-md-6 o_setting_box"
-                            >
+                            <div id="email_liquidation" class="col-12 col-md-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="l10n_ec_send_mail_liquidation" />
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label
-                                        for="l10n_ec_send_mail_liquidation"
-                                        string="Purchase Liquidation"
-                                    />
+                                    <label for="l10n_ec_send_mail_liquidation" string="Purchase Liquidation" />
                                 </div>
                             </div>
                         </div>
                         <h2 name="email">Customers Portal</h2>
                         <div class="row mt16 o_settings_container">
-                            <div
-                                id="l10n_ec_create_login_for_partners"
-                                class="col-12 col-md-6 o_setting_box"
-                            >
+                            <div id="l10n_ec_create_login_for_partners" class="col-12 col-md-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="l10n_ec_create_login_for_partners" />
                                 </div>
@@ -601,10 +459,7 @@
                         </div>
                         <h2 name="email">Options for print RIDE</h2>
                         <div class="row mt16 o_settings_container">
-                            <div
-                                id="option_l10n_ec_print_ride_main_code"
-                                class="col-12 col-md-6 o_setting_box"
-                            >
+                            <div id="option_l10n_ec_print_ride_main_code" class="col-12 col-md-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="l10n_ec_print_ride_main_code" />
                                 </div>
@@ -612,10 +467,7 @@
                                     <label for="l10n_ec_print_ride_main_code" />
                                 </div>
                             </div>
-                            <div
-                                id="option_l10n_ec_print_ride_aux_code"
-                                class="col-12 col-md-6 o_setting_box"
-                            >
+                            <div id="option_l10n_ec_print_ride_aux_code" class="col-12 col-md-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="l10n_ec_print_ride_aux_code" />
                                 </div>
@@ -623,10 +475,7 @@
                                     <label for="l10n_ec_print_ride_aux_code" />
                                 </div>
                             </div>
-                            <div
-                                id="option_l10n_ec_print_ride_detail1"
-                                class="col-12 col-md-6 o_setting_box"
-                            >
+                            <div id="option_l10n_ec_print_ride_detail1" class="col-12 col-md-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="l10n_ec_print_ride_detail1" />
                                 </div>
@@ -634,10 +483,7 @@
                                     <label for="l10n_ec_print_ride_detail1" />
                                 </div>
                             </div>
-                            <div
-                                id="option_l10n_ec_print_ride_detail2"
-                                class="col-12 col-md-6 o_setting_box"
-                            >
+                            <div id="option_l10n_ec_print_ride_detail2" class="col-12 col-md-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="l10n_ec_print_ride_detail2" />
                                 </div>
@@ -645,10 +491,7 @@
                                     <label for="l10n_ec_print_ride_detail2" />
                                 </div>
                             </div>
-                            <div
-                                id="option_l10n_ec_print_ride_detail3"
-                                class="col-12 col-md-6 o_setting_box"
-                            >
+                            <div id="option_l10n_ec_print_ride_detail3" class="col-12 col-md-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="l10n_ec_print_ride_detail3" />
                                 </div>

@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <menuitem
-        id="sri_root_menu"
-        name="SRI"
-        sequence="25"
-        parent="account_accountant.menu_accounting"
-    />
-    <menuitem
-        id="sri_electronic_documents_menu"
-        name="Electronic Documents"
-        parent="sri_root_menu"
-        sequence="17"
-    />
+    <menuitem id="sri_root_menu" name="SRI" sequence="25" parent="account_accountant.menu_accounting" />
+    <menuitem id="sri_electronic_documents_menu" name="Electronic Documents" parent="sri_root_menu" sequence="17" />
     <menuitem
         id="sri_config_menu"
         groups="account.group_account_manager"

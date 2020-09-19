@@ -22,9 +22,7 @@ def migrate(cr, version):
     for company in all_company:
         xml_ids = collections.defaultdict(list)
         for data in xml_id_data:
-            xml_ids[data["res_id"]].append(
-                f"{data['module']}.{company.id}_{data['name']}"
-            )
+            xml_ids[data["res_id"]].append(f"{data['module']}.{company.id}_{data['name']}")
         for tax_tmpl in all_tax_template:
             try:
                 tax_id_xml = xml_ids.get(tax_tmpl.id, [""])[0]

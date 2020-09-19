@@ -9,9 +9,7 @@
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f104_412">
-            <field
-                name="name"
-            >Ventas de activos fijos gravadas tarifa diferente de cero – VALOR NETO</field>
+            <field name="name">Ventas de activos fijos gravadas tarifa diferente de cero – VALOR NETO</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
@@ -23,9 +21,7 @@
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f104_422">
-            <field
-                name="name"
-            >Ventas de activos fijos gravadas tarifa diferente de cero – IMPUESTO GENERADO</field>
+            <field name="name">Ventas de activos fijos gravadas tarifa diferente de cero – IMPUESTO GENERADO</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
@@ -65,9 +61,7 @@
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f104_416">
-            <field
-                name="name"
-            >Ventas de activos fijos gravadas tarifa 0% que dan derecho a crédito tributario</field>
+            <field name="name">Ventas de activos fijos gravadas tarifa 0% que dan derecho a crédito tributario</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
@@ -87,16 +81,12 @@
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f104_442">
-            <field
-                name="name"
-            >Notas de crédito tarifa 0% por compensar próximo mes</field>
+            <field name="name">Notas de crédito tarifa 0% por compensar próximo mes</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f104_443">
-            <field
-                name="name"
-            >Notas de crédito tarifa diferente de cero por compensar próximo mes – VALOR NETO</field>
+            <field name="name">Notas de crédito tarifa diferente de cero por compensar próximo mes – VALOR NETO</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
@@ -157,9 +147,7 @@
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f104_515">
-            <field
-                name="name"
-            >Importaciones de activos fijos gravados tarifa diferente de cero – VALOR NETO</field>
+            <field name="name">Importaciones de activos fijos gravados tarifa diferente de cero – VALOR NETO</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
@@ -220,16 +208,12 @@
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f104_516">
-            <field
-                name="name"
-            >Importaciones de bienes (incluye activos fijos) gravados tarifa 0%</field>
+            <field name="name">Importaciones de bienes (incluye activos fijos) gravados tarifa 0%</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f104_517">
-            <field
-                name="name"
-            >Adquisiciones y pagos (incluye activos fijos) gravados tarifa 0%</field>
+            <field name="name">Adquisiciones y pagos (incluye activos fijos) gravados tarifa 0%</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
@@ -249,16 +233,12 @@
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f104_543">
-            <field
-                name="name"
-            >Notas de crédito tarifa 0% por compensar próximo mes</field>
+            <field name="name">Notas de crédito tarifa 0% por compensar próximo mes</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f104_544">
-            <field
-                name="name"
-            >Notas de crédito tarifa diferente de cero por compensar próximo mes – VALOR NETO</field>
+            <field name="name">Notas de crédito tarifa diferente de cero por compensar próximo mes – VALOR NETO</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
@@ -284,9 +264,7 @@
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f104_609">
-            <field
-                name="name"
-            >(-) Retenciones en la fuente de IVA que le han sido efectuadas en este período</field>
+            <field name="name">(-) Retenciones en la fuente de IVA que le han sido efectuadas en este período</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
@@ -321,16 +299,12 @@
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_302">
-            <field
-                name="name"
-            >En relación de dependencia que supera o no la base desgravada – BASE IMPONIBLE</field>
+            <field name="name">En relación de dependencia que supera o no la base desgravada – BASE IMPONIBLE</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_303">
-            <field
-                name="name"
-            >Servicios Honorarios profesionales – BASE IMPONIBLE</field>
+            <field name="name">Servicios Honorarios profesionales – BASE IMPONIBLE</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
@@ -340,23 +314,17 @@
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_307">
-            <field
-                name="name"
-            >Servicios Predomina la mano de obra – BASE IMPONIBLE</field>
+            <field name="name">Servicios Predomina la mano de obra – BASE IMPONIBLE</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_308">
-            <field
-                name="name"
-            >Servicios Utilización o aprovechamiento de la imagen o renombre – BASE IMPONIBLE</field>
+            <field name="name">Servicios Utilización o aprovechamiento de la imagen o renombre – BASE IMPONIBLE</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_309">
-            <field
-                name="name"
-            >Servicios Publicidad y comunicación – BASE IMPONIBLE</field>
+            <field name="name">Servicios Publicidad y comunicación – BASE IMPONIBLE</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
@@ -375,16 +343,12 @@
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_312">
-            <field
-                name="name"
-            >Transferencia de bienes muebles de naturaleza corporal – BASE IMPONIBLE</field>
+            <field name="name">Transferencia de bienes muebles de naturaleza corporal – BASE IMPONIBLE</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_314">
-            <field
-                name="name"
-            >Por regalías, derechos de autor, marcas, patentes y similares – BASE IMPONIBLE</field>
+            <field name="name">Por regalías, derechos de autor, marcas, patentes y similares – BASE IMPONIBLE</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
@@ -399,9 +363,7 @@
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_322">
-            <field
-                name="name"
-            >Seguros y reaseguros (primas y cesiones) – BASE IMPONIBLE</field>
+            <field name="name">Seguros y reaseguros (primas y cesiones) – BASE IMPONIBLE</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
@@ -430,23 +392,17 @@
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_327">
-            <field
-                name="name"
-            >Dividendos distribuidos a personas naturales residentes – BASE IMPONIBLE</field>
+            <field name="name">Dividendos distribuidos a personas naturales residentes – BASE IMPONIBLE</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_328">
-            <field
-                name="name"
-            >Dividendos distribuidos a sociedades residentes – BASE IMPONIBLE</field>
+            <field name="name">Dividendos distribuidos a sociedades residentes – BASE IMPONIBLE</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_329">
-            <field
-                name="name"
-            >Dividendos distribuidos a fideicomisos residentes – BASE IMPONIBLE</field>
+            <field name="name">Dividendos distribuidos a fideicomisos residentes – BASE IMPONIBLE</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
@@ -465,9 +421,7 @@
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_332">
-            <field
-                name="name"
-            >Pagos de bienes y servicios no sujetos a retención – BASE IMPONIBLE</field>
+            <field name="name">Pagos de bienes y servicios no sujetos a retención – BASE IMPONIBLE</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
@@ -486,23 +440,17 @@
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_335">
-            <field
-                name="name"
-            >Loterías, rifas, apuestas y similares – BASE IMPONIBLE</field>
+            <field name="name">Loterías, rifas, apuestas y similares – BASE IMPONIBLE</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_336">
-            <field
-                name="name"
-            >Venta de combustibles A comercializadoras – BASE IMPONIBLE</field>
+            <field name="name">Venta de combustibles A comercializadoras – BASE IMPONIBLE</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_337">
-            <field
-                name="name"
-            >Venta de combustibles A distribuidores – BASE IMPONIBLE</field>
+            <field name="name">Venta de combustibles A distribuidores – BASE IMPONIBLE</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
@@ -527,23 +475,17 @@
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_402">
-            <field
-                name="name"
-            >Con convenio de doble tributación – BASE IMPONIBLE</field>
+            <field name="name">Con convenio de doble tributación – BASE IMPONIBLE</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_403">
-            <field
-                name="name"
-            >Con convenio de doble tributación Intereses de créditos – BASE IMPONIBLE</field>
+            <field name="name">Con convenio de doble tributación Intereses de créditos – BASE IMPONIBLE</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_404">
-            <field
-                name="name"
-            >Con convenio de doble tributación Anticipo de dividendos – BASE IMPONIBLE</field>
+            <field name="name">Con convenio de doble tributación Anticipo de dividendos – BASE IMPONIBLE</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
@@ -611,16 +553,12 @@
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_414">
-            <field
-                name="name"
-            >Sin convenio de doble tributación Intereses de créditos – BASE IMPONIBLE</field>
+            <field name="name">Sin convenio de doble tributación Intereses de créditos – BASE IMPONIBLE</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_415">
-            <field
-                name="name"
-            >Sin convenio de doble tributación Anticipo de dividendos – BASE IMPONIBLE</field>
+            <field name="name">Sin convenio de doble tributación Anticipo de dividendos – BASE IMPONIBLE</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
@@ -751,16 +689,12 @@
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_352">
-            <field
-                name="name"
-            >En relación de dependencia que supera o no la base desgravada – VALOR RETENIDO</field>
+            <field name="name">En relación de dependencia que supera o no la base desgravada – VALOR RETENIDO</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_353">
-            <field
-                name="name"
-            >Servicios Honorarios profesionales – VALOR RETENIDO</field>
+            <field name="name">Servicios Honorarios profesionales – VALOR RETENIDO</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
@@ -770,23 +704,17 @@
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_357">
-            <field
-                name="name"
-            >Servicios Predomina la mano de obra – VALOR RETENIDO</field>
+            <field name="name">Servicios Predomina la mano de obra – VALOR RETENIDO</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_358">
-            <field
-                name="name"
-            >Servicios Utilización o aprovechamiento de la imagen o renombre – VALOR RETENIDO</field>
+            <field name="name">Servicios Utilización o aprovechamiento de la imagen o renombre – VALOR RETENIDO</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_359">
-            <field
-                name="name"
-            >Servicios Publicidad y comunicación – VALOR RETENIDO</field>
+            <field name="name">Servicios Publicidad y comunicación – VALOR RETENIDO</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
@@ -805,16 +733,12 @@
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_362">
-            <field
-                name="name"
-            >Transferencia de bienes muebles de naturaleza corporal – VALOR RETENIDO</field>
+            <field name="name">Transferencia de bienes muebles de naturaleza corporal – VALOR RETENIDO</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_364">
-            <field
-                name="name"
-            >Por regalías, derechos de autor, marcas, patentes y similares – VALOR RETENIDO</field>
+            <field name="name">Por regalías, derechos de autor, marcas, patentes y similares – VALOR RETENIDO</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
@@ -829,9 +753,7 @@
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_372">
-            <field
-                name="name"
-            >Seguros y reaseguros (primas y cesiones) – VALOR RETENIDO</field>
+            <field name="name">Seguros y reaseguros (primas y cesiones) – VALOR RETENIDO</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
@@ -860,23 +782,17 @@
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_377">
-            <field
-                name="name"
-            >Dividendos distribuidos a personas naturales residentes – VALOR RETENIDO</field>
+            <field name="name">Dividendos distribuidos a personas naturales residentes – VALOR RETENIDO</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_378">
-            <field
-                name="name"
-            >Dividendos distribuidos a sociedades residentes – VALOR RETENIDO</field>
+            <field name="name">Dividendos distribuidos a sociedades residentes – VALOR RETENIDO</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_379">
-            <field
-                name="name"
-            >Dividendos distribuidos a fideicomisos residentes – VALOR RETENIDO</field>
+            <field name="name">Dividendos distribuidos a fideicomisos residentes – VALOR RETENIDO</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
@@ -902,23 +818,17 @@
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_385">
-            <field
-                name="name"
-            >Loterías, rifas, apuestas y similares – VALOR RETENIDO</field>
+            <field name="name">Loterías, rifas, apuestas y similares – VALOR RETENIDO</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_386">
-            <field
-                name="name"
-            >Venta de combustibles A comercializadoras – VALOR RETENIDO</field>
+            <field name="name">Venta de combustibles A comercializadoras – VALOR RETENIDO</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_387">
-            <field
-                name="name"
-            >Venta de combustibles A distribuidores – VALOR RETENIDO</field>
+            <field name="name">Venta de combustibles A distribuidores – VALOR RETENIDO</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
@@ -943,23 +853,17 @@
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_452">
-            <field
-                name="name"
-            >Con convenio de doble tributación – VALOR RETENIDO</field>
+            <field name="name">Con convenio de doble tributación – VALOR RETENIDO</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_453">
-            <field
-                name="name"
-            >Con convenio de doble tributación Intereses de créditos – VALOR RETENIDO</field>
+            <field name="name">Con convenio de doble tributación Intereses de créditos – VALOR RETENIDO</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_454">
-            <field
-                name="name"
-            >Con convenio de doble tributación Anticipo de dividendos – VALOR RETENIDO</field>
+            <field name="name">Con convenio de doble tributación Anticipo de dividendos – VALOR RETENIDO</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
@@ -1013,16 +917,12 @@
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_464">
-            <field
-                name="name"
-            >Sin convenio de doble tributación Intereses de créditos – VALOR RETENIDO</field>
+            <field name="name">Sin convenio de doble tributación Intereses de créditos – VALOR RETENIDO</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
         <record model="account.account.tag" id="tag_f103_465">
-            <field
-                name="name"
-            >Sin convenio de doble tributación Anticipo de dividendos – VALOR RETENIDO</field>
+            <field name="name">Sin convenio de doble tributación Anticipo de dividendos – VALOR RETENIDO</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>

@@ -15,7 +15,7 @@ from zeep import Client
 from zeep.transports import Transport
 
 from odoo import _, api, fields, models, tools
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
 
 _logger = logging.getLogger(__name__)
@@ -50,54 +50,31 @@ class SriXmlData(models.Model):
             date_emision_document = False
             point_emission = self.env["l10n_ec.point.of.emission"]
             if xml_data.invoice_out_id:
-                number = (
-                    "FV: %s" % xml_data.invoice_out_id.l10n_ec_get_document_number()
-                )
-                date_emision_document = (
-                    xml_data.invoice_out_id.l10n_ec_get_document_date()
-                )
+                number = "FV: %s" % xml_data.invoice_out_id.l10n_ec_get_document_number()
+                date_emision_document = xml_data.invoice_out_id.l10n_ec_get_document_date()
                 point_emission = xml_data.invoice_out_id.l10n_ec_point_of_emission_id
             elif xml_data.credit_note_out_id:
-                number = (
-                    "NCC: %s"
-                    % xml_data.credit_note_out_id.l10n_ec_get_document_number()
-                )
-                date_emision_document = (
-                    xml_data.credit_note_out_id.l10n_ec_get_document_date()
-                )
-                point_emission = (
-                    xml_data.credit_note_out_id.l10n_ec_point_of_emission_id
-                )
+                number = "NCC: %s" % xml_data.credit_note_out_id.l10n_ec_get_document_number()
+                date_emision_document = xml_data.credit_note_out_id.l10n_ec_get_document_date()
+                point_emission = xml_data.credit_note_out_id.l10n_ec_point_of_emission_id
             elif xml_data.debit_note_out_id:
-                number = (
-                    "NDC: %s" % xml_data.debit_note_out_id.l10n_ec_get_document_number()
-                )
-                date_emision_document = (
-                    xml_data.debit_note_out_id.l10n_ec_get_document_date()
-                )
+                number = "NDC: %s" % xml_data.debit_note_out_id.l10n_ec_get_document_number()
+                date_emision_document = xml_data.debit_note_out_id.l10n_ec_get_document_date()
                 point_emission = xml_data.debit_note_out_id.l10n_ec_point_of_emission_id
             elif xml_data.withhold_id:
                 number = "RET: %s" % xml_data.withhold_id.l10n_ec_get_document_number()
                 date_emision_document = xml_data.withhold_id.l10n_ec_get_document_date()
                 point_emission = xml_data.withhold_id.point_of_emission_id
             elif xml_data.liquidation_id:
-                number = (
-                    "LIQ: %s" % xml_data.liquidation_id.l10n_ec_get_document_number()
-                )
-                date_emision_document = (
-                    xml_data.liquidation_id.l10n_ec_get_document_date()
-                )
+                number = "LIQ: %s" % xml_data.liquidation_id.l10n_ec_get_document_number()
+                date_emision_document = xml_data.liquidation_id.l10n_ec_get_document_date()
                 point_emission = xml_data.liquidation_id.l10n_ec_point_of_emission_id
             xml_data.number_document = number
             xml_data.date_emision_document = date_emision_document
             xml_data.l10n_ec_point_of_emission_id = point_emission
 
-    number_document = fields.Char(
-        "Document Number", compute="_compute_document_datas", store=True, index=True
-    )
-    date_emision_document = fields.Date(
-        "Fecha de emision", compute="_compute_document_datas", store=True, index=True
-    )
+    number_document = fields.Char("Document Number", compute="_compute_document_datas", store=True, index=True)
+    date_emision_document = fields.Date("Fecha de emision", compute="_compute_document_datas", store=True, index=True)
     l10n_ec_point_of_emission_id = fields.Many2one(
         "l10n_ec.point.of.emission",
         string="Punto de Emisión",
@@ -106,57 +83,34 @@ class SriXmlData(models.Model):
         index=True,
     )
     agency_id = fields.Many2one(
-        "l10n_ec.agency",
-        string="Agencia",
-        related="l10n_ec_point_of_emission_id.agency_id",
-        store=True,
+        "l10n_ec.agency", string="Agencia", related="l10n_ec_point_of_emission_id.agency_id", store=True,
     )
     xml_file = fields.Binary(readonly=False, copy=False)
-    xml_filename = fields.Char(
-        string="Nombre de archivo xml", readonly=False, copy=False
-    )
+    xml_filename = fields.Char(string="Nombre de archivo xml", readonly=False, copy=False)
     xml_file_version = fields.Char("Version XML")
     l10n_ec_xml_key = fields.Char("Clave de Acceso", size=49, readonly=True, index=True)
-    xml_authorization = fields.Char(
-        "Autorización SRI", size=49, readonly=True, index=True
-    )
+    xml_authorization = fields.Char("Autorización SRI", size=49, readonly=True, index=True)
     description = fields.Char("Description")
-    invoice_out_id = fields.Many2one(
-        "account.move", "Factura", index=True, auto_join=True
-    )
-    credit_note_out_id = fields.Many2one(
-        "account.move", "Nota de Crédito", index=True, auto_join=True
-    )
-    debit_note_out_id = fields.Many2one(
-        "account.move", "Nota de Débito", index=True, auto_join=True
-    )
-    liquidation_id = fields.Many2one(
-        "account.move", "Liquidacion de compras", index=True, auto_join=True
-    )
-    withhold_id = fields.Many2one(
-        "l10n_ec.withhold", "Retención", index=True, auto_join=True
-    )
-    company_id = fields.Many2one(
-        "res.company", string="Compañía", default=lambda self: self.env.company
-    )
+    invoice_out_id = fields.Many2one("account.move", "Factura", index=True, auto_join=True)
+    credit_note_out_id = fields.Many2one("account.move", "Nota de Crédito", index=True, auto_join=True)
+    debit_note_out_id = fields.Many2one("account.move", "Nota de Débito", index=True, auto_join=True)
+    liquidation_id = fields.Many2one("account.move", "Liquidacion de compras", index=True, auto_join=True)
+    withhold_id = fields.Many2one("l10n_ec.withhold", "Retención", index=True, auto_join=True)
+    company_id = fields.Many2one("res.company", string="Compañía", default=lambda self: self.env.company)
     partner_id = fields.Many2one("res.partner", "Cliente", index=True, auto_join=True)
     create_uid = fields.Many2one("res.users", "Creado por", readonly=True)
     create_date = fields.Datetime("Fecha de Creación", readonly=True)
     signed_date = fields.Datetime("Fecha de Firma", readonly=True, index=True)
     send_date = fields.Datetime("Fecha de Envío", readonly=True)
     response_date = fields.Datetime("Fecha de Respuesta", readonly=True)
-    l10n_ec_authorization_date = fields.Datetime(
-        "Fecha de Autorización", readonly=True, index=True
-    )
+    l10n_ec_authorization_date = fields.Datetime("Fecha de Autorización", readonly=True, index=True)
     notification_active = fields.Boolean(
         string="Notificación de Documentos Electrónicos no Autorizados?",
         default=True,
         help="Esto permite activar o desactivar las notificaciones del presente documento",
     )
     l10n_ec_type_conection_sri = fields.Selection(
-        [("online", "On-Line"), ("offline", "Off-Line"),],
-        string="Tipo de conexion con SRI",
-        default="offline",
+        [("online", "On-Line"), ("offline", "Off-Line"),], string="Tipo de conexion con SRI", default="offline",
     )
     state = fields.Selection(
         [
@@ -175,35 +129,20 @@ class SriXmlData(models.Model):
         default="draft",
     )
     l10n_ec_type_environment = fields.Selection(
-        [("test", "Pruebas"), ("production", "Producción"),],
-        string="Tipo de Ambiente",
-        index=True,
-        readonly=True,
+        [("test", "Pruebas"), ("production", "Producción"),], string="Tipo de Ambiente", index=True, readonly=True,
     )
-    last_error_id = fields.Many2one(
-        "sri.error.code", "Ultimo Mensaje de error", readonly=True, index=True
-    )
-    sri_message_ids = fields.One2many(
-        "sri.xml.data.message.line", "xml_id", "Mensajes Informativos", auto_join=True
-    )
-    try_ids = fields.One2many(
-        "sri.xml.data.send.try", "xml_id", "Send Logs", auto_join=True
-    )
+    last_error_id = fields.Many2one("sri.error.code", "Ultimo Mensaje de error", readonly=True, index=True)
+    sri_message_ids = fields.One2many("sri.xml.data.message.line", "xml_id", "Mensajes Informativos", auto_join=True)
+    try_ids = fields.One2many("sri.xml.data.send.try", "xml_id", "Send Logs", auto_join=True)
     # campo para enviar los mail a los clientes por lotes, u mejorar el proceso de autorizacion
     send_mail = fields.Boolean("Mail enviado?")
     # campo para el numero de autorizacion cuando se cancelan documentos electronicos
-    authorization_to_cancel = fields.Char(
-        "Autorización para cancelar", size=64, readonly=True
-    )
+    authorization_to_cancel = fields.Char("Autorización para cancelar", size=64, readonly=True)
     cancel_date = fields.Datetime("Fecha de cancelación", readonly=True)
     cancel_user_id = fields.Many2one("res.users", "Usuario que canceló", readonly=True)
 
     _sql_constraints = [
-        (
-            "invoice_out_id_uniq",
-            "unique (invoice_out_id, company_id)",
-            "Ya existe una factura con el mismo numero!",
-        ),
+        ("invoice_out_id_uniq", "unique (invoice_out_id, company_id)", "Ya existe una factura con el mismo numero!",),
         (
             "credit_note_out_id_uniq",
             "unique (credit_note_out_id, company_id)",
@@ -219,11 +158,7 @@ class SriXmlData(models.Model):
             "unique (liquidation_id, company_id)",
             "Ya existe una Liquidacion de compras con el mismo numero!",
         ),
-        (
-            "withhold_id_uniq",
-            "unique (withhold_id, company_id)",
-            "Ya existe una Retencion con el mismo numero!",
-        ),
+        ("withhold_id_uniq", "unique (withhold_id, company_id)", "Ya existe una Retencion con el mismo numero!",),
     ]
 
     @api.model
@@ -248,9 +183,7 @@ class SriXmlData(models.Model):
             wsClient = Client(ws_url, transport=transport)
         except Exception as e:
             _logger.warning(
-                "Error in Connection with web services of SRI: %s. Error: %s",
-                ws_url,
-                tools.ustr(e),
+                "Error in Connection with web services of SRI: %s. Error: %s", ws_url, tools.ustr(e),
             )
         return wsClient
 
@@ -297,9 +230,7 @@ class SriXmlData(models.Model):
             document_active = True
         elif invoice_type == "debit_note_out" and company.l10n_ec_electronic_debit_note:
             document_active = True
-        elif (
-            invoice_type == "withhold_purchase" and company.l10n_ec_electronic_withhold
-        ):
+        elif invoice_type == "withhold_purchase" and company.l10n_ec_electronic_withhold:
             document_active = True
         elif invoice_type == "liquidation" and company.l10n_ec_electronic_liquidation:
             document_active = True
@@ -353,13 +284,7 @@ class SriXmlData(models.Model):
 
     @api.model
     def get_single_key(
-        self,
-        company,
-        document_code_sri,
-        environment,
-        printer_point,
-        sequence,
-        date_document=None,
+        self, company, document_code_sri, environment, printer_point, sequence, date_document=None,
     ):
         """Devuelve la clave para archivo xml a enviar a firmar en comprobantes unicos
         :paran: company: browse_record(res.company)
@@ -422,21 +347,14 @@ class SriXmlData(models.Model):
         nombreComercial = "PRUEBAS SERVICIO DE RENTAS INTERNAS"
         if environment == "2":
             razonSocial = util_model._clean_str(company.partner_id.name)
-            nombreComercial = util_model._clean_str(
-                company.partner_id.l10n_ec_business_name or razonSocial
-            )
+            nombreComercial = util_model._clean_str(company.partner_id.l10n_ec_business_name or razonSocial)
         SubElement(infoTributaria, "razonSocial").text = razonSocial
         SubElement(infoTributaria, "nombreComercial").text = nombreComercial
         SubElement(infoTributaria, "ruc").text = company.partner_id.vat
         clave_acceso = self.l10n_ec_xml_key
         if not clave_acceso:
             clave_acceso = self.get_single_key(
-                company,
-                document_code_sri,
-                environment,
-                printer,
-                sequence,
-                date_document,
+                company, document_code_sri, environment, printer, sequence, date_document,
             )
         SubElement(infoTributaria, "claveAcceso").text = clave_acceso
         SubElement(infoTributaria, "codDoc").text = document_code_sri
@@ -445,9 +363,7 @@ class SriXmlData(models.Model):
         SubElement(infoTributaria, "secuencial").text = str(sequence).rjust(9, "0")
         # Debe ser la direccion matriz
         company_address = company.partner_id.get_direccion_matriz(printer)
-        SubElement(infoTributaria, "dirMatriz").text = util_model._clean_str(
-            company_address or ""
-        )
+        SubElement(infoTributaria, "dirMatriz").text = util_model._clean_str(company_address or "")
         return clave_acceso, node
 
     def check_xsd(self, xml_string, xsd_file_path):
@@ -468,9 +384,7 @@ class SriXmlData(models.Model):
                     tools.ustr(e),
                 )
             else:
-                raise UserError(
-                    _("Wrong Creation on XML File, missing data : \n%s") % tools.ustr(e)
-                )
+                raise UserError(_("Wrong Creation on XML File, missing data : \n%s") % tools.ustr(e))
         return True
 
     def action_generate_xml_file(self, document):
@@ -486,14 +400,8 @@ class SriXmlData(models.Model):
         environment = self._get_environment()
         xml_version = document.l10n_ec_get_document_version_xml()
         partner_id = document.partner_id
-        root = Element(
-            xml_version.xml_header_name,
-            id="comprobante",
-            version=xml_version.version_file,
-        )
-        clave_acceso, root = self.generate_info_tributaria(
-            root, document, environment, company
-        )
+        root = Element(xml_version.xml_header_name, id="comprobante", version=xml_version.version_file,)
+        clave_acceso, root = self.generate_info_tributaria(root, document, environment, company)
         state = self.state
         l10n_ec_type_environment = ""
         if environment == "1":
@@ -538,11 +446,7 @@ class SriXmlData(models.Model):
             messages_recs = message_model.browse()
             # si no fue autorizado, y es clave 70, escribir estado para que la tarea cron se encargue de autorizarlo
             # el identificador puede ser str o numerico
-            if (
-                not authorized
-                and message.get("identificador")
-                and message.get("identificador") in ("70", 70)
-            ):
+            if not authorized and message.get("identificador") and message.get("identificador") in ("70", 70):
                 _logger.warning(
                     "Clave 70, en espera de autorizacion. %s %s",
                     message.get("mensaje", ""),
@@ -550,20 +454,12 @@ class SriXmlData(models.Model):
                 )
                 self.write({"state": "waiting"})
                 raise_error = False
-            error_recs = error_model.search(
-                [("code", "=", message.get("identificador"))]
-            )
+            error_recs = error_model.search([("code", "=", message.get("identificador"))])
             if error_recs:
                 last_error_rec = error_recs[0]
             # el mensaje 60 no agregarlo, es informativo y no debe lanzar excepcion por ese error
-            if message.get("identificador") and message.get("identificador") not in (
-                "60",
-                60,
-            ):
-                messages_error.append(
-                    "%s. %s"
-                    % (message.get("mensaje"), message.get("informacionAdicional"))
-                )
+            if message.get("identificador") and message.get("identificador") not in ("60", 60,):
+                messages_error.append("{}. {}".format(message.get("mensaje"), message.get("informacionAdicional")))
             vals_messages = {
                 "xml_id": self.id,
                 "message_code_id": last_error_rec.id,
@@ -574,15 +470,11 @@ class SriXmlData(models.Model):
             for msj in self.sri_message_ids:
                 # si ya existe un mensaje con el mismo codigo
                 # y el texto es el mismo, modificar ese registro
-                if (
-                    msj.message_type in ("ERROR", "ERROR DE SERVIDOR")
-                    and last_error_rec
-                ):
+                if msj.message_type in ("ERROR", "ERROR DE SERVIDOR") and last_error_rec:
                     last_error_id = last_error_rec.id
                 if msj.message_code_id and last_error_rec:
                     if msj.message_code_id.id == last_error_rec.id and (
-                        msj.message == message.get("mensaje")
-                        or msj.other_info == message.get("other_info")
+                        msj.message == message.get("mensaje") or msj.other_info == message.get("other_info")
                     ):
                         method_messages = "write"
                         messages_recs += msj
@@ -590,21 +482,14 @@ class SriXmlData(models.Model):
                 messages_recs.write(vals_messages)
             elif method_messages == "create":
                 message_model.create(vals_messages)
-                if (
-                    vals_messages.get("message_type", "")
-                    in ("ERROR", "ERROR DE SERVIDOR")
-                    and last_error_rec
-                ):
+                if vals_messages.get("message_type", "") in ("ERROR", "ERROR DE SERVIDOR") and last_error_rec:
                     last_error_id = last_error_rec.id
         # una vez creado todos los mensajes, si hubo uno de error escribirlo como el ultimo error recibido
         if last_error_id:
             values = {"last_error_id": last_error_id}
             # si el ultimo codigo de error es codigo 43(Clave acceso registrada)
             # cambiar el estado a En espera de autorizacion, para que la tarea cron la procese posteriormente
-            if (
-                self.state not in ("authorized", "cancel")
-                and last_error_rec.code == "43"
-            ):
+            if self.state not in ("authorized", "cancel") and last_error_rec.code == "43":
                 values["state"] = "waiting"
             self.write(values)
         return messages_error, raise_error
@@ -622,13 +507,7 @@ class SriXmlData(models.Model):
             # En caso de ya haber tratado de enviar anteriormente, no debe enviar 2 veces
             if len(self.try_ids) >= 1:
                 # En caso de ya haber hecho un intento es necesario que se verifique directamente con la clave de acceso
-                try_rec = try_model.create(
-                    {
-                        "xml_id": self.id,
-                        "send_date": time.strftime(DTF),
-                        "type_send": "check",
-                    }
-                )
+                try_rec = try_model.create({"xml_id": self.id, "send_date": time.strftime(DTF), "type_send": "check",})
                 responseAuth = client_ws_auth.service.autorizacionComprobante(
                     claveAccesoComprobante=self.l10n_ec_xml_key
                 )
@@ -643,27 +522,17 @@ class SriXmlData(models.Model):
             if self.env.context.get("no_send") and self.try_ids:
                 send = False
             if send:
-                try_rec = try_model.create(
-                    {
-                        "xml_id": self.id,
-                        "send_date": time.strftime(DTF),
-                        "type_send": "send",
-                    }
-                )
+                try_rec = try_model.create({"xml_id": self.id, "send_date": time.strftime(DTF), "type_send": "send",})
                 # el parametro xml del webservice espera recibir xs:base64Binary
                 # con suds nosotros haciamos la conversion
                 # pero con zeep la libreria se encarga de hacer la conversion
                 # tenerlo presente cuando se use adjuntos en lugar del sistema de archivos
-                response = client_ws.service.validarComprobante(
-                    xml=self.get_file().encode()
-                )
+                response = client_ws.service.validarComprobante(xml=self.get_file().encode())
                 try_model.write({"response_date": time.strftime(DTF)})
                 _logger.info(
                     "Send file succesful, claveAcceso %s. %s",
                     self.l10n_ec_xml_key,
-                    str(response.estado)
-                    if hasattr(response, "estado")
-                    else "SIN RESPUESTA",
+                    str(response.estado) if hasattr(response, "estado") else "SIN RESPUESTA",
                 )
             self.write({"response_date": time.strftime(DTF)})
         except Exception as e:
@@ -708,24 +577,16 @@ class SriXmlData(models.Model):
             else:
                 ok = True
             try:
-                comprobantes = (
-                    hasattr(response.comprobantes, "comprobante")
-                    and response.comprobantes.comprobante
-                    or []
-                )
+                comprobantes = hasattr(response.comprobantes, "comprobante") and response.comprobantes.comprobante or []
                 for comprobante in comprobantes:
                     for msj in comprobante.mensajes.mensaje:
                         msj_res.append(
                             {
-                                "identificador": msj.identificador
-                                if hasattr(msj, "identificador")
-                                else "",
+                                "identificador": msj.identificador if hasattr(msj, "identificador") else "",
                                 "informacionAdicional": msj.informacionAdicional
                                 if hasattr(msj, "informacionAdicional")
                                 else "",
-                                "mensaje": msj.mensaje
-                                if hasattr(msj, "mensaje")
-                                else "",
+                                "mensaje": msj.mensaje if hasattr(msj, "mensaje") else "",
                                 "tipo": msj.tipo if hasattr(msj, "tipo") else "",
                             }
                         )
@@ -735,9 +596,7 @@ class SriXmlData(models.Model):
                             ok = False
             except Exception as e:
                 _logger.info(
-                    "can't validate document, claveAcceso %s. ERROR: %s",
-                    self.l10n_ec_xml_key,
-                    tools.ustr(e),
+                    "can't validate document, claveAcceso %s. ERROR: %s", self.l10n_ec_xml_key, tools.ustr(e),
                 )
                 _logger.info(
                     "can't validate document, claveAcceso %s. TRACEBACK: %s",
@@ -745,11 +604,7 @@ class SriXmlData(models.Model):
                     tools.ustr(traceback.format_exc()),
                 )
                 ok = False
-        if (
-            response
-            and isinstance(response, dict)
-            and response.get("estado", False) == "RECIBIDA"
-        ):
+        if response and isinstance(response, dict) and response.get("estado", False) == "RECIBIDA":
             ok = True
             previous_authorized = True
         return ok, msj_res, error, previous_authorized
@@ -760,15 +615,11 @@ class SriXmlData(models.Model):
         :param client_ws: direccion del webservice para realizar el proceso
         """
         try:
-            response = client_ws.service.autorizacionComprobante(
-                claveAccesoComprobante=self.l10n_ec_xml_key
-            )
+            response = client_ws.service.autorizacionComprobante(claveAccesoComprobante=self.l10n_ec_xml_key)
         except Exception as e:
             response = False
             self.write({"state": "waiting"})
-            _logger.warning(
-                "Error send xml to server %s. ERROR: %s", client_ws, tools.ustr(e)
-            )
+            _logger.warning("Error send xml to server %s. ERROR: %s", client_ws, tools.ustr(e))
             messajes = [
                 {
                     "identificador": "50",
@@ -797,9 +648,7 @@ class SriXmlData(models.Model):
 
         if not response:
             # si no tengo respuesta, dejar el documento en espera de autorizacion, para que la tarea cron se encargue de procesarlo y no quede firmado el documento
-            _logger.warning(
-                "Authorization response error, No response get. Documento en espera de autorizacion"
-            )
+            _logger.warning("Authorization response error, No response get. Documento en espera de autorizacion")
             self.write({"state": "waiting"})
             return ok, msj_res
         if isinstance(response, object) and not hasattr(response, "autorizaciones"):
@@ -818,8 +667,7 @@ class SriXmlData(models.Model):
         if hasattr(response, "autorizaciones") and response.autorizaciones is not None:
             if isinstance(response.autorizaciones, str):
                 _logger.warning(
-                    "Authorization data error, reponse message is not correct. %s",
-                    str(response.autorizaciones),
+                    "Authorization data error, reponse message is not correct. %s", str(response.autorizaciones),
                 )
                 dump(response)
                 return ok, msj_res
@@ -842,18 +690,12 @@ class SriXmlData(models.Model):
                 # TODO: escribir la autorizacion en el archivo xml o no???
                 numeroAutorizacion = doc.numeroAutorizacion
                 # tomar la fecha de autorizacion que envia el SRI
-                l10n_ec_authorization_date = (
-                    doc.fechaAutorizacion
-                    if hasattr(doc, "fechaAutorizacion")
-                    else False
-                )
+                l10n_ec_authorization_date = doc.fechaAutorizacion if hasattr(doc, "fechaAutorizacion") else False
                 # si no es una fecha valida, tomar la fecha actual del sistema
                 if not isinstance(l10n_ec_authorization_date, datetime):
                     l10n_ec_authorization_date = datetime.now()
                 if l10n_ec_authorization_date.tzinfo:
-                    l10n_ec_authorization_date = l10n_ec_authorization_date.astimezone(
-                        pytz.UTC
-                    )
+                    l10n_ec_authorization_date = l10n_ec_authorization_date.astimezone(pytz.UTC)
                 _logger.info(
                     "Authorization succesful, claveAcceso %s. Autohrization: %s. Fecha de autorizacion: %s",
                     self.l10n_ec_xml_key,
@@ -861,9 +703,7 @@ class SriXmlData(models.Model):
                     l10n_ec_authorization_date,
                 )
                 vals["xml_authorization"] = str(numeroAutorizacion)
-                vals[
-                    "l10n_ec_authorization_date"
-                ] = l10n_ec_authorization_date.strftime(DTF)
+                vals["l10n_ec_authorization_date"] = l10n_ec_authorization_date.strftime(DTF)
                 vals["state"] = "authorized"
                 # escribir en los objetos relacionados, la autorizacion y fecha de autorizacion
                 document = self.get_current_document()
@@ -888,15 +728,11 @@ class SriXmlData(models.Model):
                         for msj in doc.mensajes.mensaje:
                             msj_res.append(
                                 {
-                                    "identificador": msj.identificador
-                                    if hasattr(msj, "identificador")
-                                    else "",
+                                    "identificador": msj.identificador if hasattr(msj, "identificador") else "",
                                     "informacionAdicional": msj.informacionAdicional
                                     if hasattr(msj, "informacionAdicional")
                                     else "",
-                                    "mensaje": msj.mensaje
-                                    if hasattr(msj, "mensaje")
-                                    else "",
+                                    "mensaje": msj.mensaje if hasattr(msj, "mensaje") else "",
                                     "tipo": msj.tipo if hasattr(msj, "tipo") else "",
                                 }
                             )
@@ -904,22 +740,16 @@ class SriXmlData(models.Model):
                         for msj in doc.mensajes:
                             msj_res.append(
                                 {
-                                    "identificador": msj.identificador
-                                    if hasattr(msj, "identificador")
-                                    else "",
+                                    "identificador": msj.identificador if hasattr(msj, "identificador") else "",
                                     "informacionAdicional": msj.informacionAdicional
                                     if hasattr(msj, "informacionAdicional")
                                     else "",
-                                    "mensaje": msj.mensaje
-                                    if hasattr(msj, "mensaje")
-                                    else "",
+                                    "mensaje": msj.mensaje if hasattr(msj, "mensaje") else "",
                                     "tipo": msj.tipo if hasattr(msj, "tipo") else "",
                                 }
                             )
             except Exception as e:
-                _logger.warning(
-                    "Can't process messages %s. ERROR: %s", doc.mensajes, tools.ustr(e)
-                )
+                _logger.warning("Can't process messages %s. ERROR: %s", doc.mensajes, tools.ustr(e))
                 _logger.debug(traceback.format_exc())
         return ok, msj_res
 
@@ -932,17 +762,13 @@ class SriXmlData(models.Model):
             self._create_file_authorized(
                 tree,
                 self.xml_authorization,
-                fields.Datetime.context_timestamp(
-                    self, self.l10n_ec_authorization_date
-                ),
+                fields.Datetime.context_timestamp(self, self.l10n_ec_authorization_date),
                 self.l10n_ec_type_environment,
             )
         return xml_authorized
 
     @api.model
-    def _create_file_authorized(
-        self, tree, authorization_number, authorization_date, environment
-    ):
+    def _create_file_authorized(self, tree, authorization_number, authorization_date, environment):
         root = Element("RespuestaAutorizacion")
         authorizacion_ele = SubElement(root, "estado")
         authorizacion_ele.text = "AUTORIZADO"
@@ -952,9 +778,7 @@ class SriXmlData(models.Model):
         authorizacion_ele = SubElement(root, "fechaAutorizacion")
         authorizacion_ele.text = authorization_date.strftime(DTF)
         authorizacion_ele = SubElement(root, "ambiente")
-        authorizacion_ele.text = (
-            "PRODUCCION" if environment == "production" else "PRUEBAS"
-        )
+        authorizacion_ele.text = "PRODUCCION" if environment == "production" else "PRUEBAS"
         # agregar el resto del xml
         comprobante_node = SubElement(root, "comprobante")
         comprobante_node.text = tostring(tree).decode()
@@ -998,9 +822,7 @@ class SriXmlData(models.Model):
         l10n_ec_max_intentos = 1
         for xml_rec in self:
             environment = xml_rec._get_environment()
-            xml_rec.with_context(no_send=True).send_xml_data_to_check(
-                environment, l10n_ec_max_intentos
-            )
+            xml_rec.with_context(no_send=True).send_xml_data_to_check(environment, l10n_ec_max_intentos)
         return True
 
     def send_xml_data_to_check(self, environment, l10n_ec_max_intentos=1):
@@ -1020,9 +842,7 @@ class SriXmlData(models.Model):
                 return False
             elif send_again:
                 # si no supera el maximo de intentos, volve a intentar
-                return self.send_xml_data_to_check(
-                    environment, l10n_ec_max_intentos=l10n_ec_max_intentos + 1
-                )
+                return self.send_xml_data_to_check(environment, l10n_ec_max_intentos=l10n_ec_max_intentos + 1)
             return True
 
         company = self.company_id or self.env.company
@@ -1033,19 +853,12 @@ class SriXmlData(models.Model):
             return True
         try:
             if not tools.config.get("send_sri_documents", False):
-                _logger.warning(
-                    "Envio de documentos electronicos desactivado, verifique su archivo de configuracion"
-                )
+                _logger.warning("Envio de documentos electronicos desactivado, verifique su archivo de configuracion")
                 return True
             receipt_client = self.get_current_wsClient(environment, "reception")
             auth_client = self.get_current_wsClient(environment, "authorization")
             response = self._send_xml_data_to_valid(receipt_client, auth_client)
-            (
-                res_ws_valid,
-                msj,
-                raise_error,
-                previous_authorized,
-            ) = self._process_response_check(response)
+            (res_ws_valid, msj, raise_error, previous_authorized,) = self._process_response_check(response)
             message_data.extend(msj)
             # si no hay respuesta, el webservice no esta respondiendo, la tarea cron se debe encargar de este proceso
             if not res_ws_valid and not raise_error:
@@ -1055,24 +868,17 @@ class SriXmlData(models.Model):
                 # si el sri no me respondio o no es la respuesta que esperaba
                 # verificar si quedo en procesamiento antes de volver a autorizar
                 if not response_auth or isinstance(response_auth.autorizaciones, str):
-                    response_check = self._send_xml_data_to_valid(
-                        receipt_client, auth_client
+                    response_check = self._send_xml_data_to_valid(receipt_client, auth_client)
+                    (res_ws_valid, msj, raise_error, previous_authorized,) = self._process_response_check(
+                        response_check
                     )
-                    (
-                        res_ws_valid,
-                        msj,
-                        raise_error,
-                        previous_authorized,
-                    ) = self._process_response_check(response_check)
                     # si se intento una vez mas y no se pudo autorizar , dejar el documento en espera de autorizacion para que la tarea cron se encargue de eso
                     if not res_ws_valid and not previous_authorized:
                         self.write({"state": "waiting"})
                 else:
                     authorized, msj = self._process_response_autorization(response_auth)
                     message_data.extend(msj)
-            messages_error, raise_error = self._create_messaje_response(
-                message_data, authorized, raise_error
-            )
+            messages_error, raise_error = self._create_messaje_response(message_data, authorized, raise_error)
         except Exception as e:
             self.write({"state": "rejected"})
             # FIX: pasar a unicode para evitar problemas
@@ -1088,9 +894,7 @@ class SriXmlData(models.Model):
             # TODO: en flujo de datos se mensiona que se debe mostrar los errores recibidos al autorizar
             # pero si lanzo excepcion se revierte toda la transaccion realizada, siempre sera asi
             # o encontrar manera de mostrar mensajes al usuario sin revertir transaccion(a manera informativa)
-            messages_error.insert(
-                0, "No se pudo autorizar, se detalla errores recibidos"
-            )
+            messages_error.insert(0, "No se pudo autorizar, se detalla errores recibidos")
             raise UserError("\n".join(messages_error))
         return authorized
 
@@ -1130,9 +934,7 @@ class SriXmlData(models.Model):
                     )
                 if xml_rec.xml_file:
                     xml_string_data = xml_rec.get_file()
-                    xml_signed = company.l10n_ec_key_type_id.action_sign(
-                        xml_string_data
-                    )
+                    xml_signed = company.l10n_ec_key_type_id.action_sign(xml_string_data)
                     if not xml_signed:
                         raise UserError(
                             _(
@@ -1202,9 +1004,7 @@ class SriXmlData(models.Model):
                     documents_sended |= xml_rec
             except Exception as e:
                 if self.env.context.get("l10n_ec_xml_call_from_cron", False):
-                    _logger.warning(
-                        "Error send mail to partner. ERROR: %s", tools.ustr(e)
-                    )
+                    _logger.warning("Error send mail to partner. ERROR: %s", tools.ustr(e))
                 else:
                     raise
         return documents_sended
@@ -1214,14 +1014,10 @@ class SriXmlData(models.Model):
         document = self.get_current_document()
         # al consumidor final no se debe enviar mail, pero marcarlo como enviado
         if self.partner_id and self.partner_id.l10n_ec_type_sri == "Consumidor":
-            raise UserError(
-                _("No esta permitido el envio de correos a consumidor final")
-            )
+            raise UserError(_("No esta permitido el envio de correos a consumidor final"))
         if not self._is_document_enabled_for_send_mail():
             raise UserError(
-                _(
-                    "No esta habilitado el envio de correos para los documentos tipo: %s, verifique su configuracion"
-                )
+                _("No esta habilitado el envio de correos para los documentos tipo: %s, verifique su configuracion")
                 % (document.get_document_string())
             )
         self._action_send_mail_partner()
@@ -1236,9 +1032,7 @@ class SriXmlData(models.Model):
             xml_process_offline = self.browse()
             xml_process_online = self
         else:
-            xml_process_offline = self.filtered(
-                lambda x: x.l10n_ec_type_conection_sri == "offline"
-            )
+            xml_process_offline = self.filtered(lambda x: x.l10n_ec_type_conection_sri == "offline")
             xml_process_online = self - xml_process_offline
         # crear el xml, firmarlo y enviarlo al SRI
         if xml_process_online:
@@ -1255,18 +1049,14 @@ class SriXmlData(models.Model):
     @api.model
     def send_documents_offline(self):
         if not tools.config.get("send_sri_documents", False):
-            _logger.warning(
-                "Envio de documentos electronicos desactivado, verifique su archivo de configuracion"
-            )
+            _logger.warning("Envio de documentos electronicos desactivado, verifique su archivo de configuracion")
             return True
         all_companies = self.env["res.company"].search([])
         # pasar flag: l10n_ec_xml_call_from_cron para que los errores salgan x log y no por excepcion
         # pasar flag: no_change_state para que en caso de no autorizar, no me cambie estado del documento y seguir intentado
         for company in all_companies:
             self.with_context(
-                allowed_company_ids=company.ids,
-                l10n_ec_xml_call_from_cron=True,
-                no_change_state=True,
+                allowed_company_ids=company.ids, l10n_ec_xml_call_from_cron=True, no_change_state=True,
             )._send_documents_offline()
         return True
 
@@ -1288,9 +1078,7 @@ class SriXmlData(models.Model):
         receipt_client = self.get_current_wsClient(environment, "reception")
         auth_client = self.get_current_wsClient(environment, "authorization")
         if receipt_client is None or auth_client is None:
-            _logger.error(
-                "No se puede conectar con el SRI, por favor verifique su conexion o intente luego"
-            )
+            _logger.error("No se puede conectar con el SRI, por favor verifique su conexion o intente luego")
             return False
         counter = 1
         total = len(xml_recs)
@@ -1313,12 +1101,7 @@ class SriXmlData(models.Model):
             xml_data.action_sing_xml_file()
             # enviar a autorizar el xml(si se autorizo, enviara el mail a los involucrados)
             response = xml_data._send_xml_data_to_valid(receipt_client, auth_client)
-            (
-                ok,
-                messages,
-                raise_error,
-                previous_authorized,
-            ) = xml_data._process_response_check(response)
+            (ok, messages, raise_error, previous_authorized,) = xml_data._process_response_check(response)
             # si recibio la solicitud, enviar a autorizar
             if ok:
                 response = xml_data._send_xml_data_to_autorice(auth_client)
@@ -1337,10 +1120,7 @@ class SriXmlData(models.Model):
         algunos xml electronicos se elimina el documento original y se quedan huerfanos
         """
         xml_recs = self.search(
-            [
-                ("state", "in", ("returned", "rejected")),
-                ("company_id", "=", company.id),
-            ],
+            [("state", "in", ("returned", "rejected")), ("company_id", "=", company.id),],
             limit=company.l10n_ec_cron_process,
         )
         xml_recs = xml_recs.filtered(lambda x: x.get_current_document())
@@ -1352,9 +1132,7 @@ class SriXmlData(models.Model):
         Enviar mail de documentos rechazados o devueltos
         """
         if not tools.config.get("send_sri_documents", False):
-            _logger.warning(
-                "Envio de documentos electronicos desactivado, verifique su archivo de configuracion"
-            )
+            _logger.warning("Envio de documentos electronicos desactivado, verifique su archivo de configuracion")
             return True
         all_companies = self.env["res.company"].search([])
         for company in all_companies:
@@ -1362,26 +1140,20 @@ class SriXmlData(models.Model):
                 allowed_company_ids=company.ids, l10n_ec_xml_call_from_cron=True,
             )._get_documents_rejected(company)
             # TODO: agregar notificacion por correo de documentos rechazados
-            _logger.info(
-                f"{len(xml_rejected)} Documentos electronicos rechazados a notificar"
-            )
+            _logger.info(f"{len(xml_rejected)} Documentos electronicos rechazados a notificar")
         return True
 
     @api.model
     def send_documents_waiting_autorization(self):
         if not tools.config.get("send_sri_documents", False):
-            _logger.warning(
-                "Envio de documentos electronicos desactivado, verifique su archivo de configuracion"
-            )
+            _logger.warning("Envio de documentos electronicos desactivado, verifique su archivo de configuracion")
             return True
         all_companies = self.env["res.company"].search([])
         # pasar flag: l10n_ec_xml_call_from_cron para que los errores salgan x log y no por excepcion
         # pasar flag: no_change_state para que en caso de no autorizar, no me cambie estado del documento y seguir intentado
         for company in all_companies:
             self.with_context(
-                allowed_company_ids=company.ids,
-                l10n_ec_xml_call_from_cron=True,
-                no_change_state=True,
+                allowed_company_ids=company.ids, l10n_ec_xml_call_from_cron=True, no_change_state=True,
             )._send_documents_waiting_autorization()
         return True
 
@@ -1395,8 +1167,7 @@ class SriXmlData(models.Model):
         """
         company = self.env.company
         xml_recs = self.search(
-            [("state", "=", "waiting"), ("company_id", "=", company.id)],
-            limit=company.l10n_ec_cron_process,
+            [("state", "=", "waiting"), ("company_id", "=", company.id)], limit=company.l10n_ec_cron_process,
         )
         # en algunas ocaciones los documentos se envian a autorizar, pero se quedan como firmados
         # buscar los documentos firmados que se hayan enviado a autorizar para verificar si fueron autorizados o no
@@ -1426,30 +1197,21 @@ class SriXmlData(models.Model):
         receipt_client = self.get_current_wsClient(environment, "reception")
         auth_client = self.get_current_wsClient(environment, "authorization")
         if receipt_client is None or auth_client is None:
-            _logger.error(
-                "No se puede conectar con el SRI, por favor verifique su conexion o intente luego"
-            )
+            _logger.error("No se puede conectar con el SRI, por favor verifique su conexion o intente luego")
             return False
         counter = 1
         total = len(xml_recs)
         xml_to_notify = self.browse()
         for xml_data in xml_recs:
             _logger.info(
-                "Procesando documentos en espera de autorizacion: %s de %s",
-                counter,
-                total,
+                "Procesando documentos en espera de autorizacion: %s de %s", counter, total,
             )
             counter += 1
             document = xml_data.get_current_document()
             if not document:
                 continue
             response = xml_data._send_xml_data_to_valid(receipt_client, auth_client)
-            (
-                ok,
-                messages,
-                raise_error,
-                previous_authorized,
-            ) = xml_data._process_response_check(response)
+            (ok, messages, raise_error, previous_authorized,) = xml_data._process_response_check(response)
             # si recibio la solicitud, enviar a autorizar
             if ok:
                 response = xml_data._send_xml_data_to_autorice(auth_client)
@@ -1487,9 +1249,7 @@ class SriXmlData(models.Model):
         all_companies = self.env["res.company"].search([])
         # pasar flag: l10n_ec_xml_call_from_cron para que los errores salgan x log y no por excepcion
         for company in all_companies:
-            self.with_context(
-                allowed_company_ids=company.ids, l10n_ec_xml_call_from_cron=True,
-            )._send_mail_to_partner()
+            self.with_context(allowed_company_ids=company.ids, l10n_ec_xml_call_from_cron=True,)._send_mail_to_partner()
         return True
 
     @api.model
@@ -1517,9 +1277,7 @@ class SriXmlData(models.Model):
         portal_model = self.env["portal.wizard"]
         if not self.env.company.l10n_ec_create_login_for_partners:
             return False
-        partners = self.mapped("partner_id").filtered(
-            lambda x: not x.user_ids and x.l10n_ec_type_sri != "Consumidor"
-        )
+        partners = self.mapped("partner_id").filtered(lambda x: not x.user_ids and x.l10n_ec_type_sri != "Consumidor")
         if partners:
             ctx = self.env.context.copy()
             ctx["active_model"] = "res.partner"
@@ -1527,17 +1285,7 @@ class SriXmlData(models.Model):
             ctx["active_id"] = partners[0].id
             user_changes = []
             for partner in partners.sudo():
-                user_changes.append(
-                    (
-                        0,
-                        0,
-                        {
-                            "partner_id": partner.id,
-                            "email": partner.email,
-                            "in_portal": True,
-                        },
-                    )
-                )
+                user_changes.append((0, 0, {"partner_id": partner.id, "email": partner.email, "in_portal": True,},))
             wizard = portal_model.with_context(ctx).create({"user_ids": user_changes})
             try:
                 wizard.action_apply()
@@ -1579,10 +1327,7 @@ class SriXmlData(models.Model):
         # obtener el nombre del archivo
         file_name = self.generate_file_name()
         self.write(
-            {
-                "xml_file": base64.encodebytes(file_content.encode()),
-                "xml_filename": file_name,
-            }
+            {"xml_file": base64.encodebytes(file_content.encode()), "xml_filename": file_name,}
         )
         return file_name
 
@@ -1593,23 +1338,13 @@ class SriXmlData(models.Model):
                 # si esta cancelado, pero no tengo numero de autorizacion para cancelar, permitir eliminar
                 if xml_data.state == "cancel" and not xml_data.authorization_to_cancel:
                     continue
-                raise UserError(
-                    _(
-                        "No puede eliminar registros a menos que esten en estado borrador"
-                    )
-                )
+                raise UserError(_("No puede eliminar registros a menos que esten en estado borrador"))
         res = super(SriXmlData, self).unlink()
         return res
 
     @api.model
     def _search(
-        self,
-        args,
-        offset=0,
-        limit=None,
-        order=None,
-        count=False,
-        access_rights_uid=None,
+        self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None,
     ):
         new_domain = []
         for domain in args:
@@ -1628,12 +1363,7 @@ class SriXmlData(models.Model):
             else:
                 new_domain.append(domain)
         res = super(SriXmlData, self)._search(
-            new_domain,
-            offset=offset,
-            limit=limit,
-            order=order,
-            count=count,
-            access_rights_uid=access_rights_uid,
+            new_domain, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid,
         )
         return res
 
@@ -1649,9 +1379,7 @@ class SriXmlData(models.Model):
 
     @api.model
     def send_massage_documents_no_autorization(self):
-        template_mail_docs_no_autorization = self.env.ref(
-            "ecua_documentos_electronicos.mail_documents_no_autorization"
-        )
+        template_mail_docs_no_autorization = self.env.ref("ecua_documentos_electronicos.mail_documents_no_autorization")
         company = self.env.company
         if company.get_documents_electonic_no_autorization():
             template_mail_docs_no_autorization.send_mail(company.id)
@@ -1672,12 +1400,8 @@ class SriXmlDataMessageLine(models.Model):
     _description = "Mensajes S.R.I."
     _rec_name = "message"
 
-    xml_id = fields.Many2one(
-        "sri.xml.data", "XML Data", index=True, auto_join=True, ondelete="cascade"
-    )
-    message_code_id = fields.Many2one(
-        "sri.error.code", "Código de Mensaje", index=True, auto_join=True
-    )
+    xml_id = fields.Many2one("sri.xml.data", "XML Data", index=True, auto_join=True, ondelete="cascade")
+    message_code_id = fields.Many2one("sri.error.code", "Código de Mensaje", index=True, auto_join=True)
     message_type = fields.Char("Tipo", size=64)
     other_info = fields.Text(string="Información Adicional")
     message = fields.Text(string="Mensaje")
@@ -1689,9 +1413,7 @@ class SriXmlDataSendTry(models.Model):
     _name = "sri.xml.data.send.try"
     _description = "Intentos de envio a SRI"
 
-    xml_id = fields.Many2one(
-        "sri.xml.data", "XML Data", index=True, auto_join=True, ondelete="cascade"
-    )
+    xml_id = fields.Many2one("sri.xml.data", "XML Data", index=True, auto_join=True, ondelete="cascade")
     send_date = fields.Datetime("Send Date")
     response_date = fields.Datetime("Response Date")
     type_send = fields.Selection(

@@ -1,16 +1,6 @@
-import os
-import time
 from datetime import datetime
 
-from odoo import api, fields, models
-from odoo.exceptions import ValidationError, Warning, except_orm
-from odoo.tools import (
-    DEFAULT_SERVER_DATE_FORMAT as DF,
-    DEFAULT_SERVER_DATETIME_FORMAT as DTF,
-)
-from odoo.tools.translate import _
-
-import odoo.addons.decimal_precision as dp
+from odoo import api, models
 
 
 class ResCompany(models.Model):

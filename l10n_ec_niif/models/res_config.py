@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import fields, models
 
 
 class ResConfigSettings(models.TransientModel):
@@ -57,18 +57,13 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
     )
     l10n_ec_key_type_id = fields.Many2one(
-        "sri.key.type",
-        "Certificate File",
-        related="company_id.l10n_ec_key_type_id",
-        readonly=False,
+        "sri.key.type", "Certificate File", related="company_id.l10n_ec_key_type_id", readonly=False,
     )
     l10n_ec_ws_receipt_test = fields.Char(
-        "URL WS for testing on SRI for documents reception",
-        config_parameter="l10n_ec_ws_receipt_test",
+        "URL WS for testing on SRI for documents reception", config_parameter="l10n_ec_ws_receipt_test",
     )
     l10n_ec_ws_auth_test = fields.Char(
-        "URL WS for Testing environment on SRI for documents authorization",
-        config_parameter="l10n_ec_ws_auth_test",
+        "URL WS for Testing environment on SRI for documents authorization", config_parameter="l10n_ec_ws_auth_test",
     )
     l10n_ec_ws_receipt_production = fields.Char(
         "URL WS for Production environment on SRI for documents reception",
@@ -79,46 +74,30 @@ class ResConfigSettings(models.TransientModel):
         config_parameter="l10n_ec_ws_auth_production",
     )
     l10n_ec_electronic_invoice = fields.Boolean(
-        "Authorized for Invoice?",
-        related="company_id.l10n_ec_electronic_invoice",
-        readonly=False,
+        "Authorized for Invoice?", related="company_id.l10n_ec_electronic_invoice", readonly=False,
     )
     l10n_ec_electronic_withhold = fields.Boolean(
-        "Authorized for Withholding?",
-        related="company_id.l10n_ec_electronic_withhold",
-        readonly=False,
+        "Authorized for Withholding?", related="company_id.l10n_ec_electronic_withhold", readonly=False,
     )
     l10n_ec_electronic_credit_note = fields.Boolean(
-        "Authorized for Credit Note?",
-        related="company_id.l10n_ec_electronic_credit_note",
-        readonly=False,
+        "Authorized for Credit Note?", related="company_id.l10n_ec_electronic_credit_note", readonly=False,
     )
     l10n_ec_electronic_debit_note = fields.Boolean(
-        "Authorized for Debit Note?",
-        related="company_id.l10n_ec_electronic_debit_note",
-        readonly=False,
+        "Authorized for Debit Note?", related="company_id.l10n_ec_electronic_debit_note", readonly=False,
     )
     l10n_ec_electronic_liquidation = fields.Boolean(
-        "Authorized for Purchase Liquidation?",
-        related="company_id.l10n_ec_electronic_liquidation",
-        readonly=False,
+        "Authorized for Purchase Liquidation?", related="company_id.l10n_ec_electronic_liquidation", readonly=False,
     )
     # campo para la imagen que va en los documentos electronicos
     l10n_ec_electronic_logo = fields.Binary(
         "Logo for RIDE", related="company_id.l10n_ec_electronic_logo", readonly=False,
     )
     l10n_ec_max_intentos = fields.Integer(
-        "Maximum attempts for authorization",
-        related="company_id.l10n_ec_max_intentos",
-        readonly=False,
+        "Maximum attempts for authorization", related="company_id.l10n_ec_max_intentos", readonly=False,
     )
-    l10n_ec_ws_timeout = fields.Integer(
-        "Timeout Web Service", related="company_id.l10n_ec_ws_timeout", readonly=False
-    )
+    l10n_ec_ws_timeout = fields.Integer("Timeout Web Service", related="company_id.l10n_ec_ws_timeout", readonly=False)
     l10n_ec_cron_process = fields.Integer(
-        "Number Documents Process in Cron",
-        related="company_id.l10n_ec_cron_process",
-        readonly=False,
+        "Number Documents Process in Cron", related="company_id.l10n_ec_cron_process", readonly=False,
     )
     l10n_ec_send_mail_from = fields.Datetime(
         "Sent mail from", related="company_id.l10n_ec_send_mail_from", readonly=False
@@ -127,27 +106,19 @@ class ResConfigSettings(models.TransientModel):
         "Invoice?", related="company_id.l10n_ec_send_mail_invoice", readonly=False,
     )
     l10n_ec_send_mail_credit_note = fields.Boolean(
-        "Credit Note?",
-        related="company_id.l10n_ec_send_mail_credit_note",
-        readonly=False,
+        "Credit Note?", related="company_id.l10n_ec_send_mail_credit_note", readonly=False,
     )
     l10n_ec_send_mail_debit_note = fields.Boolean(
-        "Debit Note?",
-        related="company_id.l10n_ec_send_mail_debit_note",
-        readonly=False,
+        "Debit Note?", related="company_id.l10n_ec_send_mail_debit_note", readonly=False,
     )
     l10n_ec_send_mail_retention = fields.Boolean(
         "Withholding?", related="company_id.l10n_ec_send_mail_retention", readonly=False
     )
     l10n_ec_send_mail_liquidation = fields.Boolean(
-        "Purchase liquidation?",
-        related="company_id.l10n_ec_send_mail_liquidation",
-        readonly=False,
+        "Purchase liquidation?", related="company_id.l10n_ec_send_mail_liquidation", readonly=False,
     )
     l10n_ec_create_login_for_partners = fields.Boolean(
-        "Create login for portal user?",
-        related="company_id.l10n_ec_create_login_for_partners",
-        readonly=False,
+        "Create login for portal user?", related="company_id.l10n_ec_create_login_for_partners", readonly=False,
     )
     l10n_ec_invoice_version_xml_id = fields.Many2one(
         "l10n_ec.xml.version",
@@ -185,29 +156,19 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
     )
     l10n_ec_print_ride_main_code = fields.Boolean(
-        "Print main product code?",
-        related="company_id.l10n_ec_print_ride_main_code",
-        readonly=False,
+        "Print main product code?", related="company_id.l10n_ec_print_ride_main_code", readonly=False,
     )
     l10n_ec_print_ride_aux_code = fields.Boolean(
-        "Print secondary code?",
-        related="company_id.l10n_ec_print_ride_aux_code",
-        readonly=False,
+        "Print secondary code?", related="company_id.l10n_ec_print_ride_aux_code", readonly=False,
     )
     l10n_ec_print_ride_detail1 = fields.Boolean(
-        "Print detail additional 1?",
-        related="company_id.l10n_ec_print_ride_detail1",
-        readonly=False,
+        "Print detail additional 1?", related="company_id.l10n_ec_print_ride_detail1", readonly=False,
     )
     l10n_ec_print_ride_detail2 = fields.Boolean(
-        "Print detail additional 2?",
-        related="company_id.l10n_ec_print_ride_detail2",
-        readonly=False,
+        "Print detail additional 2?", related="company_id.l10n_ec_print_ride_detail2", readonly=False,
     )
     l10n_ec_print_ride_detail3 = fields.Boolean(
-        "Print detail additional 3?",
-        related="company_id.l10n_ec_print_ride_detail3",
-        readonly=False,
+        "Print detail additional 3?", related="company_id.l10n_ec_print_ride_detail3", readonly=False,
     )
     l10n_ec_sri_payment_id = fields.Many2one(
         "l10n_ec.sri.payment.method",
@@ -215,9 +176,5 @@ class ResConfigSettings(models.TransientModel):
         related="company_id.l10n_ec_sri_payment_id",
         readonly=False,
     )
-    l10n_ec_sri_login_url = fields.Char(
-        related="company_id.l10n_ec_sri_login_url", readonly=False,
-    )
-    l10n_ec_sri_password = fields.Char(
-        related="company_id.l10n_ec_sri_password", readonly=False,
-    )
+    l10n_ec_sri_login_url = fields.Char(related="company_id.l10n_ec_sri_login_url", readonly=False,)
+    l10n_ec_sri_password = fields.Char(related="company_id.l10n_ec_sri_password", readonly=False,)

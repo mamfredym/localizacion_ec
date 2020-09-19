@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <template id="electronic_report_common_head">
-        <div
-            class="row"
-            style="font-size: 11px; padding-top: 10px; padding-bottom: 10px; padding-right: 0px;"
-        >
-            <t
-                t-set="style_div_company"
-                t-value="'min-height: 230px; padding-left: 20px;'"
-            />
+        <div class="row" style="font-size: 11px; padding-top: 10px; padding-bottom: 10px; padding-right: 0px;">
+            <t t-set="style_div_company" t-value="'min-height: 230px; padding-left: 20px;'" />
             <t t-set="company_logo" t-value="company.logo" />
             <t t-if="company.l10n_ec_electronic_logo">
                 <t t-set="company_logo" t-value="company.l10n_ec_electronic_logo" />
@@ -26,27 +20,17 @@
                             </div>
                             <br />
                         </t>
-                        <div
-                            class="div-bordered div-radius"
-                            t-att-style="style_div_company"
-                        >
+                        <div class="div-bordered div-radius" t-att-style="style_div_company">
                             <div class="text-center text-uppercase">
                                 <strong t-field="company.name" />
                             </div>
-                            <div
-                                class="text-center"
-                                t-if="company.partner_id.city and company.partner_id.country_id"
-                            >
+                            <div class="text-center" t-if="company.partner_id.city and company.partner_id.country_id">
                                 <span t-esc="company.partner_id.city.capitalize()" />-
-                                <span
-                                    t-esc="company.partner_id.country_id.name.capitalize()"
-                                />
+                                <span t-esc="company.partner_id.country_id.name.capitalize()" />
                             </div>
                             <br />
                             <strong>Dir. Matriz: </strong>
-                            <span
-                                t-esc="company.partner_id.get_direccion_matriz(printer_point)"
-                            />
+                            <span t-esc="company.partner_id.get_direccion_matriz(printer_point)" />
                             <t t-if="company.partner_id.phone">
                                 <br />
                                 <strong>Telf.: </strong>
@@ -62,22 +46,16 @@
                             >
                                 <br />
                                 <strong>Dir. Sucursal: </strong>
-                                <span
-                                    t-esc="printer_point.agency_id.address_id.street"
-                                />
+                                <span t-esc="printer_point.agency_id.address_id.street" />
                                 <t t-if="printer_point.agency_id.address_id.phone">
                                     <br />
                                     <strong>Telf. Sucursal: </strong>
-                                    <span
-                                        t-field="printer_point.agency_id.address_id.phone"
-                                    />
+                                    <span t-field="printer_point.agency_id.address_id.phone" />
                                 </t>
                                 <t t-if="printer_point.agency_id.address_id.email">
                                     <br />
                                     <strong>Email Sucursal: </strong>
-                                    <span
-                                        t-field="printer_point.agency_id.address_id.email"
-                                    />
+                                    <span t-field="printer_point.agency_id.address_id.email" />
                                 </t>
                             </t>
                             <t
@@ -115,19 +93,14 @@
                             <br />
                             <br />
                             <strong>AMBIENTE: </strong>
-                            <span
-                                t-field="o.l10n_ec_xml_data_id.l10n_ec_type_environment"
-                            />
+                            <span t-field="o.l10n_ec_xml_data_id.l10n_ec_type_environment" />
                             <br /><br />
                             <strong>EMISION: </strong>
                             <span t-esc="'Normal'" />
                             <br /><br />
                             <strong>CLAVE DE ACCESO: </strong>
                             <br />
-                            <div
-                                class="oe_product_image text-center"
-                                t-if="o.l10n_ec_xml_key"
-                            >
+                            <div class="oe_product_image text-center" t-if="o.l10n_ec_xml_key">
                                 <img
                                     class="barcode"
                                     t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;' % ('Code128', o.l10n_ec_xml_key, 400, 100)"
@@ -151,31 +124,19 @@
                 <span t-esc="comment" />
                 <br />
             </t>
-            <t
-                t-if="partner.street or (partner.child_ids and partner.child_ids[0].street)"
-            >
+            <t t-if="partner.street or (partner.child_ids and partner.child_ids[0].street)">
                 <strong>Dirección: </strong>
-                <span
-                    t-esc="partner.street or (partner.child_ids and partner.child_ids[0].street) or ''"
-                />
+                <span t-esc="partner.street or (partner.child_ids and partner.child_ids[0].street) or ''" />
                 <br />
             </t>
-            <t
-                t-if="partner.phone or (partner.child_ids and partner.child_ids[0].phone)"
-            >
+            <t t-if="partner.phone or (partner.child_ids and partner.child_ids[0].phone)">
                 <strong>Telefono: </strong>
-                <span
-                    t-esc="partner.phone or (partner.child_ids and partner.child_ids[0].phone) or ''"
-                />
+                <span t-esc="partner.phone or (partner.child_ids and partner.child_ids[0].phone) or ''" />
                 <br />
             </t>
-            <t
-                t-if="partner.email or (partner.child_ids and partner.child_ids[0].email)"
-            >
+            <t t-if="partner.email or (partner.child_ids and partner.child_ids[0].email)">
                 <strong>Email: </strong>
-                <span
-                    t-esc="partner.email or (partner.child_ids and partner.child_ids[0].email) or ''"
-                />
+                <span t-esc="partner.email or (partner.child_ids and partner.child_ids[0].email) or ''" />
                 <br />
             </t>
             <!--			<t t-foreach="o.info_aditional_ids" t-as="info_aditional">-->
@@ -190,9 +151,7 @@
         <table class="table table-sm table-bordered-black small">
             <thead>
                 <tr>
-                    <th
-                        style="border: 1px solid black; border-bottom: 1px solid black !important;"
-                    >Forma de Pago</th>
+                    <th style="border: 1px solid black; border-bottom: 1px solid black !important;">Forma de Pago</th>
                     <th
                         class="text-center"
                         style="border: 1px solid black; border-bottom: 1px solid black !important;"

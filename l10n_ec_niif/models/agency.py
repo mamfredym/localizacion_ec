@@ -15,29 +15,15 @@ class L10nEcAgency(models.Model):
     _description = "Agencia"
 
     name = fields.Char("Agency Name", required=True, readonly=False, index=True)
-    count_invoice = fields.Integer(
-        string="Count Invoice", compute="_compute_count_invoice"
-    )
-    number = fields.Char(
-        string="S.R.I. Number", size=3, required=True, readonly=False, index=True
-    )
-    printer_point_ids = fields.One2many(
-        "l10n_ec.point.of.emission", "agency_id", "Points of Emission"
-    )
-    user_ids = fields.Many2many(
-        "res.users", string="Allowed Users", help="", domain=[("share", "=", False)]
-    )
+    count_invoice = fields.Integer(string="Count Invoice", compute="_compute_count_invoice")
+    number = fields.Char(string="S.R.I. Number", size=3, required=True, readonly=False, index=True)
+    printer_point_ids = fields.One2many("l10n_ec.point.of.emission", "agency_id", "Points of Emission")
+    user_ids = fields.Many2many("res.users", string="Allowed Users", help="", domain=[("share", "=", False)])
     address_id = fields.Many2one("res.partner", "Address", required=False, help="",)
     company_id = fields.Many2one(
-        "res.company",
-        "Company",
-        required=False,
-        help="",
-        default=lambda self: self.env.company,
+        "res.company", "Company", required=False, help="", default=lambda self: self.env.company,
     )
-    partner_id = fields.Many2one(
-        "res.partner", string="Company's Partner", related="company_id.partner_id"
-    )
+    partner_id = fields.Many2one("res.partner", string="Company's Partner", related="company_id.partner_id")
     active = fields.Boolean(string="Active?", default=True)
 
     def _compute_count_invoice(self):
@@ -50,9 +36,7 @@ class L10nEcAgency(models.Model):
         for agency in self.with_context(active_test=False):
             if agency.count_invoice > 0:
                 raise UserError(
-                    _(
-                        "You cannot delete an agency that contains an invoice. You can only archive the agency."
-                    )
+                    _("You cannot delete an agency that contains an invoice. You can only archive the agency.")
                 )
         # Delete the empty agency
         result = super(L10nEcAgency, self).unlink()
@@ -65,19 +49,13 @@ class L10nEcAgency(models.Model):
                 try:
                     number_int = int(agency.number)
                     if number_int < 1 or number_int > 999:
-                        raise ValidationError(
-                            _("Number of agency must be between 1 and 999")
-                        )
+                        raise ValidationError(_("Number of agency must be between 1 and 999"))
                 except ValueError as e:
                     _logger.debug("Error parsing agency number %s" % str(e))
                     raise ValidationError(_("Number of agency must be only numbers"))
 
     _sql_constraints = [
-        (
-            "number_uniq",
-            "unique (number, company_id)",
-            _("Number of Agency must be unique by company!"),
-        ),
+        ("number_uniq", "unique (number, company_id)", _("Number of Agency must be unique by company!"),),
     ]
 
 
@@ -88,29 +66,15 @@ class L10EcPointOfEmission(models.Model):
 
     _name = "l10n_ec.point.of.emission"
 
-    name = fields.Char(
-        "Point of emission's name", required=True, readonly=False, index=True
-    )
-    agency_id = fields.Many2one(
-        "l10n_ec.agency", "Agency", required=False, index=True, auto_join=True
-    )
-    company_id = fields.Many2one(
-        comodel_name="res.company", string="Company", related="agency_id.company_id"
-    )
-    number = fields.Char(
-        "S.R.I. Number", size=3, required=True, readonly=False, index=True
-    )
+    name = fields.Char("Point of emission's name", required=True, readonly=False, index=True)
+    agency_id = fields.Many2one("l10n_ec.agency", "Agency", required=False, index=True, auto_join=True)
+    company_id = fields.Many2one(comodel_name="res.company", string="Company", related="agency_id.company_id")
+    number = fields.Char("S.R.I. Number", size=3, required=True, readonly=False, index=True)
     active = fields.Boolean(string="Active?", related="agency_id.active", default=True)
-    count_invoice = fields.Integer(
-        string="Count Invoice", related="agency_id.count_invoice"
-    )
+    count_invoice = fields.Integer(string="Count Invoice", related="agency_id.count_invoice")
     type_emission = fields.Selection(
         string="Type Emission",
-        selection=[
-            ("electronic", "Electronic"),
-            ("pre_printed", "Pre Printed"),
-            ("auto_printer", "Auto Printer"),
-        ],
+        selection=[("electronic", "Electronic"), ("pre_printed", "Pre Printed"), ("auto_printer", "Auto Printer"),],
         required=True,
         default="electronic",
     )
@@ -160,26 +124,14 @@ class L10EcPointOfEmission(models.Model):
 
     @api.model
     def _search(
-        self,
-        args,
-        offset=0,
-        limit=None,
-        order=None,
-        count=False,
-        access_rights_uid=None,
+        self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None,
     ):
         args.extend(self._l10n_ec_get_extra_domain_user())
-        res = super(L10EcPointOfEmission, self)._search(
-            args, offset, limit, order, count, access_rights_uid
-        )
+        res = super(L10EcPointOfEmission, self)._search(args, offset, limit, order, count, access_rights_uid)
         return res
 
     _sql_constraints = [
-        (
-            "number_uniq",
-            "unique (number, agency_id)",
-            _("The number of point of emission must be unique by Agency!"),
-        ),
+        ("number_uniq", "unique (number, agency_id)", _("The number of point of emission must be unique by Agency!"),),
     ]
 
     @api.model
@@ -204,7 +156,6 @@ class L10EcPointOfEmission(models.Model):
                 document_format = self.create_number(seq)
             except Exception as e:
                 _logger("Error function complete_number %s" % str(e))
-                pass
         return document_format
 
     def _get_first_number_electronic(self, invoice_type):
@@ -216,9 +167,7 @@ class L10EcPointOfEmission(models.Model):
                 break
         return first_number_electronic
 
-    def get_authorization_for_number(
-        self, invoice_type, document_number, emission_date=None, company=None
-    ):
+    def get_authorization_for_number(self, invoice_type, document_number, emission_date=None, company=None):
         """
         Search a authorization for document type and document_number requested
         :param invoice_type: Options available are:
@@ -268,10 +217,7 @@ class L10EcPointOfEmission(models.Model):
         # mostrar excepcion si el punto de emision es electronico
         # pero para el tipo de documento no se esta en produccion aun(ambiente pruebas)
         force_preprint = False
-        if (
-            self.type_emission == "electronic"
-            and not xml_model.l10n_ec_is_environment_production(invoice_type, self)
-        ):
+        if self.type_emission == "electronic" and not xml_model.l10n_ec_is_environment_production(invoice_type, self):
             force_preprint = True
         if self.type_emission in ("pre_printed", "auto_printer") or force_preprint:
             if not doc_find:
@@ -280,13 +226,7 @@ class L10EcPointOfEmission(models.Model):
                         "It is not possible to find authorization for the document type %s "
                         "at the point of emission %s for the agency %s with date %s on company: %s"
                     )
-                    % (
-                        model_description,
-                        self.number,
-                        self.agency_id.number,
-                        emission_date,
-                        company.name,
-                    )
+                    % (model_description, self.number, self.agency_id.number, emission_date, company.name,)
                 )
         return doc_find
 
@@ -333,9 +273,7 @@ class L10EcPointOfEmission(models.Model):
             if next_seq:
                 seq = int(next_seq.split("-")[2])
             if self.env.context.get("numbers_skip", []):
-                seq = int(
-                    sorted(self.env.context.get("numbers_skip", []))[-1].split("-")[2]
-                )
+                seq = int(sorted(self.env.context.get("numbers_skip", []))[-1].split("-")[2])
         except Exception as e:
             _logger.debug("Error parsing number: %s" % str(e))
             seq = False
@@ -351,9 +289,7 @@ class L10EcPointOfEmission(models.Model):
                         doc_finded = doc
                         break
                     elif not seq:
-                        next_seq = doc.point_of_emission_id.create_number(
-                            doc.first_sequence
-                        )
+                        next_seq = doc.point_of_emission_id.create_number(doc.first_sequence)
                         doc_finded = doc
                         break
             if not doc_finded and recs_finded:
@@ -364,13 +300,8 @@ class L10EcPointOfEmission(models.Model):
                     seq = False
                 if seq:
                     for doc in doc_recs:
-                        if (
-                            doc.first_sequence > seq
-                            and date >= doc.authorization_id.start_date
-                        ):
-                            next_seq = doc.point_of_emission_id.create_number(
-                                doc.first_sequence
-                            )
+                        if doc.first_sequence > seq and date >= doc.authorization_id.start_date:
+                            next_seq = doc.point_of_emission_id.create_number(doc.first_sequence)
                             doc_finded = doc
                             break
                     if not doc_finded:
@@ -382,10 +313,7 @@ class L10EcPointOfEmission(models.Model):
         # mostrar excepcion si el punto de emision es electronico
         # pero para el tipo de documento no se esta en produccion aun(ambiente pruebas)
         force_preprint = False
-        if (
-            self.type_emission == "electronic"
-            and not xml_model.l10n_ec_is_environment_production(invoice_type, self)
-        ):
+        if self.type_emission == "electronic" and not xml_model.l10n_ec_is_environment_production(invoice_type, self):
             force_preprint = True
             raise_exception = True
         if self.type_emission in ("pre_printed", "auto_printer") or force_preprint:
@@ -400,18 +328,10 @@ class L10EcPointOfEmission(models.Model):
             return next_seq, doc_finded
         elif self.type_emission == "electronic":
             xml_model = self.env["sri.xml.data"]
-            first_number_electronic = self.env.context.get(
-                "first_number_electronic", ""
-            )
+            first_number_electronic = self.env.context.get("first_number_electronic", "")
             # tomar el primer numero para facturacion electronica si esta en produccion
-            if (
-                not first_number_electronic
-                and self
-                and xml_model.l10n_ec_is_environment_production(invoice_type, self)
-            ):
-                first_number_electronic = self._get_first_number_electronic(
-                    invoice_type
-                )
+            if not first_number_electronic and self and xml_model.l10n_ec_is_environment_production(invoice_type, self):
+                first_number_electronic = self._get_first_number_electronic(invoice_type)
             # si tengo un secuencial y es menor al configurado como el inicio de facturacion electronica
             # devolver el numero configurado
             # cuando el secuencial obtenido sea mayor, devolver ese secuencial
@@ -446,9 +366,7 @@ class L10EcPointOfEmission(models.Model):
                 domain.append((field_name, "!=", False))
                 domain.append((field_name, ">=", next_seq))
                 domain.append(("company_id", "=", self.company_id.id))
-                recs = res_model.with_context(skip_picking_type_filter=True).search(
-                    domain
-                )
+                recs = res_model.with_context(skip_picking_type_filter=True).search(domain)
                 number_in_use = []
                 if recs:
                     if len(recs.ids) == 1:
@@ -468,12 +386,8 @@ class L10EcPointOfEmissionDocumentSequence(models.Model):
 
     _name = "l10n_ec.point.of.emission.document.sequence"
 
-    printer_id = fields.Many2one(
-        comodel_name="l10n_ec.point.of.emission", string="Printer", required=True,
-    )
-    initial_sequence = fields.Integer(
-        string="Initial Sequence", required=True, default=1
-    )
+    printer_id = fields.Many2one(comodel_name="l10n_ec.point.of.emission", string="Printer", required=True,)
+    initial_sequence = fields.Integer(string="Initial Sequence", required=True, default=1)
     document_type = fields.Selection(
         string="Document Type",
         selection=[

@@ -1,9 +1,6 @@
 <odoo>
     <template id="portal_electronic_chatter" name="Allow Comments &amp; History">
-        <xpath
-            expr="//div[@id='electronic_content']//div[hasclass('o_portal_html_view')]"
-            position="after"
-        >
+        <xpath expr="//div[@id='electronic_content']//div[hasclass('o_portal_html_view')]" position="after">
             <div id="electronic_chatter" class="mt-4">
                 <h2>History</h2>
                 <t t-call="portal.message_thread">
@@ -15,22 +12,13 @@
             </div>
         </xpath>
     </template>
-    <template
-        id="portal_document_electronic_error"
-        name="Documento electronico error/warning display"
-    >
+    <template id="portal_document_electronic_error" name="Documento electronico error/warning display">
         <div class="row mr16">
             <div
                 t-attf-class="'col-lg-12 mr16 ml16 alert alert-dismissable' #{'alert-danger' if error else 'alert-warning'}"
                 role="alert"
             >
-                <a
-                    href="#"
-                    class="close"
-                    data-dismiss="alert"
-                    aria-label="close"
-                    title="close"
-                >×</a>
+                <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
                 <t t-if="error == 'generic'" name="generic">
                     Hubo un error procesando su solicitud, intente mas tarde
                 </t>
@@ -44,22 +32,10 @@
             </div>
         </div>
     </template>
-    <template
-        id="portal_document_electronic_success"
-        name="Documento electronico success display"
-    >
+    <template id="portal_document_electronic_success" name="Documento electronico success display">
         <div class="row mr16">
-            <div
-                class="col-lg-12 mr16 ml16 alert alert-dismissable alert-success"
-                role="status"
-            >
-                <a
-                    href="#"
-                    class="close"
-                    data-dismiss="alert"
-                    aria-label="close"
-                    title="close"
-                >×</a>
+            <div class="col-lg-12 mr16 ml16 alert alert-dismissable alert-success" role="status">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
             </div>
         </div>
     </template>

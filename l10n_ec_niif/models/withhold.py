@@ -3,7 +3,7 @@ import re
 from xml.etree.ElementTree import SubElement
 
 from odoo import _, api, fields, models, tools
-from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 _STATES = {"draft": [("readonly", False)]}
 _logger = logging.getLogger(__name__)
@@ -24,23 +24,10 @@ class L10nEcWithhold(models.Model):
     _order = "issue_date DESC, number DESC"
 
     company_id = fields.Many2one(
-        "res.company",
-        "Company",
-        required=True,
-        ondelete="restrict",
-        default=lambda self: self.env.company,
+        "res.company", "Company", required=True, ondelete="restrict", default=lambda self: self.env.company,
     )
-    currency_id = fields.Many2one(
-        "res.currency", string="Currency", related="company_id.currency_id", store=True,
-    )
-    number = fields.Char(
-        string="Number",
-        required=True,
-        readonly=True,
-        states=_STATES,
-        tracking=True,
-        size=17,
-    )
+    currency_id = fields.Many2one("res.currency", string="Currency", related="company_id.currency_id", store=True,)
+    number = fields.Char(string="Number", required=True, readonly=True, states=_STATES, tracking=True, size=17,)
     no_number = fields.Boolean("Withholding  without Number?")
     state = fields.Selection(
         string="State",
@@ -50,9 +37,7 @@ class L10nEcWithhold(models.Model):
         default="draft",
         tracking=True,
     )
-    issue_date = fields.Date(
-        string="Issue date", readonly=True, states=_STATES, required=True, tracking=True
-    )
+    issue_date = fields.Date(string="Issue date", readonly=True, states=_STATES, required=True, tracking=True)
     partner_id = fields.Many2one(
         comodel_name="res.partner",
         string="Partner",
@@ -88,33 +73,19 @@ class L10nEcWithhold(models.Model):
         tracking=True,
     )
     l10n_ec_supplier_authorization_number = fields.Char(
-        string="Supplier Authorization",
-        required=False,
-        size=10,
-        readonly=True,
-        states=_STATES,
+        string="Supplier Authorization", required=False, size=10, readonly=True, states=_STATES,
     )
-    l10n_ec_type_supplier_authorization = fields.Selection(
-        related="company_id.l10n_ec_type_supplier_authorization"
-    )
+    l10n_ec_type_supplier_authorization = fields.Selection(related="company_id.l10n_ec_type_supplier_authorization")
     type = fields.Selection(
         string="Type",
-        selection=[
-            ("sale", "On Sales"),
-            ("purchase", "On Purchases"),
-            ("credit_card", "On Credit Card Liquidation"),
-        ],
+        selection=[("sale", "On Sales"), ("purchase", "On Purchases"), ("credit_card", "On Credit Card Liquidation"),],
         required=True,
         readonly=True,
         default=lambda self: self.env.context.get("withhold_type", "sale"),
     )
     document_type = fields.Selection(
         string="Document type",
-        selection=[
-            ("electronic", "Electronic"),
-            ("pre_printed", "Pre Printed"),
-            ("auto_printer", "Auto Printer"),
-        ],
+        selection=[("electronic", "Electronic"), ("pre_printed", "Pre Printed"), ("auto_printer", "Auto Printer"),],
         required=True,
         readonly=True,
         states=_STATES,
@@ -122,12 +93,7 @@ class L10nEcWithhold(models.Model):
         tracking=True,
     )
     electronic_authorization = fields.Char(
-        string="Electronic authorization",
-        size=49,
-        readonly=True,
-        states=_STATES,
-        required=False,
-        tracking=True,
+        string="Electronic authorization", size=49, readonly=True, states=_STATES, required=False, tracking=True,
     )
     point_of_emission_id = fields.Many2one(
         comodel_name="l10n_ec.point.of.emission",
@@ -153,25 +119,14 @@ class L10nEcWithhold(models.Model):
     )
     l10n_ec_sri_authorization_state = fields.Selection(
         string="Authorization state on SRI",
-        selection=[
-            ("to_check", "To Check"),
-            ("valid", "Valid"),
-            ("invalid", "Invalid"),
-        ],
+        selection=[("to_check", "To Check"), ("valid", "Valid"), ("invalid", "Invalid"),],
         readonly=True,
         copy=False,
         default="to_check",
     )
-    concept = fields.Char(
-        string="Concept", readonly=True, states=_STATES, required=False, tracking=True
-    )
+    concept = fields.Char(string="Concept", readonly=True, states=_STATES, required=False, tracking=True)
     note = fields.Char(string="Note", required=False)
-    move_id = fields.Many2one(
-        comodel_name="account.move",
-        string="Account Move",
-        ondelete="restrict",
-        readonly=True,
-    )
+    move_id = fields.Many2one(comodel_name="account.move", string="Account Move", ondelete="restrict", readonly=True,)
     line_ids = fields.One2many(
         comodel_name="l10n_ec.withhold.line",
         inverse_name="withhold_id",
@@ -186,45 +141,25 @@ class L10nEcWithhold(models.Model):
         states=_STATES,
         help="With this option activated, the system will not require an invoice to issue the Debut or Credit Note",
     )
-    l10n_ec_legacy_document_date = fields.Date(
-        string="External Document Date", readonly=True, states=_STATES,
-    )
-    l10n_ec_legacy_document_number = fields.Char(
-        string="External Document Number", readonly=True, states=_STATES,
-    )
+    l10n_ec_legacy_document_date = fields.Date(string="External Document Date", readonly=True, states=_STATES,)
+    l10n_ec_legacy_document_number = fields.Char(string="External Document Number", readonly=True, states=_STATES,)
 
     @api.depends(
         "line_ids.type", "line_ids.tax_amount",
     )
     def _compute_tax_amount(self):
         for rec in self:
-            rec.tax_iva = sum(
-                i.tax_amount_currency
-                for i in rec.line_ids.filtered(lambda x: x.type == "iva")
-            )
-            rec.tax_rent = sum(
-                r.tax_amount_currency
-                for r in rec.line_ids.filtered(lambda x: x.type == "rent")
-            )
+            rec.tax_iva = sum(i.tax_amount_currency for i in rec.line_ids.filtered(lambda x: x.type == "iva"))
+            rec.tax_rent = sum(r.tax_amount_currency for r in rec.line_ids.filtered(lambda x: x.type == "rent"))
 
-    tax_iva = fields.Monetary(
-        string="Withhold IVA", compute="_compute_tax_amount", store=True, readonly=True
-    )
-    tax_rent = fields.Monetary(
-        string="Withhold Rent", compute="_compute_tax_amount", store=True, readonly=True
-    )
-    l10n_ec_related_document = fields.Boolean(
-        string="Have related document?", compute="_compute_is_related_document"
-    )
+    tax_iva = fields.Monetary(string="Withhold IVA", compute="_compute_tax_amount", store=True, readonly=True)
+    tax_rent = fields.Monetary(string="Withhold Rent", compute="_compute_tax_amount", store=True, readonly=True)
+    l10n_ec_related_document = fields.Boolean(string="Have related document?", compute="_compute_is_related_document")
     l10n_ec_is_create_from_invoice = fields.Boolean(string="Is created from invoice?")
     move_ids = fields.One2many(
-        comodel_name="account.move",
-        inverse_name="l10n_ec_withhold_id",
-        string="Accounting entries",
+        comodel_name="account.move", inverse_name="l10n_ec_withhold_id", string="Accounting entries",
     )
-    move_count = fields.Integer(
-        string="Move Count", compute="_compute_l10n_ec_withhold_ids", store=False
-    )
+    move_count = fields.Integer(string="Move Count", compute="_compute_l10n_ec_withhold_ids", store=False)
 
     @api.constrains("l10n_ec_supplier_authorization_number",)
     def _check_l10n_ec_supplier_authorization_number(self):
@@ -233,20 +168,14 @@ class L10nEcWithhold(models.Model):
             if withold.l10n_ec_supplier_authorization_number and not re.match(
                 cadena, withold.l10n_ec_supplier_authorization_number
             ):
-                raise ValidationError(
-                    _(
-                        "Invalid supplier authorization number, this must be like 0123456789"
-                    )
-                )
+                raise ValidationError(_("Invalid supplier authorization number, this must be like 0123456789"))
 
     @api.constrains("l10n_ec_legacy_document_number")
     @api.onchange("l10n_ec_legacy_document_number")
     def _check_l10n_ec_legacy_document_number(self):
         for withhold in self:
             if withhold.l10n_ec_legacy_document_number:
-                withhold._format_withhold_document_number(
-                    withhold.l10n_ec_legacy_document_number
-                )
+                withhold._format_withhold_document_number(withhold.l10n_ec_legacy_document_number)
 
     def _compute_access_url(self):
         super(L10nEcWithhold, self)._compute_access_url()
@@ -265,18 +194,13 @@ class L10nEcWithhold(models.Model):
         if not document_number:
             return False
         if not re.match(r"\d{3}-\d{3}-\d{9}$", document_number):
-            raise UserError(
-                _("Ecuadorian Document %s must be like 001-001-123456789")
-                % (self.display_name)
-            )
+            raise UserError(_("Ecuadorian Document %s must be like 001-001-123456789") % (self.display_name))
         return document_number
 
     @api.constrains("invoice_id")
     def _check_no_retention_same_invoice(self):
         for rec in self:
-            l10n_ec_withhold_line_ids = rec.search(
-                [("invoice_id", "=", rec.invoice_id.id), ("id", "!=", rec.id)]
-            )
+            l10n_ec_withhold_line_ids = rec.search([("invoice_id", "=", rec.invoice_id.id), ("id", "!=", rec.id)])
             if l10n_ec_withhold_line_ids:
                 raise UserError(_("Invoice is already registered"))
         return True
@@ -286,9 +210,7 @@ class L10nEcWithhold(models.Model):
     def _onchange_number_sale_withhold(self):
         for rec in self:
             if rec.number:
-                format_document_number = rec._format_withhold_document_number(
-                    rec.number
-                )
+                format_document_number = rec._format_withhold_document_number(rec.number)
                 if rec.number != format_document_number:
                     rec.number = format_document_number
 
@@ -298,14 +220,7 @@ class L10nEcWithhold(models.Model):
         authorization_supplier_model = self.env["l10n_ec.sri.authorization.supplier"]
 
         def _create_move_line(
-            move_id,
-            credit,
-            debit,
-            account_id,
-            tax_code_id=None,
-            tax_amount=0.0,
-            name="/",
-            partner_id=None,
+            move_id, credit, debit, account_id, tax_code_id=None, tax_amount=0.0, name="/", partner_id=None,
         ):
             vals_move_line = {
                 "move_id": move_id,
@@ -317,9 +232,7 @@ class L10nEcWithhold(models.Model):
                 "name": name,
                 "partner_id": partner_id,
             }
-            return model_aml.with_context(check_move_validity=False).create(
-                vals_move_line
-            )
+            return model_aml.with_context(check_move_validity=False).create(vals_move_line)
 
         for rec in self:
             if rec.type == "sale":
@@ -329,38 +242,21 @@ class L10nEcWithhold(models.Model):
                 if rec.document_type in ("pre_printed", "auto_printer"):
                     if rec.partner_authorization_id:
                         authorization_supplier_model.check_number_document(
-                            "withhold_sale",
-                            rec.number,
-                            rec.partner_authorization_id,
-                            rec.issue_date,
-                            rec.id,
-                            False,
+                            "withhold_sale", rec.number, rec.partner_authorization_id, rec.issue_date, rec.id, False,
                         )
                     elif not rec.l10n_ec_supplier_authorization_number:
-                        raise UserError(
-                            _("You must enter the authorization of the third party")
-                        )
+                        raise UserError(_("You must enter the authorization of the third party"))
                 # intentar validar el documento en linea con el SRI
                 rec._l10n_ec_action_validate_authorization_sri()
                 destination_account_id = rec.partner_id.property_account_receivable_id
                 if not rec.line_ids:
                     raise UserError(_("You must have at least one line to continue"))
                 if not rec.company_id.l10n_ec_withhold_journal_id:
-                    raise UserError(
-                        _("You must configure Withhold Journal on Company to continue")
-                    )
+                    raise UserError(_("You must configure Withhold Journal on Company to continue"))
                 if not rec.company_id.l10n_ec_withhold_sale_iva_account_id:
-                    raise UserError(
-                        _(
-                            "You must configure Withhold Sale Vat Account on Company to continue"
-                        )
-                    )
+                    raise UserError(_("You must configure Withhold Sale Vat Account on Company to continue"))
                 if not rec.company_id.l10n_ec_withhold_sale_rent_account_id:
-                    raise UserError(
-                        _(
-                            "You must configure Withhold Sale Rent Account on Company to continue"
-                        )
-                    )
+                    raise UserError(_("You must configure Withhold Sale Rent Account on Company to continue"))
                 vals_move = {
                     "ref": _("RET CLI: %s") % rec.number,
                     "date": rec.issue_date,
@@ -369,16 +265,13 @@ class L10nEcWithhold(models.Model):
                     "journal_id": rec.company_id.l10n_ec_withhold_journal_id.id,
                     "type": "entry",
                     "l10n_ec_withhold_id": rec.id,
-                    "currency_id": rec.line_ids.mapped("currency_id").id
-                    or self.env.company.currency_id.id,
+                    "currency_id": rec.line_ids.mapped("currency_id").id or self.env.company.currency_id.id,
                 }
                 move_rec = model_move.create(vals_move)
                 rec.move_id = move_rec.id
                 invoice_group_to_reconcile = {}
                 for line in rec.line_ids:
-                    invoice_group_to_reconcile.setdefault(
-                        line.invoice_id.id, model_aml.browse()
-                    )
+                    invoice_group_to_reconcile.setdefault(line.invoice_id.id, model_aml.browse())
                     for aml in line.invoice_id.line_ids.filtered(
                         lambda line: not line.reconciled
                         and line.account_id == destination_account_id
@@ -390,22 +283,13 @@ class L10nEcWithhold(models.Model):
                         tax_code = False
                         name = False
                         if line.type == "iva":
-                            account_id = (
-                                rec.company_id.l10n_ec_withhold_sale_iva_account_id.id
-                            )
-                            tax_code = (
-                                rec.company_id.l10n_ec_withhold_sale_iva_tag_id.ids
-                            )
+                            account_id = rec.company_id.l10n_ec_withhold_sale_iva_account_id.id
+                            tax_code = rec.company_id.l10n_ec_withhold_sale_iva_tag_id.ids
                             name = _("Withhold Vat. %s") % line.invoice_id.display_name
                         elif line.type == "rent":
-                            account_id = (
-                                rec.company_id.l10n_ec_withhold_sale_rent_account_id.id
-                            )
+                            account_id = rec.company_id.l10n_ec_withhold_sale_rent_account_id.id
                             tax_code = []
-                            name = (
-                                _("Withhold Rent Tax. %s")
-                                % line.invoice_id.display_name
-                            )
+                            name = _("Withhold Rent Tax. %s") % line.invoice_id.display_name
                         _create_move_line(
                             move_id=move_rec.id,
                             credit=0.0,
@@ -415,9 +299,7 @@ class L10nEcWithhold(models.Model):
                             tax_amount=line.tax_amount,
                             name=name,
                         )
-                        invoice_group_to_reconcile[
-                            line.invoice_id.id
-                        ] |= _create_move_line(
+                        invoice_group_to_reconcile[line.invoice_id.id] |= _create_move_line(
                             move_id=move_rec.id,
                             credit=line.tax_amount,
                             debit=0.0,
@@ -446,25 +328,21 @@ class L10nEcWithhold(models.Model):
                     current_move = rec.move_id
                     rec.move_id = False
                     current_move.unlink()
-        return self.write(
-            {"state": "cancelled", "l10n_ec_sri_authorization_state": "to_check"}
-        )
+        return self.write({"state": "cancelled", "l10n_ec_sri_authorization_state": "to_check"})
 
     def _l10n_ec_action_validate_authorization_sri(self):
         # intentar validar el documento en linea con el SRI
         if self.type == "sale":
-            if (
-                self.document_type in ("pre_printed", "auto_printer")
-            ) and tools.config.get("validate_authorization_sri", True):
+            if (self.document_type in ("pre_printed", "auto_printer")) and tools.config.get(
+                "validate_authorization_sri", True
+            ):
                 if self.partner_authorization_id:
                     authorization_number = self.partner_authorization_id.number
                 else:
                     authorization_number = self.l10n_ec_supplier_authorization_number
                 response_sri = {}
                 try:
-                    response_sri = self.env[
-                        "l10n_ec.sri.authorization.supplier"
-                    ].validate_authorization_into_sri(
+                    response_sri = self.env["l10n_ec.sri.authorization.supplier"].validate_authorization_into_sri(
                         authorization_number,
                         self.commercial_partner_id.vat,
                         "withholding",
@@ -478,9 +356,7 @@ class L10nEcWithhold(models.Model):
                     # usar los datos del contribuyente en su lugar
                     if not response_sri.get("contribuyente"):
                         raise UserError(
-                            _(
-                                "Document was reviewed online with SRI and Authorization is invalid. %s"
-                            )
+                            _("Document was reviewed online with SRI and Authorization is invalid. %s")
                             % response_sri.get("estado")
                         )
                     else:
@@ -489,15 +365,12 @@ class L10nEcWithhold(models.Model):
                 xml_data = self.env["sri.xml.data"]
                 try:
                     limit_days = int(
-                        self.env["ir.config_parameter"]
-                        .sudo()
-                        .get_param("sri.days.to_validate_documents", 3)
+                        self.env["ir.config_parameter"].sudo().get_param("sri.days.to_validate_documents", 3)
                     )
                 except Exception as ex:
                     limit_days = 3
                     _logger.error(
-                        "Error get parameter sri.days.to_validate_documents %s",
-                        tools.ustr(ex),
+                        "Error get parameter sri.days.to_validate_documents %s", tools.ustr(ex),
                     )
                 is_authorized = False
                 try:
@@ -506,10 +379,7 @@ class L10nEcWithhold(models.Model):
                         claveAccesoComprobante=self.electronic_authorization
                     )
                     autorizacion_list = []
-                    if (
-                        hasattr(response, "autorizaciones")
-                        and response.autorizaciones is not None
-                    ):
+                    if hasattr(response, "autorizaciones") and response.autorizaciones is not None:
                         if not isinstance(response.autorizaciones.autorizacion, list):
                             autorizacion_list = [response.autorizaciones.autorizacion]
                         else:
@@ -546,9 +416,7 @@ class L10nEcWithhold(models.Model):
             action["views"] = [(self.env.ref("account.view_move_form").id, "form")]
             action["res_id"] = moves.id
         action["context"] = dict(
-            self._context,
-            default_partner_id=self.partner_id.id,
-            default_l10n_ec_withhold_id=self.id,
+            self._context, default_partner_id=self.partner_id.id, default_l10n_ec_withhold_id=self.id,
         )
         return action
 
@@ -568,10 +436,7 @@ class L10nEcWithhold(models.Model):
         ):
             partners |= self.commercial_partner_id
         for contact in self.commercial_partner_id.child_ids:
-            if (
-                contact.l10n_ec_email_withhold_purchase
-                and contact not in self.message_partner_ids
-            ):
+            if contact.l10n_ec_email_withhold_purchase and contact not in self.message_partner_ids:
                 partners |= contact
         if partners:
             self.message_subscribe(partners.ids)
@@ -609,62 +474,40 @@ class L10nEcWithhold(models.Model):
         util_model = self.env["l10n_ec.utils"]
         company = self.company_id or self.env.company
         infoCompRetencion = SubElement(node_root, "infoCompRetencion")
-        SubElement(infoCompRetencion, "fechaEmision").text = self.issue_date.strftime(
-            util_model.get_formato_date()
-        )
+        SubElement(infoCompRetencion, "fechaEmision").text = self.issue_date.strftime(util_model.get_formato_date())
         address = company.partner_id.street
-        SubElement(
-            infoCompRetencion, "dirEstablecimiento"
-        ).text = util_model._clean_str(address[:300])
+        SubElement(infoCompRetencion, "dirEstablecimiento").text = util_model._clean_str(address[:300])
         numero_contribuyente_especial = company.get_contribuyente_data(self.issue_date)
         if numero_contribuyente_especial:
-            SubElement(
-                infoCompRetencion, "contribuyenteEspecial"
-            ).text = numero_contribuyente_especial
-        SubElement(
-            infoCompRetencion, "obligadoContabilidad"
-        ).text = util_model.get_obligado_contabilidad(
+            SubElement(infoCompRetencion, "contribuyenteEspecial").text = numero_contribuyente_especial
+        SubElement(infoCompRetencion, "obligadoContabilidad").text = util_model.get_obligado_contabilidad(
             company.partner_id.property_account_position_id
         )
         SubElement(
             infoCompRetencion, "tipoIdentificacionSujetoRetenido"
-        ).text = (
-            self.partner_id.commercial_partner_id.l10n_ec_get_sale_identification_partner()
+        ).text = self.partner_id.commercial_partner_id.l10n_ec_get_sale_identification_partner()
+        SubElement(infoCompRetencion, "razonSocialSujetoRetenido").text = util_model._clean_str(
+            self.partner_id.commercial_partner_id.name
         )
-        SubElement(
-            infoCompRetencion, "razonSocialSujetoRetenido"
-        ).text = util_model._clean_str(self.partner_id.commercial_partner_id.name)
-        SubElement(
-            infoCompRetencion, "identificacionSujetoRetenido"
-        ).text = util_model._clean_str(self.partner_id.commercial_partner_id.vat)
-        SubElement(infoCompRetencion, "periodoFiscal").text = self.issue_date.strftime(
-            "%m/%Y"
+        SubElement(infoCompRetencion, "identificacionSujetoRetenido").text = util_model._clean_str(
+            self.partner_id.commercial_partner_id.vat
         )
+        SubElement(infoCompRetencion, "periodoFiscal").text = self.issue_date.strftime("%m/%Y")
         impuestos = SubElement(node_root, "impuestos")
         for line in self.line_ids:
             impuesto = SubElement(impuestos, "impuesto")
             SubElement(impuesto, "codigo").text = line.get_retention_code()
             SubElement(impuesto, "codigoRetencion").text = line.get_retention_tax_code()
-            SubElement(impuesto, "baseImponible").text = util_model.formato_numero(
-                line.base_amount
-            )
-            SubElement(impuesto, "porcentajeRetener").text = util_model.formato_numero(
-                line.percentage, 2
-            )
-            SubElement(impuesto, "valorRetenido").text = util_model.formato_numero(
-                line.tax_amount
-            )
-            SubElement(impuesto, "codDocSustento").text = (
-                self.invoice_id.l10n_ec_get_document_code_sri() or "01"
-            )
+            SubElement(impuesto, "baseImponible").text = util_model.formato_numero(line.base_amount)
+            SubElement(impuesto, "porcentajeRetener").text = util_model.formato_numero(line.percentage, 2)
+            SubElement(impuesto, "valorRetenido").text = util_model.formato_numero(line.tax_amount)
+            SubElement(impuesto, "codDocSustento").text = self.invoice_id.l10n_ec_get_document_code_sri() or "01"
             numDocSustento = self.invoice_id.l10n_ec_get_document_number()
             dateDocSustento = self.invoice_id.l10n_ec_get_document_date()
-            SubElement(impuesto, "numDocSustento").text = numDocSustento.replace(
-                "-", ""
-            )  # pasar numero sin guiones
-            SubElement(
-                impuesto, "fechaEmisionDocSustento"
-            ).text = dateDocSustento.strftime(util_model.get_formato_date())
+            SubElement(impuesto, "numDocSustento").text = numDocSustento.replace("-", "")  # pasar numero sin guiones
+            SubElement(impuesto, "fechaEmisionDocSustento").text = dateDocSustento.strftime(
+                util_model.get_formato_date()
+            )
         self.l10n_ec_add_info_adicional(node_root)
         return node_root
 
@@ -717,9 +560,7 @@ class L10nEcWithhold(models.Model):
     def l10n_ec_get_share_url(self, redirect=False, signup_partner=False, pid=None):
         # funcion para usarla desde los correos electronicos
         # el metodo original al ser privado no permite llamarlo desde la plantilla de correo
-        return self._get_share_url(
-            redirect=redirect, signup_partner=signup_partner, pid=pid
-        )
+        return self._get_share_url(redirect=redirect, signup_partner=signup_partner, pid=pid)
 
     @api.constrains(
         "number", "type", "company_id",
@@ -728,32 +569,21 @@ class L10nEcWithhold(models.Model):
         for rec in self:
             if rec.type == "purchase":
                 other_records = self.search(
-                    [
-                        ("type", "=", "purchase"),
-                        ("number", "=", rec.number),
-                        ("company_id", "=", rec.company_id.id),
-                    ]
+                    [("type", "=", "purchase"), ("number", "=", rec.number), ("company_id", "=", rec.company_id.id),]
                 )
                 if len(other_records) > 1:
                     raise ValidationError(
-                        _(
-                            "There is already a withhold on sales with number %s please verify"
-                        )
-                        % (rec.number)
+                        _("There is already a withhold on sales with number %s please verify") % (rec.number)
                     )
 
     @api.constrains("electronic_authorization")
     def _check_duplicity_electronic_authorization(self):
         for rec in self:
             if rec.electronic_authorization:
-                other_docs = self.search(
-                    [("electronic_authorization", "=", rec.electronic_authorization,),]
-                )
+                other_docs = self.search([("electronic_authorization", "=", rec.electronic_authorization,),])
                 if len(other_docs) > 1:
                     raise ValidationError(
-                        _(
-                            "There is already a document with electronic authorization %s please verify"
-                        )
+                        _("There is already a document with electronic authorization %s please verify")
                         % (rec.electronic_authorization)
                     )
 
@@ -764,9 +594,7 @@ class L10nEcWithholdLinePercent(models.Model):
     _order = "percent ASC"
 
     name = fields.Char(string="Percent", required=False)
-    type = fields.Selection(
-        string="Type", selection=[("iva", "IVA"), ("rent", "Rent"),], required=False,
-    )
+    type = fields.Selection(string="Type", selection=[("iva", "IVA"), ("rent", "Rent"),], required=False,)
     percent = fields.Float(string="Percent", required=False)
 
     def _get_percent(self, percent, type):
@@ -775,13 +603,7 @@ class L10nEcWithholdLinePercent(models.Model):
             rec = self.create({"name": str(percent), "type": type, "percent": percent,})
         return rec
 
-    _sql_constraints = [
-        (
-            "type_percent_unique",
-            "unique(type, percent)",
-            "Percent Withhold must be unique by type",
-        )
-    ]
+    _sql_constraints = [("type_percent_unique", "unique(type, percent)", "Percent Withhold must be unique by type",)]
 
 
 class AccountTax(models.Model):
@@ -805,13 +627,9 @@ class AccountTax(models.Model):
                 percent = abs(rec.amount)
                 if type == "iva":
                     percent = abs(
-                        rec.invoice_repartition_line_ids.filtered(
-                            lambda x: x.repartition_type == "tax"
-                        ).factor_percent
+                        rec.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == "tax").factor_percent
                     )
-                current_percent = percent_model.search(
-                    [("type", "=", type), ("percent", "=", percent)]
-                )
+                current_percent = percent_model.search([("type", "=", type), ("percent", "=", percent)])
                 if not current_percent:
                     percent_model.create(
                         {"name": str(percent), "type": type, "percent": percent,}
@@ -825,21 +643,12 @@ class L10nEcWithholdLine(models.Model):
     _description = "Ecuadorian Withhold"
 
     withhold_id = fields.Many2one(
-        comodel_name="l10n_ec.withhold",
-        string="Withhold",
-        required=True,
-        ondelete="cascade",
-        readonly=True,
+        comodel_name="l10n_ec.withhold", string="Withhold", required=True, ondelete="cascade", readonly=True,
     )
     company_id = fields.Many2one(
-        comodel_name="res.company",
-        string="Company",
-        related="withhold_id.company_id",
-        store=True,
+        comodel_name="res.company", string="Company", related="withhold_id.company_id", store=True,
     )
-    issue_date = fields.Date(
-        string="Issue date", related="withhold_id.issue_date", store=True,
-    )
+    issue_date = fields.Date(string="Issue date", related="withhold_id.issue_date", store=True,)
     invoice_id = fields.Many2one(
         comodel_name="account.move",
         string="Related Document",
@@ -847,43 +656,19 @@ class L10nEcWithholdLine(models.Model):
         default=lambda self: self.env.context.get("default_invoice_id", False),
     )
     tax_id = fields.Many2one(comodel_name="account.tax", string="Tax", required=False)
-    base_tag_id = fields.Many2one(
-        comodel_name="account.account.tag", string="Base Tax Tag", readonly=True
-    )
-    tax_tag_id = fields.Many2one(
-        comodel_name="account.account.tag", string="Tax Tax Tag", readonly=True
-    )
-    type = fields.Selection(
-        string="Type", selection=[("iva", "IVA"), ("rent", "Rent"),], required=True,
-    )
+    base_tag_id = fields.Many2one(comodel_name="account.account.tag", string="Base Tax Tag", readonly=True)
+    tax_tag_id = fields.Many2one(comodel_name="account.account.tag", string="Tax Tax Tag", readonly=True)
+    type = fields.Selection(string="Type", selection=[("iva", "IVA"), ("rent", "Rent"),], required=True,)
     partner_currency_id = fields.Many2one(
-        comodel_name="res.currency",
-        string="Partner Currency",
-        related="invoice_id.currency_id",
-        store=True,
+        comodel_name="res.currency", string="Partner Currency", related="invoice_id.currency_id", store=True,
     )
-    base_amount = fields.Monetary(
-        string="Base Amount Currency",
-        currency_field="partner_currency_id",
-        required=True,
-    )
+    base_amount = fields.Monetary(string="Base Amount Currency", currency_field="partner_currency_id", required=True,)
     tax_amount = fields.Monetary(
-        string="Withhold Amount Currency",
-        currency_field="partner_currency_id",
-        required=True,
+        string="Withhold Amount Currency", currency_field="partner_currency_id", required=True,
     )
-    percent_id = fields.Many2one(
-        comodel_name="l10n_ec.withhold.line.percent", string="Percent", required=False
-    )
-    percentage = fields.Float(
-        string="Percent", related="percent_id.percent", store=True,
-    )
-    currency_id = fields.Many2one(
-        "res.currency",
-        string="Currency",
-        related="withhold_id.currency_id",
-        store=True,
-    )
+    percent_id = fields.Many2one(comodel_name="l10n_ec.withhold.line.percent", string="Percent", required=False)
+    percentage = fields.Float(string="Percent", related="percent_id.percent", store=True,)
+    currency_id = fields.Many2one("res.currency", string="Currency", related="withhold_id.currency_id", store=True,)
     base_amount_currency = fields.Monetary(string="Base Amount", required=True)
     tax_amount_currency = fields.Monetary(string="Withhold Amount", required=True)
 

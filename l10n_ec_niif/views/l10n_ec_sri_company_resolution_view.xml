@@ -14,11 +14,7 @@
                     />
                     <group>
                         <group>
-                            <field
-                                name="company_id"
-                                options="{'no_create': True}"
-                                groups="base.group_multi_company"
-                            />
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" />
                             <field name="resolution" required="1" />
                         </group>
                         <group>
@@ -64,10 +60,7 @@
             </search>
         </field>
     </record>
-    <record
-        id="l10n_ec_sri_company_resolution_act_window"
-        model="ir.actions.act_window"
-    >
+    <record id="l10n_ec_sri_company_resolution_act_window" model="ir.actions.act_window">
         <field name="name">S.R.I. Company Resolutions</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">l10n_ec.sri.company.resolution</field>

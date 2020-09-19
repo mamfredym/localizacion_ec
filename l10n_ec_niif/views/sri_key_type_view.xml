@@ -40,18 +40,11 @@
                     <group>
                         <group>
                             <field name="name" required="1" />
-                            <field
-                                name="company_id"
-                                groups="base.group_multi_company"
-                            />
+                            <field name="company_id" groups="base.group_multi_company" />
                             <field name="file_name" invisible="1" force_save="1" />
                         </group>
                         <group>
-                            <field
-                                name="file_content"
-                                required="1"
-                                filename="file_name"
-                            />
+                            <field name="file_content" required="1" filename="file_name" />
                             <field name="password" required="1" password="True" />
                         </group>
                     </group>
@@ -61,22 +54,13 @@
                                 <group>
                                     <field name="emision_date" />
                                     <field name="subject_common_name" />
-                                    <field
-                                        name="subject_serial_number"
-                                        groups="base.group_system"
-                                    />
+                                    <field name="subject_serial_number" groups="base.group_system" />
                                 </group>
                                 <group>
                                     <field name="expire_date" />
                                     <field name="issuer_common_name" />
-                                    <field
-                                        name="cert_serial_number"
-                                        groups="base.group_system"
-                                    />
-                                    <field
-                                        name="cert_version"
-                                        groups="base.group_system"
-                                    />
+                                    <field name="cert_serial_number" groups="base.group_system" />
+                                    <field name="cert_version" groups="base.group_system" />
                                 </group>
                             </group>
                         </page>

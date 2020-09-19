@@ -1,5 +1,5 @@
 from odoo import api, fields, models
-from odoo.exceptions import RedirectWarning, ValidationError, Warning
+from odoo.exceptions import Warning
 from odoo.tools.translate import _
 
 
@@ -8,15 +8,11 @@ class ResUsers(models.Model):
 
     l10n_ec_agency_ids = fields.Many2many("l10n_ec.agency", string="Allowed Agencies")
     l10n_ec_printer_default_id = fields.Many2one(
-        "l10n_ec.point.of.emission",
-        string="Default Point of Emission",
-        company_dependent=True,
+        "l10n_ec.point.of.emission", string="Default Point of Emission", company_dependent=True,
     )
 
     @api.model
-    def get_default_point_of_emission(
-        self, user_id=False, get_all=True, raise_exception=True
-    ):
+    def get_default_point_of_emission(self, user_id=False, get_all=True, raise_exception=True):
         user = self.env.user
         if user_id:
             user = self.browse(user_id)
@@ -39,11 +35,7 @@ class ResUsers(models.Model):
             for agency in user.l10n_ec_agency_ids:
                 for printer in agency.printer_point_ids:
                     res["all_printer_ids"] |= printer
-        if (
-            not res["default_printer_default_id"]
-            and raise_exception
-            and user.company_id.country_id.code == "EC"
-        ):
+        if not res["default_printer_default_id"] and raise_exception and user.company_id.country_id.code == "EC":
             raise Warning(
                 _(
                     "Your user does not have the permissions "

@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <data>
-        <menuitem
-            id="withholds_root"
-            name="Withholds"
-            sequence="20"
-            parent="sri_root_menu"
-        />
+        <menuitem id="withholds_root" name="Withholds" sequence="20" parent="sri_root_menu" />
         <record id="l10n_ec_withhold_line_view_tree" model="ir.ui.view">
             <field name="name">l10n_ec_withhold_line_view_tree</field>
             <field name="model">l10n_ec.withhold.line</field>
@@ -25,18 +20,10 @@
                         options="{'no_create': True}"
                         groups="base.group_multi_currency"
                     />
-                    <field
-                        name="currency_id"
-                        options="{'no_create': True}"
-                        groups="base.group_multi_currency"
-                    />
+                    <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency" />
                     <field name="percent_id" domain="[('type', '=', type)]" />
                     <field name="base_amount" groups="base.group_multi_currency" />
-                    <field
-                        name="tax_amount"
-                        sum="Tax"
-                        groups="base.group_multi_currency"
-                    />
+                    <field name="tax_amount" sum="Tax" groups="base.group_multi_currency" />
                     <field name="base_amount_currency" />
                     <field name="tax_amount_currency" sum="Tax Currency" />
                 </tree>
@@ -50,10 +37,7 @@
                     <sheet>
                         <group>
                             <group>
-                                <field
-                                    name="company_id"
-                                    groups="base.group_multi_company"
-                                />
+                                <field name="company_id" groups="base.group_multi_company" />
                                 <field name="withhold_id" />
                                 <field name="issue_date" />
                                 <field name="invoice_id" />
@@ -73,18 +57,9 @@
                                     options="{'no_create': True}"
                                     groups="base.group_multi_currency"
                                 />
-                                <field
-                                    name="percent_id"
-                                    domain="[('type', '=', type)]"
-                                />
-                                <field
-                                    name="base_amount"
-                                    groups="base.group_multi_currency"
-                                />
-                                <field
-                                    name="tax_amount"
-                                    groups="base.group_multi_currency"
-                                />
+                                <field name="percent_id" domain="[('type', '=', type)]" />
+                                <field name="base_amount" groups="base.group_multi_currency" />
+                                <field name="tax_amount" groups="base.group_multi_currency" />
                                 <field name="base_amount_currency" />
                                 <field name="tax_amount_currency" />
                             </group>
@@ -103,12 +78,7 @@
                     <field name="tax_id" />
                     <field name="issue_date" />
                     <group expand="1" string="Group By">
-                        <filter
-                            string="Tax"
-                            name="groupby_tax"
-                            domain="[]"
-                            context="{'group_by':'tax_id'}"
-                        />
+                        <filter string="Tax" name="groupby_tax" domain="[]" context="{'group_by':'tax_id'}" />
                         <filter
                             string="Issue Date"
                             name="groupby_issue_date"
@@ -145,9 +115,7 @@
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click o_res_partner_kanban">
                                 <div class="oe_kanban_details">
-                                    <strong
-                                        class="o_kanban_record_title oe_partner_heading"
-                                    >
+                                    <strong class="o_kanban_record_title oe_partner_heading">
                                         <field name="withhold_id" />
                                         <field name="invoice_id" />
                                         <field name="issue_date" />
@@ -161,10 +129,7 @@
                 </kanban>
             </field>
         </record>
-        <record
-            id="l10n_ec_withhold_line_purchases_action"
-            model="ir.actions.act_window"
-        >
+        <record id="l10n_ec_withhold_line_purchases_action" model="ir.actions.act_window">
             <field name="name">Purchase Withhold Lines</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">l10n_ec.withhold.line</field>
@@ -210,11 +175,7 @@
                             class="oe_highlight"
                             attrs="{'invisible': ['|', ('state', '!=', 'done'), ('l10n_ec_xml_data_id', '=', False)]}"
                         />
-                        <field
-                            name="state"
-                            widget="statusbar"
-                            statusbar_visible="draft,done"
-                        />
+                        <field name="state" widget="statusbar" statusbar_visible="draft,done" />
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
@@ -237,18 +198,12 @@
                         </div>
                         <group>
                             <group>
-                                <field
-                                    name="company_id"
-                                    groups="base.group_multi_company"
-                                />
+                                <field name="company_id" groups="base.group_multi_company" />
                                 <field
                                     name="partner_id"
                                     attrs="{'readonly': ['|', ('l10n_ec_is_create_from_invoice', '=', True), ('state', '!=', 'draft')]}"
                                 />
-                                <field
-                                    name="commercial_partner_id"
-                                    groups="base.group_no_one"
-                                />
+                                <field name="commercial_partner_id" groups="base.group_no_one" />
                                 <field
                                     name="invoice_id"
                                     attrs="{'invisible': [('l10n_ec_legacy_document', '=', True)], 'readonly': ['|', ('l10n_ec_is_create_from_invoice', '=', True), ('state', '!=', 'draft')]}"
@@ -263,10 +218,7 @@
                                     attrs="{'invisible': [('l10n_ec_legacy_document', '=', False)], 'required': [('l10n_ec_legacy_document', '=', True)]}"
                                 />
                                 <field name="l10n_ec_related_document" invisible="1" />
-                                <field
-                                    name="l10n_ec_is_create_from_invoice"
-                                    invisible="1"
-                                />
+                                <field name="l10n_ec_is_create_from_invoice" invisible="1" />
                             </group>
                             <group>
                                 <field name="issue_date" />
@@ -287,10 +239,7 @@
                                     name="electronic_authorization"
                                     attrs="{'invisible': ['|', ('document_type', '!=', 'electronic'), '&amp;', ('type', '=', 'purchase'), ('electronic_authorization', '=', False)], 'required': [('document_type', '=', 'electronic'), ('type', '=', 'sale')]}"
                                 />
-                                <field
-                                    name="l10n_ec_type_supplier_authorization"
-                                    invisible="1"
-                                />
+                                <field name="l10n_ec_type_supplier_authorization" invisible="1" />
                                 <field name="type" invisible="1" />
                                 <field name="no_number" invisible="1" />
                             </group>
@@ -299,11 +248,7 @@
                         </group>
                         <notebook colspan="4">
                             <page name="withhold_lines" string="Lines">
-                                <field
-                                    name="line_ids"
-                                    colspan="4"
-                                    context="{'default_invoice_id': invoice_id}"
-                                >
+                                <field name="line_ids" colspan="4" context="{'default_invoice_id': invoice_id}">
                                     <tree editable="bottom">
                                         <field
                                             name="invoice_id"
@@ -341,10 +286,7 @@
                                             force_save="1"
                                             attrs="{'readonly': [('parent.type', '=', 'sale')]}"
                                         />
-                                        <field
-                                            name="base_amount_currency"
-                                            groups="base.group_multi_currency"
-                                        />
+                                        <field name="base_amount_currency" groups="base.group_multi_currency" />
                                         <field
                                             name="tax_amount_currency"
                                             attrs="{'readonly': [('parent.type', '=', 'sale')]}"
@@ -362,10 +304,7 @@
                                             name="l10n_ec_legacy_document"
                                             attrs="{'invisible': [('type', '!=', 'sale')]}"
                                         />
-                                        <field
-                                            name="move_id"
-                                            attrs="{'invisible': [('move_id', '=', False)]}"
-                                        />
+                                        <field name="move_id" attrs="{'invisible': [('move_id', '=', False)]}" />
                                         <field
                                             name="l10n_ec_xml_key"
                                             attrs="{'invisible':[('l10n_ec_xml_data_id','=',False)]}"
@@ -386,9 +325,7 @@
                                             for="l10n_ec_sri_authorization_state"
                                             attrs="{'invisible':[('type', '!=', 'sale')]}"
                                         />
-                                        <div
-                                            attrs="{'invisible':[('type', '!=', 'sale')]}"
-                                        >
+                                        <div attrs="{'invisible':[('type', '!=', 'sale')]}">
                                             <span
                                                 class="badge badge-pill"
                                                 attrs="{'invisible': [('l10n_ec_sri_authorization_state', '!=', 'to_check')]}"
@@ -401,15 +338,10 @@
                                                 class="badge badge-pill badge-danger"
                                                 attrs="{'invisible': [('l10n_ec_sri_authorization_state', '!=', 'invalid')]}"
                                             >Invalid</span>
-                                            <field
-                                                name="l10n_ec_sri_authorization_state"
-                                                invisible="1"
-                                            />
+                                            <field name="l10n_ec_sri_authorization_state" invisible="1" />
                                         </div>
                                     </group>
-                                    <group
-                                        attrs="{'invisible': [('type', 'not in', ('purchase', 'credit_card'))]}"
-                                    >
+                                    <group attrs="{'invisible': [('type', 'not in', ('purchase', 'credit_card'))]}">
                                         <field name="point_of_emission_id" />
                                         <field name="agency_id" />
                                         <field name="authorization_line_id" />
@@ -423,11 +355,7 @@
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">
-                        <field
-                            name="message_follower_ids"
-                            widget="mail_followers"
-                            groups="base.group_user"
-                        />
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user" />
                         <field name="activity_ids" widget="mail_activity" />
                         <field name="message_ids" widget="mail_thread" />
                     </div>
@@ -492,12 +420,7 @@
                             domain="[]"
                             context="{'group_by':'issue_date'}"
                         />
-                        <filter
-                            string="State"
-                            name="groupby_state"
-                            domain="[]"
-                            context="{'group_by':'state'}"
-                        />
+                        <filter string="State" name="groupby_state" domain="[]" context="{'group_by':'state'}" />
                     </group>
                 </search>
             </field>
@@ -517,9 +440,7 @@
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click o_res_partner_kanban">
                                 <div class="oe_kanban_details">
-                                    <strong
-                                        class="o_kanban_record_title oe_partner_heading"
-                                    >
+                                    <strong class="o_kanban_record_title oe_partner_heading">
                                         <field name="number" />
                                         <field name="invoice_id" />
                                         <field name="tax_iva" />

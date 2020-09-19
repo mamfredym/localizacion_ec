@@ -76,10 +76,8 @@
     </detalles>
     <reembolsos>
         <reembolsoDetalle>
-            <tipoIdentificacionProveedorReembolso
-            >04</tipoIdentificacionProveedorReembolso>
-            <identificacionProveedorReembolso
-            >identificacionProvee</identificacionProveedorReembolso>
+            <tipoIdentificacionProveedorReembolso>04</tipoIdentificacionProveedorReembolso>
+            <identificacionProveedorReembolso>identificacionProvee</identificacionProveedorReembolso>
             <codPaisPagoProveedorReembolso>000</codPaisPagoProveedorReembolso>
             <tipoProveedorReembolso>00</tipoProveedorReembolso>
             <codDocReembolso>00</codDocReembolso>

@@ -76,11 +76,7 @@
         <field name="code">model.recompute_date_expire()</field>
     </record>
     <!-- tarea para verificar si la autorizacion de documentos de proveedores es valida -->
-    <record
-        forcecreate="True"
-        id="ir_cron_validate_supplier_documents_sri"
-        model="ir.cron"
-    >
+    <record forcecreate="True" id="ir_cron_validate_supplier_documents_sri" model="ir.cron">
         <field name="name">Validate Supplier Documents on SRI</field>
         <field name="interval_number">1</field>
         <field name="interval_type">days</field>

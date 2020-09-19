@@ -1,8 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import os
 
-from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
+from odoo import api, fields, models
 
 
 class ResCompany(models.Model):
@@ -17,41 +15,27 @@ class ResCompany(models.Model):
     def _localization_use_documents(self):
         """ Ecuadorian localization use documents """
         self.ensure_one()
-        return (
-            True
-            if self.country_id == self.env.ref("base.ec")
-            else super()._localization_use_documents()
-        )
+        return True if self.country_id == self.env.ref("base.ec") else super()._localization_use_documents()
 
-    l10n_ec_consumidor_final_limit = fields.Float(
-        string="Invoice Sales Limit Final Consumer", default=200.0
-    )
+    l10n_ec_consumidor_final_limit = fields.Float(string="Invoice Sales Limit Final Consumer", default=200.0)
 
     l10n_ec_withhold_sale_iva_account_id = fields.Many2one(
-        comodel_name="account.account",
-        string="Withhold Sales IVA Account",
-        required=False,
+        comodel_name="account.account", string="Withhold Sales IVA Account", required=False,
     )
 
     l10n_ec_withhold_sale_iva_tag_id = fields.Many2one(
-        comodel_name="account.account.tag",
-        string="Withhold Sales IVA Account Tag",
-        required=False,
+        comodel_name="account.account.tag", string="Withhold Sales IVA Account Tag", required=False,
     )
 
     l10n_ec_withhold_sale_rent_account_id = fields.Many2one(
-        comodel_name="account.account",
-        string="Withhold Sales Rent Account",
-        required=False,
+        comodel_name="account.account", string="Withhold Sales Rent Account", required=False,
     )
 
     l10n_ec_withhold_journal_id = fields.Many2one(
         comodel_name="account.journal", string="Withhold Journal", required=False
     )
     l10n_ec_type_supplier_authorization = fields.Selection(
-        [("simple", "Simple"), ("complete", "Complete"),],
-        string="Type of Suppliers authorization",
-        default="simple",
+        [("simple", "Simple"), ("complete", "Complete"),], string="Type of Suppliers authorization", default="simple",
     )
     # campos para facturacion electronica
     l10n_ec_type_environment = fields.Selection(
@@ -60,39 +44,25 @@ class ResCompany(models.Model):
         default="test",
     )
     l10n_ec_type_conection_sri = fields.Selection(
-        [("online", "On-Line"), ("offline", "Off-Line"),],
-        string="Connection type with SRI",
-        default="offline",
+        [("online", "On-Line"), ("offline", "Off-Line"),], string="Connection type with SRI", default="offline",
     )
-    l10n_ec_key_type_id = fields.Many2one(
-        "sri.key.type", "Certificate File", ondelete="restrict"
-    )
+    l10n_ec_key_type_id = fields.Many2one("sri.key.type", "Certificate File", ondelete="restrict")
     l10n_ec_electronic_invoice = fields.Boolean("Authorized for Invoice?")
     l10n_ec_electronic_withhold = fields.Boolean("Authorized for Withholding?")
     l10n_ec_electronic_credit_note = fields.Boolean("Authorized for Credit Note?")
     l10n_ec_electronic_debit_note = fields.Boolean("Authorized for Debit Note?")
-    l10n_ec_electronic_liquidation = fields.Boolean(
-        "Authorized for Purchase Liquidation?"
-    )
+    l10n_ec_electronic_liquidation = fields.Boolean("Authorized for Purchase Liquidation?")
     l10n_ec_invoice_version_xml_id = fields.Many2one(
-        "l10n_ec.xml.version",
-        string="XML Version for Invoice",
-        domain=[("document_type", "=", "invoice")],
+        "l10n_ec.xml.version", string="XML Version for Invoice", domain=[("document_type", "=", "invoice")],
     )
     l10n_ec_withholding_version_xml_id = fields.Many2one(
-        "l10n_ec.xml.version",
-        string="XML Version for Withholding",
-        domain=[("document_type", "=", "withholding")],
+        "l10n_ec.xml.version", string="XML Version for Withholding", domain=[("document_type", "=", "withholding")],
     )
     l10n_ec_credit_note_version_xml_id = fields.Many2one(
-        "l10n_ec.xml.version",
-        string="XML Version for Credit Note",
-        domain=[("document_type", "=", "credit_note")],
+        "l10n_ec.xml.version", string="XML Version for Credit Note", domain=[("document_type", "=", "credit_note")],
     )
     l10n_ec_debit_note_version_xml_id = fields.Many2one(
-        "l10n_ec.xml.version",
-        string="XML Version for Debit Note",
-        domain=[("document_type", "=", "debit_note")],
+        "l10n_ec.xml.version", string="XML Version for Debit Note", domain=[("document_type", "=", "debit_note")],
     )
     l10n_ec_liquidation_version_xml_id = fields.Many2one(
         "l10n_ec.xml.version",
@@ -103,38 +73,20 @@ class ResCompany(models.Model):
     l10n_ec_electronic_logo = fields.Binary("Logo for RIDE")
     l10n_ec_max_intentos = fields.Integer("Maximum attempts for authorization")
     l10n_ec_ws_timeout = fields.Integer("Timeout Web Service", default=30)
-    l10n_ec_cron_process = fields.Integer(
-        "Number Documents Process in Cron", default=100
-    )
-    l10n_ec_send_mail_from = fields.Datetime(
-        "Sent mail from", default=lambda self: fields.Datetime.now()
-    )
+    l10n_ec_cron_process = fields.Integer("Number Documents Process in Cron", default=100)
+    l10n_ec_send_mail_from = fields.Datetime("Sent mail from", default=lambda self: fields.Datetime.now())
     l10n_ec_send_mail_invoice = fields.Boolean("Invoice?", default=True,)
     l10n_ec_send_mail_credit_note = fields.Boolean("Credit Note?", default=True)
     l10n_ec_send_mail_debit_note = fields.Boolean("Debit Note?", default=True)
     l10n_ec_send_mail_retention = fields.Boolean("Withholding?", default=True)
-    l10n_ec_send_mail_liquidation = fields.Boolean(
-        "Purchase liquidation?", default=True
-    )
-    l10n_ec_create_login_for_partners = fields.Boolean(
-        "Create login for portal user?", default=False,
-    )
-    l10n_ec_print_ride_main_code = fields.Boolean(
-        "Print main product code?", default=True
-    )
+    l10n_ec_send_mail_liquidation = fields.Boolean("Purchase liquidation?", default=True)
+    l10n_ec_create_login_for_partners = fields.Boolean("Create login for portal user?", default=False,)
+    l10n_ec_print_ride_main_code = fields.Boolean("Print main product code?", default=True)
     l10n_ec_print_ride_aux_code = fields.Boolean("Print secondary code?", default=False)
-    l10n_ec_print_ride_detail1 = fields.Boolean(
-        "Print detail additional 1?", default=True
-    )
-    l10n_ec_print_ride_detail2 = fields.Boolean(
-        "Print detail additional 2?", default=False
-    )
-    l10n_ec_print_ride_detail3 = fields.Boolean(
-        "Print detail additional 3?", default=False
-    )
-    l10n_ec_sri_payment_id = fields.Many2one(
-        "l10n_ec.sri.payment.method", string=u"S.R.I Payment Method"
-    )
+    l10n_ec_print_ride_detail1 = fields.Boolean("Print detail additional 1?", default=True)
+    l10n_ec_print_ride_detail2 = fields.Boolean("Print detail additional 2?", default=False)
+    l10n_ec_print_ride_detail3 = fields.Boolean("Print detail additional 3?", default=False)
+    l10n_ec_sri_payment_id = fields.Many2one("l10n_ec.sri.payment.method", string=u"S.R.I Payment Method")
 
     @api.model
     def get_contribuyente_data(self, date=None):

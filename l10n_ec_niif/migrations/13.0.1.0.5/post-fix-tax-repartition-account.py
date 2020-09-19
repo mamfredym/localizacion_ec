@@ -22,9 +22,7 @@ def migrate(cr, version):
                 company.name,
             )
             continue
-        tax_repartition = TaxRepartition.search(
-            [("company_id", "=", company.id), ("account_id", "=", old_account.id),]
-        )
+        tax_repartition = TaxRepartition.search([("company_id", "=", company.id), ("account_id", "=", old_account.id),])
         try:
             tax_repartition.write({"account_id": new_account.id})
         except Exception as ex:

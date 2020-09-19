@@ -22,17 +22,13 @@
                     % endif
                     ,</p>
                 <br />
-                <p>Reciba un cordial saludo de quienes hacemos <strong
-                    >${object.company_id.name}</strong>.
+                <p>Reciba un cordial saludo de quienes hacemos <strong>${object.company_id.name}</strong>.
                     Nos complace informarle que su documento electrónico ha sido generado
                     con el siguiente detalle:
                     <ul>
-                        <li><strong
-                            >Tipo de Documento: </strong> ${object.l10n_ec_get_document_string()}</li>
-                        <li><strong
-                            >Número de Documento: </strong> ${object.l10n_ec_get_document_number()}</li>
-                        <li><strong
-                            >Clave de acceso: </strong> ${object.l10n_ec_xml_key}</li>
+                        <li><strong>Tipo de Documento: </strong> ${object.l10n_ec_get_document_string()}</li>
+                        <li><strong>Número de Documento: </strong> ${object.l10n_ec_get_document_number()}</li>
+                        <li><strong>Clave de acceso: </strong> ${object.l10n_ec_xml_key}</li>
                         <li><strong
                             >Valor Total: </strong> ${format_amount(object.amount_total, object.currency_id)}</li>
                         % if object.origin:
@@ -42,9 +38,7 @@
                 </p>
                 <br /><br />
                 % if object.partner_id.user_ids and object.partner_id.signup_url:
-                Para ver todos sus documentos visite <a
-                    href="${object.partner_id.signup_url}"
-                >nuestro portal</a>
+                Para ver todos sus documentos visite <a href="${object.partner_id.signup_url}">nuestro portal</a>
                 <br />
                 % endif
                 <p>Gracias por Preferirnos,</p>
@@ -74,17 +68,13 @@
                     % endif
                     ,</p>
                 <br />
-                <p>Reciba un cordial saludo de quienes hacemos <strong
-                    >${object.company_id.name}</strong>.
+                <p>Reciba un cordial saludo de quienes hacemos <strong>${object.company_id.name}</strong>.
                     Nos complace informarle que su documento electrónico ha sido generado
                     con el siguiente detalle:
                     <ul>
-                        <li><strong
-                            >Tipo de Documento: </strong> ${object.l10n_ec_get_document_string()}</li>
-                        <li><strong
-                            >Número de Documento: </strong> ${object.l10n_ec_get_document_number()}</li>
-                        <li><strong
-                            >Clave de acceso: </strong> ${object.l10n_ec_xml_key}</li>
+                        <li><strong>Tipo de Documento: </strong> ${object.l10n_ec_get_document_string()}</li>
+                        <li><strong>Número de Documento: </strong> ${object.l10n_ec_get_document_number()}</li>
+                        <li><strong>Clave de acceso: </strong> ${object.l10n_ec_xml_key}</li>
                     </ul>
                 </p>
                 <br /><br />
@@ -98,9 +88,7 @@
                 </div>
                 <br /><br />
                 % if object.partner_id.user_ids and object.partner_id.signup_url:
-                Para ver todos sus documentos visite <a
-                    href="${object.partner_id.signup_url}"
-                >nuestro portal</a>
+                Para ver todos sus documentos visite <a href="${object.partner_id.signup_url}">nuestro portal</a>
                 <br />
                 % endif
                 <p>Gracias por Preferirnos,</p>
@@ -110,9 +98,7 @@
     <record id="mail_documents_no_autorization" model="mail.template">
         <field name="name">Enviar Mail de Documentos no autorizada</field>
         <field name="email_from">${object.email}</field>
-        <field
-            name="subject"
-        >${object.name} - Documentos Electrónico no Autorizado</field>
+        <field name="subject">${object.name} - Documentos Electrónico no Autorizado</field>
         <field name="model_id" ref="base.model_res_company" />
         <field name="email_to">${object.email}</field>
         <field name="auto_delete" eval="True" />
@@ -122,10 +108,7 @@
                     Notificacion:
                     <br />
                     % set documents = object.get_documents_electonic_no_autorization()
-                    <p
-                        class="text-center"
-                        style="font-weight: bold"
-                    >Documentos Electrónicos no Autorizadas</p>
+                    <p class="text-center" style="font-weight: bold">Documentos Electrónicos no Autorizadas</p>
                     <div style="display:table;margin-left: 6%;width:95%">
                         <div style="display:table-row-group;">
                             % for doc in documents:
@@ -140,9 +123,7 @@
                                     style="display:table-cell;width:65%;text-align:center;border:solid;border-width: 1px 1px 1px 1px;"
                                 >
                                     <span>
-                                        <a
-                                            href="${doc.get_mail_url()}"
-                                        >Ver Documento</a>
+                                        <a href="${doc.get_mail_url()}">Ver Documento</a>
                                     </span>
                                 </div>
                             </div>

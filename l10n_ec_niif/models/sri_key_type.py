@@ -12,15 +12,11 @@ from xades import XAdESContext, template
 from xades.policy import ImpliedPolicy
 
 from odoo import api, fields, models, tools
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 from odoo.tools.translate import _
 
-import odoo.addons.decimal_precision as dp
-
 _logger = logging.getLogger(__name__)
-KEY_TO_PEM_CMD = (
-    "openssl pkcs12 -nocerts -in %s -out %s -passin pass:%s -passout pass:%s"
-)
+KEY_TO_PEM_CMD = "openssl pkcs12 -nocerts -in %s -out %s -passin pass:%s -passout pass:%s"
 STATES = {"unverified": [("readonly", False),]}
 
 
@@ -28,23 +24,15 @@ class SriKeyType(models.Model):
     _name = "sri.key.type"
     _description = "Tipo de Llave electronica"
 
-    name = fields.Char(
-        string="Nombre", size=255, required=True, readonly=False, help="",
-    )
+    name = fields.Char(string="Nombre", size=255, required=True, readonly=False, help="",)
     file_content = fields.Binary("Archivo de Firma", readonly=True, states=STATES)
     file_name = fields.Char("Nombre de archivo", readonly=True)
     password = fields.Char("Clave de firma", readonly=True, states=STATES)
     private_key = fields.Text(string="Private Key", readonly=True)
     active = fields.Boolean("Activo?", default=True)
-    company_id = fields.Many2one(
-        "res.company", "Compañia", default=lambda self: self.env.company
-    )
+    company_id = fields.Many2one("res.company", "Compañia", default=lambda self: self.env.company)
     state = fields.Selection(
-        [
-            ("unverified", "Sin Verificar"),
-            ("valid", "Firma Valida"),
-            ("expired", "Firma Vencida"),
-        ],
+        [("unverified", "Sin Verificar"), ("valid", "Firma Valida"), ("expired", "Firma Vencida"),],
         string="Estado",
         default="unverified",
         readonly=True,
@@ -55,9 +43,7 @@ class SriKeyType(models.Model):
     subject_serial_number = fields.Char(string="Numero de Serie(Asunto)", readonly=True)
     subject_common_name = fields.Char(string="Organizacion(Asunto)", readonly=True)
     issuer_common_name = fields.Char(string="Organizacion(Emisor)", readonly=True)
-    cert_serial_number = fields.Char(
-        string="Numero de serie(cerificado)", readonly=True
-    )
+    cert_serial_number = fields.Char(string="Numero de serie(cerificado)", readonly=True)
     cert_version = fields.Char(string="Version", readonly=True)
 
     def action_validate_and_load(self):
@@ -88,12 +74,8 @@ class SriKeyType(models.Model):
         issuer = cert.get_issuer()
         subject = cert.get_subject()
         vals = {
-            "emision_date": datetime.strptime(
-                cert.get_notBefore().decode("utf-8"), "%Y%m%d%H%M%SZ"
-            ),
-            "expire_date": datetime.strptime(
-                cert.get_notAfter().decode("utf-8"), "%Y%m%d%H%M%SZ"
-            ),
+            "emision_date": datetime.strptime(cert.get_notBefore().decode("utf-8"), "%Y%m%d%H%M%SZ"),
+            "expire_date": datetime.strptime(cert.get_notAfter().decode("utf-8"), "%Y%m%d%H%M%SZ"),
             "subject_common_name": subject.CN,
             "subject_serial_number": subject.serialNumber,
             "issuer_common_name": issuer.CN,
@@ -109,17 +91,10 @@ class SriKeyType(models.Model):
         # TODO compute it from a python way
         with tempfile.NamedTemporaryFile(
             "wb", suffix=".key", prefix="edi.ec.tmp."
-        ) as key_file, tempfile.NamedTemporaryFile(
-            "rb", suffix=".key", prefix="edi.ec.tmp."
-        ) as keypem_file:
+        ) as key_file, tempfile.NamedTemporaryFile("rb", suffix=".key", prefix="edi.ec.tmp.") as keypem_file:
             key_file.write(key)
             key_file.flush()
-            subprocess.call(
-                (
-                    KEY_TO_PEM_CMD
-                    % (key_file.name, keypem_file.name, password, password)
-                ).split()
-            )
+            subprocess.call((KEY_TO_PEM_CMD % (key_file.name, keypem_file.name, password, password)).split())
             key_pem = keypem_file.read().decode()
         return key_pem
 
@@ -130,9 +105,7 @@ class SriKeyType(models.Model):
         filecontent = base64.b64decode(self.file_content)
         try:
             private_key = crypto.load_privatekey(
-                crypto.FILETYPE_PEM,
-                self.private_key.encode("ascii"),
-                self.password.encode(),
+                crypto.FILETYPE_PEM, self.private_key.encode("ascii"), self.password.encode(),
             )
             p12 = crypto.load_pkcs12(filecontent, self.password)
         except Exception as ex:
@@ -148,9 +121,7 @@ class SriKeyType(models.Model):
         certificate_id = f"Certificate{new_range()}"
         reference_uri = f"Reference-ID-{new_range()}"
         signature = xmlsig.template.create(
-            xmlsig.constants.TransformInclC14N,
-            xmlsig.constants.TransformRsaSha1,
-            signature_id,
+            xmlsig.constants.TransformInclC14N, xmlsig.constants.TransformRsaSha1, signature_id,
         )
         xmlsig.template.add_reference(
             signature,
@@ -159,14 +130,9 @@ class SriKeyType(models.Model):
             uri=f"#{signature_property_id}",
             uri_type="http://uri.etsi.org/01903#SignedProperties",
         )
-        xmlsig.template.add_reference(
-            signature, xmlsig.constants.TransformSha1, uri=f"#{certificate_id}"
-        )
+        xmlsig.template.add_reference(signature, xmlsig.constants.TransformSha1, uri=f"#{certificate_id}")
         ref = xmlsig.template.add_reference(
-            signature,
-            xmlsig.constants.TransformSha1,
-            name=reference_uri,
-            uri="#comprobante",
+            signature, xmlsig.constants.TransformSha1, name=reference_uri, uri="#comprobante",
         )
         xmlsig.template.add_transform(ref, xmlsig.constants.TransformEnveloped)
         ki = xmlsig.template.ensure_key_info(signature, name=certificate_id)
@@ -174,15 +140,10 @@ class SriKeyType(models.Model):
         xmlsig.template.x509_data_add_certificate(data)
         xmlsig.template.add_key_value(ki)
         qualifying = template.create_qualifying_properties(signature, name=signature_id)
-        props = template.create_signed_properties(
-            qualifying, name=signature_property_id
-        )
+        props = template.create_signed_properties(qualifying, name=signature_property_id)
         signed_do = template.ensure_signed_data_object_properties(props)
         template.add_data_object_format(
-            signed_do,
-            f"#{reference_uri}",
-            description="contenido comprobante",
-            mime_type="text/xml",
+            signed_do, f"#{reference_uri}", description="contenido comprobante", mime_type="text/xml",
         )
         doc.append(signature)
         is_digital_signature = False
@@ -203,10 +164,7 @@ class SriKeyType(models.Model):
                 for x509_inst in ca_certificates_list:
                     x509_cryp = x509_inst.to_cryptography()
                     for exten in x509_cryp.extensions:
-                        if (
-                            exten.oid._name == "keyUsage"
-                            and exten.value.digital_signature
-                        ):
+                        if exten.oid._name == "keyUsage" and exten.value.digital_signature:
                             x509 = x509_inst
                             break
         if x509 is not None:
@@ -220,9 +178,7 @@ class SriKeyType(models.Model):
 
     @api.model
     def recompute_date_expire(self):
-        template_mail_notification_keys_expired = self.env.ref(
-            "l10n_ec_niif.email_template_keys_expired"
-        )
+        template_mail_notification_keys_expired = self.env.ref("l10n_ec_niif.email_template_keys_expired")
         company = self.env.company
         template_mail_notification_keys_expired.send_mail(company.id)
         return True

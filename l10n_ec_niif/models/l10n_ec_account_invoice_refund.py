@@ -15,11 +15,7 @@ class AccountInvoiceRefund(models.Model):
     _rec_name = "document_number"
 
     @api.depends(
-        "total_base_iva",
-        "total_base_iva0",
-        "total_base_no_iva",
-        "total_iva",
-        "total_ice",
+        "total_base_iva", "total_base_iva0", "total_base_no_iva", "total_iva", "total_ice",
     )
     def _compute_total_invoice(self):
         for refund in self:
@@ -32,30 +28,14 @@ class AccountInvoiceRefund(models.Model):
             )
 
     invoice_id = fields.Many2one(
-        "account.move",
-        "Liquidación de Compras",
-        ondelete="cascade",
-        index=True,
-        auto_join=True,
+        "account.move", "Liquidación de Compras", ondelete="cascade", index=True, auto_join=True,
     )
-    company_id = fields.Many2one(
-        string="Company", store=True, readonly=True, related="invoice_id.company_id"
-    )
-    currency_id = fields.Many2one(
-        string="Company Currency", readonly=True, related="company_id.currency_id"
-    )
+    company_id = fields.Many2one(string="Company", store=True, readonly=True, related="invoice_id.company_id")
+    currency_id = fields.Many2one(string="Company Currency", readonly=True, related="company_id.currency_id")
     document_number = fields.Char("Número de Factura", size=64, required=True)
-    partner_id = fields.Many2one(
-        "res.partner", "Proveedor", required=True, index=True, auto_join=True
-    )
-    l10n_ec_foreign = fields.Boolean(
-        "Foreign?", readonly=True, related="partner_id.l10n_ec_foreign"
-    )
-    date_invoice = fields.Date(
-        "Fecha de Emisión",
-        required=True,
-        default=lambda self: fields.Date.context_today(self),
-    )
+    partner_id = fields.Many2one("res.partner", "Proveedor", required=True, index=True, auto_join=True)
+    l10n_ec_foreign = fields.Boolean("Foreign?", readonly=True, related="partner_id.l10n_ec_foreign")
+    date_invoice = fields.Date("Fecha de Emisión", required=True, default=lambda self: fields.Date.context_today(self),)
     document_type = fields.Selection(
         [("normal", "Normal"), ("electronic", "Electrónico"),],
         string="Tipo Documento",
@@ -63,18 +43,14 @@ class AccountInvoiceRefund(models.Model):
         readonly=False,
         default="normal",
     )
-    l10n_ec_partner_authorization_id = fields.Many2one(
-        "l10n_ec.sri.authorization.supplier", "Autorización"
-    )
+    l10n_ec_partner_authorization_id = fields.Many2one("l10n_ec.sri.authorization.supplier", "Autorización")
     electronic_authorization = fields.Char("Autorización Electrónica", size=49)
     total_base_iva = fields.Monetary("Total Base IVA")
     total_base_iva0 = fields.Monetary("Total Base IVA 0")
     total_base_no_iva = fields.Monetary("Total Base no IVA")
     total_iva = fields.Monetary("Total IVA")
     total_ice = fields.Monetary("Total ICE")
-    total_invoice = fields.Monetary(
-        "Total Factura", compute="_compute_total_invoice", store=True
-    )
+    total_invoice = fields.Monetary("Total Factura", compute="_compute_total_invoice", store=True)
 
     @api.constrains("document_number", "l10n_ec_partner_authorization_id")
     def _check_number_invoice(self):
@@ -82,21 +58,12 @@ class AccountInvoiceRefund(models.Model):
         util_model = self.env["l10n_ec.utils"]
         padding_auth = "1,9"
         for refund in self:
-            if (
-                refund.l10n_ec_partner_authorization_id
-                and refund.l10n_ec_partner_authorization_id.padding > 0
-            ):
+            if refund.l10n_ec_partner_authorization_id and refund.l10n_ec_partner_authorization_id.padding > 0:
                 padding_auth = refund.l10n_ec_partner_authorization_id.padding
             cadena = r"(\d{3})+\-(\d{3})+\-(\d{%s})" % (padding_auth)
-            if (
-                not refund.l10n_ec_foreign
-                and refund.document_number
-                and not re.match(cadena, refund.document_number)
-            ):
+            if not refund.l10n_ec_foreign and refund.document_number and not re.match(cadena, refund.document_number):
                 raise ValidationError(
-                    _(
-                        "The document number is not correct, it must be of the form 00X-00X-000XXXXXX, X is a number"
-                    )
+                    _("The document number is not correct, it must be of the form 00X-00X-000XXXXXX, X is a number")
                 )
             if refund.document_type == "normal":
                 if not auth_s_model.check_number_document(
@@ -107,15 +74,10 @@ class AccountInvoiceRefund(models.Model):
                     refund.id,
                     refund.l10n_ec_foreign,
                 ):
-                    raise ValidationError(
-                        _("Another document with the same number already exists")
-                    )
+                    raise ValidationError(_("Another document with the same number already exists"))
             else:
                 auth_s_model.validate_unique_document_partner(
-                    "invoice_reembolso",
-                    refund.document_number,
-                    refund.partner_id.id,
-                    util_model.ensure_id(refund),
+                    "invoice_reembolso", refund.document_number, refund.partner_id.id, util_model.ensure_id(refund),
                 )
 
     @api.constrains("electronic_authorization", "document_type")
@@ -132,18 +94,11 @@ class AccountInvoiceRefund(models.Model):
                     )
                 if not re.match(cadena, refund.electronic_authorization):
                     raise ValidationError(
-                        _(
-                            "The electronic authorization must have only numbers, "
-                            "please check the refund!"
-                        )
+                        _("The electronic authorization must have only numbers, " "please check the refund!")
                     )
 
     @api.onchange(
-        "document_number",
-        "partner_id",
-        "date_invoice",
-        "document_type",
-        "l10n_ec_partner_authorization_id",
+        "document_number", "partner_id", "date_invoice", "document_type", "l10n_ec_partner_authorization_id",
     )
     def onchange_data_in(self):
         domain = {}
@@ -170,17 +125,11 @@ class AccountInvoiceRefund(models.Model):
             # si es electronico y ya tengo agencia y punto de impresion, completar el numero
             if l10n_latam_document_number:
                 try:
-                    (
-                        agency,
-                        printer_point,
-                        sequence_number,
-                    ) = UtilModel.split_document_number(
+                    (agency, printer_point, sequence_number,) = UtilModel.split_document_number(
                         l10n_latam_document_number, True
                     )
                     sequence_number = int(sequence_number)
-                    sequence_number = auth_supplier_model.fill_padding(
-                        sequence_number, padding
-                    )
+                    sequence_number = auth_supplier_model.fill_padding(sequence_number, padding)
                     self.document_number = f"{agency}-{printer_point}-{sequence_number}"
                 except Exception as ex:
                     _logger.error(tools.ustr(ex))
@@ -193,10 +142,7 @@ class AccountInvoiceRefund(models.Model):
                     return {"domain": domain, "warning": warning}
                 # validar la duplicidad de documentos electronicos
                 auth_supplier_model.validate_unique_document_partner(
-                    "invoice_reembolso",
-                    self.document_number,
-                    self.partner_id.id,
-                    UtilModel.ensure_id(self),
+                    "invoice_reembolso", self.document_number, self.partner_id.id, UtilModel.ensure_id(self),
                 )
             return {"domain": domain, "warning": warning}
         auth_data = auth_supplier_model.get_supplier_authorizations(
@@ -207,8 +153,7 @@ class AccountInvoiceRefund(models.Model):
         if auth_data.get("multi_auth", False):
             if (
                 self.l10n_ec_partner_authorization_id
-                and self.l10n_ec_partner_authorization_id.id
-                in auth_data.get("auth_ids", [])
+                and self.l10n_ec_partner_authorization_id.id in auth_data.get("auth_ids", [])
                 and l10n_latam_document_number
             ):
                 auth_use = self.l10n_ec_partner_authorization_id
@@ -221,16 +166,15 @@ class AccountInvoiceRefund(models.Model):
                         number_to_check = str(int(number_data[0]))
                     except Exception as ex:
                         _logger.error(tools.ustr(ex))
-                        pass
                 if (
                     number_to_check
                     and int(number_to_check) >= auth_use.first_sequence
                     and int(number_to_check) <= auth_use.last_sequence
                 ):
-                    l10n_latam_document_number = auth_supplier_model.fill_padding(
-                        number_to_check, auth_use.padding
+                    l10n_latam_document_number = auth_supplier_model.fill_padding(number_to_check, auth_use.padding)
+                    l10n_latam_document_number = (
+                        f"{auth_use.agency}-{auth_use.printer_point}-{l10n_latam_document_number}"
                     )
-                    l10n_latam_document_number = f"{auth_use.agency}-{auth_use.printer_point}-{l10n_latam_document_number}"
                     self.document_number = l10n_latam_document_number
                     # si hay ids pasar el id para validar sin considerar el documento actual
                     auth_supplier_model.check_number_document(
@@ -255,11 +199,7 @@ class AccountInvoiceRefund(models.Model):
                     "message": auth_data.get("message", ""),
                 }
             return {"domain": domain, "warning": warning}
-        if (
-            not auth_data.get("auth_ids", [])
-            and self.partner_id
-            and l10n_latam_document_number
-        ):
+        if not auth_data.get("auth_ids", []) and self.partner_id and l10n_latam_document_number:
             self.l10n_ec_partner_authorization_id = False
             if auth_data.get("message", ""):
                 warning = {

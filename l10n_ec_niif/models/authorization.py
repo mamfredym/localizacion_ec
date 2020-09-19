@@ -1,10 +1,8 @@
 #
 
 from odoo import api, fields, models
-from odoo.exceptions import RedirectWarning, UserError, ValidationError, Warning
+from odoo.exceptions import UserError, ValidationError, Warning
 from odoo.tools.translate import _
-
-import odoo.addons.decimal_precision as dp
 
 from ..models import modules_mapping
 
@@ -16,11 +14,7 @@ class L10nECSriAuthorization(models.Model):
     _rec_name = "number"
 
     company_id = fields.Many2one(
-        "res.company",
-        "Company",
-        required=True,
-        help="",
-        default=lambda self: self.env.company,
+        "res.company", "Company", required=True, help="", default=lambda self: self.env.company,
     )
     active = fields.Boolean(string="Active?", default=True)
     number = fields.Char("Authorization Number", size=10, required=True, index=True)
@@ -32,9 +26,7 @@ class L10nECSriAuthorization(models.Model):
         string="Document Types",
         required=False,
     )
-    count_invoice = fields.Integer(
-        string="Count Invoice", compute="_compute_count_invoice"
-    )
+    count_invoice = fields.Integer(string="Count Invoice", compute="_compute_count_invoice")
 
     @api.constrains(
         "start_date", "expiration_date",
@@ -49,15 +41,11 @@ class L10nECSriAuthorization(models.Model):
             ]
             nauthorization = self.search_count(domain)
             if nauthorization:
-                raise UserError(
-                    _("You can not set 2 authorization that overlaps on the same day.")
-                )
+                raise UserError(_("You can not set 2 authorization that overlaps on the same day."))
 
     def _compute_count_invoice(self):
         count = self.env["account.move"]
-        search = count.search_count(
-            [("l10n_ec_authorization_id", "in", [a.id for a in self])]
-        )
+        search = count.search_count([("l10n_ec_authorization_id", "in", [a.id for a in self])])
         self.count_invoice = search
 
     def unlink(self):
@@ -74,11 +62,7 @@ class L10nECSriAuthorization(models.Model):
         return result
 
     _sql_constraints = [
-        (
-            "number_uniq",
-            "unique(company_id, number)",
-            _("SRI Authorization must be unique by company"),
-        ),
+        ("number_uniq", "unique(company_id, number)", _("SRI Authorization must be unique by company"),),
         (
             "date_check2",
             "CHECK ((start_date <= expiration_date))",
@@ -117,42 +101,26 @@ class L10nECSriAuthorizationLine(models.Model):
         if (
             self.env["ir.module.module"]
             .sudo()
-            .search(
-                [("name", "=", "l10n_ec_delivery_note"), ("state", "=", "installed")]
-            )
+            .search([("name", "=", "l10n_ec_delivery_note"), ("state", "=", "installed")])
         ):
             types.append(("delivery_note", _("Delivery Note")))
         return types
 
-    document_type = fields.Selection(
-        string="Document Type", selection="_get_available_type", required=True
-    )
+    document_type = fields.Selection(string="Document Type", selection="_get_available_type", required=True)
     first_sequence = fields.Integer("First Sequence")
     last_sequence = fields.Integer("Last Sequence")
     authorization_id = fields.Many2one(
-        comodel_name="l10n_ec.sri.authorization",
-        string="Authorization",
-        required=True,
-        ondelete="cascade",
+        comodel_name="l10n_ec.sri.authorization", string="Authorization", required=True, ondelete="cascade",
     )
     point_of_emission_id = fields.Many2one(
-        comodel_name="l10n_ec.point.of.emission",
-        string="Point of Emission",
-        required=True,
+        comodel_name="l10n_ec.point.of.emission", string="Point of Emission", required=True,
     )
     agency_id = fields.Many2one(
-        comodel_name="l10n_ec.agency",
-        string="Agency",
-        related="point_of_emission_id.agency_id",
-        store=True,
+        comodel_name="l10n_ec.agency", string="Agency", related="point_of_emission_id.agency_id", store=True,
     )
     padding = fields.Integer("Padding", default=9)
-    count_invoice = fields.Integer(
-        string="Count Invoice", related="authorization_id.count_invoice"
-    )
-    active = fields.Boolean(
-        string="Active?", related="authorization_id.active", default=True
-    )
+    count_invoice = fields.Integer(string="Count Invoice", related="authorization_id.count_invoice")
+    active = fields.Boolean(string="Active?", related="authorization_id.active", default=True)
 
     @api.constrains(
         "first_sequence", "last_sequence",
@@ -174,11 +142,7 @@ class L10nECSriAuthorizationLine(models.Model):
                 raise ValidationError(_("Padding must be between 0 or 9"))
 
     @api.constrains(
-        "authorization_id",
-        "point_of_emission_id",
-        "document_type",
-        "first_sequence",
-        "last_sequence",
+        "authorization_id", "point_of_emission_id", "document_type", "first_sequence", "last_sequence",
     )
     def _check_document_type(self):
         for line in self:
@@ -187,9 +151,7 @@ class L10nECSriAuthorizationLine(models.Model):
                 ("point_of_emission_id", "=", line.point_of_emission_id.id),
                 ("id", "!=", line.id),
             ]
-            other_recs = self.search(
-                domain + [("authorization_id", "=", self.authorization_id.id)]
-            )
+            other_recs = self.search(domain + [("authorization_id", "=", self.authorization_id.id)])
             if other_recs:
                 raise ValidationError(
                     _(
@@ -217,17 +179,9 @@ class L10nECSriAuthorizationLine(models.Model):
                         and line.last_sequence <= other_auth.last_sequence
                     ):
                         valid = False
-                    if (
-                        other_auth.first_sequence
-                        <= line.last_sequence
-                        <= other_auth.last_sequence
-                    ):
+                    if other_auth.first_sequence <= line.last_sequence <= other_auth.last_sequence:
                         valid = False
-                    if (
-                        other_auth.last_sequence
-                        >= line.first_sequence
-                        >= other_auth.first_sequence
-                    ):
+                    if other_auth.last_sequence >= line.first_sequence >= other_auth.first_sequence:
                         valid = False
                 if not valid:
                     raise ValidationError(
@@ -243,22 +197,12 @@ class L10nECSriAuthorizationLine(models.Model):
                     )
 
     @api.model
-    def validate_unique_value_document(
-        self, invoice_type, document_number, company_id, res_id=False
-    ):
+    def validate_unique_value_document(self, invoice_type, document_number, company_id, res_id=False):
         company_model = self.env["res.company"]
         if not document_number or not company_id:
-            raise Warning(
-                _(
-                    "Verify the arguments to use the validate_unique_value_document function"
-                )
-            )
+            raise Warning(_("Verify the arguments to use the validate_unique_value_document function"))
         if not invoice_type:
-            raise Warning(
-                _(
-                    "You must indicate what type of document it is, Invoice, Credit Note, Debit Note, etc."
-                )
-            )
+            raise Warning(_("You must indicate what type of document it is, Invoice, Credit Note, Debit Note, etc."))
         document_type = modules_mapping.get_document_type(invoice_type)
         model_description = modules_mapping.get_document_name(document_type)
         model_name = modules_mapping.get_model_name(document_type)
@@ -277,16 +221,12 @@ class L10nECSriAuthorizationLine(models.Model):
                     return True
             if self.env.context.get("from_constrain", False):
                 raise ValidationError(
-                    _(
-                        "There is another document type %s with number '%s' for the company %s"
-                    )
+                    _("There is another document type %s with number '%s' for the company %s")
                     % (model_description, document_number, company.name)
                 )
             else:
                 raise Warning(
-                    _(
-                        "There is another document type %s with number '%s' for the company %s"
-                    )
+                    _("There is another document type %s with number '%s' for the company %s")
                     % (model_description, document_number, company.name)
                 )
         return True

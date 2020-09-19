@@ -45,19 +45,12 @@
                 <field name="code" />
                 <newline />
                 <group name="filters" string="Filters">
-                    <filter
-                        name="filter_inactive"
-                        string="Inactive"
-                        domain="[('active','=',False)]"
-                    />
+                    <filter name="filter_inactive" string="Inactive" domain="[('active','=',False)]" />
                 </group>
             </search>
         </field>
     </record>
-    <record
-        model="ir.actions.act_window"
-        id="action_l10n_ec_sri_payment_method_tree_view"
-    >
+    <record model="ir.actions.act_window" id="action_l10n_ec_sri_payment_method_tree_view">
         <field name="name">S.R.I. Payments Method</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">l10n_ec.sri.payment.method</field>

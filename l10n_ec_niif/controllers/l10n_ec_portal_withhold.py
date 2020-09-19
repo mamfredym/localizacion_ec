@@ -25,9 +25,7 @@ class PortalRetention(PortalElectronicCommon):
 
     def _prepare_portal_layout_values(self):
         values = super(PortalRetention, self)._prepare_portal_layout_values()
-        withhold_count = request.env["l10n_ec.withhold"].search_count(
-            self._get_l10n_ec_withhold_domain()
-        )
+        withhold_count = request.env["l10n_ec.withhold"].search_count(self._get_l10n_ec_withhold_domain())
         values["withhold_count"] = withhold_count
         return values
 
@@ -41,30 +39,14 @@ class PortalRetention(PortalElectronicCommon):
             "withhold": withhold,
         }
         return self._get_page_view_values(
-            withhold,
-            access_token,
-            values,
-            "l10n_ec_my_withhold_history",
-            False,
-            **kwargs,
+            withhold, access_token, values, "l10n_ec_my_withhold_history", False, **kwargs,
         )
 
     @http.route(
-        ["/my/retencion", "/my/retencion/page/<int:page>"],
-        type="http",
-        auth="user",
-        website=True,
+        ["/my/retencion", "/my/retencion/page/<int:page>"], type="http", auth="user", website=True,
     )
     def portal_my_retencion(
-        self,
-        page=1,
-        date_begin=None,
-        date_end=None,
-        sortby=None,
-        filterby=None,
-        search=None,
-        search_in=None,
-        **kw,
+        self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, search=None, search_in=None, **kw,
     ):
         values = self._prepare_portal_layout_values()
         AccountRetention = request.env["l10n_ec.withhold"]
@@ -108,12 +90,7 @@ class PortalRetention(PortalElectronicCommon):
         # pager
         pager = portal_pager(
             url="/my/retencion",
-            url_args={
-                "date_begin": date_begin,
-                "date_end": date_end,
-                "sortby": sortby,
-                "filterby": filterby,
-            },
+            url_args={"date_begin": date_begin, "date_end": date_end, "sortby": sortby, "filterby": filterby,},
             total=withhold_count,
             page=page,
             step=self._items_per_page,
@@ -121,9 +98,7 @@ class PortalRetention(PortalElectronicCommon):
         # content according to pager and archive selected
         withholds = AccountRetention.browse()
         if not errors:
-            withholds = AccountRetention.search(
-                domain, order=order, limit=self._items_per_page, offset=pager["offset"]
-            )
+            withholds = AccountRetention.search(domain, order=order, limit=self._items_per_page, offset=pager["offset"])
         request.session["l10n_ec_my_withhold_history"] = withholds.ids[:100]
         values.update(
             {
@@ -145,16 +120,10 @@ class PortalRetention(PortalElectronicCommon):
         )
         return request.render("l10n_ec_niif.portal_my_withhold", values)
 
-    @http.route(
-        ["/my/retencion/<int:withhold_id>"], type="http", auth="public", website=True
-    )
-    def portal_my_withhold_detail(
-        self, withhold_id, access_token=None, report_type=None, download=False, **kw
-    ):
+    @http.route(["/my/retencion/<int:withhold_id>"], type="http", auth="public", website=True)
+    def portal_my_withhold_detail(self, withhold_id, access_token=None, report_type=None, download=False, **kw):
         try:
-            withhold_sudo = self._document_check_access(
-                "l10n_ec.withhold", withhold_id, access_token
-            )
+            withhold_sudo = self._document_check_access("l10n_ec.withhold", withhold_id, access_token)
         except AccessError:
             return request.redirect("/my")
 
@@ -166,9 +135,7 @@ class PortalRetention(PortalElectronicCommon):
                 ("Content-Length", len(report)),
             ]
             filename = f"{withhold_sudo.get_printed_report_name_l10n_ec()}.xml"
-            reporthttpheaders.append(
-                ("Content-Disposition", content_disposition(filename))
-            )
+            reporthttpheaders.append(("Content-Disposition", content_disposition(filename)))
             return request.make_response(report, headers=reporthttpheaders)
         elif report_type in ("html", "pdf", "text"):
             return self._show_report(

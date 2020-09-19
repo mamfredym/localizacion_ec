@@ -8,11 +8,7 @@ class L10nCompanyResolution(models.Model):
     _rec_name = "resolution"
 
     company_id = fields.Many2one(
-        "res.company",
-        "Company",
-        default=lambda self: self.env.company,
-        required=True,
-        ondelete="cascade",
+        "res.company", "Company", default=lambda self: self.env.company, required=True, ondelete="cascade",
     )
     resolution = fields.Char("Resolution", size=3, required=True)
     date_from = fields.Date("Date from", required=True)

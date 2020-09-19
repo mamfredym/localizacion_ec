@@ -11,18 +11,12 @@
                     <field name="l10n_ec_is_ecuadorian_company" invisible="1" />
                 </field>
                 <field name="parent_id" position="before">
-                    <field
-                        name="l10n_ec_business_name"
-                        placeholder="Nombre Comercial"
-                    />
+                    <field name="l10n_ec_business_name" placeholder="Nombre Comercial" />
                 </field>
                 <field name="country_id" position="attributes">
                     <attribute name="required">1</attribute>
                 </field>
-                <xpath
-                    expr="//page[@name='sales_purchases']//group[@name='purchase']"
-                    position="inside"
-                >
+                <xpath expr="//page[@name='sales_purchases']//group[@name='purchase']" position="inside">
                     <field name="l10n_ec_foreign" />
                     <field
                         name="l10n_ec_foreign_type"
@@ -34,17 +28,10 @@
                         string="Third Party Authorizations"
                         groups="account.group_account_user,account.group_account_manager"
                     >
-                        <field
-                            name="l10n_ec_authorization_ids"
-                            nolabel="1"
-                            colspan="4"
-                        />
+                        <field name="l10n_ec_authorization_ids" nolabel="1" colspan="4" />
                     </page>
                     <page name="invoice_elec" string="Facturación Electrónica">
-                        <group
-                            colspan="4"
-                            string="Notificación de Documentos Electrónicos"
-                        >
+                        <group colspan="4" string="Notificación de Documentos Electrónicos">
                             <group>
                                 <field name="l10n_ec_email_out_invoice" />
                                 <field name="l10n_ec_email_out_refund" />
@@ -54,10 +41,7 @@
                                 <field name="l10n_ec_email_liquidation" />
                                 <field name="l10n_ec_email_delivery_note" />
                                 <field name="l10n_ec_email_withhold_purchase" />
-                                <field
-                                    name="l10n_ec_require_email_electronic"
-                                    invisible="1"
-                                />
+                                <field name="l10n_ec_require_email_electronic" invisible="1" />
                             </group>
                         </group>
                     </page>
@@ -66,22 +50,12 @@
                     </page>
                 </xpath>
                 <field name="email" position="attributes">
-                    <attribute
-                        name="attrs"
-                    >{'required': [('l10n_ec_require_email_electronic', '=', True)]}</attribute>
+                    <attribute name="attrs">{'required': [('l10n_ec_require_email_electronic', '=', True)]}</attribute>
                 </field>
-                <xpath
-                    expr="//field[@name='child_ids']//form//field[@name='email']"
-                    position="attributes"
-                >
-                    <attribute
-                        name="attrs"
-                    >{'required': [('l10n_ec_require_email_electronic', '=', True)]}</attribute>
+                <xpath expr="//field[@name='child_ids']//form//field[@name='email']" position="attributes">
+                    <attribute name="attrs">{'required': [('l10n_ec_require_email_electronic', '=', True)]}</attribute>
                 </xpath>
-                <xpath
-                    expr="//field[@name='child_ids']//form//field[@name='email']/../.."
-                    position="after"
-                >
+                <xpath expr="//field[@name='child_ids']//form//field[@name='email']/../.." position="after">
                     <separator colspan="4" />
                     <group colspan="4" string="Notificación de Documentos Electrónicos">
                         <group>
@@ -93,10 +67,7 @@
                             <field name="l10n_ec_email_liquidation" />
                             <field name="l10n_ec_email_delivery_note" />
                             <field name="l10n_ec_email_withhold_purchase" />
-                            <field
-                                name="l10n_ec_require_email_electronic"
-                                invisible="1"
-                            />
+                            <field name="l10n_ec_require_email_electronic" invisible="1" />
                         </group>
                     </group>
                 </xpath>
@@ -118,17 +89,12 @@
                             <field name="l10n_ec_email_liquidation" />
                             <field name="l10n_ec_email_delivery_note" />
                             <field name="l10n_ec_email_withhold_purchase" />
-                            <field
-                                name="l10n_ec_require_email_electronic"
-                                invisible="1"
-                            />
+                            <field name="l10n_ec_require_email_electronic" invisible="1" />
                         </group>
                     </group>
                 </xpath>
                 <field name="email" position="attributes">
-                    <attribute
-                        name="attrs"
-                    >{'required': [('l10n_ec_require_email_electronic', '=', True)]}</attribute>
+                    <attribute name="attrs">{'required': [('l10n_ec_require_email_electronic', '=', True)]}</attribute>
                 </field>
             </field>
         </record>
@@ -148,17 +114,12 @@
                             <field name="l10n_ec_email_liquidation" />
                             <field name="l10n_ec_email_delivery_note" />
                             <field name="l10n_ec_email_withhold_purchase" />
-                            <field
-                                name="l10n_ec_require_email_electronic"
-                                invisible="1"
-                            />
+                            <field name="l10n_ec_require_email_electronic" invisible="1" />
                         </group>
                     </group>
                 </xpath>
                 <field name="email" position="attributes">
-                    <attribute
-                        name="attrs"
-                    >{'required': [('l10n_ec_require_email_electronic', '=', True)]}</attribute>
+                    <attribute name="attrs">{'required': [('l10n_ec_require_email_electronic', '=', True)]}</attribute>
                 </field>
             </field>
         </record>
@@ -203,28 +164,13 @@
             <field name="priority" eval="50" />
             <field name="inherit_id" ref="account.view_partner_property_form" />
             <field name="arch" type="xml">
-                <xpath
-                    expr="//field[@name='property_account_position_id']"
-                    position="before"
-                >
+                <xpath expr="//field[@name='property_account_position_id']" position="before">
                     <field name="l10n_ec_related_part" />
                     <field name="l10n_ec_type_sri" groups="base.group_system" />
-                    <field
-                        name="l10n_ec_sex"
-                        attrs="{'invisible': [('company_type', '!=', 'person')]}"
-                    />
-                    <field
-                        name="l10n_ec_marital_status"
-                        attrs="{'invisible': [('company_type', '!=', 'person')]}"
-                    />
-                    <field
-                        name="l10n_ec_input_origins"
-                        attrs="{'invisible': [('company_type', '!=', 'person')]}"
-                    />
-                    <field
-                        name="l10n_ec_sri_payment_id"
-                        options="{'no_create': True}"
-                    />
+                    <field name="l10n_ec_sex" attrs="{'invisible': [('company_type', '!=', 'person')]}" />
+                    <field name="l10n_ec_marital_status" attrs="{'invisible': [('company_type', '!=', 'person')]}" />
+                    <field name="l10n_ec_input_origins" attrs="{'invisible': [('company_type', '!=', 'person')]}" />
+                    <field name="l10n_ec_sri_payment_id" options="{'no_create': True}" />
                 </xpath>
             </field>
         </record>

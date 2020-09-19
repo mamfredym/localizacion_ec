@@ -1,12 +1,10 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class AccountPayment(models.Model):
     _inherit = "account.payment"
 
-    l10n_ec_sri_payment_id = fields.Many2one(
-        "l10n_ec.sri.payment.method", "SRI Payment Method",
-    )
+    l10n_ec_sri_payment_id = fields.Many2one("l10n_ec.sri.payment.method", "SRI Payment Method",)
 
     @api.onchange("journal_id")
     def _onchange_journal(self):

@@ -14,10 +14,7 @@
                 eval="[(6, 0, [ref('base.default_user'), ref('base.user_admin'), ref('base.user_root')])]"
             />
         </record>
-        <record
-            model="l10n_ec.point.of.emission"
-            id="demo_other_point_of_emission_preprinted"
-        >
+        <record model="l10n_ec.point.of.emission" id="demo_other_point_of_emission_preprinted">
             <field name="agency_id" ref="demo_other_agency" />
             <field name="name">Demo Other Point of emission</field>
             <field name="number">001</field>
@@ -33,28 +30,19 @@
                 eval="[(6, 0, [ref('base.default_user'), ref('base.user_admin'), ref('base.user_root')])]"
             />
         </record>
-        <record
-            model="l10n_ec.point.of.emission"
-            id="demo_point_of_emission_preprinted"
-        >
+        <record model="l10n_ec.point.of.emission" id="demo_point_of_emission_preprinted">
             <field name="agency_id" ref="demo_agency" />
             <field name="name">Demo Point of Emission</field>
             <field name="number">001</field>
             <field name="type_emission">pre_printed</field>
         </record>
-        <record
-            model="l10n_ec.point.of.emission"
-            id="demo_point_of_emission_auto_printer"
-        >
+        <record model="l10n_ec.point.of.emission" id="demo_point_of_emission_auto_printer">
             <field name="agency_id" ref="demo_agency" />
             <field name="name">Demo Point of Emission</field>
             <field name="number">002</field>
             <field name="type_emission">auto_printer</field>
         </record>
-        <record
-            model="l10n_ec.point.of.emission"
-            id="demo_point_of_emission_electronic"
-        >
+        <record model="l10n_ec.point.of.emission" id="demo_point_of_emission_electronic">
             <field name="agency_id" ref="demo_agency" />
             <field name="name">Demo Point of Emission</field>
             <field name="number">003</field>
@@ -70,19 +58,13 @@
                 eval="[(6, 0, [ref('base.default_user'), ref('base.user_admin'), ref('base.user_root')])]"
             />
         </record>
-        <record
-            model="l10n_ec.point.of.emission"
-            id="demo_point_of_emission_preprinted2"
-        >
+        <record model="l10n_ec.point.of.emission" id="demo_point_of_emission_preprinted2">
             <field name="agency_id" ref="demo_agency2" />
             <field name="name">Demo Point of emission 2</field>
             <field name="number">001</field>
             <field name="type_emission">pre_printed</field>
         </record>
-        <record
-            model="l10n_ec.point.of.emission"
-            id="demo_point_of_emission_preprinted3"
-        >
+        <record model="l10n_ec.point.of.emission" id="demo_point_of_emission_preprinted3">
             <field name="agency_id" ref="demo_agency2" />
             <field name="name">Demo Point of emission 3</field>
             <field name="number">002</field>
@@ -91,21 +73,12 @@
         <record model="l10n_ec.sri.authorization" id="demo_preprinted_authorization">
             <field name="company_id" ref="base.main_company" />
             <field name="number">9999999999</field>
-            <field
-                name="start_date"
-                eval="(DateTime.today() - relativedelta(month=1)).strftime('%Y-%m-01')"
-            />
-            <field
-                name="expiration_date"
-                eval="(DateTime.today() - relativedelta(month=12)).strftime('%Y-%m-31')"
-            />
+            <field name="start_date" eval="(DateTime.today() - relativedelta(month=1)).strftime('%Y-%m-01')" />
+            <field name="expiration_date" eval="(DateTime.today() - relativedelta(month=12)).strftime('%Y-%m-31')" />
         </record>
         <record model="l10n_ec.sri.authorization.line" id="demo_invoice_sequence">
             <field name="authorization_id" ref="demo_preprinted_authorization" />
-            <field
-                name="point_of_emission_id"
-                ref="demo_point_of_emission_preprinted"
-            />
+            <field name="point_of_emission_id" ref="demo_point_of_emission_preprinted" />
             <field name="document_type">invoice</field>
             <field name="first_sequence">1</field>
             <field name="last_sequence">1000</field>
@@ -113,10 +86,7 @@
         </record>
         <record model="l10n_ec.sri.authorization.line" id="demo_withholding_sequence">
             <field name="authorization_id" ref="demo_preprinted_authorization" />
-            <field
-                name="point_of_emission_id"
-                ref="demo_point_of_emission_preprinted"
-            />
+            <field name="point_of_emission_id" ref="demo_point_of_emission_preprinted" />
             <field name="document_type">withholding</field>
             <field name="first_sequence">1</field>
             <field name="last_sequence">1000</field>
@@ -124,10 +94,7 @@
         </record>
         <record model="l10n_ec.sri.authorization.line" id="demo_liquidation_sequence">
             <field name="authorization_id" ref="demo_preprinted_authorization" />
-            <field
-                name="point_of_emission_id"
-                ref="demo_point_of_emission_preprinted"
-            />
+            <field name="point_of_emission_id" ref="demo_point_of_emission_preprinted" />
             <field name="document_type">liquidation</field>
             <field name="first_sequence">1</field>
             <field name="last_sequence">1000</field>
@@ -135,10 +102,7 @@
         </record>
         <record model="l10n_ec.sri.authorization.line" id="demo_credit_note_sequence">
             <field name="authorization_id" ref="demo_preprinted_authorization" />
-            <field
-                name="point_of_emission_id"
-                ref="demo_point_of_emission_preprinted"
-            />
+            <field name="point_of_emission_id" ref="demo_point_of_emission_preprinted" />
             <field name="document_type">credit_note</field>
             <field name="first_sequence">1</field>
             <field name="last_sequence">1000</field>
@@ -146,10 +110,7 @@
         </record>
         <record model="l10n_ec.sri.authorization.line" id="demo_debit_note_sequence">
             <field name="authorization_id" ref="demo_preprinted_authorization" />
-            <field
-                name="point_of_emission_id"
-                ref="demo_point_of_emission_preprinted"
-            />
+            <field name="point_of_emission_id" ref="demo_point_of_emission_preprinted" />
             <field name="document_type">debit_note</field>
             <field name="first_sequence">1</field>
             <field name="last_sequence">1000</field>
@@ -157,10 +118,7 @@
         </record>
         <record model="l10n_ec.sri.authorization.line" id="demo_invoice_sequence2">
             <field name="authorization_id" ref="demo_preprinted_authorization" />
-            <field
-                name="point_of_emission_id"
-                ref="demo_point_of_emission_preprinted2"
-            />
+            <field name="point_of_emission_id" ref="demo_point_of_emission_preprinted2" />
             <field name="document_type">invoice</field>
             <field name="first_sequence">1</field>
             <field name="last_sequence">1000</field>
@@ -168,10 +126,7 @@
         </record>
         <record model="l10n_ec.sri.authorization.line" id="demo_withholding_sequence2">
             <field name="authorization_id" ref="demo_preprinted_authorization" />
-            <field
-                name="point_of_emission_id"
-                ref="demo_point_of_emission_preprinted2"
-            />
+            <field name="point_of_emission_id" ref="demo_point_of_emission_preprinted2" />
             <field name="document_type">withholding</field>
             <field name="first_sequence">1</field>
             <field name="last_sequence">1000</field>
@@ -179,10 +134,7 @@
         </record>
         <record model="l10n_ec.sri.authorization.line" id="demo_liquidation_sequence2">
             <field name="authorization_id" ref="demo_preprinted_authorization" />
-            <field
-                name="point_of_emission_id"
-                ref="demo_point_of_emission_preprinted2"
-            />
+            <field name="point_of_emission_id" ref="demo_point_of_emission_preprinted2" />
             <field name="document_type">liquidation</field>
             <field name="first_sequence">1</field>
             <field name="last_sequence">1000</field>
@@ -190,10 +142,7 @@
         </record>
         <record model="l10n_ec.sri.authorization.line" id="demo_credit_note_sequence2">
             <field name="authorization_id" ref="demo_preprinted_authorization" />
-            <field
-                name="point_of_emission_id"
-                ref="demo_point_of_emission_preprinted2"
-            />
+            <field name="point_of_emission_id" ref="demo_point_of_emission_preprinted2" />
             <field name="document_type">credit_note</field>
             <field name="first_sequence">1</field>
             <field name="last_sequence">1000</field>
@@ -201,10 +150,7 @@
         </record>
         <record model="l10n_ec.sri.authorization.line" id="demo_debit_note_sequence2">
             <field name="authorization_id" ref="demo_preprinted_authorization" />
-            <field
-                name="point_of_emission_id"
-                ref="demo_point_of_emission_preprinted2"
-            />
+            <field name="point_of_emission_id" ref="demo_point_of_emission_preprinted2" />
             <field name="document_type">debit_note</field>
             <field name="first_sequence">1</field>
             <field name="last_sequence">1000</field>
@@ -212,10 +158,7 @@
         </record>
         <record model="l10n_ec.sri.authorization.line" id="demo_invoice_sequence3">
             <field name="authorization_id" ref="demo_preprinted_authorization" />
-            <field
-                name="point_of_emission_id"
-                ref="demo_point_of_emission_preprinted3"
-            />
+            <field name="point_of_emission_id" ref="demo_point_of_emission_preprinted3" />
             <field name="document_type">invoice</field>
             <field name="first_sequence">1</field>
             <field name="last_sequence">1000</field>
@@ -223,10 +166,7 @@
         </record>
         <record model="l10n_ec.sri.authorization.line" id="demo_withholding_sequence3">
             <field name="authorization_id" ref="demo_preprinted_authorization" />
-            <field
-                name="point_of_emission_id"
-                ref="demo_point_of_emission_preprinted3"
-            />
+            <field name="point_of_emission_id" ref="demo_point_of_emission_preprinted3" />
             <field name="document_type">withholding</field>
             <field name="first_sequence">1</field>
             <field name="last_sequence">1000</field>
@@ -234,10 +174,7 @@
         </record>
         <record model="l10n_ec.sri.authorization.line" id="demo_liquidation_sequence3">
             <field name="authorization_id" ref="demo_preprinted_authorization" />
-            <field
-                name="point_of_emission_id"
-                ref="demo_point_of_emission_preprinted3"
-            />
+            <field name="point_of_emission_id" ref="demo_point_of_emission_preprinted3" />
             <field name="document_type">liquidation</field>
             <field name="first_sequence">1</field>
             <field name="last_sequence">1000</field>
@@ -245,10 +182,7 @@
         </record>
         <record model="l10n_ec.sri.authorization.line" id="demo_credit_note_sequence3">
             <field name="authorization_id" ref="demo_preprinted_authorization" />
-            <field
-                name="point_of_emission_id"
-                ref="demo_point_of_emission_preprinted3"
-            />
+            <field name="point_of_emission_id" ref="demo_point_of_emission_preprinted3" />
             <field name="document_type">credit_note</field>
             <field name="first_sequence">1</field>
             <field name="last_sequence">1000</field>
@@ -256,10 +190,7 @@
         </record>
         <record model="l10n_ec.sri.authorization.line" id="demo_debit_note_sequence3">
             <field name="authorization_id" ref="demo_preprinted_authorization" />
-            <field
-                name="point_of_emission_id"
-                ref="demo_point_of_emission_preprinted3"
-            />
+            <field name="point_of_emission_id" ref="demo_point_of_emission_preprinted3" />
             <field name="document_type">debit_note</field>
             <field name="first_sequence">1</field>
             <field name="last_sequence">1000</field>

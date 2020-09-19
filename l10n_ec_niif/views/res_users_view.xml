@@ -7,15 +7,9 @@
             <field name="inherit_id" ref="base.view_users_form" />
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='preferences']/../.." position="after">
-                    <page
-                        string="Ecuadorian Localization"
-                        name="ecuadorian_localization"
-                    >
+                    <page string="Ecuadorian Localization" name="ecuadorian_localization">
                         <group>
-                            <field
-                                name="l10n_ec_printer_default_id"
-                                options="{'no_create': True}"
-                            />
+                            <field name="l10n_ec_printer_default_id" options="{'no_create': True}" />
                         </group>
                         <field name="l10n_ec_agency_ids" nolabel="1" colspan="4" />
                     </page>

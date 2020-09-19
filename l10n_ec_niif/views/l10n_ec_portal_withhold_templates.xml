@@ -20,14 +20,8 @@
         priority="30"
     >
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
-            <li
-                t-if="page_name == 'withhold'"
-                t-attf-class="breadcrumb-item #{'active ' if not withhold else ''}"
-            >
-                <a
-                    t-if="withhold"
-                    t-attf-href="/my/retencion?{{ keep_query() }}"
-                >Retenciones</a>
+            <li t-if="page_name == 'withhold'" t-attf-class="breadcrumb-item #{'active ' if not withhold else ''}">
+                <a t-if="withhold" t-attf-href="/my/retencion?{{ keep_query() }}">Retenciones</a>
                 <t t-else="">Retenciones</t>
             </li>
             <li t-if="withhold" class="breadcrumb-item active">
@@ -60,14 +54,8 @@
                     <t t-foreach="withholds" t-as="withhold">
                         <tr>
                             <td>
-                                <t
-                                    t-set="document_number"
-                                    t-value="withhold.l10n_ec_get_document_number()"
-                                />
-                                <a
-                                    t-att-href="withhold.get_portal_url()"
-                                    t-att-title="document_number"
-                                >
+                                <t t-set="document_number" t-value="withhold.l10n_ec_get_document_number()" />
+                                <a t-att-href="withhold.get_portal_url()" t-att-title="document_number">
                                     <t t-esc="document_number" t-if="document_number" />
                                     <em t-else="">Retencion en borrador</em>
                                 </a>
@@ -121,9 +109,7 @@
                         </h2>
                     </t>
                     <t t-set="entries">
-                        <ul
-                            class="list-group list-group-flush flex-wrap flex-row flex-lg-column"
-                        >
+                        <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
                             <li class="list-group-item flex-grow-1">
                                 <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
                                     <div class="btn-group  flex-grow-1 mr-1 mb-1">
@@ -151,10 +137,7 @@
                                     </div>
                                 </div>
                             </li>
-                            <li
-                                t-if="withhold.create_uid"
-                                class="list-group-item flex-grow-1"
-                            >
+                            <li t-if="withhold.create_uid" class="list-group-item flex-grow-1">
                                 <div class="small mb-1">
                                     <strong class="text-muted">Contact</strong>
                                 </div>
@@ -190,19 +173,14 @@
                 </t>
                 <!-- Page Content -->
                 <div id="electronic_content" class="col-12 col-lg">
-                    <t
-                        t-if="error or warning"
-                        t-call="l10n_ec_niif.portal_document_electronic_error"
-                    />
+                    <t t-if="error or warning" t-call="l10n_ec_niif.portal_document_electronic_error" />
                     <t
                         t-if="success and (not error and not warning)"
                         t-call="l10n_ec_niif.portal_document_electronic_success"
                     />
                     <div class="o_portal_html_view shadow p-3">
                         <div class="o_portal_html_loader text-center">
-                            <i
-                                class="fa fa-circle-o-notch fa-spin fa-2x fa-fw text-black-50"
-                            />
+                            <i class="fa fa-circle-o-notch fa-spin fa-2x fa-fw text-black-50" />
                         </div>
                         <iframe
                             id="electronic_report_html"

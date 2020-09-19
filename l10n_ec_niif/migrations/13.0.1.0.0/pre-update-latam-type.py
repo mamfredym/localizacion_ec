@@ -14,16 +14,12 @@ def migrate(cr, version):
     # ya que odoo eliminaria los campos l10n_ec_debit_note y l10n_ec_liquidation
     # actualizamos primero los diarios de ND y liquidacion
     # los restantes se le asume invoice
+    cr.execute("ALTER TABLE account_journal ADD COLUMN l10n_latam_internal_type_tmp VARCHAR")
     cr.execute(
-        "ALTER TABLE account_journal ADD COLUMN l10n_latam_internal_type_tmp VARCHAR"
+        "UPDATE account_journal SET l10n_latam_internal_type_tmp = 'debit_note' " " WHERE l10n_ec_debit_note = true"
     )
     cr.execute(
-        "UPDATE account_journal SET l10n_latam_internal_type_tmp = 'debit_note' "
-        " WHERE l10n_ec_debit_note = true"
-    )
-    cr.execute(
-        "UPDATE account_journal SET l10n_latam_internal_type_tmp = 'liquidation' "
-        " WHERE l10n_ec_liquidation = true"
+        "UPDATE account_journal SET l10n_latam_internal_type_tmp = 'liquidation' " " WHERE l10n_ec_liquidation = true"
     )
     cr.execute(
         "UPDATE account_journal SET l10n_latam_internal_type_tmp = 'invoice' "

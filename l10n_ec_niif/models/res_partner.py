@@ -1,4 +1,3 @@
-import json
 import logging
 
 import requests
@@ -24,37 +23,18 @@ class ResPartner(models.Model):
             partner.l10n_ec_foreign = l10n_ec_foreign
 
     l10n_ec_foreign = fields.Boolean(
-        "Foreign?",
-        readonly=True,
-        help="",
-        store=True,
-        compute="_compute_l10n_ec_foreign",
+        "Foreign?", readonly=True, help="", store=True, compute="_compute_l10n_ec_foreign",
     )
     l10n_ec_foreign_type = fields.Selection(
-        [("01", "Persona Natural"), ("02", "Sociedad"),],
-        string="Foreign Type",
-        readonly=False,
-        help="",
+        [("01", "Persona Natural"), ("02", "Sociedad"),], string="Foreign Type", readonly=False, help="",
     )
-    l10n_ec_business_name = fields.Char(
-        "Business Name", required=False, readonly=False, help="",
-    )
+    l10n_ec_business_name = fields.Char("Business Name", required=False, readonly=False, help="",)
     # Datos para el reporte dinardap
     l10n_ec_sex = fields.Selection(
-        [("M", "Masculino"), ("F", "Femenino"),],
-        string="Sex",
-        readonly=False,
-        help="",
-        required=False,
+        [("M", "Masculino"), ("F", "Femenino"),], string="Sex", readonly=False, help="", required=False,
     )
     l10n_ec_marital_status = fields.Selection(
-        [
-            ("S", "Soltero(a)"),
-            ("C", "Casado(a)"),
-            ("D", "Divorciado(a)"),
-            ("", "Unión Libre"),
-            ("V", "Viudo(o)"),
-        ],
+        [("S", "Soltero(a)"), ("C", "Casado(a)"), ("D", "Divorciado(a)"), ("", "Unión Libre"), ("V", "Viudo(o)"),],
         string="Civil Status",
         readonly=False,
         help="",
@@ -79,9 +59,7 @@ class ResPartner(models.Model):
     l10n_ec_is_ecuadorian_company = fields.Boolean(
         string="is Ecuadorian Company?", compute="_compute_ecuadorian_company"
     )
-    l10n_ec_sri_payment_id = fields.Many2one(
-        "l10n_ec.sri.payment.method", "SRI Payment Method"
-    )
+    l10n_ec_sri_payment_id = fields.Many2one("l10n_ec.sri.payment.method", "SRI Payment Method")
 
     @api.depends("company_id.country_id")
     def _compute_ecuadorian_company(self):
@@ -137,9 +115,7 @@ class ResPartner(models.Model):
     @api.constrains("vat", "country_id")
     def check_vat(self):
         if self.sudo().env.ref("base.module_base_vat").state == "installed":
-            self = self.filtered(
-                lambda partner: partner.country_id == self.env.ref("base.ec")
-            )
+            self = self.filtered(lambda partner: partner.country_id == self.env.ref("base.ec"))
             for partner in self:
                 if partner.vat:
                     valid, vat_type = self.check_vat_ec(partner.vat)
@@ -167,10 +143,7 @@ class ResPartner(models.Model):
             partner.l10n_ec_type_sri = vat_type
 
     l10n_ec_type_sri = fields.Char(
-        "SRI Identification Type",
-        store=True,
-        readonly=True,
-        compute="_compute_l10n_ec_type_sri",
+        "SRI Identification Type", store=True, readonly=True, compute="_compute_l10n_ec_type_sri",
     )
 
     def write(self, values):
@@ -178,12 +151,7 @@ class ResPartner(models.Model):
             if (
                 partner.ref == "9999999999999"
                 and self._uid != SUPERUSER_ID
-                and (
-                    "name" in values
-                    or "vat" in values
-                    or "active" in values
-                    or "country_id" in values
-                )
+                and ("name" in values or "vat" in values or "active" in values or "country_id" in values)
             ):
                 raise Warning(_("You cannot modify record of final consumer"))
         return super(ResPartner, self).write(values)
@@ -194,37 +162,24 @@ class ResPartner(models.Model):
                 raise Warning(_("You cannot unlink final consumer"))
         return super(ResPartner, self).unlink()
 
-    def _name_search(
-        self, name, args=None, operator="ilike", limit=100, name_get_uid=None
-    ):
+    def _name_search(self, name, args=None, operator="ilike", limit=100, name_get_uid=None):
         args = args or []
         recs = self.browse()
-        res = super(ResPartner, self)._name_search(
-            name, args, operator, limit, name_get_uid
-        )
+        res = super(ResPartner, self)._name_search(name, args, operator, limit, name_get_uid)
         if not res and name:
             recs = self.search([("vat", operator, name)] + args, limit=limit)
             if not recs:
-                recs = self.search(
-                    [("l10n_ec_business_name", operator, name)] + args, limit=limit
-                )
+                recs = self.search([("l10n_ec_business_name", operator, name)] + args, limit=limit)
             if recs:
-                res = (
-                    models.lazy_name_get(self.browse(recs.ids).with_user(name_get_uid))
-                    or []
-                )
+                res = models.lazy_name_get(self.browse(recs.ids).with_user(name_get_uid)) or []
         return res
 
     l10n_ec_authorization_ids = fields.One2many(
-        "l10n_ec.sri.authorization.supplier",
-        "partner_id",
-        string="Third Party Authorizations",
+        "l10n_ec.sri.authorization.supplier", "partner_id", string="Third Party Authorizations",
     )
 
     l10n_ec_email_out_invoice = fields.Boolean(
-        "As Follower on Invoice",
-        readonly=False,
-        default=lambda self: not ("default_parent_id" in self.env.context),
+        "As Follower on Invoice", readonly=False, default=lambda self: not ("default_parent_id" in self.env.context),
     )
     l10n_ec_email_out_refund = fields.Boolean(
         "As Follower on Credit Note",
@@ -242,19 +197,13 @@ class ResPartner(models.Model):
         default=lambda self: not ("default_parent_id" in self.env.context),
     )
     l10n_ec_email_delivery_note = fields.Boolean(
-        "As Follower Delivery Note",
-        readonly=False,
-        default=lambda self: not ("default_parent_id" in self.env.context),
+        "As Follower Delivery Note", readonly=False, default=lambda self: not ("default_parent_id" in self.env.context),
     )
     l10n_ec_email_withhold_purchase = fields.Boolean(
-        "As Follower on Withhold",
-        readonly=False,
-        default=lambda self: not ("default_parent_id" in self.env.context),
+        "As Follower on Withhold", readonly=False, default=lambda self: not ("default_parent_id" in self.env.context),
     )
     l10n_ec_require_email_electronic = fields.Boolean(
-        string=u"Requerir Correo Electronico",
-        store=False,
-        compute="_compute_l10n_ec_require_email_electronic",
+        string=u"Requerir Correo Electronico", store=False, compute="_compute_l10n_ec_require_email_electronic",
     )
 
     @api.depends(
@@ -291,8 +240,7 @@ class ResPartner(models.Model):
                 response = False
                 try:
                     response = requests.get(
-                        "https://srienlinea.sri.gob.ec/movil-servicios/api/v1.0/estadoTributario/%s"
-                        % rec.vat
+                        "https://srienlinea.sri.gob.ec/movil-servicios/api/v1.0/estadoTributario/%s" % rec.vat
                     )
                 except Exception as e:
                     _logger.debug("Error retrieving data from sri: %s" % str(e))
@@ -300,9 +248,8 @@ class ResPartner(models.Model):
                     data = response.json()
                     if isinstance(data, dict):
                         if "razonSocial" in data:
-                            l10n_ec_sri_status += (
-                                "<p><strong>Razon Social: </strong><span>%s</span></p>"
-                                % data.get("razonSocial", "")
+                            l10n_ec_sri_status += "<p><strong>Razon Social: </strong><span>%s</span></p>" % data.get(
+                                "razonSocial", ""
                             )
                         if "descripcion" in data:
                             l10n_ec_sri_status += (
@@ -321,9 +268,7 @@ class ResPartner(models.Model):
                             )
             rec.l10n_ec_sri_status = l10n_ec_sri_status
 
-    l10n_ec_sri_status = fields.Html(
-        string="SRI Status", readonly=True, compute="_compute_sri_status"
-    )
+    l10n_ec_sri_status = fields.Html(string="SRI Status", readonly=True, compute="_compute_sri_status")
 
     def l10n_ec_get_sale_identification_partner(self):
         return self._l10n_ec_get_sale_identification_partner(self.l10n_ec_type_sri)

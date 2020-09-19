@@ -29,18 +29,9 @@
                         />
                         <group>
                             <field name="active" invisible="1" />
-                            <field
-                                name="company_id"
-                                groups="base.group_multi_company"
-                            />
-                            <field
-                                name="name"
-                                attrs="{'readonly': [('count_invoice', '>', '0')]}"
-                            />
-                            <field
-                                name="number"
-                                attrs="{'readonly': [('count_invoice', '>', '0')]}"
-                            />
+                            <field name="company_id" groups="base.group_multi_company" />
+                            <field name="name" attrs="{'readonly': [('count_invoice', '>', '0')]}" />
+                            <field name="number" attrs="{'readonly': [('count_invoice', '>', '0')]}" />
                             <field
                                 name="address_id"
                                 domain="[('parent_id', '=', partner_id)]"
@@ -60,14 +51,8 @@
                                     </tree>
                                     <form string="Point of Emission">
                                         <group>
-                                            <field
-                                                name="name"
-                                                attrs="{'readonly': [('count_invoice', '>', '0')]}"
-                                            />
-                                            <field
-                                                name="number"
-                                                attrs="{'readonly': [('count_invoice', '>', '0')]}"
-                                            />
+                                            <field name="name" attrs="{'readonly': [('count_invoice', '>', '0')]}" />
+                                            <field name="number" attrs="{'readonly': [('count_invoice', '>', '0')]}" />
                                             <field name="active" />
                                             <field
                                                 name="type_emission"
