@@ -12,7 +12,10 @@
                         name="ecuadorian_localization"
                     >
                         <group>
-                            <field name="l10n_ec_printer_default_id" />
+                            <field
+                                name="l10n_ec_printer_default_id"
+                                options="{'no_create': True}"
+                            />
                         </group>
                         <field name="l10n_ec_agency_ids" nolabel="1" colspan="4" />
                     </page>
