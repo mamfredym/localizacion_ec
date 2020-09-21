@@ -1,7 +1,7 @@
 import logging
 
 from odoo import api, fields, models
-from odoo.exceptions import UserError, ValidationError, Warning
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools.translate import _
 
 from ..models import modules_mapping
@@ -221,7 +221,7 @@ class L10EcPointOfEmission(models.Model):
             force_preprint = True
         if self.type_emission in ("pre_printed", "auto_printer") or force_preprint:
             if not doc_find:
-                raise Warning(
+                raise UserError(
                     _(
                         "It is not possible to find authorization for the document type %s "
                         "at the point of emission %s for the agency %s with date %s on company: %s"
@@ -318,7 +318,7 @@ class L10EcPointOfEmission(models.Model):
             raise_exception = True
         if self.type_emission in ("pre_printed", "auto_printer") or force_preprint:
             if not doc_finded and raise_exception:
-                raise Warning(
+                raise UserError(
                     _(
                         "It is not possible to find authorization for the document type %s "
                         "at the point of issue %s for the agency %s with date %s"

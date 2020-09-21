@@ -4,7 +4,7 @@ import requests
 from stdnum.ec import ci, ruc
 
 from odoo import SUPERUSER_ID, api, fields, models
-from odoo.exceptions import UserError, Warning
+from odoo.exceptions import UserError
 from odoo.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -86,7 +86,7 @@ class ResPartner(models.Model):
     #                 ('id', '!=', rec.id),
     #                                         ])
     #             if len(other_partner) >= 1:
-    #                 raise Warning(_("The number %s must be unique as VAT") % rec.vat)
+    #                 raise UserError(_("The number %s must be unique as VAT") % rec.vat)
 
     def verify_final_consumer(self, vat):
         b = True
@@ -153,13 +153,13 @@ class ResPartner(models.Model):
                 and self._uid != SUPERUSER_ID
                 and ("name" in values or "vat" in values or "active" in values or "country_id" in values)
             ):
-                raise Warning(_("You cannot modify record of final consumer"))
+                raise UserError(_("You cannot modify record of final consumer"))
         return super(ResPartner, self).write(values)
 
     def unlink(self):
         for partner in self:
             if partner.ref == "9999999999999":
-                raise Warning(_("You cannot unlink final consumer"))
+                raise UserError(_("You cannot unlink final consumer"))
         return super(ResPartner, self).unlink()
 
     def _name_search(self, name, args=None, operator="ilike", limit=100, name_get_uid=None):

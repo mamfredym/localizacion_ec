@@ -1,5 +1,5 @@
 from odoo import api, fields, models
-from odoo.exceptions import Warning
+from odoo.exceptions import UserError
 from odoo.tools.translate import _
 
 
@@ -36,7 +36,7 @@ class ResUsers(models.Model):
                 for printer in agency.printer_point_ids:
                     res["all_printer_ids"] |= printer
         if not res["default_printer_default_id"] and raise_exception and user.company_id.country_id.code == "EC":
-            raise Warning(
+            raise UserError(
                 _(
                     "Your user does not have the permissions "
                     "configured correctly (Agency, Point of emission), please check with the administrator"

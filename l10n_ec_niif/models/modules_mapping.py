@@ -1,4 +1,4 @@
-from odoo.exceptions import Warning
+from odoo.exceptions import UserError
 from odoo.tools.translate import _
 
 
@@ -28,7 +28,7 @@ def get_document_type(invoice_type):
     elif invoice_type == "delivery_note":
         document_type = "delivery_note"
     else:
-        raise Warning(_("Invoice / Document Type: %s is invalid, please check, get_document_type") % (invoice_type))
+        raise UserError(_("Invoice / Document Type: %s is invalid, please check, get_document_type") % (invoice_type))
     return document_type
 
 
@@ -69,7 +69,7 @@ def l10n_ec_get_invoice_type(invoice_type, internal_type, raise_exception=True):
     elif invoice_type == "out_invoice" and internal_type == "debit_note":
         document_type = "debit_note_out"
     if not document_type and raise_exception:
-        raise Warning(
+        raise UserError(
             _("Invoice / Document Type: %s is invalid, please check, l10n_ec_get_invoice_type") % (invoice_type)
         )
     return document_type
@@ -122,7 +122,7 @@ def get_invoice_type_reverse(invoice_type):
     elif invoice_type == "delivery_note":
         invoice_type_reverse = "delivery_note"
     else:
-        raise Warning(
+        raise UserError(
             _("Invoice / Document Type: %s is invalid, please check, get_invoice_type_reverse") % (invoice_type)
         )
     return invoice_type_reverse, l10n_latam_internal_type

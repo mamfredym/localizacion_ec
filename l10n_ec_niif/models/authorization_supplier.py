@@ -5,7 +5,7 @@ from datetime import datetime, time
 import requests
 
 from odoo import SUPERUSER_ID, api, fields, models
-from odoo.exceptions import ValidationError, Warning
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools.translate import _
 
 from ..models import modules_mapping
@@ -170,7 +170,7 @@ class L10nECSriAuthorizationSupplier(models.Model):
                     ]
                 )
                 if invoice_recs or retention_recs:
-                    raise Warning(
+                    raise UserError(
                         _(
                             "You cannot modify authorization %s of partner %s, "
                             "this is already used in active documents, contact de system administrator"
@@ -209,22 +209,22 @@ class L10nECSriAuthorizationSupplier(models.Model):
     @api.model
     def check_number_document(self, invoice_type, number, authorization, date=None, res_id=None, foreign=False):
         if not invoice_type:
-            raise Warning(_("You must declare document type to check authorization"))
+            raise UserError(_("You must declare document type to check authorization"))
         if not number:
-            raise Warning(_("You must declare document number to check authorization"))
+            raise UserError(_("You must declare document number to check authorization"))
         if not authorization and not foreign and not self.env.context.get("from_refund"):
-            raise Warning(_("You must declare authorization to check"))
+            raise UserError(_("You must declare authorization to check"))
         if foreign:
             return True
         number_split = number.split("-")
         if len(number_split) != 3:
-            raise Warning(_("Invalid Number, that must be like 001-001-0123456789"))
+            raise UserError(_("Invalid Number, that must be like 001-001-0123456789"))
         num_shop, num_printer, num_doc = number_split
         try:
             num_doc = int(num_doc)
         except ValueError:
             if not foreign:
-                raise Warning(
+                raise UserError(
                     _(
                         "The number of document must be numeric, "
                         "please don't input letters, or check if partner is not ecuadorian"
@@ -242,17 +242,17 @@ class L10nECSriAuthorizationSupplier(models.Model):
             if not date:
                 date = fields.Date.context_today(self)
             if date > authorization.expiration_date or date < authorization.start_date:
-                raise Warning(
+                raise UserError(
                     _("%s is not within the authorization dates %s y %s")
                     % (date, authorization.start_date, authorization.expiration_date)
                 )
             if num_shop != authorization.agency:
-                raise Warning(
+                raise UserError(
                     _("The agency number %s does not correspond to the authorization, that should be %s")
                     % (num_shop, authorization.agency)
                 )
             if num_printer != authorization.printer_point:
-                raise Warning(
+                raise UserError(
                     _("The emission point number %s does not correspond to the authorization, that should be %s")
                     % (num_printer, authorization.printer_point)
                 )
@@ -261,7 +261,7 @@ class L10nECSriAuthorizationSupplier(models.Model):
                 or num_doc > authorization.last_sequence
                 and not authorization.autoprinter
             ):
-                raise Warning(
+                raise UserError(
                     _("The sequence number %s is not within the range %s and %s")
                     % (num_doc, authorization.first_sequence, authorization.last_sequence,)
                 )
@@ -283,7 +283,7 @@ class L10nECSriAuthorizationSupplier(models.Model):
                     if other_rec.id != res_id:
                         list_ids_exist.append(other_rec)
             if list_ids_exist and partner:
-                raise Warning(
+                raise UserError(
                     _("There is another document of type %s with number '%s' for partner %s")
                     % (description_name, number, partner.name)
                 )
@@ -297,9 +297,9 @@ class L10nECSriAuthorizationSupplier(models.Model):
     @api.model
     def validate_unique_document_partner(self, invoice_type, number, partner_id, res_id=None):
         if not number or not partner_id:
-            raise Warning(_("Check parameters of partner and number to continue"))
+            raise UserError(_("Check parameters of partner and number to continue"))
         if not invoice_type:
-            raise Warning(_("You must specify type of document to continue."))
+            raise UserError(_("You must specify type of document to continue."))
         partner_model = self.env["res.partner"]
         document_type = modules_mapping.get_document_type(invoice_type)
         model_name = modules_mapping.get_model_name(document_type)
@@ -325,7 +325,7 @@ class L10nECSriAuthorizationSupplier(models.Model):
             args.append(("id", "!=", res_id))
         model_recs = number and res_model.search(args) or False
         if model_recs:
-            raise Warning(
+            raise UserError(
                 _("There's another document type %s with number '%s' for partner %s")
                 % (model_description, number, partner.name)
             )

@@ -1,7 +1,7 @@
 #
 
 from odoo import api, fields, models
-from odoo.exceptions import UserError, ValidationError, Warning
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools.translate import _
 
 from ..models import modules_mapping
@@ -200,9 +200,9 @@ class L10nECSriAuthorizationLine(models.Model):
     def validate_unique_value_document(self, invoice_type, document_number, company_id, res_id=False):
         company_model = self.env["res.company"]
         if not document_number or not company_id:
-            raise Warning(_("Verify the arguments to use the validate_unique_value_document function"))
+            raise UserError(_("Verify the arguments to use the validate_unique_value_document function"))
         if not invoice_type:
-            raise Warning(_("You must indicate what type of document it is, Invoice, Credit Note, Debit Note, etc."))
+            raise UserError(_("You must indicate what type of document it is, Invoice, Credit Note, Debit Note, etc."))
         document_type = modules_mapping.get_document_type(invoice_type)
         model_description = modules_mapping.get_document_name(document_type)
         model_name = modules_mapping.get_model_name(document_type)
@@ -225,7 +225,7 @@ class L10nECSriAuthorizationLine(models.Model):
                     % (model_description, document_number, company.name)
                 )
             else:
-                raise Warning(
+                raise UserError(
                     _("There is another document type %s with number '%s' for the company %s")
                     % (model_description, document_number, company.name)
                 )
