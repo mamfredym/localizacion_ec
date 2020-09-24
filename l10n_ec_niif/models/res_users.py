@@ -35,7 +35,12 @@ class ResUsers(models.Model):
             for agency in user.l10n_ec_agency_ids:
                 for printer in agency.printer_point_ids:
                     res["all_printer_ids"] |= printer
-        if not res["default_printer_default_id"] and raise_exception and user.company_id.country_id.code == "EC":
+        if (
+            not res["default_printer_default_id"]
+            and raise_exception
+            and user.company_id.country_id.code == "EC"
+            and not user.has_group("base.group_public")
+        ):
             raise UserError(
                 _(
                     "Your user does not have the permissions "
