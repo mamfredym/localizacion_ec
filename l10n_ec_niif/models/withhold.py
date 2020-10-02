@@ -606,37 +606,6 @@ class L10nEcWithholdLinePercent(models.Model):
     _sql_constraints = [("type_percent_unique", "unique(type, percent)", "Percent Withhold must be unique by type",)]
 
 
-class AccountTax(models.Model):
-
-    _inherit = "account.tax"
-
-    @api.model_create_multi
-    def create(self, vals):
-        recs = super(AccountTax, self).create(vals)
-        withhold_iva_group = self.env.ref("l10n_ec_niif.tax_group_iva_withhold")
-        withhold_rent_group = self.env.ref("l10n_ec_niif.tax_group_renta_withhold")
-        percent_model = self.env["l10n_ec.withhold.line.percent"]
-        for rec in recs:
-            if rec.tax_group_id.id in (withhold_iva_group.id, withhold_rent_group.id):
-                type = (
-                    rec.tax_group_id.id == withhold_iva_group.id
-                    and "iva"
-                    or rec.tax_group_id.id == withhold_rent_group.id
-                    and "rent"
-                )
-                percent = abs(rec.amount)
-                if type == "iva":
-                    percent = abs(
-                        rec.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == "tax").factor_percent
-                    )
-                current_percent = percent_model.search([("type", "=", type), ("percent", "=", percent)])
-                if not current_percent:
-                    percent_model.create(
-                        {"name": str(percent), "type": type, "percent": percent,}
-                    )
-        return recs
-
-
 class L10nEcWithholdLine(models.Model):
 
     _name = "l10n_ec.withhold.line"

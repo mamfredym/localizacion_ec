@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class AccountTaxGroup(models.Model):
@@ -17,6 +17,36 @@ class AccountTax(models.Model):
         help="Tax Code used into xml files for electronic documents sent to S.R.I., "
         "If field is empty, description field are used instead",
     )
+
+    @api.model_create_multi
+    def create(self, vals):
+        recs = super(AccountTax, self).create(vals)
+        recs._l10n_ec_action_create_tax_for_withholding()
+        return recs
+
+    def _l10n_ec_action_create_tax_for_withholding(self):
+        withhold_iva_group = self.env.ref("l10n_ec_niif.tax_group_iva_withhold")
+        withhold_rent_group = self.env.ref("l10n_ec_niif.tax_group_renta_withhold")
+        percent_model = self.env["l10n_ec.withhold.line.percent"]
+        for rec in self:
+            if rec.tax_group_id.id in (withhold_iva_group.id, withhold_rent_group.id):
+                type = (
+                    rec.tax_group_id.id == withhold_iva_group.id
+                    and "iva"
+                    or rec.tax_group_id.id == withhold_rent_group.id
+                    and "rent"
+                )
+                percent = abs(rec.amount)
+                if type == "iva":
+                    percent = abs(
+                        rec.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == "tax").factor_percent
+                    )
+                current_percent = percent_model.search([("type", "=", type), ("percent", "=", percent)])
+                if not current_percent:
+                    percent_model.create(
+                        {"name": str(percent), "type": type, "percent": percent,}
+                    )
+        return True
 
 
 class AccountTaxTemplate(models.Model):
