@@ -107,3 +107,4 @@ class ResCompany(models.Model):
     )
 
     l10n_ec_sri_password = fields.Char(string="Sri Portal Password", required=False)
+    l10n_ec_retention_resolution = fields.Char(string="Retention Resolution")

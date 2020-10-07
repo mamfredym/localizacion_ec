@@ -188,3 +188,6 @@ class ResConfigSettings(models.TransientModel):
         comodel_name="account.account",
         config_parameter="l10n_ec_accounting_account_payable_fireign_id",
     )
+    l10n_ec_retention_resolution = fields.Char(
+        string="Retention Resolution", related="company_id.l10n_ec_retention_resolution", readonly=False,
+    )

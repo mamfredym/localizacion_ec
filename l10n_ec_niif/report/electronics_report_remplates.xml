@@ -79,6 +79,11 @@
                             <strong>R.U.C.:</strong>
                             <strong t-field="company.partner_id.vat" />
                             <br /><br />
+                            <t t-if="company.l10n_ec_retention_resolution">
+                                <strong>Withholding Agent:</strong>
+                                <span t-field="company.l10n_ec_retention_resolution" />
+                                <br />
+                            </t>
                             <strong t-esc="document_string" />
                             <br />
                             Nº.
