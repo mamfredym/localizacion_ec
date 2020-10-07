@@ -178,3 +178,13 @@ class ResConfigSettings(models.TransientModel):
     )
     l10n_ec_sri_login_url = fields.Char(related="company_id.l10n_ec_sri_login_url", readonly=False,)
     l10n_ec_sri_password = fields.Char(related="company_id.l10n_ec_sri_password", readonly=False,)
+    l10n_ec_accounting_account_receivable_fireign_id = fields.Many2one(
+        string="Accounting Account Receivable",
+        comodel_name="account.account",
+        config_parameter="l10n_ec_accounting_account_receivable_fireign_id",
+    )
+    l10n_ec_accounting_account_payable_fireign_id = fields.Many2one(
+        string="Accounting Account Payable",
+        comodel_name="account.account",
+        config_parameter="l10n_ec_accounting_account_payable_fireign_id",
+    )

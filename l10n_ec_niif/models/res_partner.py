@@ -20,7 +20,26 @@ class ResPartner(models.Model):
             if partner.country_id:
                 if partner.country_id.code != "EC":
                     l10n_ec_foreign = True
+                    partner.set_accounting_account_foreign()
+                else:
+                    partner.property_account_receivable_id = (
+                        partner.env.company.partner_id.property_account_receivable_id.id
+                    )
+                    partner.property_account_payable_id = partner.env.company.partner_id.property_account_payable_id.id
             partner.l10n_ec_foreign = l10n_ec_foreign
+
+    def set_accounting_account_foreign(self):
+        self.ensure_one()
+        accounting_account_receivable_fireign_id = (
+            self.env["ir.config_parameter"].sudo().get_param("l10n_ec_accounting_account_receivable_fireign_id")
+        )
+        accounting_account_payable_fireign_id = (
+            self.env["ir.config_parameter"].sudo().get_param("l10n_ec_accounting_account_payable_fireign_id")
+        )
+        if accounting_account_receivable_fireign_id:
+            self.property_account_receivable_id = int(accounting_account_receivable_fireign_id)
+        if accounting_account_payable_fireign_id:
+            self.property_account_payable_id = int(accounting_account_payable_fireign_id)
 
     l10n_ec_foreign = fields.Boolean(
         "Foreign?", readonly=True, help="", store=True, compute="_compute_l10n_ec_foreign",
