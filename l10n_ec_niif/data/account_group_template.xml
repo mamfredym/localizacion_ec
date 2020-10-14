@@ -52,13 +52,28 @@
             <field name="parent_id" ref="account_group_2" />
         </record>
         <record id="account_group_301" model="account.group">
-            <field name="name">PATRIMONIO ATRIBUIBLE A PROPIETARIOS</field>
+            <field name="name">CAPITAL</field>
             <field name="code_prefix">301</field>
             <field name="parent_id" ref="account_group_3" />
         </record>
         <record id="account_group_302" model="account.group">
-            <field name="name">PARTICIPACIÓN NO CONTROLADORA</field>
+            <field name="name">APORTES DE SOCIOS O ACCIONISTAS PARA FUTURA CAPITALIZACIÓN</field>
             <field name="code_prefix">302</field>
+            <field name="parent_id" ref="account_group_3" />
+        </record>
+        <record id="account_group_303" model="account.group">
+            <field name="name">PRIMA POR EMISIÓN PRIMARIA DE ACCIONES</field>
+            <field name="code_prefix">303</field>
+            <field name="parent_id" ref="account_group_3" />
+        </record>
+        <record id="account_group_304" model="account.group">
+            <field name="name">RESERVAS</field>
+            <field name="code_prefix">304</field>
+            <field name="parent_id" ref="account_group_3" />
+        </record>
+        <record id="account_group_305" model="account.group">
+            <field name="name">OTROS RESULTADOS INTEGRALES</field>
+            <field name="code_prefix">305</field>
             <field name="parent_id" ref="account_group_3" />
         </record>
         <record id="account_group_41" model="account.group">
@@ -78,7 +93,7 @@
         </record>
         <record id="account_group_501" model="account.group">
             <field name="name">COSTO DE VENTAS Y PRODUCCIÓN</field>
-            <field name="code_prefix">501</field>
+            <field name="code_prefix">51</field>
             <field name="parent_id" ref="account_group_5" />
         </record>
         <record id="account_group_502" model="account.group">
@@ -134,8 +149,13 @@
             <field name="parent_id" ref="account_group_101" />
         </record>
         <record id="account_group_10107" model="account.group">
-            <field name="name">OTROS ACTIVOS CORRIENTES</field>
+            <field name="name">CONSTRUCCIONES EN PROCESO (NIC 11 Y SECC.23 PYMES)</field>
             <field name="code_prefix">10107</field>
+            <field name="parent_id" ref="account_group_101" />
+        </record>
+        <record id="account_group_10108" model="account.group">
+            <field name="name">OTROS ACTIVOS CORRIENTES</field>
+            <field name="code_prefix">10108</field>
             <field name="parent_id" ref="account_group_101" />
         </record>
         <record id="account_group_10201" model="account.group">
@@ -286,13 +306,18 @@
             <field name="parent_id" ref="account_group_202" />
         </record>
         <record id="account_group_20208" model="account.group">
-            <field name="name">PASIVOS DIFERIDO</field>
+            <field name="name">OTRAS PROVISIONES</field>
             <field name="code_prefix">20208</field>
             <field name="parent_id" ref="account_group_202" />
         </record>
         <record id="account_group_20209" model="account.group">
-            <field name="name">OTROS PASIVOS NO CORRIENTES</field>
+            <field name="name">PASIVO DIFERIDO</field>
             <field name="code_prefix">20209</field>
+            <field name="parent_id" ref="account_group_202" />
+        </record>
+        <record id="account_group_20210" model="account.group">
+            <field name="name">OTROS PASIVOS NO CORRIENTES</field>
+            <field name="code_prefix">20210</field>
             <field name="parent_id" ref="account_group_202" />
         </record>
         <record id="account_group_30101" model="account.group">
@@ -430,6 +455,16 @@
             <field name="name">OTRAS RENTAS</field>
             <field name="code_prefix">40305</field>
             <field name="parent_id" ref="account_group_43" />
+        </record>
+        <record id="account_group_42" model="account.group">
+            <field name="name">GANANCIA BRUTA</field>
+            <field name="code_prefix">42</field>
+            <field name="parent_id" ref="account_group_4" />
+        </record>
+        <record id="account_group_43" model="account.group">
+            <field name="name">OTROS INGRESOS</field>
+            <field name="code_prefix">43</field>
+            <field name="parent_id" ref="account_group_4" />
         </record>
         <record id="account_group_5101" model="account.group">
             <field name="name">MATERIALES UTILIZADOS O PRODUCTOS VENDIDOS</field>
@@ -1088,16 +1123,6 @@
             <field name="code_prefix">3010701</field>
             <field name="parent_id" ref="account_group_30107" />
         </record>
-        <record id="account_group_304" model="account.group">
-            <field name="name">RESERVAS</field>
-            <field name="code_prefix">304</field>
-            <field name="parent_id" ref="account_group_3" />
-        </record>
-        <record id="account_group_305" model="account.group">
-            <field name="name">OTROS RESULTADOS INTEGRALES</field>
-            <field name="code_prefix">305</field>
-            <field name="parent_id" ref="account_group_3" />
-        </record>
         <record id="account_group_306" model="account.group">
             <field name="name">RESULTADOS ACUMULADOS</field>
             <field name="code_prefix">306</field>
@@ -1118,14 +1143,14 @@
             <field name="code_prefix">4010201</field>
             <field name="parent_id" ref="account_group_40102" />
         </record>
-        <record id="account_group_4020301" model="account.group">
+        <record id="account_group_410601" model="account.group">
             <field name="name">INTERESES GENERADOS POR VENTAS A CRÉDITO</field>
-            <field name="code_prefix">4020301</field>
+            <field name="code_prefix">410601</field>
             <field name="parent_id" ref="account_group_4106" />
         </record>
-        <record id="account_group_4020302" model="account.group">
+        <record id="account_group_410602" model="account.group">
             <field name="name">OTROS INTERESES GENERADOS</field>
-            <field name="code_prefix">4020302</field>
+            <field name="code_prefix">410602</field>
             <field name="parent_id" ref="account_group_4106" />
         </record>
         <record id="account_group_5010101" model="account.group">
@@ -1196,17 +1221,17 @@
         <record id="account_group_520221" model="account.group">
             <field name="name">DEPRECIACIONES</field>
             <field name="code_prefix">520221</field>
-            <field name="parent_id" ref="account_group_5201" />
+            <field name="parent_id" ref="account_group_5202" />
         </record>
         <record id="account_group_520222" model="account.group">
             <field name="name">AMORTIZACIONES</field>
             <field name="code_prefix">520222</field>
-            <field name="parent_id" ref="account_group_5201" />
+            <field name="parent_id" ref="account_group_5202" />
         </record>
         <record id="account_group_520223" model="account.group">
             <field name="name">GASTO DETERIORO</field>
             <field name="code_prefix">520223</field>
-            <field name="parent_id" ref="account_group_5201" />
+            <field name="parent_id" ref="account_group_5202" />
         </record>
         <record id="account_group_520224" model="account.group">
             <field name="name">GASTOS POR CANTIDADES ANORMALES DE UTILIZACION EN EL PROCESO DE PRODUCCIÓN</field>

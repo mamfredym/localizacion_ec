@@ -11,13 +11,21 @@
         </record>
     </data>
     <data noupdate="False">
-        <record id="servicio_rentas_internas" model="res.partner">
-            <field name="name">Servicio De Rentas Internas</field>
-            <field name="vat" />
-            <field name="phone">9999999999</field>
+        <record id="ec_social_security" model="res.partner">
+            <field name="name">INSTITUTO ECUATORIANO DE SEGURIDAD SOCIAL IESS</field>
             <field name="country_id" ref="base.ec" />
-            <field name="l10n_latam_identification_type_id" ref="l10n_ec_niif.it_ruc" />
-            <field name="street">ECUADOR</field>
+            <field name="website">https://www.iess.gob.ec</field>
+            <field name="is_company">1</field>
+            <field name='l10n_latam_identification_type_id' ref='l10n_ec_niif.it_ruc' />
+            <field name="vat">1760004650001</field>
+        </record>
+        <record id="servicio_rentas_internas" model="res.partner">
+            <field name="name">SERVICIO DE RENTAS INTERNAS</field>
+            <field name="country_id" ref="base.ec" />
+            <field name="website">http://www.sri.gob.ec</field>
+            <field name="is_company">1</field>
+            <field name='l10n_latam_identification_type_id' ref='l10n_ec_niif.it_ruc' />
+            <field name="vat">1760013210001</field>
         </record>
     </data>
 </odoo>
