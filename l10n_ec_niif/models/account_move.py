@@ -973,7 +973,7 @@ class AccountMove(models.Model):
         self.write({"l10n_ec_sri_authorization_state": "to_check"})
         return super(AccountMove, self).button_draft()
 
-    def action_post(self):
+    def post(self):
         withhold_model = self.env["l10n_ec.withhold"]
         withhold_line_model = self.env["l10n_ec.withhold.line"]
         for move in self:
@@ -991,7 +991,7 @@ class AccountMove(models.Model):
                 # proceso de facturacion electronica
                 if move.is_invoice():
                     move.l10n_ec_action_create_xml_data()
-        return super(AccountMove, self).action_post()
+        return super(AccountMove, self).post()
 
     def action_invoice_sent(self):
         self.ensure_one()
