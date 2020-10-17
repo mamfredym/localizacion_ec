@@ -69,10 +69,10 @@
                             </t>
                             <br />
                             <t>
-                            <strong>Obligado a llevar contabilidad: </strong>
-                            <span
-                                t-esc="o.env['l10n_ec.utils'].get_obligado_contabilidad(company.partner_id.property_account_position_id)"
-                            />
+                                <strong>Obligado a llevar contabilidad: </strong>
+                                <span
+                                    t-esc="o.env['l10n_ec.utils'].get_obligado_contabilidad(company.partner_id.property_account_position_id)"
+                                />
                             </t>
                         </div>
                     </td>
