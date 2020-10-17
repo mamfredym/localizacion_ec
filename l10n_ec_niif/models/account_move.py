@@ -724,10 +724,9 @@ class AccountMove(models.Model):
         domain = {}
         warning = {}
         prefijo = ""
-        if self.l10n_ec_point_of_emission_id:
-            prefijo = (
-                f"{self.l10n_ec_point_of_emission_id.agency_id.number}-{self.l10n_ec_point_of_emission_id.number}-"
-            )
+        if not self.l10n_ec_point_of_emission_id:
+            return {"domain": domain, "warning": warning}
+        prefijo = f"{self.l10n_ec_point_of_emission_id.agency_id.number}-{self.l10n_ec_point_of_emission_id.number}-"
         if not self.l10n_latam_document_number or self.l10n_latam_document_number == prefijo:
             return {"domain": domain, "warning": warning}
         if self.l10n_ec_point_of_emission_id:
@@ -2180,6 +2179,9 @@ class AccountMoveLine(models.Model):
     l10n_ec_withhold_line_id = fields.Many2one(
         comodel_name="l10n_ec.withhold.line", string="Withhold Line", readonly=True
     )
+    l10n_ec_original_invoice_line_id = fields.Many2one(
+        "account.move.line", string="Origin invoice line", copy=False, index=True
+    )
 
     def _l10n_ec_get_discount_total(self):
         discount_total = self.price_unit * self.quantity * self.discount * 0.01
@@ -2251,3 +2253,7 @@ class AccountMoveLine(models.Model):
                 move_line.l10n_ec_base_iva_currency = l10n_ec_base_iva
                 move_line.l10n_ec_iva_currency = l10n_ec_iva
                 move_line.l10n_ec_discount_total_currency = l10n_ec_discount_total
+
+    def _copy_data_extend_business_fields(self, values):
+        super(AccountMoveLine, self)._copy_data_extend_business_fields(values)
+        values["l10n_ec_original_invoice_line_id"] = self.id
