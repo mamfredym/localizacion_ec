@@ -46,7 +46,7 @@
                    ref('ec_dt_344')
                    ])]"
             />
-            <field name="purchase_invoice_document_type_id" ref="ec_dt_03" />
+            <field name="purchase_invoice_document_type_id" ref="ec_dt_01" />
             <field name="purchase_credit_note_document_type_id" ref="ec_dt_04" />
             <field name="purchase_debit_note_document_type_id" ref="ec_dt_05" />
             <field name="purchase_liquidation_document_type_id" ref="ec_dt_03" />
@@ -68,7 +68,7 @@
                    ref('ec_dt_294'),
                    ref('ec_dt_344')])]"
             />
-            <field name="purchase_invoice_document_type_id" ref="ec_dt_03" />
+            <field name="purchase_invoice_document_type_id" ref="ec_dt_01" />
             <field name="purchase_credit_note_document_type_id" ref="ec_dt_04" />
             <field name="purchase_debit_note_document_type_id" ref="ec_dt_05" />
             <field name="purchase_liquidation_document_type_id" ref="ec_dt_03" />

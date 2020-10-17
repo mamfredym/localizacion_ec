@@ -32,5 +32,11 @@
             <field name="vat">DEF123456</field>
             <field name="company_type">company</field>
         </record>
+        <record model="res.partner" id="partner_foreign">
+            <field name="name">Empresa Extranjera</field>
+            <field name="vat">DEF123457</field>
+            <field name="company_type">company</field>
+            <field name="country_id" ref="base.us" />
+        </record>
     </data>
 </odoo>

@@ -324,16 +324,21 @@ class AccountMove(models.Model):
             else:
                 invoice.l10n_ec_is_environment_production = False
 
-    @api.depends("l10n_latam_available_document_type_ids")
+    @api.depends("l10n_latam_available_document_type_ids", "journal_id")
     @api.depends_context("internal_type")
     def _compute_l10n_latam_document_type(self):
         super(AccountMove, self)._compute_l10n_latam_document_type()
-        for move in self.filtered(lambda x: x.state == "draft"):
-            if move.l10n_ec_identification_type_id and not move.l10n_latam_document_type_id:
+        for move in self.filtered(lambda x: x.state == "draft" and x.company_id.country_id.code == "EC"):
+            if move.l10n_ec_identification_type_id:
                 if move.type == "in_invoice":
-                    move.l10n_latam_document_type_id = (
-                        move.l10n_ec_identification_type_id.purchase_invoice_document_type_id.id
-                    )
+                    if move.journal_id.l10n_latam_internal_type == "liquidation":
+                        move.l10n_latam_document_type_id = (
+                            move.l10n_ec_identification_type_id.purchase_liquidation_document_type_id.id
+                        )
+                    else:
+                        move.l10n_latam_document_type_id = (
+                            move.l10n_ec_identification_type_id.purchase_invoice_document_type_id.id
+                        )
                 elif move.type == "in_refund":
                     move.l10n_latam_document_type_id = (
                         move.l10n_ec_identification_type_id.purchase_credit_note_document_type_id.id
@@ -797,7 +802,9 @@ class AccountMove(models.Model):
         # ya que en la llamada super se podria lanzar excepcion y los mensajes nunca se mostrarian al usuario
         if res and res.get("warning", {}).get("message"):
             return res
-        super(AccountMove, self)._inverse_l10n_latam_document_number()
+        super(
+            AccountMove, self.with_context(l10n_ec_foreign=len(self) == 1 and self.l10n_ec_foreign or False)
+        )._inverse_l10n_latam_document_number()
         return res
 
     @api.onchange(
@@ -1079,7 +1086,7 @@ class AccountMove(models.Model):
                         self.id,
                         self.commercial_partner_id.l10n_ec_foreign,
                     )
-                elif not self.l10n_ec_supplier_authorization_number:
+                elif not self.l10n_ec_supplier_authorization_number and not self.l10n_ec_foreign:
                     raise UserError(_("You must enter the authorization of the third party to continue"))
         # validaciones en facturas de proveedor para emitir retenciones
         # * tener 1 impuesto de retencion IVA y 1 impuesto de retencion RENTA
