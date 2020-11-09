@@ -287,7 +287,7 @@ class ResPartner(models.Model):
                             )
             rec.l10n_ec_sri_status = l10n_ec_sri_status
 
-    l10n_ec_sri_status = fields.Html(string="SRI Status", readonly=True, compute="_compute_sri_status", store=True)
+    l10n_ec_sri_status = fields.Html(string="SRI Status", readonly=True, compute="_compute_sri_status")
 
     def l10n_ec_get_sale_identification_partner(self):
         return self._l10n_ec_get_sale_identification_partner(self.l10n_ec_type_sri)
