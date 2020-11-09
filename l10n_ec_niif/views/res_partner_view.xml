@@ -45,9 +45,6 @@
                             </group>
                         </group>
                     </page>
-                    <page name="sri" string="S.R.I">
-                        <field name="l10n_ec_sri_status" />
-                    </page>
                 </xpath>
                 <field name="email" position="attributes">
                     <attribute name="attrs">{'required': [('l10n_ec_require_email_electronic', '=', True)]}</attribute>
