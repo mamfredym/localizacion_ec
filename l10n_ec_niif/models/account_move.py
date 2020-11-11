@@ -1321,7 +1321,7 @@ class AccountMove(models.Model):
     def l10n_ec_get_invoice_type(self):
         self.ensure_one()
         internal_type = (
-            self.l10n_latam_document_type_id.internal_type or self.env.context.get("internal_type") or "invoice"
+            self.env.context.get("internal_type") or self.l10n_latam_document_type_id.internal_type or "invoice"
         )
         return modules_mapping.l10n_ec_get_invoice_type(self.type, internal_type, False)
 

@@ -131,17 +131,17 @@
                 <span t-esc="comment" />
                 <br />
             </t>
-            <t t-if="partner.street or (partner.child_ids and partner.child_ids[0].street)">
+            <t t-if="partner.street or (partner.child_ids and partner.child_ids[0].street)" name="street">
                 <strong>Dirección: </strong>
                 <span t-esc="partner.street or (partner.child_ids and partner.child_ids[0].street) or ''" />
                 <br />
             </t>
-            <t t-if="partner.phone or (partner.child_ids and partner.child_ids[0].phone)">
+            <t t-if="partner.phone or (partner.child_ids and partner.child_ids[0].phone)" name="phone">
                 <strong>Telefono: </strong>
                 <span t-esc="partner.phone or (partner.child_ids and partner.child_ids[0].phone) or ''" />
                 <br />
             </t>
-            <t t-if="partner.email or (partner.child_ids and partner.child_ids[0].email)">
+            <t t-if="partner.email or (partner.child_ids and partner.child_ids[0].email)" name="email">
                 <strong>Email: </strong>
                 <span t-esc="partner.email or (partner.child_ids and partner.child_ids[0].email) or ''" />
                 <br />

@@ -158,9 +158,9 @@
                         <td>
                             <span t-field="line.name" />
                         </td>
-                        <td t-if="company.l10n_ec_print_ride_detail1" />
-                        <td t-if="company.l10n_ec_print_ride_detail2" />
-                        <td t-if="company.l10n_ec_print_ride_detail3" />
+                        <td t-if="company.l10n_ec_print_ride_detail1" name="detail1" />
+                        <td t-if="company.l10n_ec_print_ride_detail2" name="detail2" />
+                        <td t-if="company.l10n_ec_print_ride_detail3" name="detail3" />
                         <td class="text-right">
                             <span
                                 t-field="line.price_unit"
@@ -252,16 +252,18 @@
                         <td t-if="company.l10n_ec_print_ride_main_code">
                             <span t-esc="line.product_id and line.product_id.default_code or 'S/N'" />
                         </td>
-                        <td t-if="company.l10n_ec_print_ride_aux_code" />
+                        <td t-if="company.l10n_ec_print_ride_aux_code">
+                            <span t-esc="line.product_id and line.product_id.barcode or 'S/N'" />
+                        </td>
                         <td class="text-right">
                             <span t-field="line.quantity" />
                         </td>
                         <td>
                             <span t-field="line.name" />
                         </td>
-                        <td t-if="company.l10n_ec_print_ride_detail1" />
-                        <td t-if="company.l10n_ec_print_ride_detail2" />
-                        <td t-if="company.l10n_ec_print_ride_detail3" />
+                        <td t-if="company.l10n_ec_print_ride_detail1" name="detail1" />
+                        <td t-if="company.l10n_ec_print_ride_detail2" name="detail2" />
+                        <td t-if="company.l10n_ec_print_ride_detail3" name="detail3" />
                         <td class="text-right">
                             <span
                                 t-field="line.price_unit"
@@ -402,9 +404,9 @@
                         <td>
                             <span t-field="line.name" />
                         </td>
-                        <td t-if="company.l10n_ec_print_ride_detail1" />
-                        <td t-if="company.l10n_ec_print_ride_detail2" />
-                        <td t-if="company.l10n_ec_print_ride_detail3" />
+                        <td t-if="company.l10n_ec_print_ride_detail1" name="detail1" />
+                        <td t-if="company.l10n_ec_print_ride_detail2" name="detail2" />
+                        <td t-if="company.l10n_ec_print_ride_detail3" name="detail3" />
                         <td class="text-right">
                             <span
                                 t-field="line.price_unit"

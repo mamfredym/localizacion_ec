@@ -76,6 +76,7 @@
                 </tr>
             </thead>
             <tbody>
+                <t t-set="total" t-value="0" />
                 <t t-foreach="o.line_ids" t-as="line">
                     <tr style="font-size: 9px;">
                         <td>
@@ -102,8 +103,13 @@
                         <td class="text-right">
                             <span t-field="line.tax_amount" />
                         </td>
+                        <t t-set="total" t-value="total + line.tax_amount" />
                     </tr>
                 </t>
+                <th colspan="7">Total</th>
+                <th class="text-right">
+                    <span t-esc="'{0:.2f}'.format(total)" />
+                </th>
             </tbody>
         </table>
     </template>
