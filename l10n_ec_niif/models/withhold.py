@@ -285,11 +285,11 @@ class L10nEcWithhold(models.Model):
                         if line.type == "iva":
                             account_id = rec.company_id.l10n_ec_withhold_sale_iva_account_id.id
                             tax_code = rec.company_id.l10n_ec_withhold_sale_iva_tag_id.ids
-                            name = _("Withhold Vat. %s") % line.invoice_id.display_name
+                            name = _("Withhold Vat. %s - %s") % (rec.display_name, line.invoice_id.display_name,)
                         elif line.type == "rent":
                             account_id = rec.company_id.l10n_ec_withhold_sale_rent_account_id.id
                             tax_code = []
-                            name = _("Withhold Rent Tax. %s") % line.invoice_id.display_name
+                            name = _("Withhold Rent Tax. %s - %s") % (rec.display_name, line.invoice_id.display_name)
                         _create_move_line(
                             move_id=move_rec.id,
                             credit=0.0,
