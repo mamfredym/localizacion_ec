@@ -78,7 +78,7 @@ class L10nEcWithhold(models.Model):
     l10n_ec_type_supplier_authorization = fields.Selection(related="company_id.l10n_ec_type_supplier_authorization")
     type = fields.Selection(
         string="Type",
-        selection=[("sale", "On Sales"), ("purchase", "On Purchases"), ("credit_card", "On Credit Card Liquidation"),],
+        selection=[("sale", "On Sales"), ("purchase", "On Purchases"), ("credit_card", "On Credit Card Liquidation")],
         required=True,
         readonly=True,
         default=lambda self: self.env.context.get("withhold_type", "sale"),
@@ -215,27 +215,9 @@ class L10nEcWithhold(models.Model):
                     rec.number = format_document_number
 
     def action_done(self):
-        model_move = self.env["account.move"]
-        model_aml = self.env["account.move.line"]
         authorization_supplier_model = self.env["l10n_ec.sri.authorization.supplier"]
-
-        def _create_move_line(
-            move_id, credit, debit, account_id, tax_code_id=None, tax_amount=0.0, name="/", partner_id=None,
-        ):
-            vals_move_line = {
-                "move_id": move_id,
-                "account_id": account_id,
-                "tag_ids": tax_code_id,
-                "tax_base_amount": tax_amount,
-                "debit": debit,
-                "credit": credit,
-                "name": name,
-                "partner_id": partner_id,
-            }
-            return model_aml.with_context(check_move_validity=False).create(vals_move_line)
-
         for rec in self:
-            if rec.type == "sale":
+            if rec.type in ["sale", "credit_card"]:
                 authorization_supplier_model.validate_unique_document_partner(
                     "withhold_sale", rec.number, rec.partner_id.id, rec.id,
                 )
@@ -246,9 +228,6 @@ class L10nEcWithhold(models.Model):
                         )
                     elif not rec.l10n_ec_supplier_authorization_number:
                         raise UserError(_("You must enter the authorization of the third party"))
-                # intentar validar el documento en linea con el SRI
-                rec._l10n_ec_action_validate_authorization_sri()
-                destination_account_id = rec.partner_id.property_account_receivable_id
                 if not rec.line_ids:
                     raise UserError(_("You must have at least one line to continue"))
                 if not rec.company_id.l10n_ec_withhold_journal_id:
@@ -257,67 +236,88 @@ class L10nEcWithhold(models.Model):
                     raise UserError(_("You must configure Withhold Sale Vat Account on Company to continue"))
                 if not rec.company_id.l10n_ec_withhold_sale_rent_account_id:
                     raise UserError(_("You must configure Withhold Sale Rent Account on Company to continue"))
-                vals_move = {
-                    "ref": _("RET CLI: %s") % rec.number,
-                    "date": rec.issue_date,
-                    "company_id": rec.company_id.id,
-                    "state": "draft",
-                    "journal_id": rec.company_id.l10n_ec_withhold_journal_id.id,
-                    "type": "entry",
-                    "l10n_ec_withhold_id": rec.id,
-                    "currency_id": rec.line_ids.mapped("currency_id").id or self.env.company.currency_id.id,
-                }
-                move_rec = model_move.create(vals_move)
-                rec.move_id = move_rec.id
-                invoice_group_to_reconcile = {}
-                for line in rec.line_ids:
-                    invoice_group_to_reconcile.setdefault(line.invoice_id.id, model_aml.browse())
-                    for aml in line.invoice_id.line_ids.filtered(
-                        lambda line: not line.reconciled
-                        and line.account_id == destination_account_id
-                        and line.partner_id.id == line.move_id.partner_id.id
-                    ):
-                        invoice_group_to_reconcile[line.invoice_id.id] |= aml
-                    if line.tax_amount > 0:
-                        account_id = False
-                        tax_code = False
-                        name = False
-                        if line.type == "iva":
-                            account_id = rec.company_id.l10n_ec_withhold_sale_iva_account_id.id
-                            tax_code = rec.company_id.l10n_ec_withhold_sale_iva_tag_id.ids
-                            name = _("Withhold Vat. %s - %s") % (rec.display_name, line.invoice_id.display_name,)
-                        elif line.type == "rent":
-                            account_id = rec.company_id.l10n_ec_withhold_sale_rent_account_id.id
-                            tax_code = []
-                            name = _("Withhold Rent Tax. %s - %s") % (rec.display_name, line.invoice_id.display_name)
-                        _create_move_line(
-                            move_id=move_rec.id,
-                            credit=0.0,
-                            debit=line.tax_amount,
-                            account_id=account_id,
-                            tax_code_id=tax_code,
-                            tax_amount=line.tax_amount,
-                            name=name,
-                        )
-                        invoice_group_to_reconcile[line.invoice_id.id] |= _create_move_line(
-                            move_id=move_rec.id,
-                            credit=line.tax_amount,
-                            debit=0.0,
-                            account_id=destination_account_id.id,
-                            tax_code_id=[],
-                            tax_amount=line.tax_amount,
-                            name=name,
-                        )
-                for invoice_id in invoice_group_to_reconcile.keys():
-                    if len(invoice_group_to_reconcile[invoice_id]) > 1:
-                        invoice_group_to_reconcile[invoice_id].reconcile()
-                move_rec.action_post()
-        self.write(
-            {"state": "done",}
-        )
+                # intentar validar el documento en linea con el SRI
+                rec._l10n_ec_action_validate_authorization_sri()
+                rec._create_account_move()
+        return self.write({"state": "done"})
+
+    def _create_account_move(self):
+        model_move = self.env["account.move"]
+        model_aml = self.env["account.move.line"].with_context(check_move_validity=False)
+        destination_account = self.get_destination_account()
+        vals_move = self._prepare_move_vals()
+        move_rec = model_move.create(vals_move)
+        self.move_id = move_rec.id
+        invoice_group_to_reconcile = {}
+        for line in self.line_ids:
+            invoice_group_to_reconcile.setdefault(line.invoice_id.id, model_aml.browse())
+            for aml in line.invoice_id.line_ids.filtered(
+                lambda line: not line.reconciled
+                and line.account_id == destination_account
+                and line.partner_id.id == line.move_id.partner_id.id
+            ):
+                invoice_group_to_reconcile[line.invoice_id.id] |= aml
+            if line.tax_amount > 0:
+                debit_vals, credit_vals = self._prepare_move_line(move_rec, line, destination_account)
+                model_aml.create(debit_vals)
+                invoice_group_to_reconcile[line.invoice_id.id] |= model_aml.create(credit_vals)
+        for invoice_id in invoice_group_to_reconcile.keys():
+            if len(invoice_group_to_reconcile[invoice_id]) > 1:
+                invoice_group_to_reconcile[invoice_id].reconcile()
+        move_rec.action_post()
+        return move_rec
+
+    def get_destination_account(self):
+        return self.partner_id.property_account_receivable_id
+
+    def _prepare_move_vals(self):
+        move_ref = _("RET CLI: %s") % self.number
+        if self.type == "credit_card":
+            move_ref = _("RET CLI/ Credit Card: %s") % self.number
+        return {
+            "ref": move_ref,
+            "date": self.issue_date,
+            "company_id": self.company_id.id,
+            "state": "draft",
+            "journal_id": self.company_id.l10n_ec_withhold_journal_id.id,
+            "type": "entry",
+            "l10n_ec_withhold_id": self.id,
+            "currency_id": self.line_ids.mapped("currency_id").id or self.env.company.currency_id.id,
+        }
+
+    def _prepare_move_line(self, move, line, destination_account):
+        account = False
+        tax_code = False
+        name = False
+        if line.type == "iva":
+            account = self.company_id.l10n_ec_withhold_sale_iva_account_id
+            tax_code = self.company_id.l10n_ec_withhold_sale_iva_tag_id.ids
+            name = _("Withhold Vat. %s - %s") % (self.display_name, line.invoice_id.display_name or "",)
+        elif line.type == "rent":
+            account = self.company_id.l10n_ec_withhold_sale_rent_account_id
+            tax_code = []
+            name = _("Withhold Rent Tax. %s - %s") % (self.display_name, line.invoice_id.display_name or "")
+        debit_vals = {
+            "move_id": move.id,
+            "account_id": account.id,
+            "tag_ids": tax_code,
+            "tax_base_amount": line.tax_amount,
+            "debit": line.tax_amount,
+            "credit": 0.0,
+            "name": name,
+        }
+        credit_vals = {
+            "move_id": move.id,
+            "account_id": destination_account.id,
+            "tax_base_amount": line.tax_amount,
+            "credit": line.tax_amount,
+            "debit": 0.0,
+            "name": name,
+        }
+        return debit_vals, credit_vals
 
     def action_back_to_draft(self):
-        return self.write({"state": "draft",})
+        return self.write({"state": "draft"})
 
     def action_cancel(self):
         for rec in self:
