@@ -377,8 +377,7 @@ class SriXmlData(models.Model):
                 xmlschema.assert_(xml_doc)
             return result
         except AssertionError as e:
-            #            if self.env.context.get("l10n_ec_xml_call_from_cron"):
-            if True:
+            if self.env.context.get("l10n_ec_xml_call_from_cron") or tools.config.get("skip_xsd_check", False):
                 _logger.error(
                     "Wrong Creation on XML File, faltan datos, verifique clave de acceso: %s, Detalle de error: %s",
                     self.l10n_ec_xml_key,
