@@ -197,7 +197,10 @@
                         </strong>
                     </td>
                     <td class="text-right" width="60">
-                        <span t-field="o.l10n_ec_base_iva" />
+                        <span
+                            t-field="o.l10n_ec_base_iva"
+                            t-options='{"widget": "monetary", "display_currency": res_company.currency_id}'
+                        />
                     </td>
                 </tr>
                 <tr>
@@ -205,7 +208,10 @@
                         <strong>SUBTOTAL 0%</strong>
                     </td>
                     <td class="text-right">
-                        <span t-field="o.l10n_ec_base_iva_0" />
+                        <span
+                            t-field="o.l10n_ec_base_iva_0"
+                            t-options='{"widget": "monetary", "display_currency": res_company.currency_id}'
+                        />
                     </td>
                 </tr>
                 <tr>
@@ -235,7 +241,10 @@
                         <strong>DESCUENTO</strong>
                     </td>
                     <td class="text-right">
-                        <span t-field="o.l10n_ec_discount_total" />
+                        <span
+                            t-esc="o.l10n_ec_discount_total + discount_additional"
+                            t-options='{"widget": "monetary", "display_currency": res_company.currency_id}'
+                        />
                     </td>
                 </tr>
                 <tr>
@@ -253,7 +262,10 @@
                         </strong>
                     </td>
                     <td class="text-right">
-                        <span t-field="o.l10n_ec_iva" />
+                        <span
+                            t-field="o.l10n_ec_iva"
+                            t-options='{"widget": "monetary", "display_currency": res_company.currency_id}'
+                        />
                     </td>
                 </tr>
                 <tr>

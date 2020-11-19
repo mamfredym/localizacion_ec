@@ -1616,6 +1616,90 @@ class AccountMove(models.Model):
             self.l10n_ec_get_info_liquidation(node_root)
         return True
 
+    def _l10n_ec_get_invoice_lines_to_fe(self):
+        """
+        Repartir las lineas con total en negativo(descuentos) a las demas lineas segun los impuestos aplicados
+        @return: diccionario con los datos calculados:
+            invoice_lines: browse_record(account.move.line), lineas normales sobre los que se repartira el descuento
+            lines_discount: browse_record(account.move.line) lineas de descuento con valores a repartir
+            invoice_line_data: dict(line_id, dict), diccionario con los valores calculados por cada linea de factura
+        """
+        iva_group = self.env.ref("l10n_ec_niif.tax_group_iva")
+        iva0_group = self.env.ref("l10n_ec_niif.tax_group_iva_0")
+        invoice_lines = self.invoice_line_ids.filtered(lambda x: not x.display_type)
+        lines_discount = invoice_lines.filtered(lambda x: x.price_subtotal < 0)
+        invoice_lines -= lines_discount
+        invoice_line_data = {}
+        discount_by_tax = {}
+        invoice_lines_by_tax = {}
+        for line in lines_discount:
+            if line.tax_ids not in discount_by_tax:
+                discount_by_tax[line.tax_ids] = self.env["account.move.line"]
+            discount_by_tax[line.tax_ids] |= line
+        for line in invoice_lines:
+            if line.tax_ids not in invoice_lines_by_tax:
+                invoice_lines_by_tax[line.tax_ids] = self.env["account.move.line"]
+            invoice_lines_by_tax[line.tax_ids] |= line
+        discount_applied_data = {}
+        for line in invoice_lines:
+            if line.tax_ids not in discount_applied_data:
+                discount_applied_data[line.tax_ids] = {"lines": self.env["account.move.line"], "discount_applied": 0}
+            discount_applied_data[line.tax_ids]["lines"] |= line
+            discount_lines = discount_by_tax.get(line.tax_ids) or self.env["account.move.line"]
+            total_discount_amount = abs(sum(discount_lines.mapped("price_subtotal")))
+            ail_by_tax = invoice_lines_by_tax.get(line.tax_ids) or self.env["account.move.line"]
+            ail_amount_total = abs(sum(ail_by_tax.mapped("price_subtotal")))
+            discount_unit_additional = 0.0
+            if ail_amount_total:
+                discount_unit_additional = (line.price_subtotal / ail_amount_total) * 100.0
+            discount = round(((line.price_unit * line.quantity) * ((line.discount or 0.0) / 100)), 2)
+            discount_additional = round((total_discount_amount * ((discount_unit_additional or 0.0) / 100)), 2)
+            # en la ultima linea asignar la diferencia entre lo asignado y el total a asignar
+            if len(discount_applied_data[line.tax_ids]["lines"]) == len(ail_by_tax):
+                discount_additional = round(
+                    total_discount_amount - discount_applied_data[line.tax_ids]["discount_applied"], 2
+                )
+            discount_applied_data[line.tax_ids]["discount_applied"] += discount_additional
+            discount += discount_additional
+            subtotal = round(((line.price_unit * line.quantity) - discount), 2)
+            l10n_ec_base_iva_0 = line.l10n_ec_base_iva_0
+            l10n_ec_base_iva = line.l10n_ec_base_iva
+            if iva0_group in line.tax_ids.mapped("tax_group_id"):
+                l10n_ec_base_iva_0 -= discount_additional
+            if iva_group in line.tax_ids.mapped("tax_group_id"):
+                l10n_ec_base_iva -= discount_additional
+            l10n_ec_iva = line.l10n_ec_iva
+            tarifa_iva = 12
+            taxes_res = line.tax_ids._origin.compute_all(
+                l10n_ec_base_iva,
+                quantity=1,
+                currency=self.currency_id,
+                product=line.product_id,
+                partner=self.partner_id,
+                is_refund=self.type in ("out_refund", "in_refund"),
+            )
+            # impuestos de iva 0 no agregan reparticion de impuestos,
+            # por ahora se consideran base_iva_0, verificar esto
+            if taxes_res["taxes"]:
+                for tax_data in taxes_res["taxes"]:
+                    tax = self.env["account.tax"].browse(tax_data["id"])
+                    if tax.tax_group_id.id == iva_group.id:
+                        l10n_ec_iva = tax_data["amount"]
+                        tarifa_iva = tax.amount
+            invoice_line_data[line.id] = {
+                "discount": discount,
+                "subtotal": subtotal,
+                "l10n_ec_base_iva_0": l10n_ec_base_iva_0,
+                "l10n_ec_base_iva": l10n_ec_base_iva,
+                "l10n_ec_iva": l10n_ec_iva,
+                "tarifa_iva": tarifa_iva,
+            }
+        return {
+            "invoice_lines": invoice_lines,
+            "lines_discount": lines_discount,
+            "invoice_line_data": invoice_line_data,
+        }
+
     def l10n_ec_get_info_factura(self, node):
         util_model = self.env["l10n_ec.utils"]
         company = self.company_id or self.env.company
@@ -1628,6 +1712,12 @@ class AccountMove(models.Model):
         fecha_factura = self.invoice_date.strftime(util_model.get_formato_date())
         SubElement(infoFactura, "fechaEmision").text = fecha_factura
         address = company.partner_id.street
+        invoice_lines_data = self._l10n_ec_get_invoice_lines_to_fe()
+        invoice_lines = invoice_lines_data["invoice_lines"]
+        lines_discount = invoice_lines_data["lines_discount"]
+        invoice_line_data = invoice_lines_data["invoice_line_data"]
+        l10n_ec_discount_total = self.l10n_ec_discount_total
+        l10n_ec_discount_total += abs(sum(lines_discount.mapped("price_subtotal")))
         SubElement(infoFactura, "dirEstablecimiento").text = util_model._clean_str(address)[:300]
         if self.l10n_ec_identification_type_id:
             tipoIdentificacionComprador = self.l10n_ec_identification_type_id.code
@@ -1658,7 +1748,7 @@ class AccountMove(models.Model):
             self.amount_untaxed, currency.decimal_places
         )
         SubElement(infoFactura, "totalDescuento").text = util_model.formato_numero(
-            self.l10n_ec_discount_total, currency.decimal_places
+            l10n_ec_discount_total, currency.decimal_places
         )
         # Definicion de Impuestos
         totalConImpuestos = SubElement(infoFactura, "totalConImpuestos")
@@ -1691,9 +1781,14 @@ class AccountMove(models.Model):
                 SubElement(pago, "unidadTiempo").text = payment_data.get("unidadTiempo") or "dias"
         # Lineas de Factura
         detalles = SubElement(node, "detalles")
-        for line in self.invoice_line_ids.filtered(lambda x: not x.display_type):
-            discount = round(((line.price_unit * line.quantity) * ((line.discount or 0.0) / 100)), 2)
-            subtotal = round(((line.price_unit * line.quantity) - discount), 2)
+        for line in invoice_lines:
+            line_data = invoice_line_data.get(line.id, {})
+            discount = line_data["discount"]
+            subtotal = line_data["subtotal"]
+            l10n_ec_base_iva_0 = line_data["l10n_ec_base_iva_0"]
+            l10n_ec_base_iva = line_data["l10n_ec_base_iva"]
+            l10n_ec_iva = line_data["l10n_ec_iva"]
+            tarifa_iva = line_data["tarifa_iva"]
             if currency.is_zero(subtotal):
                 continue
             detalle = SubElement(detalles, "detalle")
@@ -1716,19 +1811,19 @@ class AccountMove(models.Model):
                 subtotal, currency.decimal_places
             )
             impuestos = SubElement(detalle, "impuestos")
-            if line.l10n_ec_base_iva_0 != 0:
+            if not currency.is_zero(l10n_ec_base_iva_0):
                 self.l10n_ec_get_total_impuestos(
-                    impuestos, "2", "0", line.l10n_ec_base_iva_0, 0.0, "impuesto", 0, decimales=currency.decimal_places,
+                    impuestos, "2", "0", l10n_ec_base_iva_0, 0.0, "impuesto", 0, decimales=currency.decimal_places,
                 )
-            if line.l10n_ec_base_iva != 0:
+            if not currency.is_zero(l10n_ec_base_iva):
                 self.l10n_ec_get_total_impuestos(
                     impuestos,
                     "2",
                     "2",
-                    line.l10n_ec_base_iva,
-                    line.l10n_ec_iva,
+                    l10n_ec_base_iva,
+                    l10n_ec_iva,
                     "impuesto",
-                    12,
+                    tarifa_iva,
                     decimales=currency.decimal_places,
                 )
             # if line.base_no_iva != 0:
