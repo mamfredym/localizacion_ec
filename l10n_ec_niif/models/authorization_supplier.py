@@ -45,7 +45,9 @@ class L10nECSriAuthorizationSupplier(models.Model):
             if auth.printer_point and not re.match(cadena, auth.printer_point):
                 raise ValidationError(_("Invalid Number Format, this must be like 001"))
 
-    @api.constrains("number",)
+    @api.constrains(
+        "number",
+    )
     def _check_number(self):
         cadena = r"(\d{10})"
         for auth in self:
@@ -181,24 +183,71 @@ class L10nECSriAuthorizationSupplier(models.Model):
 
     _rec_name = "number"
 
-    partner_id = fields.Many2one("res.partner", "Partner", required=False, index=True, auto_join=True, help="",)
-    commercial_partner_id = fields.Many2one(
-        comodel_name="res.partner", string="Commercial partner", related="partner_id.commercial_partner_id", store=True,
+    partner_id = fields.Many2one(
+        "res.partner",
+        "Partner",
+        required=False,
+        index=True,
+        auto_join=True,
+        help="",
     )
-    number = fields.Char("Number", size=10, required=True, readonly=False, index=True, help="",)
+    commercial_partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Commercial partner",
+        related="partner_id.commercial_partner_id",
+        store=True,
+    )
+    number = fields.Char(
+        "Number",
+        size=10,
+        required=True,
+        readonly=False,
+        index=True,
+        help="",
+    )
     document_type = fields.Selection(
         "_get_document_type",
         string="Document Type",
         required=True,
         default=lambda self: self.env.context.get("document_type", False),
     )
-    agency = fields.Char("Agency", size=3, required=True, readonly=False, help="",)
-    printer_point = fields.Char("Point of Emission", size=3, required=True, readonly=False, help="",)
-    start_date = fields.Date("Start Date", required=True, help="",)
-    expiration_date = fields.Date("Expiration Date", required=True, help="",)
-    first_sequence = fields.Integer("First Sequence", help="",)
-    last_sequence = fields.Integer("Last Sequence", help="",)
-    padding = fields.Integer("Padding", default=lambda *a: 9, help="",)
+    agency = fields.Char(
+        "Agency",
+        size=3,
+        required=True,
+        readonly=False,
+        help="",
+    )
+    printer_point = fields.Char(
+        "Point of Emission",
+        size=3,
+        required=True,
+        readonly=False,
+        help="",
+    )
+    start_date = fields.Date(
+        "Start Date",
+        required=True,
+        help="",
+    )
+    expiration_date = fields.Date(
+        "Expiration Date",
+        required=True,
+        help="",
+    )
+    first_sequence = fields.Integer(
+        "First Sequence",
+        help="",
+    )
+    last_sequence = fields.Integer(
+        "Last Sequence",
+        help="",
+    )
+    padding = fields.Integer(
+        "Padding",
+        default=lambda *a: 9,
+        help="",
+    )
     autoprinter = fields.Boolean(
         "Autoprinter?",
         readonly=False,
@@ -263,7 +312,11 @@ class L10nECSriAuthorizationSupplier(models.Model):
             ):
                 raise UserError(
                     _("The sequence number %s is not within the range %s and %s")
-                    % (num_doc, authorization.first_sequence, authorization.last_sequence,)
+                    % (
+                        num_doc,
+                        authorization.first_sequence,
+                        authorization.last_sequence,
+                    )
                 )
         if number:
             if partner_id:
@@ -395,7 +448,9 @@ class L10nECSriAuthorizationSupplier(models.Model):
                     ) % (model_description, partner.name, date, seq_number)
                 res.update({"message": message})
         res.update(
-            {"auth_ids": auth_recs.ids,}
+            {
+                "auth_ids": auth_recs.ids,
+            }
         )
         if len(auth_recs) > 1:
             message += _(
@@ -404,7 +459,10 @@ class L10nECSriAuthorizationSupplier(models.Model):
                 "authorization and then enter the number"
             ) % (partner.display_name, model_description, number, date)
             res.update(
-                {"multi_auth": True, "message": message,}
+                {
+                    "multi_auth": True,
+                    "message": message,
+                }
             )
         if len(auth_recs) == 1 and seq_number:
             res_number = (
@@ -426,7 +484,12 @@ class L10nECSriAuthorizationSupplier(models.Model):
 
     @api.model
     def validate_authorization_into_sri(
-        self, authorization_number, partner_vat, document_type, document_number, document_date,
+        self,
+        authorization_number,
+        partner_vat,
+        document_type,
+        document_number,
+        document_date,
     ):
         response_json = {}
         document_types_sri = {

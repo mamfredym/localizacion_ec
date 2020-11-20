@@ -19,9 +19,18 @@ class L10nEcAgency(models.Model):
     number = fields.Char(string="S.R.I. Number", size=3, required=True, readonly=False, index=True)
     printer_point_ids = fields.One2many("l10n_ec.point.of.emission", "agency_id", "Points of Emission")
     user_ids = fields.Many2many("res.users", string="Allowed Users", help="", domain=[("share", "=", False)])
-    address_id = fields.Many2one("res.partner", "Address", required=False, help="",)
+    address_id = fields.Many2one(
+        "res.partner",
+        "Address",
+        required=False,
+        help="",
+    )
     company_id = fields.Many2one(
-        "res.company", "Company", required=False, help="", default=lambda self: self.env.company,
+        "res.company",
+        "Company",
+        required=False,
+        help="",
+        default=lambda self: self.env.company,
     )
     partner_id = fields.Many2one("res.partner", string="Company's Partner", related="company_id.partner_id")
     active = fields.Boolean(string="Active?", default=True)
@@ -55,7 +64,11 @@ class L10nEcAgency(models.Model):
                     raise ValidationError(_("Number of agency must be only numbers"))
 
     _sql_constraints = [
-        ("number_uniq", "unique (number, company_id)", _("Number of Agency must be unique by company!"),),
+        (
+            "number_uniq",
+            "unique (number, company_id)",
+            _("Number of Agency must be unique by company!"),
+        ),
     ]
 
 
@@ -74,7 +87,11 @@ class L10EcPointOfEmission(models.Model):
     count_invoice = fields.Integer(string="Count Invoice", related="agency_id.count_invoice")
     type_emission = fields.Selection(
         string="Type Emission",
-        selection=[("electronic", "Electronic"), ("pre_printed", "Pre Printed"), ("auto_printer", "Auto Printer"),],
+        selection=[
+            ("electronic", "Electronic"),
+            ("pre_printed", "Pre Printed"),
+            ("auto_printer", "Auto Printer"),
+        ],
         required=True,
         default="electronic",
     )
@@ -119,19 +136,35 @@ class L10EcPointOfEmission(models.Model):
             and self.env.context.get("filter_point_emission")
         ):
             user_data = self.env.user.get_default_point_of_emission()
-            domain.append(("id", "in", user_data["all_printer_ids"].ids,))
+            domain.append(
+                (
+                    "id",
+                    "in",
+                    user_data["all_printer_ids"].ids,
+                )
+            )
         return domain
 
     @api.model
     def _search(
-        self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None,
+        self,
+        args,
+        offset=0,
+        limit=None,
+        order=None,
+        count=False,
+        access_rights_uid=None,
     ):
         args.extend(self._l10n_ec_get_extra_domain_user())
         res = super(L10EcPointOfEmission, self)._search(args, offset, limit, order, count, access_rights_uid)
         return res
 
     _sql_constraints = [
-        ("number_uniq", "unique (number, agency_id)", _("The number of point of emission must be unique by Agency!"),),
+        (
+            "number_uniq",
+            "unique (number, agency_id)",
+            _("The number of point of emission must be unique by Agency!"),
+        ),
     ]
 
     @api.model
@@ -226,7 +259,13 @@ class L10EcPointOfEmission(models.Model):
                         "It is not possible to find authorization for the document type %s "
                         "at the point of emission %s for the agency %s with date %s on company: %s"
                     )
-                    % (model_description, self.number, self.agency_id.number, emission_date, company.name,)
+                    % (
+                        model_description,
+                        self.number,
+                        self.agency_id.number,
+                        emission_date,
+                        company.name,
+                    )
                 )
         return doc_find
 
@@ -386,7 +425,11 @@ class L10EcPointOfEmissionDocumentSequence(models.Model):
 
     _name = "l10n_ec.point.of.emission.document.sequence"
 
-    printer_id = fields.Many2one(comodel_name="l10n_ec.point.of.emission", string="Printer", required=True,)
+    printer_id = fields.Many2one(
+        comodel_name="l10n_ec.point.of.emission",
+        string="Printer",
+        required=True,
+    )
     initial_sequence = fields.Integer(string="Initial Sequence", required=True, default=1)
     document_type = fields.Selection(
         string="Document Type",

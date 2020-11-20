@@ -43,17 +43,17 @@
                 <tbody>
                     <tr>
                         <td style="width: 65%">
-                            <strong>Razón social / Nombres y Apellidos: </strong>
+                            <strong>Razón social / Nombres y Apellidos:</strong>
                             <span t-field="partner.name" />
                         </td>
                         <td>
-                            <strong>Identificación: </strong>
+                            <strong>Identificación:</strong>
                             <span t-field="partner.vat" />
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <strong>Fecha de Emisión: </strong>
+                            <strong>Fecha de Emisión:</strong>
                             <span t-field="o.issue_date" />
                         </td>
                         <td />
@@ -98,7 +98,8 @@
                             <span t-field="line.type" />
                         </td>
                         <td class="text-right">
-                            <span t-field="line.percentage" />%
+                            <span t-field="line.percentage" />
+                            %
                         </td>
                         <td class="text-right">
                             <span t-field="line.tax_amount" />

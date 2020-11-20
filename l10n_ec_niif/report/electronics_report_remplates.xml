@@ -25,36 +25,37 @@
                                 <strong t-field="company.name" />
                             </div>
                             <div class="text-center" t-if="company.partner_id.city and company.partner_id.country_id">
-                                <span t-esc="company.partner_id.city.capitalize()" />-
+                                <span t-esc="company.partner_id.city.capitalize()" />
+                                -
                                 <span t-esc="company.partner_id.country_id.name.capitalize()" />
                             </div>
                             <br />
-                            <strong>Dir. Matriz: </strong>
+                            <strong>Dir. Matriz:</strong>
                             <span t-esc="company.partner_id.get_direccion_matriz(printer_point)" />
                             <t t-if="company.partner_id.phone">
                                 <br />
-                                <strong>Telf.: </strong>
+                                <strong>Telf.:</strong>
                                 <span t-esc="company.partner_id.phone or ''" />
                             </t>
                             <t t-if="company.partner_id.email">
                                 <br />
-                                <strong>Email: </strong>
+                                <strong>Email:</strong>
                                 <span t-esc="company.partner_id.email or ''" />
                             </t>
                             <t
                                 t-if="company.partner_id.get_direccion_matriz(printer_point) != printer_point.agency_id.address_id.street"
                             >
                                 <br />
-                                <strong>Dir. Sucursal: </strong>
+                                <strong>Dir. Sucursal:</strong>
                                 <span t-esc="printer_point.agency_id.address_id.street" />
                                 <t t-if="printer_point.agency_id.address_id.phone">
                                     <br />
-                                    <strong>Telf. Sucursal: </strong>
+                                    <strong>Telf. Sucursal:</strong>
                                     <span t-field="printer_point.agency_id.address_id.phone" />
                                 </t>
                                 <t t-if="printer_point.agency_id.address_id.email">
                                     <br />
-                                    <strong>Email Sucursal: </strong>
+                                    <strong>Email Sucursal:</strong>
                                     <span t-field="printer_point.agency_id.address_id.email" />
                                 </t>
                             </t>
@@ -64,12 +65,12 @@
                             />
                             <t t-if="contribuyente_especial">
                                 <br />
-                                <strong>Contribuyente especial Nro: </strong>
+                                <strong>Contribuyente especial Nro:</strong>
                                 <span t-esc="contribuyente_especial" />
                             </t>
                             <br />
                             <t>
-                                <strong>Obligado a llevar contabilidad: </strong>
+                                <strong>Obligado a llevar contabilidad:</strong>
                                 <span
                                     t-esc="o.env['l10n_ec.utils'].get_obligado_contabilidad(company.partner_id.property_account_position_id)"
                                 />
@@ -80,7 +81,8 @@
                         <div class="div-bordered div-radius" style="min-height: 325px;">
                             <strong>R.U.C.:</strong>
                             <strong t-field="company.partner_id.vat" />
-                            <br /><br />
+                            <br />
+                            <br />
                             <t t-if="company.l10n_ec_retention_resolution">
                                 <strong>Withholding Agent:</strong>
                                 <span t-field="company.l10n_ec_retention_resolution" />
@@ -90,22 +92,26 @@
                             <br />
                             Nº.
                             <span t-esc="o.l10n_ec_get_document_number()" />
-                            <br /><br />
+                            <br />
+                            <br />
                             <strong>NÚMERO DE AUTORIZACION</strong>
                             <br />
                             <span t-field="o.l10n_ec_electronic_authorization" />
-                            <br /><br />
-                            <strong>Fecha y hora de autorización: </strong>
+                            <br />
+                            <br />
+                            <strong>Fecha y hora de autorización:</strong>
                             <span t-field="o.l10n_ec_authorization_date" />
                             <br />
                             <br />
-                            <strong>AMBIENTE: </strong>
+                            <strong>AMBIENTE:</strong>
                             <span t-field="o.l10n_ec_xml_data_id.l10n_ec_type_environment" />
-                            <br /><br />
-                            <strong>EMISION: </strong>
+                            <br />
+                            <br />
+                            <strong>EMISION:</strong>
                             <span t-esc="'Normal'" />
-                            <br /><br />
-                            <strong>CLAVE DE ACCESO: </strong>
+                            <br />
+                            <br />
+                            <strong>CLAVE DE ACCESO:</strong>
                             <br />
                             <div class="oe_product_image text-center" t-if="o.l10n_ec_xml_key">
                                 <img
@@ -132,17 +138,17 @@
                 <br />
             </t>
             <t t-if="partner.street or (partner.child_ids and partner.child_ids[0].street)" name="street">
-                <strong>Dirección: </strong>
+                <strong>Dirección:</strong>
                 <span t-esc="partner.street or (partner.child_ids and partner.child_ids[0].street) or ''" />
                 <br />
             </t>
             <t t-if="partner.phone or (partner.child_ids and partner.child_ids[0].phone)" name="phone">
-                <strong>Telefono: </strong>
+                <strong>Telefono:</strong>
                 <span t-esc="partner.phone or (partner.child_ids and partner.child_ids[0].phone) or ''" />
                 <br />
             </t>
             <t t-if="partner.email or (partner.child_ids and partner.child_ids[0].email)" name="email">
-                <strong>Email: </strong>
+                <strong>Email:</strong>
                 <span t-esc="partner.email or (partner.child_ids and partner.child_ids[0].email) or ''" />
                 <br />
             </t>
@@ -159,14 +165,12 @@
             <thead>
                 <tr>
                     <th style="border: 1px solid black; border-bottom: 1px solid black !important;">Forma de Pago</th>
-                    <th
-                        class="text-center"
-                        style="border: 1px solid black; border-bottom: 1px solid black !important;"
-                    >Valor</th>
-                    <th
-                        class="text-center"
-                        style="border: 1px solid black; border-bottom: 1px solid black !important;"
-                    >Plazo</th>
+                    <th class="text-center" style="border: 1px solid black; border-bottom: 1px solid black !important;">
+                        Valor
+                    </th>
+                    <th class="text-center" style="border: 1px solid black; border-bottom: 1px solid black !important;">
+                        Plazo
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -281,7 +285,10 @@
     </template>
     <template id="electronic_report_page_footer">
         <div class="footer text-right" style="font-size:8px" t-if="not hide_footer">
-            Pag. <span class="page" /> / <span class="topage" />
+            Pag.
+            <span class="page" />
+            /
+            <span class="topage" />
         </div>
     </template>
 </odoo>

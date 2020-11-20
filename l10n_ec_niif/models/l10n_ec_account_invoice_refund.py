@@ -15,7 +15,11 @@ class AccountInvoiceRefund(models.Model):
     _rec_name = "document_number"
 
     @api.depends(
-        "total_base_iva", "total_base_iva0", "total_base_no_iva", "total_iva", "total_ice",
+        "total_base_iva",
+        "total_base_iva0",
+        "total_base_no_iva",
+        "total_iva",
+        "total_ice",
     )
     def _compute_total_invoice(self):
         for refund in self:
@@ -28,16 +32,27 @@ class AccountInvoiceRefund(models.Model):
             )
 
     invoice_id = fields.Many2one(
-        "account.move", "Liquidación de Compras", ondelete="cascade", index=True, auto_join=True,
+        "account.move",
+        "Liquidación de Compras",
+        ondelete="cascade",
+        index=True,
+        auto_join=True,
     )
     company_id = fields.Many2one(string="Company", store=True, readonly=True, related="invoice_id.company_id")
     currency_id = fields.Many2one(string="Company Currency", readonly=True, related="company_id.currency_id")
     document_number = fields.Char("Número de Factura", size=64, required=True)
     partner_id = fields.Many2one("res.partner", "Proveedor", required=True, index=True, auto_join=True)
     l10n_ec_foreign = fields.Boolean("Foreign?", readonly=True, related="partner_id.l10n_ec_foreign")
-    date_invoice = fields.Date("Fecha de Emisión", required=True, default=lambda self: fields.Date.context_today(self),)
+    date_invoice = fields.Date(
+        "Fecha de Emisión",
+        required=True,
+        default=lambda self: fields.Date.context_today(self),
+    )
     document_type = fields.Selection(
-        [("normal", "Normal"), ("electronic", "Electrónico"),],
+        [
+            ("normal", "Normal"),
+            ("electronic", "Electrónico"),
+        ],
         string="Tipo Documento",
         required=True,
         readonly=False,
@@ -77,7 +92,10 @@ class AccountInvoiceRefund(models.Model):
                     raise ValidationError(_("Another document with the same number already exists"))
             else:
                 auth_s_model.validate_unique_document_partner(
-                    "invoice_reembolso", refund.document_number, refund.partner_id.id, util_model.ensure_id(refund),
+                    "invoice_reembolso",
+                    refund.document_number,
+                    refund.partner_id.id,
+                    util_model.ensure_id(refund),
                 )
 
     @api.constrains("electronic_authorization", "document_type")
@@ -98,7 +116,11 @@ class AccountInvoiceRefund(models.Model):
                     )
 
     @api.onchange(
-        "document_number", "partner_id", "date_invoice", "document_type", "l10n_ec_partner_authorization_id",
+        "document_number",
+        "partner_id",
+        "date_invoice",
+        "document_type",
+        "l10n_ec_partner_authorization_id",
     )
     def onchange_data_in(self):
         domain = {}
@@ -125,9 +147,11 @@ class AccountInvoiceRefund(models.Model):
             # si es electronico y ya tengo agencia y punto de impresion, completar el numero
             if l10n_latam_document_number:
                 try:
-                    (agency, printer_point, sequence_number,) = UtilModel.split_document_number(
-                        l10n_latam_document_number, True
-                    )
+                    (
+                        agency,
+                        printer_point,
+                        sequence_number,
+                    ) = UtilModel.split_document_number(l10n_latam_document_number, True)
                     sequence_number = int(sequence_number)
                     sequence_number = auth_supplier_model.fill_padding(sequence_number, padding)
                     self.document_number = f"{agency}-{printer_point}-{sequence_number}"
@@ -142,11 +166,17 @@ class AccountInvoiceRefund(models.Model):
                     return {"domain": domain, "warning": warning}
                 # validar la duplicidad de documentos electronicos
                 auth_supplier_model.validate_unique_document_partner(
-                    "invoice_reembolso", self.document_number, self.partner_id.id, UtilModel.ensure_id(self),
+                    "invoice_reembolso",
+                    self.document_number,
+                    self.partner_id.id,
+                    UtilModel.ensure_id(self),
                 )
             return {"domain": domain, "warning": warning}
         auth_data = auth_supplier_model.get_supplier_authorizations(
-            "in_invoice", self.partner_id.id, l10n_latam_document_number, date_invoice,
+            "in_invoice",
+            self.partner_id.id,
+            l10n_latam_document_number,
+            date_invoice,
         )
         # si hay multiples autorizaciones, pero una de ellas es la que el usuario ha seleccionado, tomar esa autorizacion
         # xq sino, nunca se podra seleccionar una autorizacion

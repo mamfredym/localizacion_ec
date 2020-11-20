@@ -42,18 +42,46 @@ class ResPartner(models.Model):
             self.property_account_payable_id = int(accounting_account_payable_fireign_id)
 
     l10n_ec_foreign = fields.Boolean(
-        "Foreign?", readonly=True, help="", store=True, compute="_compute_l10n_ec_foreign",
+        "Foreign?",
+        readonly=True,
+        help="",
+        store=True,
+        compute="_compute_l10n_ec_foreign",
     )
     l10n_ec_foreign_type = fields.Selection(
-        [("01", "Persona Natural"), ("02", "Sociedad"),], string="Foreign Type", readonly=False, help="",
+        [
+            ("01", "Persona Natural"),
+            ("02", "Sociedad"),
+        ],
+        string="Foreign Type",
+        readonly=False,
+        help="",
     )
-    l10n_ec_business_name = fields.Char("Business Name", required=False, readonly=False, help="",)
+    l10n_ec_business_name = fields.Char(
+        "Business Name",
+        required=False,
+        readonly=False,
+        help="",
+    )
     # Datos para el reporte dinardap
     l10n_ec_sex = fields.Selection(
-        [("M", "Masculino"), ("F", "Femenino"),], string="Sex", readonly=False, help="", required=False,
+        [
+            ("M", "Masculino"),
+            ("F", "Femenino"),
+        ],
+        string="Sex",
+        readonly=False,
+        help="",
+        required=False,
     )
     l10n_ec_marital_status = fields.Selection(
-        [("S", "Soltero(a)"), ("C", "Casado(a)"), ("D", "Divorciado(a)"), ("", "Unión Libre"), ("V", "Viudo(o)"),],
+        [
+            ("S", "Soltero(a)"),
+            ("C", "Casado(a)"),
+            ("D", "Divorciado(a)"),
+            ("", "Unión Libre"),
+            ("V", "Viudo(o)"),
+        ],
         string="Civil Status",
         readonly=False,
         help="",
@@ -74,7 +102,11 @@ class ResPartner(models.Model):
         help="",
         required=False,
     )
-    l10n_ec_related_part = fields.Boolean("Related Part?", readonly=False, help="",)
+    l10n_ec_related_part = fields.Boolean(
+        "Related Part?",
+        readonly=False,
+        help="",
+    )
     l10n_ec_is_ecuadorian_company = fields.Boolean(
         string="is Ecuadorian Company?", compute="_compute_ecuadorian_company"
     )
@@ -92,7 +124,9 @@ class ResPartner(models.Model):
         if not default:
             default = {}
         default.update(
-            {"vat": False,}
+            {
+                "vat": False,
+            }
         )
         return super(ResPartner, self).copy_data(default)
 
@@ -162,7 +196,10 @@ class ResPartner(models.Model):
             partner.l10n_ec_type_sri = vat_type
 
     l10n_ec_type_sri = fields.Char(
-        "SRI Identification Type", store=True, readonly=True, compute="_compute_l10n_ec_type_sri",
+        "SRI Identification Type",
+        store=True,
+        readonly=True,
+        compute="_compute_l10n_ec_type_sri",
     )
 
     def write(self, values):
@@ -194,11 +231,15 @@ class ResPartner(models.Model):
         return res
 
     l10n_ec_authorization_ids = fields.One2many(
-        "l10n_ec.sri.authorization.supplier", "partner_id", string="Third Party Authorizations",
+        "l10n_ec.sri.authorization.supplier",
+        "partner_id",
+        string="Third Party Authorizations",
     )
 
     l10n_ec_email_out_invoice = fields.Boolean(
-        "As Follower on Invoice", readonly=False, default=lambda self: not ("default_parent_id" in self.env.context),
+        "As Follower on Invoice",
+        readonly=False,
+        default=lambda self: not ("default_parent_id" in self.env.context),
     )
     l10n_ec_email_out_refund = fields.Boolean(
         "As Follower on Credit Note",
@@ -216,13 +257,19 @@ class ResPartner(models.Model):
         default=lambda self: not ("default_parent_id" in self.env.context),
     )
     l10n_ec_email_delivery_note = fields.Boolean(
-        "As Follower Delivery Note", readonly=False, default=lambda self: not ("default_parent_id" in self.env.context),
+        "As Follower Delivery Note",
+        readonly=False,
+        default=lambda self: not ("default_parent_id" in self.env.context),
     )
     l10n_ec_email_withhold_purchase = fields.Boolean(
-        "As Follower on Withhold", readonly=False, default=lambda self: not ("default_parent_id" in self.env.context),
+        "As Follower on Withhold",
+        readonly=False,
+        default=lambda self: not ("default_parent_id" in self.env.context),
     )
     l10n_ec_require_email_electronic = fields.Boolean(
-        string=u"Requerir Correo Electronico", store=False, compute="_compute_l10n_ec_require_email_electronic",
+        string=u"Requerir Correo Electronico",
+        store=False,
+        compute="_compute_l10n_ec_require_email_electronic",
     )
 
     @api.depends(
@@ -250,7 +297,8 @@ class ResPartner(models.Model):
         return self.street or printer_point.agency_id.address_id.street or "NA"
 
     @api.depends(
-        "country_id", "vat",
+        "country_id",
+        "vat",
     )
     def _compute_sri_status(self):
         for rec in self:

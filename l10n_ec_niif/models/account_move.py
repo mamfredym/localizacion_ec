@@ -20,16 +20,24 @@ class L10nECIdentificationType(models.Model):
     name = fields.Char(string="Name", required=True)
     document_type_ids = fields.Many2many("l10n_latam.document.type", string="Tipos de Transacciones Asociadas")
     sale_invoice_document_type_id = fields.Many2one(
-        comodel_name="l10n_latam.document.type", string="Default Sales Document Type for Invoices", required=False,
+        comodel_name="l10n_latam.document.type",
+        string="Default Sales Document Type for Invoices",
+        required=False,
     )
     sale_credit_note_document_type_id = fields.Many2one(
-        comodel_name="l10n_latam.document.type", string="Default Sales Document Type for Credit Notes", required=False,
+        comodel_name="l10n_latam.document.type",
+        string="Default Sales Document Type for Credit Notes",
+        required=False,
     )
     sale_debit_note_document_type_id = fields.Many2one(
-        comodel_name="l10n_latam.document.type", string="Default Sales Document Type for Debit Notes", required=False,
+        comodel_name="l10n_latam.document.type",
+        string="Default Sales Document Type for Debit Notes",
+        required=False,
     )
     purchase_invoice_document_type_id = fields.Many2one(
-        comodel_name="l10n_latam.document.type", string="Default Purchases Document Type for Invoices", required=False,
+        comodel_name="l10n_latam.document.type",
+        string="Default Purchases Document Type for Invoices",
+        required=False,
     )
     purchase_credit_note_document_type_id = fields.Many2one(
         comodel_name="l10n_latam.document.type",
@@ -92,10 +100,19 @@ class AccountMove(models.Model):
         if self.env.context.get("default_type", "") in ("out_receipt", "in_receipt"):
             domain = [
                 ("company_id", "=", company_id),
-                ("type", "=", "sale" if self.env.context.get("default_type") == "out_receipt" else "purchase",),
+                (
+                    "type",
+                    "=",
+                    "sale" if self.env.context.get("default_type") == "out_receipt" else "purchase",
+                ),
                 ("l10n_latam_use_documents", "=", False),
             ]
-        elif internal_type in ("invoice", "debit_note", "credit_note", "liquidation",):
+        elif internal_type in (
+            "invoice",
+            "debit_note",
+            "credit_note",
+            "liquidation",
+        ):
             domain = [
                 ("company_id", "=", company_id),
                 ("type", "=", journal_type),
@@ -114,7 +131,9 @@ class AccountMove(models.Model):
     journal_id = fields.Many2one(default=_get_default_journal)
     # replace field from Abstract class for change attributes(readonly and states)
     l10n_ec_point_of_emission_id = fields.Many2one(
-        comodel_name="l10n_ec.point.of.emission", readonly=True, states={"draft": [("readonly", False)]},
+        comodel_name="l10n_ec.point.of.emission",
+        readonly=True,
+        states={"draft": [("readonly", False)]},
     )
     # TODO: ideal que este campo estuviera en el modulo l10n_latam_invoice_document
     # proponerlo en rama master de ser posible
@@ -131,19 +150,30 @@ class AccountMove(models.Model):
     )
     # Facturacion electronica
     l10n_ec_is_environment_production = fields.Boolean(
-        "Es Ambiente de Produccion?", compute="_compute_l10n_ec_is_environment_production", store=True, index=True,
+        "Es Ambiente de Produccion?",
+        compute="_compute_l10n_ec_is_environment_production",
+        store=True,
+        index=True,
     )
     l10n_ec_electronic_authorization = fields.Char(readonly=False)
     l10n_ec_original_invoice_id = fields.Many2one(comodel_name="account.move", string="Original Invoice")
     l10n_ec_credit_note_ids = fields.One2many(
-        comodel_name="account.move", inverse_name="l10n_ec_original_invoice_id", string="Credit Notes", required=False,
+        comodel_name="account.move",
+        inverse_name="l10n_ec_original_invoice_id",
+        string="Credit Notes",
+        required=False,
     )
     l10n_ec_refund_ids = fields.One2many(
-        comodel_name="l10n_ec.account.invoice.refund", inverse_name="invoice_id", string="Refunds", required=False,
+        comodel_name="l10n_ec.account.invoice.refund",
+        inverse_name="invoice_id",
+        string="Refunds",
+        required=False,
     )
     # campos relacionados al SRI
     l10n_ec_authorization_line_id = fields.Many2one(
-        comodel_name="l10n_ec.sri.authorization.line", copy=False, string="Own Ecuadorian Authorization Line",
+        comodel_name="l10n_ec.sri.authorization.line",
+        copy=False,
+        string="Own Ecuadorian Authorization Line",
     )
     l10n_ec_authorization_id = fields.Many2one(
         comodel_name="l10n_ec.sri.authorization",
@@ -153,7 +183,11 @@ class AccountMove(models.Model):
     )
     l10n_ec_type_emission = fields.Selection(
         string="Type Emission",
-        selection=[("electronic", "Electronic"), ("pre_printed", "Pre Printed"), ("auto_printer", "Auto Printer"),],
+        selection=[
+            ("electronic", "Electronic"),
+            ("pre_printed", "Pre Printed"),
+            ("auto_printer", "Auto Printer"),
+        ],
         required=False,
         default=False,
         readonly=True,
@@ -161,26 +195,41 @@ class AccountMove(models.Model):
     )
     l10n_ec_sri_authorization_state = fields.Selection(
         string="Authorization state on SRI",
-        selection=[("to_check", "To Check"), ("valid", "Valid"), ("invalid", "Invalid"),],
+        selection=[
+            ("to_check", "To Check"),
+            ("valid", "Valid"),
+            ("invalid", "Invalid"),
+        ],
         readonly=True,
         copy=False,
         default="to_check",
     )
     l10n_ec_document_number = fields.Char(
-        string="Ecuadorian Document Number", readonly=True, compute="_compute_l10n_ec_document_number", store=True,
+        string="Ecuadorian Document Number",
+        readonly=True,
+        compute="_compute_l10n_ec_document_number",
+        store=True,
     )
     l10n_ec_invoice_type = fields.Char(
-        string="EC Invoice Type", compute="_compute_ecuadorian_invoice_type", store=True,
+        string="EC Invoice Type",
+        compute="_compute_ecuadorian_invoice_type",
+        store=True,
     )
     l10n_ec_supplier_authorization_id = fields.Many2one(
-        comodel_name="l10n_ec.sri.authorization.supplier", string="Supplier Authorization", required=False,
+        comodel_name="l10n_ec.sri.authorization.supplier",
+        string="Supplier Authorization",
+        required=False,
     )
     l10n_ec_supplier_authorization_number = fields.Char(string="Supplier Authorization", required=False, size=10)
     l10n_ec_type_supplier_authorization = fields.Selection(related="company_id.l10n_ec_type_supplier_authorization")
     l10n_ec_consumidor_final = fields.Boolean(string="Consumidor Final", compute="_compute_l10n_ec_consumidor_final")
     l10n_ec_start_date = fields.Date("Start Date", related="l10n_ec_authorization_id.start_date")
     l10n_ec_expiration_date = fields.Date("Expiration Date", related="l10n_ec_authorization_id.expiration_date")
-    l10n_ec_tax_support_id = fields.Many2one(comodel_name="l10n_ec.tax.support", string="Tax Support", required=False,)
+    l10n_ec_tax_support_id = fields.Many2one(
+        comodel_name="l10n_ec.tax.support",
+        string="Tax Support",
+        required=False,
+    )
     l10n_ec_identification_type_id = fields.Many2one(
         "l10n_ec.identification.type",
         string="Ecuadorian Identification Type",
@@ -206,10 +255,22 @@ class AccountMove(models.Model):
         help="",
     )
     l10n_ec_aplica_convenio_doble_tributacion = fields.Selection(
-        [("si", "SI"), ("no", "NO"),], string="Aplica convenio doble tributación", states={}, help="",
+        [
+            ("si", "SI"),
+            ("no", "NO"),
+        ],
+        string="Aplica convenio doble tributación",
+        states={},
+        help="",
     )
     l10n_ec_pago_exterior_sujeto_retencion = fields.Selection(
-        [("si", "SI"), ("no", "NO"),], string="Pago sujeto a retención", states={}, help="",
+        [
+            ("si", "SI"),
+            ("no", "NO"),
+        ],
+        string="Pago sujeto a retención",
+        states={},
+        help="",
     )
     l10n_ec_sri_payment_id = fields.Many2one(
         "l10n_ec.sri.payment.method",
@@ -237,11 +298,17 @@ class AccountMove(models.Model):
     )
     l10n_ec_type_emission_withhold = fields.Selection(
         string="Type emission withhold",
-        selection=[("electronic", "Electronic"), ("pre_printed", "Pre Printed"), ("auto_printer", "Auto Printer"),],
+        selection=[
+            ("electronic", "Electronic"),
+            ("pre_printed", "Pre Printed"),
+            ("auto_printer", "Auto Printer"),
+        ],
         required=False,
     )
     l10n_ec_authorization_line_withhold_id = fields.Many2one(
-        comodel_name="l10n_ec.sri.authorization.line", copy=False, string="Own Ecuadorian Authorization Line(Withhold)",
+        comodel_name="l10n_ec.sri.authorization.line",
+        copy=False,
+        string="Own Ecuadorian Authorization Line(Withhold)",
     )
     l10n_ec_authorization_withhold_id = fields.Many2one(
         comodel_name="l10n_ec.sri.authorization",
@@ -258,16 +325,27 @@ class AccountMove(models.Model):
         states={"draft": [("readonly", False)]},
     )
     l10n_ec_withhold_required = fields.Boolean(
-        string="Withhold Required", compute="_compute_l10n_ec_withhold_required", store=True,
+        string="Withhold Required",
+        compute="_compute_l10n_ec_withhold_required",
+        store=True,
     )
-    l10n_ec_withhold_date = fields.Date(string="Withhold Date", readonly=True, states={"draft": [("readonly", False)]},)
+    l10n_ec_withhold_date = fields.Date(
+        string="Withhold Date",
+        readonly=True,
+        states={"draft": [("readonly", False)]},
+    )
     l10n_ec_withhold_id = fields.Many2one(comodel_name="l10n_ec.withhold", string="Withhold", required=False)
 
     l10n_ec_withhold_line_ids = fields.One2many(
-        comodel_name="l10n_ec.withhold.line", inverse_name="invoice_id", string="Withhold Lines", required=False,
+        comodel_name="l10n_ec.withhold.line",
+        inverse_name="invoice_id",
+        string="Withhold Lines",
+        required=False,
     )
     l10n_ec_withhold_ids = fields.Many2many(
-        comodel_name="l10n_ec.withhold", string="Withhold", compute="_compute_l10n_ec_withhold_ids",
+        comodel_name="l10n_ec.withhold",
+        string="Withhold",
+        compute="_compute_l10n_ec_withhold_ids",
     )
     l10n_ec_withhold_count = fields.Integer(
         string="Withhold Count", compute="_compute_l10n_ec_withhold_ids", store=False
@@ -307,11 +385,16 @@ class AccountMove(models.Model):
                 l10n_ec_iva, move.company_currency_id, move.company_id, move_date
             )
             move.l10n_ec_discount_total_currency = move.currency_id._convert(
-                l10n_ec_discount_total, move.company_currency_id, move.company_id, move_date,
+                l10n_ec_discount_total,
+                move.company_currency_id,
+                move.company_id,
+                move_date,
             )
 
     @api.depends(
-        "type", "l10n_ec_point_of_emission_id", "l10n_latam_document_type_id",
+        "type",
+        "l10n_ec_point_of_emission_id",
+        "l10n_latam_document_type_id",
     )
     def _compute_l10n_ec_is_environment_production(self):
         xml_model = self.env["sri.xml.data"]
@@ -354,7 +437,8 @@ class AccountMove(models.Model):
             move.l10n_latam_internal_type = move.l10n_latam_document_type_id.internal_type
 
     @api.depends(
-        "name", "l10n_latam_document_type_id",
+        "name",
+        "l10n_latam_document_type_id",
     )
     def _compute_l10n_ec_document_number(self):
         recs_with_name = self.filtered(lambda x: x.name != "/" and x.company_id.country_id.code == "EC")
@@ -368,7 +452,11 @@ class AccountMove(models.Model):
         remaining.l10n_ec_document_number = False
 
     @api.depends(
-        "type", "partner_id", "l10n_latam_document_type_id", "l10n_ec_type_emission", "company_id.country_id",
+        "type",
+        "partner_id",
+        "l10n_latam_document_type_id",
+        "l10n_ec_type_emission",
+        "company_id.country_id",
     )
     def _compute_ecuadorian_invoice_type(self):
         for rec in self:
@@ -379,7 +467,10 @@ class AccountMove(models.Model):
             rec.l10n_latam_internal_type = rec.l10n_latam_document_type_id.internal_type
 
     @api.depends(
-        "partner_id.l10n_ec_type_sri", "l10n_ec_is_exportation", "type", "company_id",
+        "partner_id.l10n_ec_type_sri",
+        "l10n_ec_is_exportation",
+        "type",
+        "company_id",
     )
     def _compute_l10n_ec_identification_type(self):
         identification_model = self.env["l10n_ec.identification.type"]
@@ -415,7 +506,9 @@ class AccountMove(models.Model):
                     [("code", "=", identification_code)], limit=1
                 )
 
-    @api.depends("l10n_latam_document_type_id",)
+    @api.depends(
+        "l10n_latam_document_type_id",
+    )
     def _compute_l10n_ec_tax_support_domain(self):
         tax_support_model = self.env["l10n_ec.tax.support"]
         for move in self:
@@ -425,7 +518,13 @@ class AccountMove(models.Model):
             supports = tax_support_model.browse()
             if move.l10n_latam_document_type_id:
                 supports = tax_support_model.search(
-                    [("document_type_ids", "in", move.l10n_latam_document_type_id.ids,)]
+                    [
+                        (
+                            "document_type_ids",
+                            "in",
+                            move.l10n_latam_document_type_id.ids,
+                        )
+                    ]
                 )
             move.l10n_ec_tax_support_domain_ids = supports.ids
 
@@ -437,7 +536,9 @@ class AccountMove(models.Model):
             date_due = invoice.invoice_date_due or date_invoice
             invoice.l10n_ec_credit_days = (date_due - date_invoice).days
 
-    @api.depends("l10n_ec_withhold_line_ids.withhold_id",)
+    @api.depends(
+        "l10n_ec_withhold_line_ids.withhold_id",
+    )
     def _compute_l10n_ec_withhold_ids(self):
         for rec in self:
             l10n_ec_withhold_ids = rec.l10n_ec_withhold_line_ids.mapped("withhold_id").ids
@@ -468,7 +569,9 @@ class AccountMove(models.Model):
             else:
                 move.l10n_ec_consumidor_final = False
 
-    @api.constrains("l10n_ec_supplier_authorization_number",)
+    @api.constrains(
+        "l10n_ec_supplier_authorization_number",
+    )
     def _check_l10n_ec_supplier_authorization_number(self):
         cadena = r"(\d{10})"
         for move in self:
@@ -500,7 +603,11 @@ class AccountMove(models.Model):
                     )
 
     @api.constrains(
-        "name", "l10n_ec_document_number", "company_id", "type", "l10n_latam_document_type_id",
+        "name",
+        "l10n_ec_document_number",
+        "company_id",
+        "type",
+        "l10n_latam_document_type_id",
     )
     def _check_l10n_ec_document_number_duplicity(self):
         auth_line_model = self.env["l10n_ec.sri.authorization.line"]
@@ -510,7 +617,10 @@ class AccountMove(models.Model):
             and x.l10n_ec_document_number
         ):
             auth_line_model.with_context(from_constrain=True).validate_unique_value_document(
-                move.l10n_ec_get_invoice_type(), move.l10n_ec_document_number, move.company_id.id, move.id,
+                move.l10n_ec_get_invoice_type(),
+                move.l10n_ec_document_number,
+                move.company_id.id,
+                move.id,
             )
 
     @api.constrains("l10n_ec_start_date", "l10n_ec_expiration_date", "invoice_date")
@@ -603,9 +713,11 @@ class AccountMove(models.Model):
             # si es electronico y ya tengo agencia y punto de impresion, completar el numero
             if l10n_latam_document_number:
                 try:
-                    (agency, printer_point, sequence_number,) = UtilModel.split_document_number(
-                        l10n_latam_document_number, True
-                    )
+                    (
+                        agency,
+                        printer_point,
+                        sequence_number,
+                    ) = UtilModel.split_document_number(l10n_latam_document_number, True)
                     sequence_number = int(sequence_number)
                     sequence_number = auth_supplier_model.fill_padding(sequence_number, padding)
                     l10n_latam_document_number = f"{agency}-{printer_point}-{sequence_number}"
@@ -630,7 +742,10 @@ class AccountMove(models.Model):
                 )
             return {"domain": domain, "warning": warning}
         auth_data = auth_supplier_model.get_supplier_authorizations(
-            self.l10n_ec_invoice_type, self.partner_id.id, l10n_latam_document_number, invoice_date,
+            self.l10n_ec_invoice_type,
+            self.partner_id.id,
+            l10n_latam_document_number,
+            invoice_date,
         )
         # si hay multiples autorizaciones, pero una de ellas es la que el usuario ha seleccionado, tomar esa autorizacion
         # xq sino, nunca se podra seleccionar una autorizacion
@@ -737,7 +852,10 @@ class AccountMove(models.Model):
             if self.l10n_latam_document_number != l10n_latam_document_number:
                 self.l10n_latam_document_number = l10n_latam_document_number
         doc_find = self.l10n_ec_point_of_emission_id.get_authorization_for_number(
-            self.l10n_ec_invoice_type, self.l10n_latam_document_number, self.invoice_date, self.company_id,
+            self.l10n_ec_invoice_type,
+            self.l10n_latam_document_number,
+            self.invoice_date,
+            self.company_id,
         )
         if doc_find:
             self.l10n_ec_authorization_line_id = doc_find
@@ -750,13 +868,17 @@ class AccountMove(models.Model):
             )
         return {"domain": domain, "warning": warning}
 
-    @api.onchange("l10n_ec_type_emission",)
+    @api.onchange(
+        "l10n_ec_type_emission",
+    )
     def onchange_l10n_ec_type_emission(self):
         if self.l10n_ec_type_emission == "electronic":
             self.l10n_ec_supplier_authorization_id = False
             self.l10n_ec_supplier_authorization_number = False
 
-    @api.onchange("l10n_ec_supplier_authorization_id",)
+    @api.onchange(
+        "l10n_ec_supplier_authorization_id",
+    )
     def onchange_l10n_ec_supplier_authorization_id(self):
         auth_supplier_model = self.env["l10n_ec.sri.authorization.supplier"]
         UtilModel = self.env["l10n_ec.utils"]
@@ -783,7 +905,8 @@ class AccountMove(models.Model):
                 is_valid = False
             if not is_valid:
                 self.l10n_latam_document_number = "{}-{}-".format(
-                    self.l10n_ec_supplier_authorization_id.agency, self.l10n_ec_supplier_authorization_id.printer_point,
+                    self.l10n_ec_supplier_authorization_id.agency,
+                    self.l10n_ec_supplier_authorization_id.printer_point,
                 )
 
     @api.onchange("l10n_latam_document_type_id", "l10n_latam_document_number")
@@ -807,7 +930,10 @@ class AccountMove(models.Model):
         return res
 
     @api.onchange(
-        "type", "l10n_latam_document_type_id", "l10n_ec_point_of_emission_id", "invoice_date",
+        "type",
+        "l10n_latam_document_type_id",
+        "l10n_ec_point_of_emission_id",
+        "invoice_date",
     )
     def _onchange_point_of_emission(self):
         for move in self.filtered(
@@ -815,7 +941,13 @@ class AccountMove(models.Model):
         ):
             if move.l10n_ec_point_of_emission_id:
                 invoice_type = move.l10n_ec_get_invoice_type()
-                if invoice_type in ("out_invoice", "out_refund", "debit_note_out", "liquidation", "in_invoice",):
+                if invoice_type in (
+                    "out_invoice",
+                    "out_refund",
+                    "debit_note_out",
+                    "liquidation",
+                    "in_invoice",
+                ):
                     if invoice_type not in ["in_invoice"]:
                         (next_number, auth_line,) = move.l10n_ec_point_of_emission_id.get_next_value_sequence(
                             invoice_type, move.invoice_date, False
@@ -826,7 +958,8 @@ class AccountMove(models.Model):
                         move.l10n_ec_authorization_line_id = auth_line.id
 
     @api.onchange(
-        "l10n_ec_point_of_emission_withhold_id", "l10n_ec_withhold_date",
+        "l10n_ec_point_of_emission_withhold_id",
+        "l10n_ec_withhold_date",
     )
     def _onchange_point_of_emission_withhold(self):
         warning = {}
@@ -854,7 +987,8 @@ class AccountMove(models.Model):
         return {"warning": warning}
 
     @api.onchange(
-        "l10n_ec_original_invoice_id", "invoice_date",
+        "l10n_ec_original_invoice_id",
+        "invoice_date",
     )
     def onchange_l10n_ec_original_invoice(self):
         line_model = self.env["account.move.line"].with_context(check_move_validity=False)
@@ -875,7 +1009,9 @@ class AccountMove(models.Model):
                     line_data.pop("move_id")
                 if "date" not in line_data:
                     line_data.update(
-                        {"date": self.invoice_date or fields.Date.context_today(self),}
+                        {
+                            "date": self.invoice_date or fields.Date.context_today(self),
+                        }
                     )
                 new_line = line_model.new(line_data)
                 if new_line.currency_id:
@@ -895,12 +1031,26 @@ class AccountMove(models.Model):
             "l10n_ec_authorization_line_id",
         }
         if (
-            inv_type in ("out_invoice", "out_refund", "in_invoice",)
+            inv_type
+            in (
+                "out_invoice",
+                "out_refund",
+                "in_invoice",
+            )
             and fields_ec_to_fill.intersection(set(fields))
             and self.env.company.country_id.code == "EC"
         ):
-            invoice_type = modules_mapping.l10n_ec_get_invoice_type(inv_type, internal_type,)
-            if invoice_type in ("out_invoice", "out_refund", "debit_note_out", "liquidation", "in_invoice",):
+            invoice_type = modules_mapping.l10n_ec_get_invoice_type(
+                inv_type,
+                internal_type,
+            )
+            if invoice_type in (
+                "out_invoice",
+                "out_refund",
+                "debit_note_out",
+                "liquidation",
+                "in_invoice",
+            ):
                 default_printer = (
                     self.env["res.users"]
                     .get_default_point_of_emission(self.env.user.id, raise_exception=True)
@@ -910,7 +1060,10 @@ class AccountMove(models.Model):
                 if default_printer:
                     values["l10n_ec_type_emission"] = default_printer.type_emission
                     if invoice_type != "in_invoice":
-                        (next_number, auth_line,) = default_printer.get_next_value_sequence(invoice_type, False, False)
+                        (
+                            next_number,
+                            auth_line,
+                        ) = default_printer.get_next_value_sequence(invoice_type, False, False)
                         if next_number:
                             values["l10n_latam_document_number"] = next_number
                         if auth_line:
@@ -934,9 +1087,10 @@ class AccountMove(models.Model):
                 "liquidation",
                 "debit_note_out",
             ):
-                (next_number, auth_line,) = self.l10n_ec_point_of_emission_id.get_next_value_sequence(
-                    invoice_type, False, False
-                )
+                (
+                    next_number,
+                    auth_line,
+                ) = self.l10n_ec_point_of_emission_id.get_next_value_sequence(invoice_type, False, False)
                 default["l10n_latam_document_number"] = next_number
                 default["l10n_ec_authorization_line_id"] = auth_line.id
         return super(AccountMove, self).copy_data(default)
@@ -1017,7 +1171,11 @@ class AccountMove(models.Model):
             else:
                 action["views"] = form_view
             action["res_id"] = withholds.id
-        action["context"] = dict(self._context, default_partner_id=self.partner_id.id, default_invoice_id=self.id,)
+        action["context"] = dict(
+            self._context,
+            default_partner_id=self.partner_id.id,
+            default_invoice_id=self.id,
+        )
         # no mostrar botones de crear/editar en retenciones de compra
         if self.type == "in_invoice":
             action["context"].update({"create": False, "edit": False})
@@ -1059,13 +1217,18 @@ class AccountMove(models.Model):
             if (
                 self.type == "out_invoice"
                 and float_compare(
-                    self.amount_total, self.company_id.l10n_ec_consumidor_final_limit, precision_digits=2,
+                    self.amount_total,
+                    self.company_id.l10n_ec_consumidor_final_limit,
+                    precision_digits=2,
                 )
                 == 1
             ):
                 raise UserError(
                     _("You can't make invoice where amount total %s " "is bigger than %s for final customer")
-                    % (self.amount_total, self.company_id.l10n_ec_consumidor_final_limit,)
+                    % (
+                        self.amount_total,
+                        self.company_id.l10n_ec_consumidor_final_limit,
+                    )
                 )
             if self.type in ("in_invoice", "in_refund", "out_refund"):
                 raise UserError(_("You can't make bill or refund to final customer on ecuadorian company"))
@@ -1073,7 +1236,10 @@ class AccountMove(models.Model):
             if not self.commercial_partner_id.vat:
                 raise UserError(_("Must be configure RUC to Partner: %s.") % (self.commercial_partner_id.name))
             supplier_authorization_model.validate_unique_document_partner(
-                self.l10n_ec_invoice_type, self.l10n_latam_document_number, self.partner_id.id, self.id,
+                self.l10n_ec_invoice_type,
+                self.l10n_latam_document_number,
+                self.partner_id.id,
+                self.id,
             )
             if self.l10n_ec_type_emission in ("pre_printed", "auto_printer"):
                 if self.l10n_ec_supplier_authorization_id:
@@ -1141,7 +1307,15 @@ class AccountMove(models.Model):
     def l10n_ec_validate_supplier_documents_sri(self):
         invoices = self.search(
             [
-                ("l10n_ec_invoice_type", "in", ("in_invoice", "in_refund", "debit_note_in",),),
+                (
+                    "l10n_ec_invoice_type",
+                    "in",
+                    (
+                        "in_invoice",
+                        "in_refund",
+                        "debit_note_in",
+                    ),
+                ),
                 ("l10n_ec_sri_authorization_state", "=", "to_check"),
                 ("state", "=", "posted"),
                 ("company_id.country_id.code", "=", "EC"),
@@ -1150,7 +1324,11 @@ class AccountMove(models.Model):
         for invoice in invoices:
             invoice._l10n_ec_action_validate_authorization_sri()
         withholding = self.env["l10n_ec.withhold"].search(
-            [("type", "=", "sale"), ("l10n_ec_sri_authorization_state", "=", "to_check"), ("state", "=", "done"),]
+            [
+                ("type", "=", "sale"),
+                ("l10n_ec_sri_authorization_state", "=", "to_check"),
+                ("state", "=", "done"),
+            ]
         )
         for withhold in withholding:
             withhold._l10n_ec_action_validate_authorization_sri()
@@ -1158,8 +1336,14 @@ class AccountMove(models.Model):
 
     def _l10n_ec_action_validate_authorization_sri(self):
         # intentar validar el documento en linea con el SRI
-        if self.l10n_ec_invoice_type in ("in_invoice", "in_refund", "debit_note_in",) and tools.config.get(
-            "validate_authorization_sri", True
+        if (
+            self.l10n_ec_invoice_type
+            in (
+                "in_invoice",
+                "in_refund",
+                "debit_note_in",
+            )
+            and tools.config.get("validate_authorization_sri", True)
         ):
             if self.l10n_ec_type_emission in ("pre_printed", "auto_printer"):
                 if self.l10n_ec_supplier_authorization_id:
@@ -1196,7 +1380,8 @@ class AccountMove(models.Model):
                 except Exception as ex:
                     limit_days = 3
                     _logger.error(
-                        "Error get parameter sri.days.to_validate_documents %s", tools.ustr(ex),
+                        "Error get parameter sri.days.to_validate_documents %s",
+                        tools.ustr(ex),
                     )
                 is_authorized = False
                 try:
@@ -1256,7 +1441,10 @@ class AccountMove(models.Model):
         tax_data = {}
         for line in self.invoice_line_ids:
             for tax in line.tax_ids:
-                if tax.tax_group_id.id in (withhold_iva_group.id, withhold_rent_group.id,):
+                if tax.tax_group_id.id in (
+                    withhold_iva_group.id,
+                    withhold_rent_group.id,
+                ):
                     base_tag_id = tax.invoice_repartition_line_ids.filtered(
                         lambda x: x.repartition_type == "base"
                     ).mapped("tag_ids")
@@ -1529,7 +1717,10 @@ class AccountMove(models.Model):
                 and self.l10n_ec_credit_days > 0
             ):
                 payment_vals.update(
-                    {"plazo": self.l10n_ec_credit_days, "unidadTiempo": "dias",}
+                    {
+                        "plazo": self.l10n_ec_credit_days,
+                        "unidadTiempo": "dias",
+                    }
                 )
             payment_data.append(payment_vals)
         if not payment_data:
@@ -1555,7 +1746,10 @@ class AccountMove(models.Model):
                 and self.l10n_ec_credit_days > 0
             ):
                 payment_vals.update(
-                    {"plazo": self.l10n_ec_credit_days, "unidadTiempo": "dias",}
+                    {
+                        "plazo": self.l10n_ec_credit_days,
+                        "unidadTiempo": "dias",
+                    }
                 )
             payment_data.append(payment_vals)
         return payment_data
@@ -1754,11 +1948,21 @@ class AccountMove(models.Model):
         totalConImpuestos = SubElement(infoFactura, "totalConImpuestos")
         if self.l10n_ec_base_iva_0 != 0:
             self.l10n_ec_get_total_impuestos(
-                totalConImpuestos, "2", "0", self.l10n_ec_base_iva_0, 0.0, decimales=currency.decimal_places,
+                totalConImpuestos,
+                "2",
+                "0",
+                self.l10n_ec_base_iva_0,
+                0.0,
+                decimales=currency.decimal_places,
             )
         if self.l10n_ec_base_iva != 0:
             self.l10n_ec_get_total_impuestos(
-                totalConImpuestos, "2", "2", self.l10n_ec_base_iva, self.l10n_ec_iva, decimales=currency.decimal_places,
+                totalConImpuestos,
+                "2",
+                "2",
+                self.l10n_ec_base_iva,
+                self.l10n_ec_iva,
+                decimales=currency.decimal_places,
             )
         # if self.base_no_iva != 0:
         #     self.l10n_ec_get_total_impuestos(totalConImpuestos, '2', '6', self.base_no_iva, 0.0,
@@ -1813,7 +2017,14 @@ class AccountMove(models.Model):
             impuestos = SubElement(detalle, "impuestos")
             if not currency.is_zero(l10n_ec_base_iva_0):
                 self.l10n_ec_get_total_impuestos(
-                    impuestos, "2", "0", l10n_ec_base_iva_0, 0.0, "impuesto", 0, decimales=currency.decimal_places,
+                    impuestos,
+                    "2",
+                    "0",
+                    l10n_ec_base_iva_0,
+                    0.0,
+                    "impuesto",
+                    0,
+                    decimales=currency.decimal_places,
                 )
             if not currency.is_zero(l10n_ec_base_iva):
                 self.l10n_ec_get_total_impuestos(
@@ -1888,11 +2099,21 @@ class AccountMove(models.Model):
         totalConImpuestos = SubElement(infoNotaCredito, "totalConImpuestos")
         if self.l10n_ec_base_iva_0 != 0:
             self.l10n_ec_get_total_impuestos(
-                totalConImpuestos, "2", "0", self.l10n_ec_base_iva_0, 0.0, decimales=currency.decimal_places,
+                totalConImpuestos,
+                "2",
+                "0",
+                self.l10n_ec_base_iva_0,
+                0.0,
+                decimales=currency.decimal_places,
             )
         if self.l10n_ec_base_iva != 0:
             self.l10n_ec_get_total_impuestos(
-                totalConImpuestos, "2", "2", self.l10n_ec_base_iva, self.l10n_ec_iva, decimales=currency.decimal_places,
+                totalConImpuestos,
+                "2",
+                "2",
+                self.l10n_ec_base_iva,
+                self.l10n_ec_iva,
+                decimales=currency.decimal_places,
             )
         # if self.base_no_iva != 0:
         #     self.l10n_ec_get_total_impuestos(totalConImpuestos, '2', '6', self.base_no_iva, 0.0,
@@ -1928,7 +2149,14 @@ class AccountMove(models.Model):
             impuestos = SubElement(detalle, "impuestos")
             if line.l10n_ec_base_iva_0 != 0:
                 self.l10n_ec_get_total_impuestos(
-                    impuestos, "2", "0", line.l10n_ec_base_iva_0, 0.0, "impuesto", 0, decimales=currency.decimal_places,
+                    impuestos,
+                    "2",
+                    "0",
+                    line.l10n_ec_base_iva_0,
+                    0.0,
+                    "impuesto",
+                    0,
+                    decimales=currency.decimal_places,
                 )
             if line.l10n_ec_base_iva != 0:
                 self.l10n_ec_get_total_impuestos(
@@ -1992,7 +2220,14 @@ class AccountMove(models.Model):
         impuestos = SubElement(infoNotaDebito, "impuestos")
         if self.l10n_ec_base_iva_0 != 0:
             self.l10n_ec_get_total_impuestos(
-                impuestos, "2", "0", self.l10n_ec_base_iva_0, 0.0, "impuesto", 0, decimales=currency.decimal_places,
+                impuestos,
+                "2",
+                "0",
+                self.l10n_ec_base_iva_0,
+                0.0,
+                "impuesto",
+                0,
+                decimales=currency.decimal_places,
             )
         if self.l10n_ec_base_iva != 0:
             # TODO: no se debe asumir que el % del iva es 12, tomar del impuesto directamente
@@ -2066,10 +2301,12 @@ class AccountMove(models.Model):
         if self.l10n_latam_document_type_id and self.l10n_latam_document_type_id.code == "41":
             SubElement(infoLiquidacionCompra, "codDocReembolso").text = self.l10n_latam_document_type_id.code
             SubElement(infoLiquidacionCompra, "totalComprobantesReembolso").text = util_model.formato_numero(
-                sum([r.total_invoice for r in self.l10n_ec_refund_ids]), decimales=currency.decimal_places,
+                sum([r.total_invoice for r in self.l10n_ec_refund_ids]),
+                decimales=currency.decimal_places,
             )
             SubElement(infoLiquidacionCompra, "totalBaseImponibleReembolso").text = util_model.formato_numero(
-                sum([r.total_base_iva for r in self.l10n_ec_refund_ids]), decimales=currency.decimal_places,
+                sum([r.total_base_iva for r in self.l10n_ec_refund_ids]),
+                decimales=currency.decimal_places,
             )
             SubElement(infoLiquidacionCompra, "totalImpuestoReembolso").text = util_model.formato_numero(
                 sum([r.l10n_ec_iva for r in self.l10n_ec_refund_ids])
@@ -2332,16 +2569,25 @@ class AccountMoveLine(models.Model):
             # no se tiene aun referencia a la moneda, asi que no hacer conversion de moneda
             if move.currency_id:
                 move_line.l10n_ec_base_iva_0_currency = move.currency_id._convert(
-                    l10n_ec_base_iva_0, move.company_currency_id, move.company_id, move_date,
+                    l10n_ec_base_iva_0,
+                    move.company_currency_id,
+                    move.company_id,
+                    move_date,
                 )
                 move_line.l10n_ec_base_iva_currency = move.currency_id._convert(
-                    l10n_ec_base_iva, move.company_currency_id, move.company_id, move_date,
+                    l10n_ec_base_iva,
+                    move.company_currency_id,
+                    move.company_id,
+                    move_date,
                 )
                 move_line.l10n_ec_iva_currency = move.currency_id._convert(
                     l10n_ec_iva, move.company_currency_id, move.company_id, move_date
                 )
                 move_line.l10n_ec_discount_total_currency = move.currency_id._convert(
-                    l10n_ec_discount_total, move.company_currency_id, move.company_id, move_date,
+                    l10n_ec_discount_total,
+                    move.company_currency_id,
+                    move.company_id,
+                    move_date,
                 )
             else:
                 move_line.l10n_ec_base_iva_0_currency = l10n_ec_base_iva_0

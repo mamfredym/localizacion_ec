@@ -78,7 +78,7 @@
                         </tfoot>
                     </table>
                     <p t-if="o.note">
-                        <strong>Note: </strong>
+                        <strong>Note:</strong>
                         <span t-field="o.note" />
                     </p>
                 </div>

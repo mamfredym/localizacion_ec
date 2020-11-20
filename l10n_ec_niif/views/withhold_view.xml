@@ -329,15 +329,21 @@
                                             <span
                                                 class="badge badge-pill"
                                                 attrs="{'invisible': [('l10n_ec_sri_authorization_state', '!=', 'to_check')]}"
-                                            >To Check</span>
+                                            >
+                                                To Check
+                                            </span>
                                             <span
                                                 class="badge badge-pill badge-success"
                                                 attrs="{'invisible': [('l10n_ec_sri_authorization_state', '!=', 'valid')]}"
-                                            >Valid</span>
+                                            >
+                                                Valid
+                                            </span>
                                             <span
                                                 class="badge badge-pill badge-danger"
                                                 attrs="{'invisible': [('l10n_ec_sri_authorization_state', '!=', 'invalid')]}"
-                                            >Invalid</span>
+                                            >
+                                                Invalid
+                                            </span>
                                             <field name="l10n_ec_sri_authorization_state" invisible="1" />
                                         </div>
                                     </group>

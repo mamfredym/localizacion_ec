@@ -36,12 +36,16 @@ def migrate(cr, version):
                     current_tax.invoice_repartition_line_ids.filtered(
                         lambda x: x.repartition_type == repartition_type
                     ).write(
-                        {"tag_ids": [(6, 0, tags.ids)],}
+                        {
+                            "tag_ids": [(6, 0, tags.ids)],
+                        }
                     )
                     current_tax.refund_repartition_line_ids.filtered(
                         lambda x: x.repartition_type == repartition_type
                     ).write(
-                        {"tag_ids": [(6, 0, tags.ids)],}
+                        {
+                            "tag_ids": [(6, 0, tags.ids)],
+                        }
                     )
             except Exception as ex:
                 _logger.warning(tools.ustr(ex))

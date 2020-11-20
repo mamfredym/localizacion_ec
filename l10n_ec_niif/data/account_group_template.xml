@@ -22,7 +22,8 @@
             <field name="code_prefix">5</field>
         </record>
         <record id="account_group_6" model="account.group">
-            <field name="name">GANANCIA (PÉRDIDA) ANTES DE 15% A TRABAJADORES E IMPUESTO A LA RENTA DE
+            <field name="name">
+                GANANCIA (PÉRDIDA) ANTES DE 15% A TRABAJADORES E IMPUESTO A LA RENTA DE
                 OPERACIONESCONTINUADAS --> Subtotal B (A + 43 - 52)
             </field>
             <field name="code_prefix">6</field>
@@ -102,7 +103,8 @@
             <field name="parent_id" ref="account_group_5" />
         </record>
         <record id="account_group_606" model="account.group">
-            <field name="name">GANANCIA (PÉRDIDA) ANTES DE 15% A TRABAJADORES E IMPUESTO A LA RENTA DE
+            <field name="name">
+                GANANCIA (PÉRDIDA) ANTES DE 15% A TRABAJADORES E IMPUESTO A LA RENTA DE
                 OPERACIONESCONTINUADAS --> Subtotal B (A + 43 - 52)
             </field>
             <field name="code_prefix">606</field>
@@ -209,7 +211,8 @@
             <field name="parent_id" ref="account_group_201" />
         </record>
         <record id="account_group_20111" model="account.group">
-            <field name="name">PASIVOS DIRECTAMENTE ASOCIADOS CON LOS ACTIVOS NO CORRIENTES Y
+            <field name="name">
+                PASIVOS DIRECTAMENTE ASOCIADOS CON LOS ACTIVOS NO CORRIENTES Y
                 OPERACIONESDISCONTINUADAS
             </field>
             <field name="code_prefix">20111</field>
@@ -461,11 +464,6 @@
             <field name="code_prefix">42</field>
             <field name="parent_id" ref="account_group_4" />
         </record>
-        <record id="account_group_43" model="account.group">
-            <field name="name">OTROS INGRESOS</field>
-            <field name="code_prefix">43</field>
-            <field name="parent_id" ref="account_group_4" />
-        </record>
         <record id="account_group_5101" model="account.group">
             <field name="name">MATERIALES UTILIZADOS O PRODUCTOS VENDIDOS</field>
             <field name="code_prefix">5101</field>
@@ -502,7 +500,7 @@
             <field name="parent_id" ref="account_group_502" />
         </record>
         <record id="account_group_5203" model="account.group">
-            <field name="name">GASTOS FINANCIEROS </field>
+            <field name="name">GASTOS FINANCIEROS</field>
             <field name="code_prefix">5203</field>
             <field name="parent_id" ref="account_group_502" />
         </record>
@@ -536,7 +534,8 @@
             <field name="parent_id" ref="account_group_606" />
         </record>
         <record id="account_group_60604" model="account.group">
-            <field name="name">GANANCIA (PÉRDIDA) DE OPERACIONES CONTINUADAS ANTES DEL IMPUESTO DIFERIDO --> Subtotal
+            <field name="name">
+                GANANCIA (PÉRDIDA) DE OPERACIONES CONTINUADAS ANTES DEL IMPUESTO DIFERIDO --> Subtotal
                 D(C - 63)
             </field>
             <field name="code_prefix">60604</field>
@@ -551,7 +550,8 @@
             <field name="code_prefix">60702</field>
         </record>
         <record id="account_group_60703" model="account.group">
-            <field name="name">GANANCIA (PÉRDIDA) ANTES DE 15% A TRABAJADORES E IMPUESTO A LA RENTA DE
+            <field name="name">
+                GANANCIA (PÉRDIDA) ANTES DE 15% A TRABAJADORES E IMPUESTO A LA RENTA DE
                 OPERACIONESDISCONTINUADAS --> Subtotal E (71 - 72)
             </field>
             <field name="code_prefix">60703</field>
@@ -561,7 +561,8 @@
             <field name="code_prefix">60704</field>
         </record>
         <record id="account_group_60705" model="account.group">
-            <field name="name">GANANCIA (PÉRDIDA) ANTES DE IMPUESTOS DE OPERACIONES DISCONTINUADAS --> Subtotal F (E
+            <field name="name">
+                GANANCIA (PÉRDIDA) ANTES DE IMPUESTOS DE OPERACIONES DISCONTINUADAS --> Subtotal F (E
                 -74)
             </field>
             <field name="code_prefix">60705</field>
@@ -659,25 +660,29 @@
             <field name="parent_id" ref="account_group_10103" />
         </record>
         <record id="account_group_1010303" model="account.group">
-            <field name="name">INVENTARIOS DE SUMINISTROS O MATERIALES A SER CONSUMIDOS EN EL PROCESO DE PRODUCCIÓN
+            <field name="name">
+                INVENTARIOS DE SUMINISTROS O MATERIALES A SER CONSUMIDOS EN EL PROCESO DE PRODUCCIÓN
             </field>
             <field name="code_prefix">1010303</field>
             <field name="parent_id" ref="account_group_10103" />
         </record>
         <record id="account_group_1010304" model="account.group">
-            <field name="name">INVENTARIOS DE SUMINISTROS O MATERIALES A SER CONSUMIDOS EN LA PRESTACIÓN DE SERVICIO
+            <field name="name">
+                INVENTARIOS DE SUMINISTROS O MATERIALES A SER CONSUMIDOS EN LA PRESTACIÓN DE SERVICIO
             </field>
             <field name="code_prefix">1010304</field>
             <field name="parent_id" ref="account_group_10103" />
         </record>
         <record id="account_group_1010305" model="account.group">
-            <field name="name">INVENTARIOS DE PRODUCTOS TERMINADOS Y MERCADERIA EN ALMACÉN - PRODUCIDO POR LA COMPAÑÍA
+            <field name="name">
+                INVENTARIOS DE PRODUCTOS TERMINADOS Y MERCADERIA EN ALMACÉN - PRODUCIDO POR LA COMPAÑÍA
             </field>
             <field name="code_prefix">1010305</field>
             <field name="parent_id" ref="account_group_10103" />
         </record>
         <record id="account_group_1010306" model="account.group">
-            <field name="name">INVENTARIOS DE PRODUCTOS TERMINADOS Y MERCADERIA EN ALMACÉN - COMPRADO DE TERCEROS
+            <field name="name">
+                INVENTARIOS DE PRODUCTOS TERMINADOS Y MERCADERIA EN ALMACÉN - COMPRADO DE TERCEROS
             </field>
             <field name="code_prefix">1010306</field>
             <field name="parent_id" ref="account_group_10103" />
@@ -858,7 +863,8 @@
             <field name="parent_id" ref="account_group_10206" />
         </record>
         <record id="account_group_1020602" model="account.group">
-            <field name="name">(-) PROVISIÓN POR DETERIORO DE ACTIVOS FINANCIEROS MANTENIDOS HASTA EL VENCIMIENTO
+            <field name="name">
+                (-) PROVISIÓN POR DETERIORO DE ACTIVOS FINANCIEROS MANTENIDOS HASTA EL VENCIMIENTO
             </field>
             <field name="code_prefix">1020602</field>
             <field name="parent_id" ref="account_group_10206" />

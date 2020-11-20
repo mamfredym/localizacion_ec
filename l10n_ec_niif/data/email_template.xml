@@ -5,9 +5,9 @@
         <field
             name="email_from"
         >${(object.company_id.email and '%s &lt;%s&gt;' % (object.company_id.name, object.company_id.email) or '')|safe}</field>
-        <field
-            name="subject"
-        >${object.company_id.name}, Nuevo Documento Electronico (${object.display_name or 'n/a'})</field>
+        <field name="subject">
+            ${object.company_id.name}, Nuevo Documento Electronico (${object.display_name or 'n/a'})
+        </field>
         <field name="partner_to">${object.partner_id.id}</field>
         <field name="model_id" ref="account.model_account_move" />
         <field name="auto_delete" eval="True" />
@@ -16,29 +16,53 @@
         <field name="lang">${object.partner_id.lang}</field>
         <field name="body_html" type="html">
             <div>
-                <p>Estimado(a) <strong>${object.partner_id.name}</strong>
+                <p>
+                    Estimado(a)
+                    <strong>${object.partner_id.name}</strong>
                     % if object.partner_id.parent_id:
-                    (<i>${object.partner_id.parent_id.name}</i>)
+                    (
+                    <i>${object.partner_id.parent_id.name}</i>
+                    )
                     % endif
-                    ,</p>
+                    ,
+                </p>
                 <br />
-                <p>Reciba un cordial saludo de quienes hacemos <strong>${object.company_id.name}</strong>.
+                <p>
+                    Reciba un cordial saludo de quienes hacemos
+                    <strong>${object.company_id.name}</strong>
+                    .
                     Nos complace informarle que su documento electrónico ha sido generado
                     con el siguiente detalle:
                     <ul>
-                        <li><strong>Tipo de Documento: </strong> ${object.l10n_ec_get_document_string()}</li>
-                        <li><strong>Número de Documento: </strong> ${object.l10n_ec_get_document_number()}</li>
-                        <li><strong>Clave de acceso: </strong> ${object.l10n_ec_xml_key}</li>
-                        <li><strong
-                            >Valor Total: </strong> ${format_amount(object.amount_total, object.currency_id)}</li>
+                        <li>
+                            <strong>Tipo de Documento:</strong>
+                            ${object.l10n_ec_get_document_string()}
+                        </li>
+                        <li>
+                            <strong>Número de Documento:</strong>
+                            ${object.l10n_ec_get_document_number()}
+                        </li>
+                        <li>
+                            <strong>Clave de acceso:</strong>
+                            ${object.l10n_ec_xml_key}
+                        </li>
+                        <li>
+                            <strong>Valor Total:</strong>
+                            ${format_amount(object.amount_total, object.currency_id)}
+                        </li>
                         % if object.origin:
-                        <li><strong>Referencia: </strong> ${object.origin}</li>
+                        <li>
+                            <strong>Referencia:</strong>
+                            ${object.origin}
+                        </li>
                         % endif
                     </ul>
                 </p>
-                <br /><br />
+                <br />
+                <br />
                 % if object.partner_id.user_ids and object.partner_id.signup_url:
-                Para ver todos sus documentos visite <a href="${object.partner_id.signup_url}">nuestro portal</a>
+                Para ver todos sus documentos visite
+                <a href="${object.partner_id.signup_url}">nuestro portal</a>
                 <br />
                 % endif
                 <p>Gracias por Preferirnos,</p>
@@ -50,9 +74,9 @@
         <field
             name="email_from"
         >${(object.company_id.email and '%s &lt;%s&gt;' % (object.company_id.name, object.company_id.email) or '')|safe}</field>
-        <field
-            name="subject"
-        >${object.company_id.name}, Nuevo Documento Electronico (${object.display_name or 'n/a'})</field>
+        <field name="subject">
+            ${object.company_id.name}, Nuevo Documento Electronico (${object.display_name or 'n/a'})
+        </field>
         <field name="partner_to">${object.partner_id.id}</field>
         <field name="model_id" ref="l10n_ec_niif.model_l10n_ec_withhold" />
         <field name="auto_delete" eval="True" />
@@ -61,23 +85,40 @@
         <field name="lang">${object.partner_id.lang}</field>
         <field name="body_html" type="html">
             <div>
-                <p>Estimado(a) <strong>${object.partner_id.name}</strong>
-
+                <p>
+                    Estimado(a)
+                    <strong>${object.partner_id.name}</strong>
                     % if object.partner_id.parent_id:
-                    (<i>${object.partner_id.parent_id.name}</i>)
+                    (
+                    <i>${object.partner_id.parent_id.name}</i>
+                    )
                     % endif
-                    ,</p>
+                    ,
+                </p>
                 <br />
-                <p>Reciba un cordial saludo de quienes hacemos <strong>${object.company_id.name}</strong>.
+                <p>
+                    Reciba un cordial saludo de quienes hacemos
+                    <strong>${object.company_id.name}</strong>
+                    .
                     Nos complace informarle que su documento electrónico ha sido generado
                     con el siguiente detalle:
                     <ul>
-                        <li><strong>Tipo de Documento: </strong> ${object.l10n_ec_get_document_string()}</li>
-                        <li><strong>Número de Documento: </strong> ${object.l10n_ec_get_document_number()}</li>
-                        <li><strong>Clave de acceso: </strong> ${object.l10n_ec_xml_key}</li>
+                        <li>
+                            <strong>Tipo de Documento:</strong>
+                            ${object.l10n_ec_get_document_string()}
+                        </li>
+                        <li>
+                            <strong>Número de Documento:</strong>
+                            ${object.l10n_ec_get_document_number()}
+                        </li>
+                        <li>
+                            <strong>Clave de acceso:</strong>
+                            ${object.l10n_ec_xml_key}
+                        </li>
                     </ul>
                 </p>
-                <br /><br />
+                <br />
+                <br />
                 <div style="margin: 32px 0px 32px 0px; text-align: center;">
                     <a
                         href="${object.get_base_url() + object.l10n_ec_get_share_url()}"
@@ -86,9 +127,11 @@
                         Ver Retencion
                     </a>
                 </div>
-                <br /><br />
+                <br />
+                <br />
                 % if object.partner_id.user_ids and object.partner_id.signup_url:
-                Para ver todos sus documentos visite <a href="${object.partner_id.signup_url}">nuestro portal</a>
+                Para ver todos sus documentos visite
+                <a href="${object.partner_id.signup_url}">nuestro portal</a>
                 <br />
                 % endif
                 <p>Gracias por Preferirnos,</p>
@@ -115,10 +158,14 @@
                             <div style="display:table-row;">
                                 <div
                                     style="display:table-cell;width:65%;text-align:center;border:solid;border-width: 1px 1px 1px 1px;"
-                                >${doc.display_name}</div>
+                                >
+                                    ${doc.display_name}
+                                </div>
                                 <div
                                     style="display:table-cell;width:65%;text-align:center;border:solid;border-width: 1px 1px 1px 1px;"
-                                >${doc.last_error_id.display_name}</div>
+                                >
+                                    ${doc.last_error_id.display_name}
+                                </div>
                                 <div
                                     style="display:table-cell;width:65%;text-align:center;border:solid;border-width: 1px 1px 1px 1px;"
                                 >
@@ -149,7 +196,8 @@
                     % set noti=NULL
                     % set notification = object.date_expire_send_mail()
                     % for noti in notification:
-                    ${noti}<br />
+                    ${noti}
+                    <br />
                     % endfor
                 </div>
             </div>

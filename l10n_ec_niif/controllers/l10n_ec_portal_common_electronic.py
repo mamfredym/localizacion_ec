@@ -48,8 +48,14 @@ class PortalElectronicCommon(CustomerPortal):
 
     def get_searchbar_sortings(self):
         searchbar_sortings = {
-            "fecha_auth": {"label": "Fecha Autorización(Recientes)", "order": "l10n_ec_authorization_date desc",},
-            "fecha_auth_asc": {"label": "Fecha Autorización(Antiguas)", "order": "l10n_ec_authorization_date",},
+            "fecha_auth": {
+                "label": "Fecha Autorización(Recientes)",
+                "order": "l10n_ec_authorization_date desc",
+            },
+            "fecha_auth_asc": {
+                "label": "Fecha Autorización(Antiguas)",
+                "order": "l10n_ec_authorization_date",
+            },
         }
         if self.field_document_number:
             searchbar_sortings.update(
@@ -58,14 +64,20 @@ class PortalElectronicCommon(CustomerPortal):
                         "label": "Número de Documento(Recientes)",
                         "order": f"{self.field_document_number} desc",
                     },
-                    "numero_desc": {"label": "Número de Documento(Antiguos)", "order": self.field_document_number,},
+                    "numero_desc": {
+                        "label": "Número de Documento(Antiguos)",
+                        "order": self.field_document_number,
+                    },
                 }
             )
         return searchbar_sortings
 
     def get_searchbar_inputs(self):
         searchbar_inputs = {
-            "fecha_auth": {"input": "fecha_auth", "label": "Fecha de Autorización(yyyy-mm-dd)",},
+            "fecha_auth": {
+                "input": "fecha_auth",
+                "label": "Fecha de Autorización(yyyy-mm-dd)",
+            },
             "clave": {"input": "clave", "label": "Clave de Acceso"},
             "todo": {"input": "all", "label": "Todo"},
         }

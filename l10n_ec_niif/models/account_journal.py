@@ -5,7 +5,10 @@ from odoo import api, fields, models
 class AccountJournal(models.Model):
     _inherit = "account.journal"
 
-    l10n_ec_sri_payment_id = fields.Many2one("l10n_ec.sri.payment.method", "SRI Payment Method",)
+    l10n_ec_sri_payment_id = fields.Many2one(
+        "l10n_ec.sri.payment.method",
+        "SRI Payment Method",
+    )
     # similar to internal_type of l10n_latam.document.type
     # for domain's purpose on invoice view
     l10n_latam_internal_type = fields.Selection(
@@ -30,7 +33,13 @@ class AccountJournal(models.Model):
 
     @api.model
     def _search(
-        self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None,
+        self,
+        args,
+        offset=0,
+        limit=None,
+        order=None,
+        count=False,
+        access_rights_uid=None,
     ):
         if self.env.context.get("l10n_latam_internal_type") and self.env.company.country_id.code == "EC":
             internal_type = self.env.context.get("l10n_latam_internal_type")
@@ -41,5 +50,10 @@ class AccountJournal(models.Model):
             else:
                 args.append(("l10n_latam_internal_type", "=", internal_type))
         return super(AccountJournal, self)._search(
-            args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid,
+            args,
+            offset=offset,
+            limit=limit,
+            order=order,
+            count=count,
+            access_rights_uid=access_rights_uid,
         )

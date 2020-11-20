@@ -101,7 +101,12 @@ class AccountChartTemplate(models.Model):
         account_model = self.env["account.account"]
         if company.country_id.code == "EC":
             tag_iva = self.env.ref("l10n_ec_niif.tag_f104_609")
-            iva_account = account_model.search([("code", "=", "101050107"),], limit=1)
+            iva_account = account_model.search(
+                [
+                    ("code", "=", "101050107"),
+                ],
+                limit=1,
+            )
             renta_account = account_model.search([("code", "=", "101050201")], limit=1)
             company.write(
                 {

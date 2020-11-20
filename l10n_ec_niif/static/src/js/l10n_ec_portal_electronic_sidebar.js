@@ -1,4 +1,4 @@
-odoo.define("l10n_ec_niif.ElectronicPortalSidebar", function(require) {
+odoo.define("l10n_ec_niif.ElectronicPortalSidebar", function (require) {
     "use strict";
 
     var publicWidget = require("web.public.widget");
@@ -14,7 +14,7 @@ odoo.define("l10n_ec_niif.ElectronicPortalSidebar", function(require) {
         /**
          * @override
          */
-        start: function() {
+        start: function () {
             var def = this._super.apply(this, arguments);
 
             var $electronic_report_html = this.$el.find("iframe#electronic_report_html");
@@ -44,7 +44,7 @@ odoo.define("l10n_ec_niif.ElectronicPortalSidebar", function(require) {
          * @private
          * @param {Object} $el: the iframe
          */
-        _updateIframeSize: function($el) {
+        _updateIframeSize: function ($el) {
             var $wrapwrap = $el.contents().find("div#wrapwrap");
             // Set it to 0 first to handle the case where scrollHeight is too big for its content.
             $el.height(0);
@@ -64,7 +64,7 @@ odoo.define("l10n_ec_niif.ElectronicPortalSidebar", function(require) {
          * @private
          * @param {MouseEvent} ev
          */
-        _onPrintElectronic: function(ev) {
+        _onPrintElectronic: function (ev) {
             ev.preventDefault();
             var href = $(ev.currentTarget).attr("href");
             this._printIframeContent(href);

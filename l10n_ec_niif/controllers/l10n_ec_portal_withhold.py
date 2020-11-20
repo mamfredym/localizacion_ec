@@ -39,14 +39,30 @@ class PortalRetention(PortalElectronicCommon):
             "withhold": withhold,
         }
         return self._get_page_view_values(
-            withhold, access_token, values, "l10n_ec_my_withhold_history", False, **kwargs,
+            withhold,
+            access_token,
+            values,
+            "l10n_ec_my_withhold_history",
+            False,
+            **kwargs,
         )
 
     @http.route(
-        ["/my/retencion", "/my/retencion/page/<int:page>"], type="http", auth="user", website=True,
+        ["/my/retencion", "/my/retencion/page/<int:page>"],
+        type="http",
+        auth="user",
+        website=True,
     )
     def portal_my_retencion(
-        self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, search=None, search_in=None, **kw,
+        self,
+        page=1,
+        date_begin=None,
+        date_end=None,
+        sortby=None,
+        filterby=None,
+        search=None,
+        search_in=None,
+        **kw,
     ):
         values = self._prepare_portal_layout_values()
         AccountRetention = request.env["l10n_ec.withhold"]
@@ -90,7 +106,12 @@ class PortalRetention(PortalElectronicCommon):
         # pager
         pager = portal_pager(
             url="/my/retencion",
-            url_args={"date_begin": date_begin, "date_end": date_end, "sortby": sortby, "filterby": filterby,},
+            url_args={
+                "date_begin": date_begin,
+                "date_end": date_end,
+                "sortby": sortby,
+                "filterby": filterby,
+            },
             total=withhold_count,
             page=page,
             step=self._items_per_page,

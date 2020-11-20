@@ -14,7 +14,12 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
         "Autorizacion Electrónica", size=49, copy=False, index=True, readonly=True
     )
     l10n_ec_xml_data_id = fields.Many2one(
-        "sri.xml.data", "XML electronico", copy=False, index=True, auto_join=True, readonly=True,
+        "sri.xml.data",
+        "XML electronico",
+        copy=False,
+        index=True,
+        auto_join=True,
+        readonly=True,
     )
     l10n_ec_xml_key = fields.Char("Clave de acceso", size=49, copy=False, index=True, readonly=True)
     l10n_ec_authorization_date = fields.Datetime("Fecha de Autorización", copy=False, index=True, readonly=True)
@@ -24,7 +29,13 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
         for rec in self:
             if rec.l10n_ec_electronic_authorization:
                 other_docs = self.search(
-                    [("l10n_ec_electronic_authorization", "=", rec.l10n_ec_electronic_authorization,),]
+                    [
+                        (
+                            "l10n_ec_electronic_authorization",
+                            "=",
+                            rec.l10n_ec_electronic_authorization,
+                        ),
+                    ]
                 )
                 if len(other_docs) > 1:
                     raise ValidationError(
@@ -153,7 +164,12 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
         infoAdicional = SubElement(NodeRoot, "infoAdicional")
         info_data = self._l10n_ec_get_info_aditional()
         if not info_data:
-            info_data = [{"name": "OtroCampo", "description": "Otra Informacion",}]
+            info_data = [
+                {
+                    "name": "OtroCampo",
+                    "description": "Otra Informacion",
+                }
+            ]
         for line in info_data:
             campoAdicional = SubElement(infoAdicional, "campoAdicional")
             campoAdicional.set("nombre", util_model._clean_str(line.get("name", "OtroCampo")))

@@ -14,7 +14,11 @@ class L10nECSriAuthorization(models.Model):
     _rec_name = "number"
 
     company_id = fields.Many2one(
-        "res.company", "Company", required=True, help="", default=lambda self: self.env.company,
+        "res.company",
+        "Company",
+        required=True,
+        help="",
+        default=lambda self: self.env.company,
     )
     active = fields.Boolean(string="Active?", default=True)
     number = fields.Char("Authorization Number", size=10, required=True, index=True)
@@ -29,7 +33,8 @@ class L10nECSriAuthorization(models.Model):
     count_invoice = fields.Integer(string="Count Invoice", compute="_compute_count_invoice")
 
     @api.constrains(
-        "start_date", "expiration_date",
+        "start_date",
+        "expiration_date",
     )
     def _check_date(self):
         for authorization in self.filtered("company_id"):
@@ -62,7 +67,11 @@ class L10nECSriAuthorization(models.Model):
         return result
 
     _sql_constraints = [
-        ("number_uniq", "unique(company_id, number)", _("SRI Authorization must be unique by company"),),
+        (
+            "number_uniq",
+            "unique(company_id, number)",
+            _("SRI Authorization must be unique by company"),
+        ),
         (
             "date_check2",
             "CHECK ((start_date <= expiration_date))",
@@ -110,20 +119,29 @@ class L10nECSriAuthorizationLine(models.Model):
     first_sequence = fields.Integer("First Sequence")
     last_sequence = fields.Integer("Last Sequence")
     authorization_id = fields.Many2one(
-        comodel_name="l10n_ec.sri.authorization", string="Authorization", required=True, ondelete="cascade",
+        comodel_name="l10n_ec.sri.authorization",
+        string="Authorization",
+        required=True,
+        ondelete="cascade",
     )
     point_of_emission_id = fields.Many2one(
-        comodel_name="l10n_ec.point.of.emission", string="Point of Emission", required=True,
+        comodel_name="l10n_ec.point.of.emission",
+        string="Point of Emission",
+        required=True,
     )
     agency_id = fields.Many2one(
-        comodel_name="l10n_ec.agency", string="Agency", related="point_of_emission_id.agency_id", store=True,
+        comodel_name="l10n_ec.agency",
+        string="Agency",
+        related="point_of_emission_id.agency_id",
+        store=True,
     )
     padding = fields.Integer("Padding", default=9)
     count_invoice = fields.Integer(string="Count Invoice", related="authorization_id.count_invoice")
     active = fields.Boolean(string="Active?", related="authorization_id.active", default=True)
 
     @api.constrains(
-        "first_sequence", "last_sequence",
+        "first_sequence",
+        "last_sequence",
     )
     def _check_sequence(self):
         for line in self:
@@ -135,14 +153,20 @@ class L10nECSriAuthorizationLine(models.Model):
                     % (line.first_sequence, line.last_sequence)
                 )
 
-    @api.constrains("padding",)
+    @api.constrains(
+        "padding",
+    )
     def _check_padding(self):
         for line in self:
             if line.padding < 0 or line.padding > 9:
                 raise ValidationError(_("Padding must be between 0 or 9"))
 
     @api.constrains(
-        "authorization_id", "point_of_emission_id", "document_type", "first_sequence", "last_sequence",
+        "authorization_id",
+        "point_of_emission_id",
+        "document_type",
+        "first_sequence",
+        "last_sequence",
     )
     def _check_document_type(self):
         for line in self:

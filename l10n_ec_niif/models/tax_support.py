@@ -6,9 +6,21 @@ class TaxSupport(models.Model):
     _name = "l10n_ec.tax.support"
     _description = "Ecuadorian Tax Support"
 
-    code = fields.Char(string="Código de Sustento Tributario", required=True, help="",)
-    name = fields.Char(string="Descripción de Sustento Tributario", required=True, help="",)
-    document_type_ids = fields.Many2many("l10n_latam.document.type", string="Document Types", help="",)
+    code = fields.Char(
+        string="Código de Sustento Tributario",
+        required=True,
+        help="",
+    )
+    name = fields.Char(
+        string="Descripción de Sustento Tributario",
+        required=True,
+        help="",
+    )
+    document_type_ids = fields.Many2many(
+        "l10n_latam.document.type",
+        string="Document Types",
+        help="",
+    )
 
     def _name_search(self, name, args=None, operator="ilike", limit=100, name_get_uid=None):
         args = args or []

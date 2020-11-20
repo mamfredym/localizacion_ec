@@ -114,21 +114,21 @@
                 <tbody>
                     <tr>
                         <td style="width: 60%">
-                            <strong>Razón social / Nombres y Apellidos: </strong>
+                            <strong>Razón social / Nombres y Apellidos:</strong>
                             <span t-field="partner.name" />
                         </td>
                         <td>
-                            <strong>Identificación: </strong>
+                            <strong>Identificación:</strong>
                             <span t-field="partner.vat" />
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <strong>Fecha de Emisión: </strong>
+                            <strong>Fecha de Emisión:</strong>
                             <span t-field="o.invoice_date" />
                         </td>
                         <td>
-                            <strong>Guia de remisión: </strong>
+                            <strong>Guia de remisión:</strong>
                         </td>
                     </tr>
                 </tbody>
@@ -199,25 +199,26 @@
                 <tbody>
                     <tr>
                         <td style="width: 60%">
-                            <strong>Razón social / Nombres y Apellidos: </strong>
+                            <strong>Razón social / Nombres y Apellidos:</strong>
                             <span t-field="partner.name" />
                         </td>
                         <td>
-                            <strong>Identificación: </strong>
+                            <strong>Identificación:</strong>
                             <span t-field="partner.ref" />
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <strong>Fecha de Emisión: </strong>
+                            <strong>Fecha de Emisión:</strong>
                             <span t-field="o.invoice_date" />
                         </td>
                         <td>
+
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <strong>Comprobante que modifica: </strong>
+                            <strong>Comprobante que modifica:</strong>
                             <span t-field="o.invoice_date" />
                         </td>
                         <td>
@@ -227,7 +228,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <strong>Fecha Emisión(Comprobante a modificar): </strong>
+                            <strong>Fecha Emisión(Comprobante a modificar):</strong>
                         </td>
                         <td>
                             <span t-field="o.l10n_ec_original_invoice_id.invoice_date" />
@@ -235,7 +236,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <strong>Razón de modificación: </strong>
+                            <strong>Razón de modificación:</strong>
                         </td>
                         <td>
                             <span t-field="o.name" />
@@ -285,7 +286,8 @@
                             />
                         </td>
                         <td class="text-right">
-                            <span t-field="line.discount" />%
+                            <span t-field="line.discount" />
+                            %
                         </td>
                         <td class="text-right">
                             <span t-field="line.price_subtotal" />
@@ -302,25 +304,26 @@
                 <tbody>
                     <tr>
                         <td style="width: 60%">
-                            <strong>Razón social / Nombres y Apellidos: </strong>
+                            <strong>Razón social / Nombres y Apellidos:</strong>
                             <span t-field="partner.name" />
                         </td>
                         <td>
-                            <strong>Identificación: </strong>
+                            <strong>Identificación:</strong>
                             <span t-field="partner.ref" />
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <strong>Fecha de Emisión: </strong>
+                            <strong>Fecha de Emisión:</strong>
                             <span t-field="o.invoice_date" />
                         </td>
                         <td>
+
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <strong>Comprobante que modifica: </strong>
+                            <strong>Comprobante que modifica:</strong>
                             <span t-field="o.invoice_date" />
                         </td>
                         <td>
@@ -330,7 +333,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <strong>Fecha Emisión(Comprobante a modificar): </strong>
+                            <strong>Fecha Emisión(Comprobante a modificar):</strong>
                         </td>
                         <td>
                             <span t-field="o.l10n_ec_original_invoice_id.invoice_date" />
@@ -368,21 +371,21 @@
                 <tbody>
                     <tr>
                         <td style="width: 60%">
-                            <strong>Nombres y Apellidos: </strong>
+                            <strong>Nombres y Apellidos:</strong>
                             <span t-field="partner.name" />
                         </td>
                         <td>
-                            <strong>Identificación: </strong>
+                            <strong>Identificación:</strong>
                             <span t-field="partner.ref" />
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <strong>Fecha de Emisión: </strong>
+                            <strong>Fecha de Emisión:</strong>
                             <span t-field="o.invoice_date" />
                         </td>
                         <td>
-                            <strong>Direccion: </strong>
+                            <strong>Direccion:</strong>
                             <span t-field="o.partner_id.street" />
                         </td>
                     </tr>
@@ -428,7 +431,8 @@
                             />
                         </td>
                         <td class="text-right">
-                            <span t-field="line.discount" />%
+                            <span t-field="line.discount" />
+                            %
                         </td>
                         <td class="text-right">
                             <span t-field="line.price_subtotal" />

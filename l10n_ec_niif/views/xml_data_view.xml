@@ -196,6 +196,7 @@
                                     <field name="last_error_id" />
                                 </group>
                                 <group>
+
                                 </group>
                             </group>
                             <field name="sri_message_ids" readonly="1">

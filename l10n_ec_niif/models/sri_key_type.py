@@ -17,14 +17,24 @@ from odoo.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 KEY_TO_PEM_CMD = "openssl pkcs12 -nocerts -in %s -out %s -passin pass:%s -passout pass:%s"
-STATES = {"unverified": [("readonly", False),]}
+STATES = {
+    "unverified": [
+        ("readonly", False),
+    ]
+}
 
 
 class SriKeyType(models.Model):
     _name = "sri.key.type"
     _description = "Tipo de Llave electronica"
 
-    name = fields.Char(string="Nombre", size=255, required=True, readonly=False, help="",)
+    name = fields.Char(
+        string="Nombre",
+        size=255,
+        required=True,
+        readonly=False,
+        help="",
+    )
     file_content = fields.Binary("Archivo de Firma", readonly=True, states=STATES)
     file_name = fields.Char("Nombre de archivo", readonly=True)
     password = fields.Char("Clave de firma", readonly=True, states=STATES)
@@ -32,7 +42,11 @@ class SriKeyType(models.Model):
     active = fields.Boolean("Activo?", default=True)
     company_id = fields.Many2one("res.company", "Compañia", default=lambda self: self.env.company)
     state = fields.Selection(
-        [("unverified", "Sin Verificar"), ("valid", "Firma Valida"), ("expired", "Firma Vencida"),],
+        [
+            ("unverified", "Sin Verificar"),
+            ("valid", "Firma Valida"),
+            ("expired", "Firma Vencida"),
+        ],
         string="Estado",
         default="unverified",
         readonly=True,
@@ -105,7 +119,9 @@ class SriKeyType(models.Model):
         filecontent = base64.b64decode(self.file_content)
         try:
             private_key = crypto.load_privatekey(
-                crypto.FILETYPE_PEM, self.private_key.encode("ascii"), self.password.encode(),
+                crypto.FILETYPE_PEM,
+                self.private_key.encode("ascii"),
+                self.password.encode(),
             )
             p12 = crypto.load_pkcs12(filecontent, self.password)
         except Exception as ex:
@@ -121,7 +137,9 @@ class SriKeyType(models.Model):
         certificate_id = f"Certificate{new_range()}"
         reference_uri = f"Reference-ID-{new_range()}"
         signature = xmlsig.template.create(
-            xmlsig.constants.TransformInclC14N, xmlsig.constants.TransformRsaSha1, signature_id,
+            xmlsig.constants.TransformInclC14N,
+            xmlsig.constants.TransformRsaSha1,
+            signature_id,
         )
         xmlsig.template.add_reference(
             signature,
@@ -132,7 +150,10 @@ class SriKeyType(models.Model):
         )
         xmlsig.template.add_reference(signature, xmlsig.constants.TransformSha1, uri=f"#{certificate_id}")
         ref = xmlsig.template.add_reference(
-            signature, xmlsig.constants.TransformSha1, name=reference_uri, uri="#comprobante",
+            signature,
+            xmlsig.constants.TransformSha1,
+            name=reference_uri,
+            uri="#comprobante",
         )
         xmlsig.template.add_transform(ref, xmlsig.constants.TransformEnveloped)
         ki = xmlsig.template.ensure_key_info(signature, name=certificate_id)
@@ -143,7 +164,10 @@ class SriKeyType(models.Model):
         props = template.create_signed_properties(qualifying, name=signature_property_id)
         signed_do = template.ensure_signed_data_object_properties(props)
         template.add_data_object_format(
-            signed_do, f"#{reference_uri}", description="contenido comprobante", mime_type="text/xml",
+            signed_do,
+            f"#{reference_uri}",
+            description="contenido comprobante",
+            mime_type="text/xml",
         )
         doc.append(signature)
         is_digital_signature = False

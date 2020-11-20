@@ -117,14 +117,20 @@
                                             class="btn btn-secondary btn-block o_download_btn"
                                             t-att-href="withhold.get_portal_url(report_type='pdf', download=True)"
                                             title="Download RIDE"
-                                        ><i class="fa fa-download" /> RIDE</a>
+                                        >
+                                            <i class="fa fa-download" />
+                                            RIDE
+                                        </a>
                                     </div>
                                     <div class="btn-group  flex-grow-1 mr-1 mb-1">
                                         <a
                                             class="btn btn-secondary btn-block o_download_btn"
                                             t-att-href="withhold.get_portal_url(report_type='xml', download=True)"
                                             title="Download XML"
-                                        ><i class="fa fa-download" /> XML</a>
+                                        >
+                                            <i class="fa fa-download" />
+                                            XML
+                                        </a>
                                     </div>
                                     <div class="btn-group flex-grow-1 mb-1">
                                         <a
@@ -133,7 +139,10 @@
                                             id="print_electronic_report"
                                             title="Print RIDE"
                                             target="_blank"
-                                        ><i class="fa fa-print" /> Print RIDE</a>
+                                        >
+                                            <i class="fa fa-print" />
+                                            Print RIDE
+                                        </a>
                                     </div>
                                 </div>
                             </li>

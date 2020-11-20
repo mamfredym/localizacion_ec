@@ -7,7 +7,11 @@ class MailTemplate(models.Model):
     def generate_email(self, res_ids, fields=None):
         self.ensure_one()
         res = super(MailTemplate, self).generate_email(res_ids, fields=fields)
-        if self.model not in ("account.move", "l10n_ec.delivery.note", "l10n_ec.withhold",):
+        if self.model not in (
+            "account.move",
+            "l10n_ec.delivery.note",
+            "l10n_ec.withhold",
+        ):
             return res
         multi_mode = True
         if isinstance(res_ids, int):

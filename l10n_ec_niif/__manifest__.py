@@ -71,8 +71,13 @@
         "views/res_config_view.xml",
         "views/assets.xml",
     ],
-    "demo": ["demo/agency_data.xml", "demo/partner_data.xml",],
+    "demo": [
+        "demo/agency_data.xml",
+        "demo/partner_data.xml",
+    ],
     "installable": True,
     "auto_install": False,
-    "external_dependencies": {"python": ["stdnum", "xmlsig", "OpenSSL", "xades", "zeep"],},
+    "external_dependencies": {
+        "python": ["stdnum", "xmlsig", "OpenSSL", "xades", "zeep"],
+    },
 }

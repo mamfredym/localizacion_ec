@@ -19,9 +19,7 @@
                 role="alert"
             >
                 <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
-                <t t-if="error == 'generic'" name="generic">
-                    Hubo un error procesando su solicitud, intente mas tarde
-                </t>
+                <t t-if="error == 'generic'" name="generic">Hubo un error procesando su solicitud, intente mas tarde</t>
                 <t t-if="errors and error_message">
                     <ul>
                         <li t-foreach="error_message" t-as="msj">

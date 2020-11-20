@@ -10,7 +10,13 @@ class L10nEcSriPaymentMethod(models.Model):
     name = fields.Char(string="Name", required=True)
     active = fields.Boolean(u"Active?", default=lambda *a: True)
 
-    _sql_constraints = [("code_uniq", "unique (code)", "Code of Payment Method must be unique, please review!",)]
+    _sql_constraints = [
+        (
+            "code_uniq",
+            "unique (code)",
+            "Code of Payment Method must be unique, please review!",
+        )
+    ]
 
     def _name_search(self, name, args=None, operator="ilike", limit=100, name_get_uid=None):
         args = args or []

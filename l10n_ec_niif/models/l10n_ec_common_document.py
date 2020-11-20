@@ -12,7 +12,10 @@ class L10nEcCommonDocument(models.AbstractModel):
         states={"draft": [("readonly", False)]},
     )
     l10n_ec_agency_id = fields.Many2one(
-        comodel_name="l10n_ec.agency", string="Agency", related="l10n_ec_point_of_emission_id.agency_id", store=True,
+        comodel_name="l10n_ec.agency",
+        string="Agency",
+        related="l10n_ec_point_of_emission_id.agency_id",
+        store=True,
     )
     l10n_ec_base_iva = fields.Float(string="Base IVA", compute="_compute_l10n_ec_amounts", store=True)
     l10n_ec_base_iva_0 = fields.Float(string="Base IVA 0", compute="_compute_l10n_ec_amounts", store=True)

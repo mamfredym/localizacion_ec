@@ -31,9 +31,9 @@
         <record id="l10n_ec_withhold_line_rule_portal" model="ir.rule">
             <field name="name">Portal Withhold lines</field>
             <field name="model_id" ref="model_l10n_ec_withhold_line" />
-            <field
-                name="domain_force"
-            >[('withhold_id.message_partner_ids','child_of',[user.commercial_partner_id.id])]</field>
+            <field name="domain_force">
+                [('withhold_id.message_partner_ids','child_of',[user.commercial_partner_id.id])]
+            </field>
             <field name="groups" eval="[(4, ref('base.group_portal'))]" />
         </record>
         <record id="l10n_ec_key_type_comp_rule" model="ir.rule">
