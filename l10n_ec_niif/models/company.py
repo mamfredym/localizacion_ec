@@ -48,6 +48,14 @@ class ResCompany(models.Model):
         string="Type of Suppliers authorization",
         default="simple",
     )
+    l10n_ec_cn_reconcile_policy = fields.Selection(
+        [
+            ("restrict", "Restrict greater than Invoice"),
+            ("open", "Always Allow"),
+        ],
+        string=u"Conciliation Policy for Credit Note",
+        default="restrict",
+    )
     # campos para facturacion electronica
     l10n_ec_type_environment = fields.Selection(
         [

@@ -5,6 +5,7 @@ from xml.etree.ElementTree import SubElement
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare, float_is_zero
+from odoo.tools.misc import formatLang
 from odoo.tools.safe_eval import safe_eval
 
 from ..models import modules_mapping
@@ -1210,6 +1211,7 @@ class AccountMove(models.Model):
         iva_exempt_group = self.env.ref("l10n_ec_niif.tax_group_iva_exempt")
         iva_group_0 = self.env.ref("l10n_ec_niif.tax_group_iva_0")
         error_list = []
+        currency = self.currency_id
         # validaciones para consumidor final
         # * no permitir factura de ventas mayor a un monto configurado(200 USD por defecto)
         # * no permitir emitir Nota de credito ni factura de proveedor
@@ -1253,6 +1255,85 @@ class AccountMove(models.Model):
                     )
                 elif not self.l10n_ec_supplier_authorization_number and not self.l10n_ec_foreign:
                     raise UserError(_("You must enter the authorization of the third party to continue"))
+        # notas de credito validar monto no sea mayor al de factura
+        if (
+            self.type in ["in_refund", "out_refund"]
+            and self.l10n_ec_original_invoice_id
+            and self.company_id.l10n_ec_cn_reconcile_policy == "restrict"
+        ):
+            # La nota de credito no puede ser superior al total de la factura
+            if (
+                float_compare(self.amount_total, self.l10n_ec_original_invoice_id.amount_total, precision_digits=2)
+            ) == 1:
+                raise UserError(
+                    _(
+                        "The total amount: %s of the credit note: %s, "
+                        "cannot be greater than the total amount: %s of the invoice %s"
+                    )
+                    % (
+                        formatLang(self.env, currency.round(self.amount_total), currency_obj=currency),
+                        self.l10n_ec_get_document_number(),
+                        formatLang(
+                            self.env,
+                            currency.round(self.l10n_ec_original_invoice_id.amount_total),
+                            currency_obj=currency,
+                        ),
+                        self.l10n_ec_original_invoice_id.l10n_ec_get_document_number(),
+                    )
+                )
+            # Si ya se encuentra parcialmente conciliada y es mayor al residual debe lanzar un error
+            if self.l10n_ec_original_invoice_id.invoice_payment_state != "paid":
+                if (
+                    float_compare(
+                        self.amount_total, self.l10n_ec_original_invoice_id.amount_residual, precision_digits=2
+                    )
+                    == 1
+                ):
+                    raise UserError(
+                        _(
+                            "The total amount: %s of the credit note %s, "
+                            "cannot be greater than the amount residual: %s of the invoice %s."
+                        )
+                        % (
+                            formatLang(self.env, currency.round(self.amount_total), currency_obj=currency),
+                            self.l10n_ec_get_document_number(),
+                            formatLang(
+                                self.env,
+                                currency.round(self.l10n_ec_original_invoice_id.amount_residual),
+                                currency_obj=currency,
+                            ),
+                            self.l10n_ec_original_invoice_id.l10n_ec_get_document_number(),
+                        )
+                    )
+            else:
+                credit_notes_recs = self.search(
+                    [
+                        ("l10n_ec_original_invoice_id", "=", self.l10n_ec_original_invoice_id.id),
+                        ("id", "!=", self.id),
+                        ("state", "=", "posted"),
+                    ]
+                )
+                if credit_notes_recs:
+                    total = 0
+                    for cn in credit_notes_recs:
+                        total += cn.amount_total
+                    total += self.amount_total
+                    if float_compare(total, self.l10n_ec_original_invoice_id.amount_total, precision_digits=2) == 1:
+                        raise UserError(
+                            _(
+                                "The total amount of all credit notes: %s, "
+                                "cannot be greater than the total amount: %s of the invoice %s"
+                            )
+                            % (
+                                formatLang(self.env, currency.round(total), currency_obj=currency),
+                                formatLang(
+                                    self.env,
+                                    currency.round(self.l10n_ec_original_invoice_id.amount_total),
+                                    currency_obj=currency,
+                                ),
+                                self.l10n_ec_original_invoice_id.l10n_ec_get_document_number(),
+                            )
+                        )
         # validaciones en facturas de proveedor para emitir retenciones
         # * tener 1 impuesto de retencion IVA y 1 impuesto de retencion RENTA
         # * no permitir retener IVA si no hay impuesto de IVA(evitar IVA 0)

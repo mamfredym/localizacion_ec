@@ -36,6 +36,36 @@
                                 </div>
                             </div>
                         </div>
+                        <h2>Credit Note</h2>
+                        <div class="col-12 col-lg-6 o_setting_box" id="sri_invoice">
+                            <div class="o_setting_left_pane">
+
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <div class="row">
+                                    <label
+                                        for="l10n_ec_cn_reconcile_policy"
+                                        class="col-5"
+                                        string="Amounts Conciliation Policy"
+                                    />
+                                    <field name="l10n_ec_cn_reconcile_policy" widget="radio" />
+                                    <div class="text-muted">
+                                        <ul>
+                                            <li>
+                                                <b>Restrict greater than Invoice:</b>
+                                                When Credit Note is greather than invoice, raise exception and cannot
+                                                validate
+                                            </li>
+                                            <li>
+                                                <b>Always Allow:</b>
+                                                Credit Notes are not compared with Invoice amount total, can be validate
+                                                without restriction
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <h2>Withhold</h2>
                         <div class="col-12 col-lg-6 o_setting_box" id="sri_withhold">
                             <div class="o_setting_left_pane">

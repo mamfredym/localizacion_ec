@@ -43,6 +43,7 @@ class ResConfigSettings(models.TransientModel):
     l10n_ec_type_supplier_authorization = fields.Selection(
         related="company_id.l10n_ec_type_supplier_authorization", readonly=False
     )
+    l10n_ec_cn_reconcile_policy = fields.Selection(related="company_id.l10n_ec_cn_reconcile_policy", readonly=False)
     # configuracion para facturacion electronica
     l10n_ec_type_environment = fields.Selection(
         [
