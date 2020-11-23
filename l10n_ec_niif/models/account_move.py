@@ -2057,6 +2057,9 @@ class AccountMove(models.Model):
         fecha_factura = self.invoice_date.strftime(util_model.get_formato_date())
         SubElement(infoNotaCredito, "fechaEmision").text = fecha_factura
         address = company.partner_id.street
+        invoice_lines_data = self._l10n_ec_get_invoice_lines_to_fe()
+        invoice_lines = invoice_lines_data["invoice_lines"]
+        invoice_line_data = invoice_lines_data["invoice_line_data"]
         SubElement(infoNotaCredito, "dirEstablecimiento").text = util_model._clean_str(address and address[:300] or "")
         if self.l10n_ec_identification_type_id:
             tipoIdentificacionComprador = self.l10n_ec_identification_type_id.code
@@ -2123,7 +2126,14 @@ class AccountMove(models.Model):
         )
         # Lineas de Factura
         detalles = SubElement(node, "detalles")
-        for line in self.invoice_line_ids.filtered(lambda x: not x.display_type):
+        for line in invoice_lines:
+            line_data = invoice_line_data.get(line.id, {})
+            discount = line_data["discount"]
+            subtotal = line_data["subtotal"]
+            l10n_ec_base_iva_0 = line_data["l10n_ec_base_iva_0"]
+            l10n_ec_base_iva = line_data["l10n_ec_base_iva"]
+            l10n_ec_iva = line_data["l10n_ec_iva"]
+            tarifa_iva = line_data["tarifa_iva"]
             detalle = SubElement(detalles, "detalle")
             SubElement(detalle, "codigoInterno").text = util_model._clean_str(
                 line.product_id and line.product_id.default_code and line.product_id.default_code[:25] or "N/A"
@@ -2137,9 +2147,6 @@ class AccountMove(models.Model):
             SubElement(detalle, "precioUnitario").text = util_model.formato_numero(
                 line.price_unit, digits_precision_product
             )
-            discount = round(((line.price_unit * line.quantity) * ((line.discount or 0.0) / 100)), 2)
-            # TODO: hacer un redondeo con las utilidades del sistema
-            subtotal = round(((line.price_unit * line.quantity) - discount), 2)
             SubElement(detalle, "descuento").text = util_model.formato_numero(
                 discount or 0.0, digits_precision_discount
             )
@@ -2147,26 +2154,26 @@ class AccountMove(models.Model):
                 subtotal, currency.decimal_places
             )
             impuestos = SubElement(detalle, "impuestos")
-            if line.l10n_ec_base_iva_0 != 0:
+            if not currency.is_zero(l10n_ec_base_iva_0):
                 self.l10n_ec_get_total_impuestos(
                     impuestos,
                     "2",
                     "0",
-                    line.l10n_ec_base_iva_0,
+                    l10n_ec_base_iva_0,
                     0.0,
                     "impuesto",
                     0,
                     decimales=currency.decimal_places,
                 )
-            if line.l10n_ec_base_iva != 0:
+            if not currency.is_zero(l10n_ec_base_iva):
                 self.l10n_ec_get_total_impuestos(
                     impuestos,
                     "2",
                     "2",
-                    line.l10n_ec_base_iva,
-                    line.l10n_ec_iva,
+                    l10n_ec_base_iva,
+                    l10n_ec_iva,
                     "impuesto",
-                    12,
+                    tarifa_iva,
                     decimales=currency.decimal_places,
                 )
             # if line.base_no_iva != 0:
