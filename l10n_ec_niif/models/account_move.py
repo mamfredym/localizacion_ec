@@ -1960,6 +1960,7 @@ class AccountMove(models.Model):
                     tax = self.env["account.tax"].browse(tax_data["id"])
                     if tax.tax_group_id.id == iva_group.id:
                         l10n_ec_iva = tax_data["amount"]
+                    if tax.tax_group_id.id in [iva_group.id, iva0_group.id]:
                         tarifa_iva = tax.amount
             invoice_line_data[line.id] = {
                 "discount": discount,
@@ -2074,8 +2075,6 @@ class AccountMove(models.Model):
             l10n_ec_base_iva = line_data["l10n_ec_base_iva"]
             l10n_ec_iva = line_data["l10n_ec_iva"]
             tarifa_iva = line_data["tarifa_iva"]
-            if currency.is_zero(subtotal):
-                continue
             detalle = SubElement(detalles, "detalle")
             SubElement(detalle, "codigoPrincipal").text = util_model._clean_str(
                 line.product_id and line.product_id.default_code and line.product_id.default_code[:25] or "N/A"
@@ -2096,7 +2095,7 @@ class AccountMove(models.Model):
                 subtotal, currency.decimal_places
             )
             impuestos = SubElement(detalle, "impuestos")
-            if not currency.is_zero(l10n_ec_base_iva_0):
+            if tarifa_iva <= 0:
                 self.l10n_ec_get_total_impuestos(
                     impuestos,
                     "2",
@@ -2107,7 +2106,7 @@ class AccountMove(models.Model):
                     0,
                     decimales=currency.decimal_places,
                 )
-            if not currency.is_zero(l10n_ec_base_iva):
+            else:
                 self.l10n_ec_get_total_impuestos(
                     impuestos,
                     "2",
