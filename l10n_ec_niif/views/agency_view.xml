@@ -51,7 +51,7 @@
                                     </tree>
                                     <form string="Point of Emission">
                                         <group>
-                                            <field name="name" attrs="{'readonly': [('count_invoice', '>', '0')]}" />
+                                            <field name="name" />
                                             <field name="number" attrs="{'readonly': [('count_invoice', '>', '0')]}" />
                                             <field name="active" />
                                             <field
