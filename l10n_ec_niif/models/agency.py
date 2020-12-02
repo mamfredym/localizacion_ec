@@ -122,7 +122,7 @@ class L10EcPointOfEmission(models.Model):
             name = "{}-{} {}".format(
                 printer.agency_id and printer.agency_id.number or "",
                 printer.number,
-                full_name and printer.agency_id and printer.agency_id.name or "",
+                full_name and printer.agency_id and printer.name or "",
             )
             res.append((printer["id"], name))
         return res
