@@ -14,7 +14,7 @@ class L10nCompanyResolution(models.Model):
         required=True,
         ondelete="cascade",
     )
-    resolution = fields.Char("Resolution", size=3, required=True)
+    resolution = fields.Char("Resolution", size=6, required=True)
     date_from = fields.Date("Date from", required=True)
     date_to = fields.Date("Date to", required=True)
     active = fields.Boolean(default=True)
