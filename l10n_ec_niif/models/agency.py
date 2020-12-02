@@ -78,8 +78,10 @@ L10nEcAgency()
 class L10EcPointOfEmission(models.Model):
 
     _name = "l10n_ec.point.of.emission"
+    _rec_name = "complete_name"
 
     name = fields.Char("Point of emission's name", required=True, readonly=False, index=True)
+    complete_name = fields.Char(string="Complete Name", compute="_compute_complete_name", store=True)
     agency_id = fields.Many2one("l10n_ec.agency", "Agency", required=False, index=True, auto_join=True)
     company_id = fields.Many2one(comodel_name="res.company", string="Company", related="agency_id.company_id")
     number = fields.Char("S.R.I. Number", size=3, required=True, readonly=False, index=True)
@@ -102,6 +104,14 @@ class L10EcPointOfEmission(models.Model):
         required=False,
     )
 
+    @api.depends("name", "number", "agency_id", "agency_id.number")
+    def _compute_complete_name(self):
+        for printer_point in self:
+            complete_name = (
+                f"{printer_point.agency_id.number or ''}-{printer_point.number or ''} {printer_point.name or ''}"
+            )
+            printer_point.complete_name = complete_name
+
     @api.model
     def default_get(self, fields):
         values = super(L10EcPointOfEmission, self).default_get(fields)
@@ -114,18 +124,6 @@ class L10EcPointOfEmission(models.Model):
             (0, 0, {"document_type": "delivery_note", "initial_sequence": 1}),
         ]
         return values
-
-    def name_get(self):
-        res = []
-        full_name = self.env.context.get("full_name", True)
-        for printer in self:
-            name = "{}-{} {}".format(
-                printer.agency_id and printer.agency_id.number or "",
-                printer.number,
-                full_name and printer.agency_id and printer.name or "",
-            )
-            res.append((printer["id"], name))
-        return res
 
     @api.model
     def _l10n_ec_get_extra_domain_user(self):
