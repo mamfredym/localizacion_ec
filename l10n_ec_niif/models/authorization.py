@@ -43,6 +43,7 @@ class L10nECSriAuthorization(models.Model):
                 ("expiration_date", ">", authorization.start_date),
                 ("company_id", "=", authorization.company_id.id),
                 ("id", "!=", authorization.id),
+                ("number", "=", self.number),
             ]
             nauthorization = self.search_count(domain)
             if nauthorization:
