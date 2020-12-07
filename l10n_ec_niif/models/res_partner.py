@@ -162,8 +162,11 @@ class ResPartner(models.Model):
             return ci.is_valid(vat), "Cedula"
         # Este caso es para extranjeros con RUC
         elif len(vat) == 13 and vat[2] == "6":
-            if ci.is_valid(vat[:10]) and vat[10:] == "001":
-                return True, "Ruc"
+            try:
+                if ci.is_valid(vat[:10]):
+                    return True, "Ruc"
+            except Exception as e:
+                _logger.debug(_("Error parsing ruc: %s") % str(e))
         elif ruc.is_valid(vat):
             return ruc.is_valid(vat), "Ruc"
         else:
