@@ -160,6 +160,10 @@ class ResPartner(models.Model):
             return self.verify_final_consumer(vat), "Consumidor"
         elif ci.is_valid(vat):
             return ci.is_valid(vat), "Cedula"
+        # Este caso es para extranjeros con RUC
+        elif len(vat) == 13 and vat[2] == "6":
+            if ci.is_valid(vat[:10]) and vat[10:] == "001":
+                return True, "Ruc"
         elif ruc.is_valid(vat):
             return ruc.is_valid(vat), "Ruc"
         else:
