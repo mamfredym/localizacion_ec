@@ -158,17 +158,16 @@ class ResPartner(models.Model):
     def check_vat_ec(self, vat):
         if self.verify_final_consumer(vat):
             return self.verify_final_consumer(vat), "Consumidor"
-        elif ci.is_valid(vat):
+        elif len(vat) == 10:
             return ci.is_valid(vat), "Cedula"
-        # Este caso es para extranjeros con RUC
-        elif len(vat) == 13 and vat[2] == "6":
-            try:
+        elif len(vat) == 13:
+            if vat[2] == "6":
                 if ci.is_valid(vat[:10]):
                     return True, "Ruc"
-            except Exception as e:
-                _logger.debug(_("Error parsing ruc: %s") % str(e))
-        elif ruc.is_valid(vat):
-            return ruc.is_valid(vat), "Ruc"
+                else:
+                    return ruc.is_valid(vat), "Ruc"
+            elif ruc.is_valid(vat):
+                return ruc.is_valid(vat), "Ruc"
         else:
             return False, False
 
