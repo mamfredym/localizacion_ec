@@ -1436,6 +1436,13 @@ class SriXmlData(models.Model):
         )
         return file_name
 
+    def action_cancel(self):
+        for xml_data in self:
+            if xml_data.state == "authorized":
+                raise UserError(_("You can't cancel document: %s is authorized on SRI") % (xml_data.display_name,))
+        self.write({"state": "cancel"})
+        return True
+
     def unlink(self):
         for xml_data in self:
             # si el documento no esta en borrador no permitir eliminar

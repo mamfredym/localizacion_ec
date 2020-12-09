@@ -1125,6 +1125,7 @@ class AccountMove(models.Model):
             if move.is_purchase_document() and move.l10n_ec_withhold_ids:
                 move.l10n_ec_withhold_ids.action_cancel()
                 move.l10n_ec_withhold_ids.with_context(cancel_from_invoice=True).unlink()
+        self.mapped("l10n_ec_xml_data_id").action_cancel()
         self.write({"l10n_ec_sri_authorization_state": "to_check"})
         return super(AccountMove, self).button_draft()
 
@@ -1638,6 +1639,13 @@ class AccountMove(models.Model):
         if self.env.context.get("no_create_electronic", False):
             return True
         # Si ya se encuentra autorizado, no hacer nuevamente el proceso de generacion del xml
+        # pero si no esta autorizado, volver a reactivarlo
+        current_xml_recs = self.filtered(
+            lambda x: x.l10n_ec_xml_data_id and x.l10n_ec_xml_data_id.state not in ("draft", "authorized")
+        ).mapped("l10n_ec_xml_data_id")
+        if current_xml_recs:
+            current_xml_recs.write({"state": "draft"})
+            xml_recs |= current_xml_recs
         for invoice in self.filtered(lambda x: not x.l10n_ec_xml_data_id):
             invoice_type = invoice.l10n_ec_get_invoice_type()
             if invoice.type == "in_invoice":
