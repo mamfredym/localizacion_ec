@@ -242,13 +242,18 @@
                                 <field name="l10n_ec_type_supplier_authorization" invisible="1" />
                                 <field name="type" invisible="1" />
                                 <field name="no_number" invisible="1" />
+                                <field name="currency_id" invisible="1" />
                             </group>
                             <label for="concept" />
                             <field name="concept" />
                         </group>
                         <notebook colspan="4">
                             <page name="withhold_lines" string="Lines">
-                                <field name="line_ids" colspan="4" context="{'default_invoice_id': invoice_id}">
+                                <field
+                                    name="line_ids"
+                                    colspan="4"
+                                    context="{'default_invoice_id': invoice_id, 'default_currency_id': currency_id}"
+                                >
                                     <tree editable="bottom">
                                         <field
                                             name="invoice_id"
@@ -268,11 +273,13 @@
                                             name="partner_currency_id"
                                             options="{'no_create': True}"
                                             groups="base.group_multi_currency"
+                                            optional="hide"
                                         />
                                         <field
                                             name="currency_id"
                                             options="{'no_create': True}"
                                             groups="base.group_multi_currency"
+                                            optional="hide"
                                         />
                                         <field
                                             name="percent_id"
@@ -286,13 +293,18 @@
                                             force_save="1"
                                             attrs="{'readonly': [('parent.type', '=', 'sale')]}"
                                         />
-                                        <field name="base_amount_currency" groups="base.group_multi_currency" />
+                                        <field
+                                            name="base_amount_currency"
+                                            groups="base.group_multi_currency"
+                                            optional="hide"
+                                        />
                                         <field
                                             name="tax_amount_currency"
                                             attrs="{'readonly': [('parent.type', '=', 'sale')]}"
                                             sum="Tax Currency"
                                             groups="base.group_multi_currency"
                                             force_save="1"
+                                            optional="hide"
                                         />
                                     </tree>
                                 </field>

@@ -352,17 +352,18 @@ class L10nEcWithhold(models.Model):
         account = False
         tax_code = False
         name = False
+        invoice_number = line.invoice_id.display_name or self.l10n_ec_legacy_document_number or ""
         if line.type == "iva":
             account = self.company_id.l10n_ec_withhold_sale_iva_account_id
             tax_code = self.company_id.l10n_ec_withhold_sale_iva_tag_id.ids
             name = _("Withhold Vat. %s - %s") % (
                 self.display_name,
-                line.invoice_id.display_name or "",
+                invoice_number,
             )
         elif line.type == "rent":
             account = self.company_id.l10n_ec_withhold_sale_rent_account_id
             tax_code = []
-            name = _("Withhold Rent Tax. %s - %s") % (self.display_name, line.invoice_id.display_name or "")
+            name = _("Withhold Rent Tax. %s - %s") % (self.display_name, invoice_number)
         debit_vals = {
             "move_id": move.id,
             "account_id": account.id,
@@ -809,12 +810,18 @@ class L10nEcWithholdLine(models.Model):
     )
     def _onchange_amount(self):
         if self.percent_id:
-            self.base_amount_currency = self.partner_currency_id._convert(
-                self.base_amount, self.currency_id, self.company_id, self.issue_date
+            # el campo partner_currency_id es related de invoice_id
+            # cuando no esta la factura no se tiene moneda y se obtiene error al hacer conversion de moneda
+            from_currency = self.partner_currency_id
+            if not from_currency:
+                from_currency = self.currency_id
+            issue_date = self.issue_date or fields.Date.context_today(self)
+            self.base_amount_currency = from_currency._convert(
+                self.base_amount, self.currency_id, self.company_id, issue_date
             )
             self.tax_amount = (self.percent_id.percent / 100.0) * self.base_amount
-            self.tax_amount_currency = self.partner_currency_id._convert(
-                self.tax_amount, self.currency_id, self.company_id, self.issue_date
+            self.tax_amount_currency = from_currency._convert(
+                self.tax_amount, self.currency_id, self.company_id, issue_date
             )
 
     def get_retention_code(self):
