@@ -194,9 +194,9 @@ class ResPartner(models.Model):
     def _compute_l10n_ec_type_sri(self):
         vat_type = ""
         for partner in self:
-            if partner.vat:
-                dni, vat_type = self.check_vat_ec(partner.vat)
             if partner.country_id:
+                if partner.vat and partner.country_id.code == "EC":
+                    dni, vat_type = self.check_vat_ec(partner.vat)
                 if partner.country_id.code != "EC":
                     vat_type = "Pasaporte"
             partner.l10n_ec_type_sri = vat_type
