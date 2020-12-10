@@ -374,6 +374,7 @@ class L10nEcWithhold(models.Model):
             "debit": line.tax_amount,
             "credit": 0.0,
             "name": name,
+            "partner_id": False,
         }
         credit_vals = {
             "move_id": move.id,
@@ -382,6 +383,7 @@ class L10nEcWithhold(models.Model):
             "credit": line.tax_amount,
             "debit": 0.0,
             "name": name,
+            "partner_id": self.commercial_partner_id.id,
         }
         return debit_vals, credit_vals
 
