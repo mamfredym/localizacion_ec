@@ -255,6 +255,8 @@ class L10nEcWithhold(models.Model):
     @api.constrains("invoice_id")
     def _check_no_retention_same_invoice(self):
         for rec in self:
+            if not rec.invoice_id and rec.l10n_ec_legacy_document:
+                continue
             l10n_ec_withhold_line_ids = rec.search([("invoice_id", "=", rec.invoice_id.id), ("id", "!=", rec.id)])
             if l10n_ec_withhold_line_ids:
                 raise UserError(_("Invoice is already registered"))
