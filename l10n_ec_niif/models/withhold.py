@@ -322,7 +322,7 @@ class L10nEcWithhold(models.Model):
                 and line.partner_id.id == line.move_id.partner_id.id
             ):
                 invoice_group_to_reconcile[line.invoice_id.id] |= aml
-            if line.tax_amount > 0:
+            if line.tax_amount_currency > 0:
                 debit_vals, credit_vals = self._prepare_move_line(move_rec, line, destination_account)
                 model_aml.create(debit_vals)
                 invoice_group_to_reconcile[line.invoice_id.id] |= model_aml.create(credit_vals)
@@ -370,8 +370,8 @@ class L10nEcWithhold(models.Model):
             "move_id": move.id,
             "account_id": account.id,
             "tag_ids": tax_code,
-            "tax_base_amount": line.tax_amount,
-            "debit": line.tax_amount,
+            "tax_base_amount": line.tax_amount_currency,
+            "debit": line.tax_amount_currency,
             "credit": 0.0,
             "name": name,
             "partner_id": False,
@@ -379,8 +379,8 @@ class L10nEcWithhold(models.Model):
         credit_vals = {
             "move_id": move.id,
             "account_id": destination_account.id,
-            "tax_base_amount": line.tax_amount,
-            "credit": line.tax_amount,
+            "tax_base_amount": line.tax_amount_currency,
+            "credit": line.tax_amount_currency,
             "debit": 0.0,
             "name": name,
             "partner_id": self.commercial_partner_id.id,
@@ -574,9 +574,9 @@ class L10nEcWithhold(models.Model):
             impuesto = SubElement(impuestos, "impuesto")
             SubElement(impuesto, "codigo").text = line.get_retention_code()
             SubElement(impuesto, "codigoRetencion").text = line.get_retention_tax_code()
-            SubElement(impuesto, "baseImponible").text = util_model.formato_numero(line.base_amount)
+            SubElement(impuesto, "baseImponible").text = util_model.formato_numero(line.base_amount_currency)
             SubElement(impuesto, "porcentajeRetener").text = util_model.formato_numero(line.percentage, 2)
-            SubElement(impuesto, "valorRetenido").text = util_model.formato_numero(line.tax_amount)
+            SubElement(impuesto, "valorRetenido").text = util_model.formato_numero(line.tax_amount_currency)
             SubElement(impuesto, "codDocSustento").text = self.invoice_id.l10n_ec_get_document_code_sri() or "01"
             numDocSustento = self.invoice_id.l10n_ec_get_document_number()
             dateDocSustento = self.invoice_id.l10n_ec_get_document_date()

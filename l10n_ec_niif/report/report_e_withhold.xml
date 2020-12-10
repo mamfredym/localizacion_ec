@@ -92,7 +92,7 @@
                             <span t-field="line.issue_date" t-options="{'widget': 'date', 'format': 'yyyy'}" />
                         </td>
                         <td class="text-right">
-                            <span t-field="line.base_amount" />
+                            <span t-field="line.base_amount_currency" />
                         </td>
                         <td class="text-center">
                             <span t-field="line.type" />
@@ -102,14 +102,14 @@
                             %
                         </td>
                         <td class="text-right">
-                            <span t-field="line.tax_amount" />
+                            <span t-field="line.tax_amount_currency" />
                         </td>
-                        <t t-set="total" t-value="total + line.tax_amount" />
+                        <t t-set="total" t-value="total + line.tax_amount_currency" />
                     </tr>
                 </t>
                 <th colspan="7">Total</th>
                 <th class="text-right">
-                    <span t-esc="'{0:.2f}'.format(total)" />
+                    <span t-esc="total" t-options='{"widget": "monetary", "display_currency": o.currency_id}' />
                 </th>
             </tbody>
         </table>

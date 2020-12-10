@@ -286,25 +286,21 @@
                                             domain="[('type', '=', type)]"
                                             options="{'no_create': True}"
                                         />
-                                        <field name="base_amount" />
+                                        <field name="base_amount" groups="base.group_multi_currency" optional="hide" />
                                         <field
                                             name="tax_amount"
                                             sum="Tax"
                                             force_save="1"
                                             attrs="{'readonly': [('parent.type', '=', 'sale')]}"
-                                        />
-                                        <field
-                                            name="base_amount_currency"
                                             groups="base.group_multi_currency"
                                             optional="hide"
                                         />
+                                        <field name="base_amount_currency" />
                                         <field
                                             name="tax_amount_currency"
                                             attrs="{'readonly': [('parent.type', '=', 'sale')]}"
                                             sum="Tax Currency"
-                                            groups="base.group_multi_currency"
                                             force_save="1"
-                                            optional="hide"
                                         />
                                     </tree>
                                 </field>
