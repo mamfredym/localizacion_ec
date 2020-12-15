@@ -819,7 +819,7 @@ class SriXmlData(models.Model):
         # si tengo xml firmado, a ese anexarle la autorizacion
         if self.state == "authorized" and self.xml_authorization and self.xml_file:
             tree = ET.fromstring(self.get_file())
-            self._create_file_authorized(
+            xml_authorized = self._create_file_authorized(
                 tree,
                 self.xml_authorization,
                 fields.Datetime.context_timestamp(self, self.l10n_ec_authorization_date),
