@@ -84,7 +84,7 @@
                             <br />
                             <br />
                             <t t-if="company.l10n_ec_retention_resolution">
-                                <strong>Withholding Agent:</strong>
+                                <strong>Agente de Retención:</strong>
                                 <span t-field="company.l10n_ec_retention_resolution" />
                                 <br />
                             </t>
