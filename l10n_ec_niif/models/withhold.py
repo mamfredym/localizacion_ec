@@ -315,17 +315,18 @@ class L10nEcWithhold(models.Model):
         self.move_id = move_rec.id
         invoice_group_to_reconcile = {}
         for line in self.line_ids:
-            invoice_group_to_reconcile.setdefault(line.invoice_id.id, model_aml.browse())
-            for aml in line.invoice_id.line_ids.filtered(
+            invoice = line.invoice_id or self.invoice_id
+            invoice_group_to_reconcile.setdefault(invoice.id, model_aml.browse())
+            for aml in invoice.line_ids.filtered(
                 lambda line: not line.reconciled
                 and line.account_id == destination_account
                 and line.partner_id.id == line.move_id.partner_id.id
             ):
-                invoice_group_to_reconcile[line.invoice_id.id] |= aml
+                invoice_group_to_reconcile[invoice.id] |= aml
             if line.tax_amount_currency > 0:
                 debit_vals, credit_vals = self._prepare_move_line(move_rec, line, destination_account)
                 model_aml.create(debit_vals)
-                invoice_group_to_reconcile[line.invoice_id.id] |= model_aml.create(credit_vals)
+                invoice_group_to_reconcile[invoice.id] |= model_aml.create(credit_vals)
         for invoice_id in invoice_group_to_reconcile.keys():
             if len(invoice_group_to_reconcile[invoice_id]) > 1:
                 invoice_group_to_reconcile[invoice_id].reconcile()
@@ -354,7 +355,9 @@ class L10nEcWithhold(models.Model):
         account = False
         tax_code = False
         name = False
-        invoice_number = line.invoice_id.display_name or self.l10n_ec_legacy_document_number or ""
+        invoice_number = (
+            line.invoice_id.display_name or self.invoice_id.display_name or self.l10n_ec_legacy_document_number or ""
+        )
         if line.type == "iva":
             account = self.company_id.l10n_ec_withhold_sale_iva_account_id
             tax_code = self.company_id.l10n_ec_withhold_sale_iva_tag_id.ids
