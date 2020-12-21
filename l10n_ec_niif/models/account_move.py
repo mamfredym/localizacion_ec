@@ -680,6 +680,8 @@ class AccountMove(models.Model):
                 and self.l10n_ec_supplier_authorization_id.partner_id != self.partner_id
             ):
                 self.l10n_ec_supplier_authorization_id = False
+            if self.partner_id.l10n_ec_foreign and self.type in ["in_invoice", "in_refund"]:
+                self.l10n_ec_type_emission = False
         return res
 
     @api.onchange("invoice_date")
