@@ -428,9 +428,14 @@ class AccountMove(models.Model):
                         move.l10n_ec_identification_type_id.purchase_credit_note_document_type_id.id
                     )
                 elif move.type == "out_invoice":
-                    move.l10n_latam_document_type_id = (
-                        move.l10n_ec_identification_type_id.sale_invoice_document_type_id.id
-                    )
+                    if move.l10n_latam_internal_type == "invoice":
+                        move.l10n_latam_document_type_id = (
+                            move.l10n_ec_identification_type_id.sale_invoice_document_type_id.id
+                        )
+                    if move.l10n_latam_internal_type == "debit_note":
+                        move.l10n_latam_document_type_id = (
+                            move.l10n_ec_identification_type_id.sale_debit_note_document_type_id.id
+                        )
                 elif move.type == "out_refund":
                     move.l10n_latam_document_type_id = (
                         move.l10n_ec_identification_type_id.sale_credit_note_document_type_id.id
