@@ -1916,8 +1916,8 @@ class AccountMove(models.Model):
         """
         iva_group = self.env.ref("l10n_ec_niif.tax_group_iva")
         iva0_group = self.env.ref("l10n_ec_niif.tax_group_iva_0")
-        invoice_lines = self.invoice_line_ids.filtered(lambda x: not x.display_type)
-        lines_discount = invoice_lines.filtered(lambda x: x.price_subtotal < 0)
+        invoice_lines = self.invoice_line_ids.filtered(lambda x: not x.display_type and x.price_subtotal > 0)
+        lines_discount = self.invoice_line_ids.filtered(lambda x:  x.price_subtotal < 0 and not x.display_type)
         invoice_lines -= lines_discount
         invoice_line_data = {}
         discount_by_tax = {}
@@ -1941,7 +1941,7 @@ class AccountMove(models.Model):
             ail_amount_total = abs(sum(ail_by_tax.mapped("price_subtotal")))
             discount_unit_additional = 0.0
             if ail_amount_total:
-                discount_unit_additional = (line.price_subtotal / ail_amount_total) * 100.0
+                discount_unit_additional = round((line.price_subtotal / ail_amount_total) * 100.0, 2)
             discount = round(((line.price_unit * line.quantity) * ((line.discount or 0.0) / 100)), 2)
             discount_additional = round((total_discount_amount * ((discount_unit_additional or 0.0) / 100)), 2)
             # en la ultima linea asignar la diferencia entre lo asignado y el total a asignar
@@ -1949,7 +1949,7 @@ class AccountMove(models.Model):
                 discount_additional = round(
                     total_discount_amount - discount_applied_data[line.tax_ids]["discount_applied"], 2
                 )
-            discount_applied_data[line.tax_ids]["discount_applied"] += discount_additional
+            discount_applied_data[line.tax_ids]["discount_applied"] += round(discount_additional, 2)
             discount += discount_additional
             subtotal = round(((line.price_unit * line.quantity) - discount), 2)
             l10n_ec_base_iva_0 = line.l10n_ec_base_iva_0
