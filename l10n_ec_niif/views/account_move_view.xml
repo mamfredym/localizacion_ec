@@ -406,6 +406,7 @@
                     <field name="l10n_ec_base_iva" optional="hide" />
                     <field name="l10n_ec_iva" optional="hide" />
                     <field name="l10n_ec_discount_total" optional="hide" />
+                    <field name="l10n_ec_discount_additional" optional="hide" />
                 </xpath>
             </field>
         </record>

@@ -48,6 +48,9 @@ class L10nEcCommonDocumentLine(models.AbstractModel):
     l10n_ec_discount_total_currency = fields.Float(
         string="Total Discount", compute="_compute_l10n_ec_amounts", store=True
     )
+    # campo para descuentos adicionales, esto se usara solo para reportes, para distribuir el valor de lineas negativas
+    # no sera campo calculado para evitar recalculos innecesarios, solo se hara una vez en el post
+    l10n_ec_discount_additional = fields.Float(string="Additional Discount")
 
     def _compute_l10n_ec_amounts(self):
         # esta funcion debe ser implementada en los modulos que hereden de esta clase

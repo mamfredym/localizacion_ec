@@ -1154,7 +1154,9 @@ class AccountMove(models.Model):
                 # proceso de facturacion electronica
                 if move.is_invoice():
                     move.l10n_ec_action_create_xml_data()
-        return super(AccountMove, self).post()
+        res = super(AccountMove, self).post()
+        self.l10n_ec_asign_discount_to_lines()
+        return res
 
     def action_invoice_sent(self):
         self.ensure_one()
@@ -1917,7 +1919,7 @@ class AccountMove(models.Model):
         iva_group = self.env.ref("l10n_ec_niif.tax_group_iva")
         iva0_group = self.env.ref("l10n_ec_niif.tax_group_iva_0")
         invoice_lines = self.invoice_line_ids.filtered(lambda x: not x.display_type and x.price_subtotal > 0)
-        lines_discount = self.invoice_line_ids.filtered(lambda x:  x.price_subtotal < 0 and not x.display_type)
+        lines_discount = self.invoice_line_ids.filtered(lambda x: x.price_subtotal < 0 and not x.display_type)
         invoice_lines -= lines_discount
         invoice_line_data = {}
         discount_by_tax = {}
@@ -1979,6 +1981,7 @@ class AccountMove(models.Model):
                         tarifa_iva = tax.amount
             invoice_line_data[line.id] = {
                 "discount": discount,
+                "discount_additional": discount_additional,
                 "subtotal": subtotal,
                 "l10n_ec_base_iva_0": l10n_ec_base_iva_0,
                 "l10n_ec_base_iva": l10n_ec_base_iva,
@@ -1990,6 +1993,16 @@ class AccountMove(models.Model):
             "lines_discount": lines_discount,
             "invoice_line_data": invoice_line_data,
         }
+
+    def l10n_ec_asign_discount_to_lines(self):
+        for invoice in self:
+            invoice_lines_data = invoice._l10n_ec_get_invoice_lines_to_fe()
+            invoice_lines = invoice_lines_data["invoice_lines"]
+            invoice_line_data = invoice_lines_data["invoice_line_data"]
+            for line in invoice_lines:
+                line_data = invoice_line_data.get(line.id, {})
+                line.write({"l10n_ec_discount_additional": line_data.get("discount_additional") or 0.0})
+        return True
 
     def l10n_ec_get_info_factura(self, node):
         util_model = self.env["l10n_ec.utils"]
