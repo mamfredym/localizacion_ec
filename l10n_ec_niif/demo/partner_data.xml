@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <data>
+        <function model="account.chart.template" name="try_loading">
+            <value eval="[ref('l10n_ec_niif.ec_chart_template')]" />
+        </function>
         <record model="res.company" id="base.main_company">
             <field name="country_id" ref="base.ec" />
         </record>
