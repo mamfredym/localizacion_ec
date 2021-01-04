@@ -25,6 +25,11 @@
             <t t-set="call_report_original" t-value="False" />
             <t t-call="l10n_ec_niif.l10n_ec_invoice_document" t-lang="lang" />
         </t>
+        <!-- Si liquidacion es tipo pre-impreso llamar a plantilla nueva -->
+        <t t-if="o.type == 'in_invoice' and o.l10n_latam_internal_type == 'liquidation' and o.l10n_ec_type_emission == 'pre_printed'">
+            <t t-set="call_report_original" t-value="False" />
+            <t t-call="l10n_ec_niif.report_liquidation_preprinter_document" t-lang="lang" />
+        </t>
         <!-- TODO: Agregar condicion si es preimpreso llamar a otra plantilla -->
         <t t-if="call_report_original">
             <t t-call="account.report_invoice_document_with_payments" t-lang="lang" />
@@ -40,6 +45,11 @@
         <t t-if="o.l10n_ec_xml_data_id">
             <t t-set="call_report_original" t-value="False" />
             <t t-call="l10n_ec_niif.l10n_ec_invoice_document" t-lang="lang" />
+        </t>
+        <!-- Si liquidacion es tipo pre-impreso llamar a plantilla nueva -->
+        <t t-if="o.type == 'in_invoice' and o.l10n_latam_internal_type == 'liquidation' and o.l10n_ec_type_emission == 'pre-printed'">
+            <t t-set="call_report_original" t-value="False" />
+            <t t-call="l10n_ec_niif.report_liquidation_preprinter_document" t-lang="lang" />
         </t>
         <!-- TODO: Agregar condicion si es preimpreso llamar a otra plantilla -->
         <t t-if="call_report_original">
