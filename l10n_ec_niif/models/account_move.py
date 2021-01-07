@@ -1924,8 +1924,8 @@ class AccountMove(models.Model):
         """
         iva_group = self.env.ref("l10n_ec_niif.tax_group_iva")
         iva0_group = self.env.ref("l10n_ec_niif.tax_group_iva_0")
-        invoice_lines = self.invoice_line_ids.filtered(lambda x: not x.display_type and x.price_subtotal > 0)
-        lines_discount = self.invoice_line_ids.filtered(lambda x: x.price_subtotal < 0 and not x.display_type)
+        invoice_lines = self.invoice_line_ids.filtered(lambda x: not x.display_type)
+        lines_discount = invoice_lines.filtered(lambda x: x.price_subtotal < 0)
         invoice_lines -= lines_discount
         invoice_line_data = {}
         discount_by_tax = {}
