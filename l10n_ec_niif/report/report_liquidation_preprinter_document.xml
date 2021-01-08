@@ -4,6 +4,8 @@
         <template id="report_liquidation_preprinter_document">
             <t t-call="web.basic_layout">
                 <div class="page">
+                    <br />
+                    <br />
                     <h5 class="text-right">
                         <span t-if="o.name != '/'">No.:</span>
                         <span t-if="o.name != '/'" t-field="o.l10n_latam_document_number" />
