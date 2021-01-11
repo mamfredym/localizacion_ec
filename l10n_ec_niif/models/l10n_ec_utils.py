@@ -230,3 +230,20 @@ class L10necUtils(models.AbstractModel):
             date = from_zone.localize(date)
         date = date.astimezone(to_zone)
         return date
+
+    @api.model
+    def get_selection_item(self, model, field, value=None):
+        """
+        Obtener el valor de un campo selection
+        @param model: str, nombre del modelo
+        @param field: str, nombre del campo selection
+        @param value: str, optional, valor del campo selection del cual obtener el string
+        @return: str, la representacion del campo selection que se muestra al usuario
+        """
+        try:
+            field_val = value
+            if field_val:
+                return dict(self.env[model].fields_get(allfields=[field])[field]["selection"])[field_val]
+            return ""
+        except Exception:
+            return ""
