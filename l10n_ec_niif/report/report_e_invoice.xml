@@ -218,7 +218,7 @@
                         </td>
                         <td>
                             <strong>Identificación:</strong>
-                            <span t-field="partner.ref" />
+                            <span t-field="partner.vat" />
                         </td>
                     </tr>
                     <tr>
