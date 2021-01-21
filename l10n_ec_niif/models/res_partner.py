@@ -196,7 +196,10 @@ class ResPartner(models.Model):
         for partner in self:
             if partner.country_id:
                 if partner.vat and partner.country_id.code == "EC":
-                    dni, vat_type = self.check_vat_ec(partner.vat)
+                    try:
+                        dni, vat_type = self.check_vat_ec(partner.vat)
+                    except Exception as e:
+                        _logger.debug(_("Error checking vat: %s error:%s") % (partner.vat, str(e)))
                 if partner.country_id.code != "EC":
                     vat_type = "Pasaporte"
             partner.l10n_ec_type_sri = vat_type
