@@ -549,7 +549,7 @@ class L10nEcWithhold(models.Model):
         self.ensure_one()
         return f"RET-{self.l10n_ec_get_document_number()}"
 
-    def l10n_ec_action_generate_xml_data(self, node_root):
+    def l10n_ec_action_generate_xml_data(self, node_root, xml_version):
         util_model = self.env["l10n_ec.utils"]
         company = self.company_id or self.env.company
         infoCompRetencion = SubElement(node_root, "infoCompRetencion")

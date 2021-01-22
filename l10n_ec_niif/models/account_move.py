@@ -1899,10 +1899,10 @@ class AccountMove(models.Model):
         # algo como: id, prefijo, secuencial
         return f"{self.id}_{self.l10n_latam_document_type_id.doc_code_prefix}_{self.l10n_ec_get_document_number()}"
 
-    def l10n_ec_action_generate_xml_data(self, node_root):
+    def l10n_ec_action_generate_xml_data(self, node_root, xml_version):
         invoice_type = self.l10n_ec_get_invoice_type()
         if invoice_type == "out_invoice":
-            self.l10n_ec_get_info_factura(node_root)
+            self.l10n_ec_get_info_factura(node_root, xml_version)
         # nota de credito
         elif invoice_type == "out_refund":
             self.l10n_ec_get_info_credit_note(node_root)
@@ -2010,7 +2010,7 @@ class AccountMove(models.Model):
                 line.write({"l10n_ec_discount_additional": line_data.get("discount_additional") or 0.0})
         return True
 
-    def l10n_ec_get_info_factura(self, node):
+    def l10n_ec_get_info_factura(self, node, xml_version):
         util_model = self.env["l10n_ec.utils"]
         company = self.company_id or self.env.company
         currency = company.currency_id
@@ -2156,6 +2156,8 @@ class AccountMove(models.Model):
             #                              decimales=currency.decimal_places)
         # Las retenciones solo aplican para el esquema de gasolineras
         # retenciones = SubElement(node,"retenciones")
+        if xml_version.version_file in ("2.0.0", "2.1.0"):
+            _logger.debug("TODO: implement tag otrosRubrosTerceros")
         self.l10n_ec_add_info_adicional(node)
         return node
 

@@ -148,7 +148,7 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
         # algo como: id, prefijo, secuencial
         raise UserError(_("You must replace this function l10n_ec_get_document_filename_xml in your inherited class"))
 
-    def l10n_ec_action_generate_xml_data(self, node_root):
+    def l10n_ec_action_generate_xml_data(self, node_root, xml_version):
         # funcion debe ser reemplazada en cada clase heredada
         # esta funcion debe crear la data del documento en el xml(node_root)
         raise UserError(_("You must replace this function l10n_ec_action_generate_xml_data in its inherited class"))

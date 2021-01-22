@@ -465,7 +465,7 @@ class SriXmlData(models.Model):
         # si estoy con un documento externo, y no debo hacer el proceso electronico en ese momento
         # no tomar la info de los documentos, la tarea cron debe encargarse de eso
         if sign_now:
-            document.l10n_ec_action_generate_xml_data(root)
+            document.l10n_ec_action_generate_xml_data(root, xml_version)
         # Se identa con propositos de revision, no debe ser asi al enviar el documento
         util_model.indent(root)
         bytes_data = tostring(root, encoding="UTF-8")

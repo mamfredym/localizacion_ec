@@ -36,6 +36,10 @@
             <field name="sequence">16</field>
             <field name="l10n_ec_xml_fe_code">6</field>
         </record>
+        <record id="tax_group_third_amounts" model="account.tax.group">
+            <field name="name">Third's Amounts</field>
+            <field name="sequence">17</field>
+        </record>
         <record model="account.tax.template" id="tax_411_iva">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
             <field name="name">Ventas locales (excluye activos fijos) gravadas tarifa diferente de cero</field>
