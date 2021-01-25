@@ -47,6 +47,7 @@
         "report/report_liquidation_preprinter_document.xml",
         "data/email_template.xml",
         "views/sri_menu.xml",
+        "wizard/wizard_cancel_withhold.xml",
         "views/res_partner_view.xml",
         "views/tax_support_view.xml",
         "views/identification_type_view.xml",
