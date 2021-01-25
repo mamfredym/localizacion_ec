@@ -1865,7 +1865,7 @@ class AccountMove(models.Model):
             if line.tax_line_id.tax_group_id.id == iva_group.id and line.tax_line_id.amount > 0:
                 tarifa_iva = line.tax_line_id.amount
         if not tarifa_iva:
-            tarifa_iva = 12
+            tarifa_iva = 12.0
         return tarifa_iva
 
     def l10n_ec_get_document_code_sri(self):
