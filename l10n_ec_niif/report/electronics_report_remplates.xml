@@ -272,6 +272,33 @@
                         />
                     </td>
                 </tr>
+                <t t-set="third_amounts_group" t-value="o.env.ref('l10n_ec_niif.tax_group_third_amounts')" />
+                <t
+                    t-set="other_taxes"
+                    t-value="o.line_ids.mapped('tax_ids').filtered(lambda x: x.tax_group_id.id == third_amounts_group.id)"
+                />
+                <t
+                    t-set="other_taxes_amount"
+                    t-value="sum(g[1] for g in o.amount_by_group if g[6] == third_amounts_group.id)"
+                />
+                <t t-if="len(other_taxes) == 1">
+                    <tr>
+                        <td>
+                            <strong>
+                                <span
+                                    t-esc="'{} ({} %)'.format(other_taxes.name, round(other_taxes.amount, 2))"
+                                    style="text-transform: uppercase;"
+                                />
+                            </strong>
+                        </td>
+                        <td class="text-right">
+                            <span
+                                t-esc="other_taxes_amount"
+                                t-options='{"widget": "monetary", "display_currency": res_company.currency_id}'
+                            />
+                        </td>
+                    </tr>
+                </t>
                 <tr>
                     <td>
                         <strong>VALOR TOTAL</strong>

@@ -291,15 +291,15 @@ class SriXmlData(models.Model):
         :rtype: clave para adjuntar al xml a ser firmado
         """
         mult = 1
-        sum = 0
+        current_sum = 0
         # Paso 1, 2, 3
         for i in reversed(list(range(len(key)))):
             mult += 1
             if mult == 8:
                 mult = 2
-            sum += int(key[i]) * mult
+            current_sum += int(key[i]) * mult
         # Paso 4 y 5
-        check_digit = 11 - (sum % 11)
+        check_digit = 11 - (current_sum % 11)
         if check_digit == 11:
             check_digit = 0
         if check_digit == 10:
@@ -453,6 +453,7 @@ class SriXmlData(models.Model):
                 "state": state,
                 "l10n_ec_xml_key": clave_acceso,
                 "partner_id": partner_id and partner_id.id or False,
+                "xml_file_version": xml_version.version_file,
             }
         )
         # escribir en los objetos relacionados, la clave de acceso y el xml_data para pasar la relacion

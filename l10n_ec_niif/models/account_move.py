@@ -2157,7 +2157,21 @@ class AccountMove(models.Model):
         # Las retenciones solo aplican para el esquema de gasolineras
         # retenciones = SubElement(node,"retenciones")
         if xml_version.version_file in ("2.0.0", "2.1.0"):
-            _logger.debug("TODO: implement tag otrosRubrosTerceros")
+            third_amounts_group = self.env.ref("l10n_ec_niif.tax_group_third_amounts")
+            other_values = {}
+            for group in self.amount_by_group:
+                if group[6] == third_amounts_group.id:
+                    other_values.setdefault(group[0], 0)
+                    other_values[group[0]] += group[1]
+            other_taxes = self.line_ids.mapped("tax_ids").filtered(
+                lambda x: x.tax_group_id.id == third_amounts_group.id
+            )
+            if other_values and len(other_values.keys()) == 1 and len(other_taxes) == 1:
+                otrosRubrosTerceros = SubElement(node, "otrosRubrosTerceros")
+                for name in other_values.keys():
+                    rubro = SubElement(otrosRubrosTerceros, "rubro")
+                    SubElement(rubro, "concepto").text = other_taxes.name
+                    SubElement(rubro, "total").text = util_model.formato_numero(other_values[name], 2)
         self.l10n_ec_add_info_adicional(node)
         return node
 
