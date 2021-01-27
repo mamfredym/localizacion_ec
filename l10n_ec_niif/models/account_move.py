@@ -2737,3 +2737,39 @@ class AccountMoveLine(models.Model):
     def _copy_data_extend_business_fields(self, values):
         super(AccountMoveLine, self)._copy_data_extend_business_fields(values)
         values["l10n_ec_original_invoice_line_id"] = self.id
+
+    def _get_third_amounts_line(self):
+        self.ensure_one()
+        res = {}
+        other_tax = self.env.ref("l10n_ec_niif.tax_group_third_amounts")
+        not_apply_iva = self.env.ref("l10n_ec_niif.1_tax_541_iva")
+        if len(self.tax_ids.filtered(lambda x: x.tax_group_id.id == other_tax.id)) == 1:
+            other_tax = self.tax_ids.filtered(lambda x: x.tax_group_id.id == other_tax.id)
+            taxes = other_tax.compute_all(price_unit=self.price_subtotal, quantity=1.0)
+            amount_tax = 0
+            account_id = False
+            for tax_data in taxes.get("taxes"):
+                if tax_data.get("id", False) == other_tax.id:
+                    amount_tax = tax_data.get("amount", 0)
+                    account_id = tax_data.get("account_id", 0)
+            res = {
+                "line_id": self.id,
+                "product_id": False,
+                "process": True,
+                "name": other_tax.name,
+                "quantity": 1,
+                "product_uom_id": False,
+                "discount": 0,
+                "price_unit": amount_tax,
+                "price_total": amount_tax,
+                "price_subtotal": amount_tax,
+                "account_id": account_id,
+                "analytic_account_id": self.analytic_account_id.id,
+                "analytic_tag_ids": [(6, 0, self.analytic_tag_ids.ids)],
+                "max_quantity": 1,
+                "lot_id": False,
+                "stock_move_line_id": False,
+                "other_amounts": True,
+                "tax_ids": [(6, 0, not_apply_iva.ids)],
+            }
+        return res
