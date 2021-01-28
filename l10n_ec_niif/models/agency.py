@@ -390,7 +390,8 @@ class L10EcPointOfEmission(models.Model):
                     if next_seq_temp and first_number_electronic:
                         if next_seq_temp <= first_number_electronic:
                             next_seq = False
-            # si no encontro documento, y estoy en produccion, a partir de la primera secuencia configurada continuar la numeracion
+            # si no encontro documento, y estoy en produccion
+            # tomar el ultimo numero generado y sumarle 1
             if not next_seq and first_number_electronic and self:
                 try:
                     first_number_electronic = int(first_number_electronic)
@@ -400,22 +401,19 @@ class L10EcPointOfEmission(models.Model):
                 # todos los documentos de account.move se guardan en la misma tabla y con el mismo nombre de campo
                 # obtener el domain segun el tipo de documento
                 domain = modules_mapping.get_domain(invoice_type, include_state=False)
-                domain.append((field_name, "!=", False))
-                domain.append((field_name, ">=", next_seq))
+                start_doc_number = "{}-{}-{}".format(self.agency_id.number, self.number, "%")
+                domain.append((field_name, "ilike", start_doc_number))
                 domain.append(("company_id", "=", self.company_id.id))
-                recs = res_model.with_context(skip_picking_type_filter=True).search(domain)
-                number_in_use = []
+                recs = res_model.with_context(skip_picking_type_filter=True).search(
+                    domain, order=field_name + " DESC", limit=1
+                )
                 if recs:
-                    if len(recs.ids) == 1:
-                        query = f"SELECT {field_name} FROM {res_model._table} WHERE id = {recs.ids[0]} ORDER BY {field_name} "
-                    else:
-                        query = f"SELECT {field_name} FROM {res_model._table} WHERE id IN {tuple(recs.ids)} ORDER BY {field_name} "
-                    self.env.cr.execute(query)
-                    number_in_use = map(lambda x: x[0], self.env.cr.fetchall())
-                count = 0
-                while next_seq in number_in_use:
-                    count += 1
-                    next_seq = self.create_number(first_number_electronic + count)
+                    try:
+                        last_number = int(recs[0][field_name].split("-")[2])
+                    except Exception:
+                        last_number = first_number_electronic
+                    if last_number > first_number_electronic:
+                        next_seq = self.create_number(last_number + 1)
             return next_seq, doc_finded
 
 
