@@ -540,6 +540,42 @@
                 eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': [ref('tag_f104_545')]}),]"
             />
         </record>
+        <record model="account.tax.template" id="tax_7_iva">
+            <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
+            <field name="name">Retención IVA 0%</field>
+            <field name="description">Ret. 0% IVA</field>
+            <field name="amount">12</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="l10n_ec_xml_fe_code">7</field>
+            <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva_withhold" />
+            <field
+                name="invoice_repartition_line_ids"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': []}), (0,0, {'factor_percent': 0,'repartition_type': 'tax','account_id': ref('201070107'),'tag_ids': [ref('tag_f104_7')]}),]"
+            />
+            <field
+                name="refund_repartition_line_ids"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': []}), (0,0, {'factor_percent': 0,'repartition_type': 'tax','account_id': ref('201070107'),'tag_ids': [ref('tag_f104_7')]}),]"
+            />
+        </record>
+        <record model="account.tax.template" id="tax_8_iva">
+            <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
+            <field name="name">No procede Retención</field>
+            <field name="description">No Ret.</field>
+            <field name="amount">12</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="l10n_ec_xml_fe_code">8</field>
+            <field name="tax_group_id" ref="l10n_ec_niif.tax_group_iva_withhold" />
+            <field
+                name="invoice_repartition_line_ids"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': []}), (0,0, {'factor_percent': 0,'repartition_type': 'tax','account_id': ref('201070107'),'tag_ids': [ref('tag_f104_8')]}),]"
+            />
+            <field
+                name="refund_repartition_line_ids"
+                eval="[(5, 0, 0), (0,0, {'factor_percent': 100, 'repartition_type': 'base','tag_ids': []}), (0,0, {'factor_percent': 0,'repartition_type': 'tax','account_id': ref('201070107'),'tag_ids': [ref('tag_f104_8')]}),]"
+            />
+        </record>
         <record model="account.tax.template" id="tax_721_iva">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
             <field name="name">Retención IVA del 10%</field>

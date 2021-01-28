@@ -1595,9 +1595,9 @@ class AccountMove(models.Model):
                         )
         for tax, tax_vals in tax_data.items():
             if tax.tax_group_id.id == withhold_iva_group.id:
-                tax_vals["base_amount"] = tax_vals["tax_amount"] / (
-                    percent_model.browse(tax_vals["percent_id"]).percent / 100.0
-                )
+                tax_percentage = percent_model.browse(tax_vals["percent_id"])
+                if tax_percentage.percent:
+                    tax_vals["base_amount"] = tax_vals["tax_amount"] / (tax_percentage.percent / 100.0)
                 tax_vals["base_amount_currency"] = self.currency_id.compute(
                     tax_vals["base_amount"], self.company_id.currency_id
                 )
