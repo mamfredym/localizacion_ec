@@ -91,7 +91,7 @@ class SriXmlData(models.Model):
     xml_file = fields.Binary(readonly=False, copy=False)
     xml_filename = fields.Char(string="Nombre de archivo xml", readonly=False, copy=False)
     xml_file_version = fields.Char("Version XML")
-    l10n_ec_xml_key = fields.Char("Clave de Acceso", size=49, readonly=True, index=True)
+    l10n_ec_xml_key = fields.Char("Clave de Acceso", size=49, readonly=True, index=True, tracking=True)
     xml_authorization = fields.Char("Autorización SRI", size=49, readonly=True, index=True)
     description = fields.Char("Description")
     invoice_out_id = fields.Many2one("account.move", "Factura", index=True, auto_join=True)
@@ -135,6 +135,7 @@ class SriXmlData(models.Model):
         index=True,
         readonly=True,
         default="draft",
+        tracking=True,
     )
     l10n_ec_type_environment = fields.Selection(
         [
@@ -1439,9 +1440,15 @@ class SriXmlData(models.Model):
 
     def action_cancel(self):
         for xml_data in self:
-            if xml_data.state == "authorized":
+            if xml_data.state == "authorized" and not xml_data.authorization_to_cancel:
                 raise UserError(_("You can't cancel document: %s is authorized on SRI") % (xml_data.display_name,))
-        self.write({"state": "cancel"})
+        self.write(
+            {
+                "cancel_date": time.strftime(DTF),
+                "cancel_user_id": self.env.uid,
+                "state": "cancel",
+            }
+        )
         return True
 
     def unlink(self):

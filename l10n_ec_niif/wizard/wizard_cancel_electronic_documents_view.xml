@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="wizard_cancel_electronic_documents_form_view">
+        <field name="name">wizard.cancel.electronic.documents.form</field>
+        <field name="model">wizard.cancel.electronic.documents</field>
+        <field name="arch" type="xml">
+            <form>
+                <group string="Please enter authorization number for cancel this document" colspan="2">
+                    <field
+                        name="move_id"
+                        attrs="{'invisible': [('move_id', '=', False)]}"
+                        readonly="1"
+                        force_save="1"
+                        options="{'no_open': True}"
+                    />
+                    <field
+                        name="withholding_id"
+                        attrs="{'invisible': [('withholding_id', '=', False)]}"
+                        readonly="1"
+                        force_save="1"
+                        options="{'no_open': True}"
+                    />
+                    <field name="authorization_to_cancel" required="1" />
+                </group>
+                <footer>
+                    <div class="oe_left">
+                        <button
+                            string="Cancel Document"
+                            name="action_cancel"
+                            type="object"
+                            icon="fa-close"
+                            class="oe_highlight"
+                        />
+                        <button string="Close" special="cancel" type="object" icon="fa-close" class="oe_link" />
+                    </div>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_wizard_cancel_electronic_documents_form_view">
+        <field name="name">Cancel electronic documents</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">wizard.cancel.electronic.documents</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="wizard_cancel_electronic_documents_form_view" />
+    </record>
+</odoo>

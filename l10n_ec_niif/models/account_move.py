@@ -1131,6 +1131,42 @@ class AccountMove(models.Model):
 
     def button_draft(self):
         for move in self:
+            # si esta en modo produccion, mostrar asistente para que ingrese autorizacion para cancelar
+            # esta autorizacion se debe pedir al SRI(tramite manual)
+            withhold_electronic = move.l10n_ec_withhold_ids.filtered(
+                lambda x: x.l10n_ec_xml_data_id and x.l10n_ec_xml_data_id.state not in ["draft", "signed", "cancel"]
+            )
+            if (
+                move.is_purchase_document()
+                and withhold_electronic
+                and not self.env.context.get("cancel_electronic_document", False)
+            ):
+                wizard = self.env["wizard.cancel.electronic.documents"].create(
+                    {"withholding_id": withhold_electronic.id}
+                )
+                action = self.env.ref("l10n_ec_niif.action_wizard_cancel_electronic_documents_form_view").read()[0]
+                action["context"] = {
+                    "active_model": self._name,
+                    "active_id": move.id,
+                    "active_ids": self.ids,
+                }
+                action["res_id"] = wizard.id
+                return action
+            if (
+                move.l10n_ec_is_environment_production
+                and move.l10n_ec_xml_data_id
+                and move.l10n_ec_xml_data_id.state not in ["draft", "signed", "cancel"]
+                and not self.env.context.get("cancel_electronic_document", False)
+            ):
+                wizard = self.env["wizard.cancel.electronic.documents"].create({"move_id": move.id})
+                action = self.env.ref("l10n_ec_niif.action_wizard_cancel_electronic_documents_form_view").read()[0]
+                action["context"] = {
+                    "active_model": self._name,
+                    "active_id": move.id,
+                    "active_ids": self.ids,
+                }
+                action["res_id"] = wizard.id
+                return action
             if move.is_purchase_document() and move.l10n_ec_withhold_ids:
                 move.l10n_ec_withhold_ids.action_cancel()
                 move.l10n_ec_withhold_ids.with_context(cancel_from_invoice=True).unlink()
@@ -1392,6 +1428,15 @@ class AccountMove(models.Model):
                         _("You cannot apply VAT withholding without an assigned VAT tax %s")
                         % (" / ".join(t.description or t.name for t in withhold_iva_taxes))
                     )
+        # al validar un documento, si tiene xml autorizado
+        # o una autorizacion de cancelacion, no permitir validar nuevamente,
+        # ya que el SRI rechazara por secuencial registrado
+        current_xml_recs = self.filtered(
+            lambda x: x.l10n_ec_xml_data_id
+            and (x.l10n_ec_xml_data_id.state == "cancel" and x.l10n_ec_xml_data_id.authorization_to_cancel)
+        ).mapped("l10n_ec_xml_data_id")
+        if current_xml_recs:
+            error_list.append(_("You cannot validate this record, already is cancelled on the SRI"))
         if error_list:
             raise UserError("\n".join(error_list))
         return True
@@ -1512,6 +1557,22 @@ class AccountMove(models.Model):
         """
         :return: dict with values for create a new withhold
         """
+        vals_to_write = {}
+        # cuando no tengo numero de retencion, obtener el siguiente
+        if (
+            not self.l10n_ec_withhold_number
+            and self.l10n_ec_point_of_emission_withhold_id
+            and self.l10n_ec_type_emission_withhold == "electronic"
+        ):
+            (next_number, auth_line,) = self.l10n_ec_point_of_emission_withhold_id.get_next_value_sequence(
+                "withhold_purchase", self.l10n_ec_withhold_date, True
+            )
+            if next_number:
+                vals_to_write["l10n_ec_withhold_number"] = next_number
+            if auth_line:
+                vals_to_write["l10n_ec_authorization_line_withhold_id"] = auth_line.id
+        if vals_to_write:
+            self.write(vals_to_write)
         withhold_values = {
             "company_id": self.company_id.id,
             "number": self.l10n_ec_withhold_number,
@@ -1661,8 +1722,8 @@ class AccountMove(models.Model):
         if current_xml_recs:
             current_xml_recs.write({"state": "draft"})
             xml_recs |= current_xml_recs
-        for invoice in self.filtered(lambda x: not x.l10n_ec_xml_data_id):
-            invoice_type = invoice.l10n_ec_get_invoice_type()
+        # proceso de retenciones, hacerlo indistinto si la factura o liquidacion de compra tiene xml
+        for invoice in self:
             if invoice.type == "in_invoice":
                 for retention in invoice.l10n_ec_withhold_ids:
                     if retention.point_of_emission_id.type_emission != "electronic":
@@ -1679,6 +1740,8 @@ class AccountMove(models.Model):
                             new_xml_rec = xml_model.create(sri_xml_vals)
                             xml_recs += new_xml_rec
                             retention._l10n_ec_add_followers_to_electronic_documents()
+        for invoice in self.filtered(lambda x: not x.l10n_ec_xml_data_id):
+            invoice_type = invoice.l10n_ec_get_invoice_type()
             # si el documento esta habilitado, hacer el proceso electronico
             if (
                 invoice.l10n_ec_point_of_emission_id.type_emission == "electronic"

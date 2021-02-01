@@ -255,7 +255,7 @@ class L10nEcWithhold(models.Model):
     @api.constrains("invoice_id")
     def _check_no_retention_same_invoice(self):
         for rec in self:
-            if not rec.invoice_id and rec.l10n_ec_legacy_document:
+            if not rec.invoice_id:
                 continue
             l10n_ec_withhold_line_ids = rec.search([("invoice_id", "=", rec.invoice_id.id), ("id", "!=", rec.id)])
             if l10n_ec_withhold_line_ids:
@@ -402,6 +402,7 @@ class L10nEcWithhold(models.Model):
                     current_move = rec.move_id
                     rec.move_id = False
                     current_move.unlink()
+        self.mapped("l10n_ec_xml_data_id").action_cancel()
         return self.write({"state": "cancelled", "l10n_ec_sri_authorization_state": "to_check"})
 
     def _l10n_ec_action_validate_authorization_sri(self):

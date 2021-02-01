@@ -411,8 +411,8 @@ class L10EcPointOfEmission(models.Model):
                     try:
                         last_number = int(recs[0][field_name].split("-")[2])
                     except Exception:
-                        last_number = first_number_electronic
-                    if last_number > first_number_electronic:
+                        last_number = 0
+                    if last_number >= first_number_electronic:
                         next_seq = self.create_number(last_number + 1)
             return next_seq, doc_finded
 
