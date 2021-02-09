@@ -1110,7 +1110,7 @@ class AccountMove(models.Model):
         for move in ecuadorian_moves:
             if move.is_invoice() and move.state != "draft":
                 raise UserError(_("You only delete invoices in draft state"))
-            super(AccountMove, move.with_context(force_delete=True)).unlink()
+        super(AccountMove, ecuadorian_moves.with_context(force_delete=True)).unlink()
         return super(AccountMove, self - ecuadorian_moves).unlink()
 
     def _get_name_invoice_report(self, report_xml_id):
