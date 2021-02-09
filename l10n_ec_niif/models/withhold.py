@@ -4,6 +4,7 @@ from xml.etree.ElementTree import SubElement
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import safe_eval
 
 _STATES = {"draft": [("readonly", False)]}
 _logger = logging.getLogger(__name__)
@@ -844,3 +845,40 @@ class L10nEcWithholdLine(models.Model):
             return self.tax_id.l10n_ec_xml_fe_code
         elif self.type == "rent":
             return self.tax_id.description
+
+    @api.model
+    def _query_get(self, domain=None):
+        context = dict(self._context or {})
+        domain = domain or []
+        if not isinstance(domain, (list, tuple)):
+            domain = safe_eval(domain)
+        date_field = "issue_date"
+        if context.get("date_to"):
+            domain += [(date_field, "<=", context["date_to"])]
+        if context.get("date_from"):
+            domain += [(date_field, ">=", context["date_from"])]
+        state = context.get("state")
+        if state:
+            if state.lower() != "all":
+                domain += ["|", ("withhold_id.state", "=", "done"), ("withhold_id", "=", False)]
+            else:
+                domain += ["|", ("withhold_id.state", "!=", "cancelled"), ("withhold_id", "=", False)]
+        else:
+            domain += ["|", ("withhold_id.state", "=", "done"), ("withhold_id", "=", False)]
+        if context.get("company_id"):
+            domain += [("company_id", "=", context["company_id"])]
+        description = context.get("type")
+        if description:
+            domain += [("type", "=", description)]
+        transaction_type = context.get("transaction_type")
+        if transaction_type:
+            domain += [("withhold_id.type", "=", transaction_type)]
+        if "company_ids" in context:
+            domain += [("company_id", "in", context["company_ids"])]
+        where_clause = ""
+        where_clause_params = []
+        tables = ""
+        if domain:
+            query = self._where_calc(domain)
+            tables, where_clause, where_clause_params = query.get_sql()
+        return tables, where_clause, where_clause_params
