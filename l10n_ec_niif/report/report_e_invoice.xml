@@ -20,6 +20,7 @@
             t-set="lang"
             t-value="o.invoice_user_id.sudo().lang if o.type in ('in_invoice', 'in_refund') else o.partner_id.lang"
         />
+        <t t-if="not lang" t-set="lang" t-value="o.partner_id.lang" />
         <!-- Si tiene xml electronico llamar a plantilla de RIDE -->
         <t t-if="o.l10n_ec_xml_data_id">
             <t t-set="call_report_original" t-value="False" />
@@ -43,6 +44,7 @@
             t-set="lang"
             t-value="o.invoice_user_id.sudo().lang if o.type in ('in_invoice', 'in_refund') else o.partner_id.lang"
         />
+        <t t-if="not lang" t-set="lang" t-value="o.partner_id.lang" />
         <!-- Si tiene xml electronico llamar a plantilla de RIDE -->
         <t t-if="o.l10n_ec_xml_data_id">
             <t t-set="call_report_original" t-value="False" />

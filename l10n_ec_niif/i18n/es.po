@@ -5600,7 +5600,7 @@ msgstr "Debe configurar el Diario de Retención de la empresa para continuar"
 #: code:addons/l10n_ec_niif/models/withhold.py:0
 #, python-format
 msgid "You must configure Withhold Sale Rent Account on Company to continue"
-msgstr "Debe configurar la Cuenta de Retención Venta de Alquiler en la Compañía para continuar"
+msgstr "Debe configurar la Cuenta de Retención de impuesto a la renta en la Compañía para continuar"
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/withhold.py:0
