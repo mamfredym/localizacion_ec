@@ -1083,7 +1083,9 @@ class AccountMove(models.Model):
     def copy_data(self, default=None):
         if not default:
             default = {}
-        if self.filtered(lambda x: x.company_id.country_id.code == "EC"):
+        if self.filtered(lambda x: x.company_id.country_id.code == "EC") and not default.get(
+            "l10n_latam_document_number"
+        ):
             inv_type = default.get("type") or self.type
             internal_type = (
                 default.get("l10n_latam_internal_type")
