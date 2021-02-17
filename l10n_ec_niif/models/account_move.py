@@ -1681,6 +1681,8 @@ class AccountMove(models.Model):
             message_list.append(_("Must be configure Street to Company: %s.") % (self.company_id.partner_id.name))
         if not self.commercial_partner_id.vat:
             message_list.append(_("Must be configure RUC to Partner: %s.") % (self.commercial_partner_id.name))
+        if not self.commercial_partner_id.country_id:
+            message_list.append(_("Must be configure Country to Partner: %s.") % (self.commercial_partner_id.name))
         if not self.commercial_partner_id.street:
             message_list.append(_("Must be configure Street to Partner: %s.") % (self.commercial_partner_id.name))
         if self.l10n_ec_invoice_type != "in_invoice" and not self.l10n_ec_sri_payment_id:
