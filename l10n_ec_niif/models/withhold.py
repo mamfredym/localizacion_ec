@@ -853,6 +853,8 @@ class L10nEcWithholdLine(models.Model):
         if not isinstance(domain, (list, tuple)):
             domain = safe_eval(domain)
         date_field = "issue_date"
+        if context.get("transaction_type", "") == "sale":
+            date_field = "withhold_id.move_id.date"
         if context.get("date_to"):
             domain += [(date_field, "<=", context["date_to"])]
         if context.get("date_from"):
