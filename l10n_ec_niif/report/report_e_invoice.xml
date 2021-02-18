@@ -52,7 +52,7 @@
         </t>
         <!-- Si liquidacion es tipo pre-impreso llamar a plantilla nueva -->
         <t
-            t-if="o.type == 'in_invoice' and o.l10n_latam_internal_type == 'liquidation' and o.l10n_ec_type_emission == 'pre-printed'"
+            t-if="o.type == 'in_invoice' and o.l10n_latam_internal_type == 'liquidation' and o.l10n_ec_type_emission == 'pre_printed'"
         >
             <t t-set="call_report_original" t-value="False" />
             <t t-call="l10n_ec_niif.report_liquidation_preprinter_document" t-lang="lang" />
