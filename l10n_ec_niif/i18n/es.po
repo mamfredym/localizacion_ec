@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-02 04:37+0000\n"
-"PO-Revision-Date: 2021-02-04 12:35-0500\n"
+"POT-Creation-Date: 2021-02-18 23:21+0000\n"
+"PO-Revision-Date: 2021-02-18 18:30-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -105,16 +105,16 @@ msgid ""
 "                        <div style=\"display:table-row-group;\">\n"
 "                            % for doc in documents:\n"
 "                            <div style=\"display:table-row;\">\n"
-"                                <div style=\"display:table-cell;width:65%;text-align:center;border:solid;border-width: "
-"1px 1px 1px 1px;\">\n"
+"                                <div style=\"display:table-cell;width:65%;text-align:center;border:solid;border-width: 1px "
+"1px 1px 1px;\">\n"
 "                                    ${doc.display_name}\n"
 "                                </div>\n"
-"                                <div style=\"display:table-cell;width:65%;text-align:center;border:solid;border-width: "
-"1px 1px 1px 1px;\">\n"
+"                                <div style=\"display:table-cell;width:65%;text-align:center;border:solid;border-width: 1px "
+"1px 1px 1px;\">\n"
 "                                    ${doc.last_error_id.display_name}\n"
 "                                </div>\n"
-"                                <div style=\"display:table-cell;width:65%;text-align:center;border:solid;border-width: "
-"1px 1px 1px 1px;\">\n"
+"                                <div style=\"display:table-cell;width:65%;text-align:center;border:solid;border-width: 1px "
+"1px 1px 1px;\">\n"
 "                                    <span>\n"
 "                                        <a href=\"${doc.get_mail_url()}\">Ver Documento</a>\n"
 "                                    </span>\n"
@@ -138,12 +138,12 @@ msgstr ""
 "                        <div style=\"display:table-row-group;\">\n"
 "                            % for doc in documents:\n"
 "                            <div style=\"display:table-row;\">\n"
-"                                <div style=\"display:table-cell;width:65%;text-align:center;border:solid;border-width: "
-"1px 1px 1px 1px;\">${doc.display_name}</div>\n"
-"                                <div style=\"display:table-cell;width:65%;text-align:center;border:solid;border-width: "
-"1px 1px 1px 1px;\">${doc.last_error_id.display_name}</div>\n"
-"                                <div style=\"display:table-cell;width:65%;text-align:center;border:solid;border-width: "
-"1px 1px 1px 1px;\">\n"
+"                                <div style=\"display:table-cell;width:65%;text-align:center;border:solid;border-width: 1px "
+"1px 1px 1px;\">${doc.display_name}</div>\n"
+"                                <div style=\"display:table-cell;width:65%;text-align:center;border:solid;border-width: 1px "
+"1px 1px 1px;\">${doc.last_error_id.display_name}</div>\n"
+"                                <div style=\"display:table-cell;width:65%;text-align:center;border:solid;border-width: 1px "
+"1px 1px 1px;\">\n"
 "                                    <span>\n"
 "                                        <a href=\"${doc.get_mail_url()}\">Ver Documento</a>\n"
 "                                    </span>\n"
@@ -160,13 +160,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
 msgid ""
 "<b>Always Allow:</b>\n"
-"                                                Credit Notes are not compared with Invoice amount total, can be "
-"validate\n"
+"                                                Credit Notes are not compared with Invoice amount total, can be validate\n"
 "                                                without restriction"
 msgstr ""
 "<b> Permitir siempre: </b>\n"
-"                                                 Las notas de crédito no se comparan con el monto total de la factura, "
-"se pueden validar\n"
+"                                                 Las notas de crédito no se comparan con el monto total de la factura, se "
+"pueden validar\n"
 "                                                 sin restricción"
 
 #. module: l10n_ec_niif
@@ -178,8 +177,7 @@ msgid ""
 msgstr ""
 "<b> Completo: </b>\n"
 "                                                     Debe ingresar toda la información necesaria para crear proveedor\n"
-"                                                     autorización, las validaciones se realizan localmente y en línea "
-"con SRI"
+"                                                     autorización, las validaciones se realizan localmente y en línea con SRI"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
@@ -188,8 +186,7 @@ msgid ""
 "                                                Documents are authorized on max time of 24 hours with SRI"
 msgstr ""
 "<b> Fuera de línea: </b>\n"
-"                                                 Los documentos están autorizados en un tiempo máximo de 24 horas con "
-"SRI"
+"                                                 Los documentos están autorizados en un tiempo máximo de 24 horas con SRI"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_sri_config_settings
@@ -217,8 +214,8 @@ msgid ""
 "                                                validate"
 msgstr ""
 "<b> Restringir mayor que la factura: </b>\n"
-"                                                 Cuando la nota de crédito es mayor que la factura, genere una "
-"excepción y no pueda\n"
+"                                                 Cuando la nota de crédito es mayor que la factura, genere una excepción y "
+"no pueda\n"
 "                                                 validar"
 
 #. module: l10n_ec_niif
@@ -248,6 +245,8 @@ msgid ""
 "<br/>\n"
 "                                    <strong>Email Sucursal:</strong>"
 msgstr ""
+"<br/>\n"
+"                                    <strong>Email Sucursal: </strong>"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.electronic_report_common_head
@@ -423,8 +422,7 @@ msgstr ""
 "                        <li><strong>Tipo de Documento: </strong> ${object.l10n_ec_get_document_string()}</li>\n"
 "                        <li><strong>Número de Documento: </strong> ${object.l10n_ec_get_document_number()}</li>\n"
 "                        <li><strong>Clave de acceso: </strong> ${object.l10n_ec_xml_key}</li>\n"
-"                        <li><strong>Valor Total: </strong> ${format_amount(object.amount_total, object.currency_id)}</"
-"li>\n"
+"                        <li><strong>Valor Total: </strong> ${format_amount(object.amount_total, object.currency_id)}</li>\n"
 "                        % if object.origin:\n"
 "                        <li><strong>Referencia: </strong> ${object.origin}</li>\n"
 "                        % endif\n"
@@ -478,8 +476,8 @@ msgid ""
 "                <br/>\n"
 "                <br/>\n"
 "                <div style=\"margin: 32px 0px 32px 0px; text-align: center;\">\n"
-"                    <a href=\"${object.get_base_url() + object.l10n_ec_get_share_url()}\" style=\"background-color: "
-"#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                    <a href=\"${object.get_base_url() + object.l10n_ec_get_share_url()}\" style=\"background-color: #875A7B; "
+"padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                        Ver Retencion\n"
 "                    </a>\n"
 "                </div>\n"
@@ -513,8 +511,8 @@ msgstr ""
 "                </p>\n"
 "                <br/><br/>\n"
 "                <div style=\"margin: 32px 0px 32px 0px; text-align: center;\">\n"
-"                    <a href=\"${object.get_base_url() + object.l10n_ec_get_share_url()}\" style=\"background-color: "
-"#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                    <a href=\"${object.get_base_url() + object.l10n_ec_get_share_url()}\" style=\"background-color: #875A7B; "
+"padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                        Ver Retencion\n"
 "                    </a>\n"
 "                </div>\n"
@@ -560,40 +558,40 @@ msgstr ""
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.account_move_form_view_latam
 msgid ""
-"<span attrs=\"{'invisible': ['|', '|', ('l10n_ec_invoice_type', '!=', 'out_invoice'), ('state', '!=', 'draft'), "
-"('name', '!=', '/')]}\">\n"
+"<span attrs=\"{'invisible': ['|', '|', ('l10n_ec_invoice_type', '!=', 'out_invoice'), ('state', '!=', 'draft'), ('name', '!"
+"=', '/')]}\">\n"
 "                            Draft Customer Invoice\n"
 "                        </span>\n"
-"                        <span attrs=\"{'invisible': ['|', '|', ('l10n_ec_invoice_type', '!=', 'out_refund'), ('state', "
-"'!=', 'draft'), ('name', '!=', '/')]}\">\n"
+"                        <span attrs=\"{'invisible': ['|', '|', ('l10n_ec_invoice_type', '!=', 'out_refund'), ('state', '!=', "
+"'draft'), ('name', '!=', '/')]}\">\n"
 "                            Draft Customer Credit Note\n"
 "                        </span>\n"
-"                        <span attrs=\"{'invisible': ['|', '|', ('l10n_ec_invoice_type', '!=', 'in_invoice'), ('state', "
-"'!=', 'draft'), ('name', '!=', '/')]}\">\n"
+"                        <span attrs=\"{'invisible': ['|', '|', ('l10n_ec_invoice_type', '!=', 'in_invoice'), ('state', '!=', "
+"'draft'), ('name', '!=', '/')]}\">\n"
 "                            Draft Vendor Bill\n"
 "                        </span>\n"
-"                        <span attrs=\"{'invisible': ['|', '|', ('l10n_ec_invoice_type', '!=', 'in_refund'), ('state', "
-"'!=', 'draft'), ('name', '!=', '/')]}\">\n"
+"                        <span attrs=\"{'invisible': ['|', '|', ('l10n_ec_invoice_type', '!=', 'in_refund'), ('state', '!=', "
+"'draft'), ('name', '!=', '/')]}\">\n"
 "                            Draft Vendor Refund\n"
 "                        </span>\n"
-"                        <span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'out_receipt'), ('state', '!=', "
-"'draft'), ('name', '!=', '/')]}\">\n"
+"                        <span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'out_receipt'), ('state', '!=', 'draft'), "
+"('name', '!=', '/')]}\">\n"
 "                            Draft Sales Receipt\n"
 "                        </span>\n"
 "                        <span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'in_receipt'), ('state', '!=', 'draft'), "
 "('name', '!=', '/')]}\">\n"
 "                            Draft Purchase Receipt\n"
 "                        </span>\n"
-"                        <span attrs=\"{'invisible': ['|', '|', ('l10n_ec_invoice_type', '!=', 'debit_note_out'), "
-"('state', '!=', 'draft'), ('name', '!=', '/')]}\">\n"
+"                        <span attrs=\"{'invisible': ['|', '|', ('l10n_ec_invoice_type', '!=', 'debit_note_out'), ('state', '!"
+"=', 'draft'), ('name', '!=', '/')]}\">\n"
 "                            Draft Customer Debit Note\n"
 "                        </span>\n"
-"                        <span attrs=\"{'invisible': ['|', '|', ('l10n_ec_invoice_type', '!=', 'debit_note_in'), "
-"('state', '!=', 'draft'), ('name', '!=', '/')]}\">\n"
+"                        <span attrs=\"{'invisible': ['|', '|', ('l10n_ec_invoice_type', '!=', 'debit_note_in'), ('state', '!"
+"=', 'draft'), ('name', '!=', '/')]}\">\n"
 "                            Draft Vendor Debit Note\n"
 "                        </span>\n"
-"                        <span attrs=\"{'invisible': ['|', '|', ('l10n_ec_invoice_type', '!=', 'liquidation'), "
-"('state', '!=', 'draft'), ('name', '!=', '/')]}\">\n"
+"                        <span attrs=\"{'invisible': ['|', '|', ('l10n_ec_invoice_type', '!=', 'liquidation'), ('state', '!"
+"=', 'draft'), ('name', '!=', '/')]}\">\n"
 "                            Draft Liquidation of Purchase\n"
 "                        </span>"
 msgstr ""
@@ -874,7 +872,7 @@ msgstr "<strong>Punto de Emisión</strong>"
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.report_liquidation_preprinter_document
 msgid "<strong>Produced by</strong>"
-msgstr "<strong> Producido por </strong>"
+msgstr "<strong> Elaborado por </strong>"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.electronic_report_common_head
@@ -1170,12 +1168,11 @@ msgstr "Política de conciliación de montos"
 #. module: l10n_ec_niif
 #: model:ir.model.fields,help:l10n_ec_niif.field_l10n_latam_document_type__internal_type
 msgid ""
-"Analog to odoo account.move.type but with more options allowing to identify the kind of document we are working with. "
-"(not only related to account.move, could be for documents of other models like stock.picking)"
+"Analog to odoo account.move.type but with more options allowing to identify the kind of document we are working with. (not "
+"only related to account.move, could be for documents of other models like stock.picking)"
 msgstr ""
-"Análogo a account.move.type de Odoo pero con más opciones, permitiendo identificar el tipo de documento sobre el que "
-"estamos trabajando. (no solamente relativo a account.move, podría ser relativo a otros modelos, como por ejemplo stock."
-"picking)"
+"Análogo a account.move.type de Odoo pero con más opciones, permitiendo identificar el tipo de documento sobre el que estamos "
+"trabajando. (no solamente relativo a account.move, podría ser relativo a otros modelos, como por ejemplo stock.picking)"
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/l10n_ec_account_invoice_refund.py:0
@@ -1577,7 +1574,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.view_account_cancel_withhold_wizard
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.wizard_cancel_electronic_documents_form_view
 msgid "Close"
-msgstr ""
+msgstr "Cerrar"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_identification_type__code
@@ -2184,15 +2181,13 @@ msgstr ""
 
 #. module: l10n_ec_niif
 #: model:ir.actions.server,name:l10n_ec_niif.ir_cron_xml_per_contingence_ir_actions_server
-#: model:ir.cron,cron_name:l10n_ec_niif.ir_cron_xml_per_contingence
-#: model:ir.cron,name:l10n_ec_niif.ir_cron_xml_per_contingence
+#: model:ir.cron,cron_name:l10n_ec_niif.ir_cron_xml_per_contingence model:ir.cron,name:l10n_ec_niif.ir_cron_xml_per_contingence
 msgid "Documentos emitidos en contingecia"
 msgstr ""
 
 #. module: l10n_ec_niif
 #: model:ir.actions.server,name:l10n_ec_niif.ir_cron_xml_no_authorizated_ir_actions_server
-#: model:ir.cron,cron_name:l10n_ec_niif.ir_cron_xml_no_authorizated
-#: model:ir.cron,name:l10n_ec_niif.ir_cron_xml_no_authorizated
+#: model:ir.cron,cron_name:l10n_ec_niif.ir_cron_xml_no_authorizated model:ir.cron,name:l10n_ec_niif.ir_cron_xml_no_authorizated
 msgid "Documentos en espera de autorizacion"
 msgstr "Documentos en espera de autorización"
 
@@ -2417,8 +2412,7 @@ msgstr ""
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/sri_key_type.py:0
 #, python-format
-msgid ""
-"Error opening the signature, possibly the signature key has been entered incorrectly or the file is not supported."
+msgid "Error opening the signature, possibly the signature key has been entered incorrectly or the file is not supported."
 msgstr ""
 "Error abriendo la firma, es posible que la contraseña de la firma ha sido ingresada incorrectamente o el archivo no es "
 "soportado."
@@ -2462,8 +2456,8 @@ msgstr ""
 #: code:addons/l10n_ec_niif/models/xml_data.py:0
 #, python-format
 msgid ""
-"Es obligatorio seleccionar el tipo de llave o archivo de cifrado usa para la firma de los documentos electrónicos, "
-"verificar la configuración de la compañia"
+"Es obligatorio seleccionar el tipo de llave o archivo de cifrado usa para la firma de los documentos electrónicos, verificar "
+"la configuración de la compañia"
 msgstr ""
 
 #. module: l10n_ec_niif
@@ -2794,7 +2788,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_wizard_cancel_withhold__id
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_wizard_cancel_withhold_line__id
 msgid "ID"
-msgstr ""
+msgstr "ID (Identificador)"
 
 #. module: l10n_ec_niif
 #: model:account.tax.group,name:l10n_ec_niif.tax_group_irbpnr
@@ -3079,21 +3073,20 @@ msgstr "Fecha de emisión"
 #: code:addons/l10n_ec_niif/models/agency.py:0
 #, python-format
 msgid ""
-"It is not possible to find authorization for the document type %s at the point of emission %s for the agency %s with "
-"date %s on company: %s"
+"It is not possible to find authorization for the document type %s at the point of emission %s for the agency %s with date %s "
+"on company: %s"
 msgstr ""
-"No es posible para encontrar una autorización para el documento tipo %s para el punto de emisión %s en la agencia %s "
-"con fecha %s en la compañía: %s"
+"No es posible para encontrar una autorización para el documento tipo %s para el punto de emisión %s en la agencia %s con "
+"fecha %s en la compañía: %s"
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/agency.py:0
 #, python-format
 msgid ""
-"It is not possible to find authorization for the document type %s at the point of issue %s for the agency %s with date "
-"%s"
+"It is not possible to find authorization for the document type %s at the point of issue %s for the agency %s with date %s"
 msgstr ""
-"No es posible para encontrar una autorización para el documento tipo %s para el punto de emisión %s en la agencia %s "
-"con fecha %s"
+"No es posible para encontrar una autorización para el documento tipo %s para el punto de emisión %s en la agencia %s con "
+"fecha %s"
 
 #. module: l10n_ec_niif
 #: model:ir.model,name:l10n_ec_niif.model_account_journal
@@ -3131,11 +3124,11 @@ msgstr ""
 #. module: l10n_ec_niif
 #: model:ir.model.fields,help:l10n_ec_niif.field_l10n_ec_xml_version__file_path
 msgid ""
-"La ruta del archivo xsd a usar, puede ser una ruta absoluta o relativa al modulo, pero debe incluir el nombre del "
-"archivo y la extension"
+"La ruta del archivo xsd a usar, puede ser una ruta absoluta o relativa al modulo, pero debe incluir el nombre del archivo y "
+"la extension"
 msgstr ""
-"La ruta del archivo xsd a usar, puede ser una ruta absoluta o relativa al modulo, pero debe incluir el nombre del "
-"archivo y la extensión"
+"La ruta del archivo xsd a usar, puede ser una ruta absoluta o relativa al modulo, pero debe incluir el nombre del archivo y "
+"la extensión"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_l10n_ec_account_invoice_refund____last_update
@@ -3401,6 +3394,12 @@ msgstr "Mover para cancelar"
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_form_view
 msgid "Moves"
 msgstr "Movimientos"
+
+#. module: l10n_ec_niif
+#: code:addons/l10n_ec_niif/models/account_move.py:0
+#, python-format
+msgid "Must be configure Country to Partner: %s."
+msgstr "Debe configurar el pais en la empresa: %s."
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/account_move.py:0
@@ -4216,6 +4215,7 @@ msgstr ""
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_sri_xml_data__withhold_id
+#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_point_of_emission_document_sequence__document_type__withhold_purchase
 msgid "Retención"
 msgstr ""
 
@@ -4228,11 +4228,6 @@ msgstr ""
 #: model:account.tax.group,name:l10n_ec_niif.tax_group_iva_withhold
 msgid "Retención I.V.A."
 msgstr ""
-
-#. module: l10n_ec_niif
-#: model:ir.model.fields.selection,name:l10n_ec_niif.selection__l10n_ec_point_of_emission_document_sequence__document_type__withhold_purchase
-msgid "Retener"
-msgstr "Retención"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_retention_resolution
@@ -4563,11 +4558,10 @@ msgstr ""
 #: model:ir.model.fields,help:l10n_ec_niif.field_account_tax__l10n_ec_xml_fe_code
 #: model:ir.model.fields,help:l10n_ec_niif.field_account_tax_template__l10n_ec_xml_fe_code
 msgid ""
-"Tax Code used into xml files for electronic documents sent to S.R.I., If field is empty, description field are used "
-"instead"
+"Tax Code used into xml files for electronic documents sent to S.R.I., If field is empty, description field are used instead"
 msgstr ""
-"Código de impuestos utilizado en archivos xml para documentos electrónicos enviados a S.R.I., si el campo está vacío, "
-"se utiliza el campo de descripción en su lugar"
+"Código de impuestos utilizado en archivos xml para documentos electrónicos enviados a S.R.I., si el campo está vacío, se "
+"utiliza el campo de descripción en su lugar"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_withhold_form_view
@@ -4766,11 +4760,11 @@ msgstr "Hay otro tipo de documento %s con el número '%s' para la empresa %s"
 #: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
 #, python-format
 msgid ""
-"There is more than one match of active authorizations for the partner %s of type %s for the number %s with date %s, "
-"please select the correct authorization and then enter the number"
+"There is more than one match of active authorizations for the partner %s of type %s for the number %s with date %s, please "
+"select the correct authorization and then enter the number"
 msgstr ""
-"Hay más de una coincidencia de autorizaciones activas para la empresa %s del tipo %s para el número %s con la fecha "
-"%s, seleccione la autorización correcta y luego ingrese el número"
+"Hay más de una coincidencia de autorizaciones activas para la empresa %s del tipo %s para el número %s con la fecha %s, "
+"seleccione la autorización correcta y luego ingrese el número"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.actions.act_window,help:l10n_ec_niif.l10n_ec_sri_company_resolution_act_window
@@ -4793,8 +4787,7 @@ msgstr "Hay otro tipo de documento %s con el número '%s' para el contacto %s"
 #: code:addons/l10n_ec_niif/models/authorization.py:0
 #, python-format
 msgid "There's another line with document type %s for point of emission %s in the agency %s, please check sequences"
-msgstr ""
-"Hay otra línea con el tipo de documento %s para el punto de emisión %s en la agencia %s, verifique las secuencias"
+msgstr "Hay otra línea con el tipo de documento %s para el punto de emisión %s en la agencia %s, verifique las secuencias"
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/authorization.py:0
@@ -4806,21 +4799,20 @@ msgstr "Hay otra línea con el tipo de documento %s para el punto de emisión %s
 #: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
 #, python-format
 msgid ""
-"There's no exist authorization for document type %s for partner %s with date %s for sequence %s, check if you should "
-"create authorization"
+"There's no exist authorization for document type %s for partner %s with date %s for sequence %s, check if you should create "
+"authorization"
 msgstr ""
-"No existe una autorización para el tipo de documento %s para el contacto %s con la fecha %s para la secuencia %s, "
-"verifique si debe crear una autorización"
+"No existe una autorización para el tipo de documento %s para el contacto %s con la fecha %s para la secuencia %s, verifique "
+"si debe crear una autorización"
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
 #, python-format
 msgid ""
-"There's no exist authorization for document type %s for partner %s with date %s, check if you should create "
-"authorization"
+"There's no exist authorization for document type %s for partner %s with date %s, check if you should create authorization"
 msgstr ""
-"No existe una autorización para el tipo de documento %s para el contacto %s con la fecha %s, verifique si debe crear "
-"una autorización"
+"No existe una autorización para el tipo de documento %s para el contacto %s con la fecha %s, verifique si debe crear una "
+"autorización"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.l10n_ec_sri_authorization_supplier_form_view
@@ -5349,7 +5341,7 @@ msgstr "Retenciones"
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_wizard_cancel_withhold_line__wizard_id
 msgid "Wizard"
-msgstr ""
+msgstr "Asistente"
 
 #. module: l10n_ec_niif
 #: model:ir.model,name:l10n_ec_niif.model_wizard_cancel_withhold_line
@@ -5554,11 +5546,10 @@ msgstr "No puede tener más de un IVA %s"
 #: code:addons/l10n_ec_niif/models/authorization_supplier.py:0
 #, python-format
 msgid ""
-"You cannot modify authorization %s of partner %s, this is already used in active documents, contact de system "
-"administrator"
+"You cannot modify authorization %s of partner %s, this is already used in active documents, contact de system administrator"
 msgstr ""
-"No puede modificar la autorización %s del contacto %s, esto ya se usa en documentos activos, póngase en contacto con "
-"el administrador del sistema"
+"No puede modificar la autorización %s del contacto %s, esto ya se usa en documentos activos, póngase en contacto con el "
+"administrador del sistema"
 
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/res_partner.py:0
@@ -5702,10 +5693,8 @@ msgstr "Solo elimina las facturas en estado borrador"
 #: code:addons/l10n_ec_niif/models/res_users.py:0
 #, python-format
 msgid ""
-"Your user does not have the permissions configured correctly (Agency, Point of emission), please check with the "
-"administrator"
-msgstr ""
-"Su usuario no tiene los permisos configurados correctamente (Agencia, Punto de emisión), consulte con el administrador"
+"Your user does not have the permissions configured correctly (Agency, Point of emission), please check with the administrator"
+msgstr "Su usuario no tiene los permisos configurados correctamente (Agencia, Punto de emisión), consulte con el administrador"
 
 #. module: l10n_ec_niif
 #: model_terms:ir.ui.view,arch_db:l10n_ec_niif.portal_document_electronic_error
