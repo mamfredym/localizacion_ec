@@ -124,8 +124,6 @@ class L10nEcWithhold(models.Model):
     electronic_authorization = fields.Char(
         string="Electronic authorization",
         size=49,
-        readonly=True,
-        states=_STATES,
         required=False,
         tracking=True,
     )
