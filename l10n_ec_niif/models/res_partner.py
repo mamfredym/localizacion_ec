@@ -171,21 +171,29 @@ class ResPartner(models.Model):
         else:
             return False, False
 
-    @api.constrains("vat", "country_id")
+    @api.constrains("vat", "country_id", "l10n_latam_identification_type_id")
     def check_vat(self):
+        it_ruc = self.env.ref("l10n_ec_niif.it_ruc")
+        it_cedula = self.env.ref("l10n_ec_niif.it_cedula")
+        it_pasaporte = self.env.ref("l10n_ec_niif.it_pasaporte")
         if self.sudo().env.ref("base.module_base_vat").state == "installed":
-            self = self.filtered(lambda partner: partner.country_id == self.env.ref("base.ec"))
-            for partner in self:
+            ecuadorian_partners = self.filtered(lambda partner: partner.country_id == self.env.ref("base.ec"))
+            for partner in ecuadorian_partners:
                 if partner.vat:
-                    valid, vat_type = self.check_vat_ec(partner.vat)
-                    if not valid:
+                    if partner.l10n_latam_identification_type_id.id not in (it_ruc.id, it_cedula.id, it_pasaporte.id):
                         raise UserError(
-                            _(
-                                "VAT %s is not valid for an Ecuadorian company, "
-                                "it must be like this form 17165373411001"
-                            )
-                            % (partner.vat)
+                            _("You must set Identification type as RUC, Cedula or Passport for ecuadorian company")
                         )
+                    if partner.l10n_latam_identification_type_id.id in (it_ruc.id, it_cedula.id):
+                        valid, vat_type = self.check_vat_ec(partner.vat)
+                        if not valid:
+                            raise UserError(
+                                _(
+                                    "VAT %s is not valid for an Ecuadorian company, "
+                                    "it must be like this form 17165373411001"
+                                )
+                                % (partner.vat)
+                            )
             return super(ResPartner, self).check_vat()
         else:
             return True
