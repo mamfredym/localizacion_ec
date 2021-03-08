@@ -202,8 +202,9 @@ class ResPartner(models.Model):
         else:
             return True
 
-    @api.depends("vat", "country_id")
+    @api.depends("vat", "country_id", "l10n_latam_identification_type_id")
     def _compute_l10n_ec_type_sri(self):
+        it_pasaporte = self.env.ref("l10n_ec_niif.it_pasaporte")
         vat_type = ""
         for partner in self:
             if partner.country_id:
@@ -212,7 +213,9 @@ class ResPartner(models.Model):
                         dni, vat_type = self.check_vat_ec(partner.vat)
                     except Exception as e:
                         _logger.debug(_("Error checking vat: %s error:%s") % (partner.vat, str(e)))
-                if partner.country_id.code != "EC":
+                if partner.country_id.code != "EC" or (
+                    partner.country_id.code == "EC" and partner.l10n_latam_identification_type_id.id == it_pasaporte.id
+                ):
                     vat_type = "Pasaporte"
             partner.l10n_ec_type_sri = vat_type
 
