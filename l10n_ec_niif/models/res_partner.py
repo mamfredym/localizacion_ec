@@ -13,19 +13,23 @@ _logger = logging.getLogger(__name__)
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    @api.depends("country_id")
+    @api.depends("country_id", "l10n_latam_identification_type_id")
     def _compute_l10n_ec_foreign(self):
+        it_pasaporte = self.env.ref("l10n_ec_niif.it_pasaporte")
         for partner in self:
             l10n_ec_foreign = False
             if partner.country_id:
                 if partner.country_id.code != "EC":
                     l10n_ec_foreign = True
-                    partner.set_accounting_account_foreign()
+                if partner.country_id.code == "EC" and partner.l10n_latam_identification_type_id.id == it_pasaporte.id:
+                    l10n_ec_foreign = True
                 else:
                     partner.property_account_receivable_id = (
                         partner.env.company.partner_id.property_account_receivable_id.id
                     )
                     partner.property_account_payable_id = partner.env.company.partner_id.property_account_payable_id.id
+            if l10n_ec_foreign:
+                partner.set_accounting_account_foreign()
             partner.l10n_ec_foreign = l10n_ec_foreign
 
     def set_accounting_account_foreign(self):
