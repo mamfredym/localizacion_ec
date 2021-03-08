@@ -1,6 +1,6 @@
 {
     "name": "Ecuador - Accounting IFRS",
-    "version": "13.0.1.1.2",
+    "version": "13.0.1.1.3",
     "category": "Localization",
     "author": "Spearhead",
     "website": "https://www.spearhead.global",
