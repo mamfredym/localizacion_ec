@@ -2123,7 +2123,10 @@ class AccountMove(models.Model):
         SubElement(infoFactura, "razonSocialComprador").text = util_model._clean_str(
             self.commercial_partner_id.name[:300]
         )
-        SubElement(infoFactura, "identificacionComprador").text = self.commercial_partner_id.vat
+        vat = self.commercial_partner_id.vat
+        if self.l10n_ec_identification_type_id.code == "06":
+            vat = "9999999999999"
+        SubElement(infoFactura, "identificacionComprador").text = vat
         SubElement(infoFactura, "direccionComprador").text = util_model._clean_str(self.commercial_partner_id.street)[
             :300
         ]
