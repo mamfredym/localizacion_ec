@@ -160,8 +160,9 @@ class ResPartner(models.Model):
             return False
 
     def check_vat_ec(self, vat):
-        if self.verify_final_consumer(vat):
-            return self.verify_final_consumer(vat), "Consumidor"
+        consumidor_final = self.verify_final_consumer(vat)
+        if consumidor_final:
+            return consumidor_final, "Consumidor"
         elif len(vat) == 10:
             return ci.is_valid(vat), "Cedula"
         elif len(vat) == 13:
@@ -170,7 +171,7 @@ class ResPartner(models.Model):
                     return True, "Ruc"
                 else:
                     return ruc.is_valid(vat), "Ruc"
-            elif ruc.is_valid(vat):
+            else:
                 return ruc.is_valid(vat), "Ruc"
         else:
             return False, False
