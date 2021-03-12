@@ -1040,6 +1040,11 @@ class AccountMove(models.Model):
             "l10n_latam_document_number",
             "l10n_ec_authorization_line_id",
         }
+        default_printer = self.env["l10n_ec.point.of.emission"].browse()
+        if self.env.context.get("l10n_ec_point_of_emission_id"):
+            default_printer = self.env["l10n_ec.point.of.emission"].browse(
+                self.env.context.get("l10n_ec_point_of_emission_id")
+            )
         if (
             inv_type
             in (
@@ -1061,11 +1066,12 @@ class AccountMove(models.Model):
                 "liquidation",
                 "in_invoice",
             ):
-                default_printer = (
-                    self.env["res.users"]
-                    .get_default_point_of_emission(self.env.user.id, raise_exception=True)
-                    .get("default_printer_default_id")
-                )
+                if not default_printer:
+                    default_printer = (
+                        self.env["res.users"]
+                        .get_default_point_of_emission(self.env.user.id, raise_exception=True)
+                        .get("default_printer_default_id")
+                    )
                 values["l10n_ec_point_of_emission_id"] = default_printer.id
                 if default_printer:
                     values["l10n_ec_type_emission"] = default_printer.type_emission

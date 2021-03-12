@@ -186,7 +186,7 @@ class L10EcPointOfEmission(models.Model):
                     seq = int(number)
                 document_format = self.create_number(seq)
             except Exception as e:
-                _logger("Error function complete_number %s" % str(e))
+                _logger.debug("Error function complete_number %s" % str(e))
         return document_format
 
     def _get_first_number_electronic(self, invoice_type):
@@ -229,7 +229,7 @@ class L10EcPointOfEmission(models.Model):
             if self.number != number_printer:
                 is_number_valid = False
         except Exception as e:
-            _logger("Error parsing number of document: %s" % str(e))
+            _logger.debug("Error parsing number of document: %s" % str(e))
             is_number_valid = False
         if is_number_valid and number:
             doc_find = auth_line_model.search(
