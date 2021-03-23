@@ -1525,10 +1525,10 @@ class AccountMove(models.Model):
                 xml_data = self.env["sri.xml.data"]
                 try:
                     limit_days = int(
-                        self.env["ir.config_parameter"].sudo().get_param("sri.days.to_validate_documents", 3)
+                        self.env["ir.config_parameter"].sudo().get_param("sri.days.to_validate_documents", 5)
                     )
                 except Exception as ex:
-                    limit_days = 3
+                    limit_days = 5
                     _logger.error(
                         "Error get parameter sri.days.to_validate_documents %s",
                         tools.ustr(ex),
