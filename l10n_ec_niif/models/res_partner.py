@@ -205,7 +205,7 @@ class ResPartner(models.Model):
 
     @api.depends("vat", "country_id", "l10n_latam_identification_type_id")
     def _compute_l10n_ec_type_sri(self):
-        it_pasaporte = self.env.ref("l10n_ec_niif.it_pasaporte")
+        it_pasaporte = self.env.ref("l10n_ec_niif.it_pasaporte", False)
         vat_type = ""
         for partner in self:
             if partner.country_id:
