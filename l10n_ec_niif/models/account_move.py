@@ -473,7 +473,7 @@ class AccountMove(models.Model):
             rec.l10n_latam_internal_type = rec.l10n_latam_document_type_id.internal_type
 
     @api.depends(
-        "partner_id.l10n_ec_type_sri",
+        "partner_id.commercial_partner_id.l10n_ec_type_sri",
         "l10n_ec_is_exportation",
         "type",
         "company_id",
@@ -482,30 +482,30 @@ class AccountMove(models.Model):
         identification_model = self.env["l10n_ec.identification.type"]
         for move in self:
             move.l10n_ec_identification_type_id = False
-            if move.company_id.country_id.code != "EC" or not move.partner_id.l10n_ec_type_sri:
+            if move.company_id.country_id.code != "EC" or not move.partner_id.commercial_partner_id.l10n_ec_type_sri:
                 continue
             identification_code = False
             if move.type in ("in_invoice", "in_refund"):
-                if move.partner_id.l10n_ec_type_sri == "Ruc":
+                if move.partner_id.commercial_partner_id.l10n_ec_type_sri == "Ruc":
                     identification_code = "01"
-                elif move.partner_id.l10n_ec_type_sri == "Cedula":
+                elif move.partner_id.commercial_partner_id.l10n_ec_type_sri == "Cedula":
                     identification_code = "02"
-                elif move.partner_id.l10n_ec_type_sri == "Pasaporte":
+                elif move.partner_id.commercial_partner_id.l10n_ec_type_sri == "Pasaporte":
                     identification_code = "03"
             elif move.type in ("out_invoice", "out_refund"):
                 if not move.l10n_ec_is_exportation:
-                    if move.partner_id.l10n_ec_type_sri == "Ruc":
+                    if move.partner_id.commercial_partner_id.l10n_ec_type_sri == "Ruc":
                         identification_code = "04"
-                    elif move.partner_id.l10n_ec_type_sri == "Cedula":
+                    elif move.partner_id.commercial_partner_id.l10n_ec_type_sri == "Cedula":
                         identification_code = "05"
-                    elif move.partner_id.l10n_ec_type_sri == "Pasaporte":
+                    elif move.partner_id.commercial_partner_id.l10n_ec_type_sri == "Pasaporte":
                         identification_code = "06"
-                    elif move.partner_id.l10n_ec_type_sri == "Consumidor":
+                    elif move.partner_id.commercial_partner_id.l10n_ec_type_sri == "Consumidor":
                         identification_code = "07"
                 else:
-                    if move.partner_id.l10n_ec_type_sri == "Ruc":
+                    if move.partner_id.commercial_partner_id.l10n_ec_type_sri == "Ruc":
                         identification_code = "20"
-                    elif move.partner_id.l10n_ec_type_sri == "Pasaporte":
+                    elif move.partner_id.commercial_partner_id.l10n_ec_type_sri == "Pasaporte":
                         identification_code = "21"
             if identification_code:
                 move.l10n_ec_identification_type_id = identification_model.search(

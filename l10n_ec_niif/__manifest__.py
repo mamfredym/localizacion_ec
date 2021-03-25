@@ -6,6 +6,7 @@
     "website": "https://www.spearhead.global",
     "license": "LGPL-3",
     "depends": [
+        "base",
         "account",
         "base_iban",
         "base_vat",

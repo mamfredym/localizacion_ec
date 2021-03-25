@@ -15,13 +15,17 @@ class ResPartner(models.Model):
 
     @api.depends("country_id", "l10n_latam_identification_type_id")
     def _compute_l10n_ec_foreign(self):
-        it_pasaporte = self.env.ref("l10n_ec_niif.it_pasaporte")
+        it_pasaporte = self.env.ref("l10n_ec_niif.it_pasaporte", False)
         for partner in self:
             l10n_ec_foreign = False
             if partner.country_id:
                 if partner.country_id.code != "EC":
                     l10n_ec_foreign = True
-                if partner.country_id.code == "EC" and partner.l10n_latam_identification_type_id.id == it_pasaporte.id:
+                if (
+                    it_pasaporte
+                    and partner.country_id.code == "EC"
+                    and partner.l10n_latam_identification_type_id.id == it_pasaporte.id
+                ):
                     l10n_ec_foreign = True
                 else:
                     partner.property_account_receivable_id = (
@@ -48,7 +52,6 @@ class ResPartner(models.Model):
     l10n_ec_foreign = fields.Boolean(
         "Foreign?",
         readonly=True,
-        help="",
         store=True,
         compute="_compute_l10n_ec_foreign",
     )
@@ -178,9 +181,9 @@ class ResPartner(models.Model):
 
     @api.constrains("vat", "country_id", "l10n_latam_identification_type_id")
     def check_vat(self):
-        it_ruc = self.env.ref("l10n_ec_niif.it_ruc")
-        it_cedula = self.env.ref("l10n_ec_niif.it_cedula")
-        it_pasaporte = self.env.ref("l10n_ec_niif.it_pasaporte")
+        it_ruc = self.env.ref("l10n_ec_niif.it_ruc", False)
+        it_cedula = self.env.ref("l10n_ec_niif.it_cedula", False)
+        it_pasaporte = self.env.ref("l10n_ec_niif.it_pasaporte", False)
         if self.sudo().env.ref("base.module_base_vat").state == "installed":
             ecuadorian_partners = self.filtered(lambda partner: partner.country_id == self.env.ref("base.ec"))
             for partner in ecuadorian_partners:
@@ -206,8 +209,8 @@ class ResPartner(models.Model):
     @api.depends("vat", "country_id", "l10n_latam_identification_type_id")
     def _compute_l10n_ec_type_sri(self):
         it_pasaporte = self.env.ref("l10n_ec_niif.it_pasaporte", False)
-        vat_type = ""
         for partner in self:
+            vat_type = ""
             if partner.country_id:
                 if partner.vat and partner.country_id.code == "EC":
                     try:
@@ -215,7 +218,9 @@ class ResPartner(models.Model):
                     except Exception as e:
                         _logger.debug(_("Error checking vat: %s error:%s") % (partner.vat, str(e)))
                 if partner.country_id.code != "EC" or (
-                    partner.country_id.code == "EC" and partner.l10n_latam_identification_type_id.id == it_pasaporte.id
+                    it_pasaporte
+                    and partner.country_id.code == "EC"
+                    and partner.l10n_latam_identification_type_id.id == it_pasaporte.id
                 ):
                     vat_type = "Pasaporte"
             partner.l10n_ec_type_sri = vat_type
