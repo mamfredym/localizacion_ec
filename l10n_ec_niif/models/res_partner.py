@@ -1,4 +1,5 @@
 import logging
+import re
 
 import requests
 from stdnum.ec import ci, ruc
@@ -231,6 +232,47 @@ class ResPartner(models.Model):
         readonly=True,
         compute="_compute_l10n_ec_type_sri",
     )
+
+    @api.model_create_multi
+    def create(self, vals):
+        ecuador = self.env.ref("base.ec")
+        it_ruc = self.env.ref("l10n_ec_niif.it_ruc", False)
+        it_cedula = self.env.ref("l10n_ec_niif.it_cedula", False)
+        it_pasaporte = self.env.ref("l10n_ec_niif.it_pasaporte", False)
+        if (
+            self.sudo().env.ref("base.module_base_vat").state == "installed"
+            and self.env.company.partner_id.country_id.code == "EC"
+        ):
+            for val in vals:
+                if not val.get("l10n_latam_identification_type_id", False) and val.get("vat"):
+                    if val.get("country_id") == ecuador.id:
+                        only_numbers = re.match(r"^([\s\d]+)$", val.get("vat"))
+                        if only_numbers:
+                            if len(val.get("vat")) == 10:
+                                val.update(
+                                    {
+                                        "l10n_latam_identification_type_id": it_cedula.id,
+                                    }
+                                )
+                            elif len(val.get("vat")) == 13:
+                                val.update(
+                                    {
+                                        "l10n_latam_identification_type_id": it_ruc.id,
+                                    }
+                                )
+                            else:
+                                val.update(
+                                    {
+                                        "l10n_latam_identification_type_id": it_pasaporte.id,
+                                    }
+                                )
+                        else:
+                            val.update(
+                                {
+                                    "l10n_latam_identification_type_id": it_pasaporte.id,
+                                }
+                            )
+        return super(ResPartner, self).create(vals)
 
     def write(self, values):
         for partner in self:
