@@ -184,15 +184,10 @@ class ResPartner(models.Model):
     def check_vat(self):
         it_ruc = self.env.ref("l10n_ec_niif.it_ruc", False)
         it_cedula = self.env.ref("l10n_ec_niif.it_cedula", False)
-        it_pasaporte = self.env.ref("l10n_ec_niif.it_pasaporte", False)
         if self.sudo().env.ref("base.module_base_vat").state == "installed":
             ecuadorian_partners = self.filtered(lambda partner: partner.country_id == self.env.ref("base.ec"))
             for partner in ecuadorian_partners:
                 if partner.vat:
-                    if partner.l10n_latam_identification_type_id.id not in (it_ruc.id, it_cedula.id, it_pasaporte.id):
-                        raise UserError(
-                            _("You must set Identification type as RUC, Cedula or Passport for ecuadorian company")
-                        )
                     if partner.l10n_latam_identification_type_id.id in (it_ruc.id, it_cedula.id):
                         valid, vat_type = self.check_vat_ec(partner.vat)
                         if not valid:
@@ -411,6 +406,23 @@ class ResPartner(models.Model):
 
     def l10n_ec_get_sale_identification_partner(self):
         return self._l10n_ec_get_sale_identification_partner(self.l10n_ec_type_sri)
+
+    def _check_l10n_ec_values(self):
+        self.ensure_one()
+        it_ruc = self.env.ref("l10n_ec_niif.it_ruc", False)
+        it_cedula = self.env.ref("l10n_ec_niif.it_cedula", False)
+        it_pasaporte = self.env.ref("l10n_ec_niif.it_pasaporte", False)
+        # validar que la empresa tenga ruc y tipo de documento
+        if not self.vat:
+            raise UserError(_("Please enter Cedula/RUC to partner: %s") % (self.name,))
+        if self.l10n_latam_identification_type_id.id not in (
+            it_ruc.id,
+            it_cedula.id,
+            it_pasaporte.id,
+        ):
+            raise UserError(
+                _("You must set Identification type as RUC, Cedula or Passport on partner %s") % (self.name,)
+            )
 
     @api.model
     def _l10n_ec_get_sale_identification_partner(self, l10n_ec_type_sri):

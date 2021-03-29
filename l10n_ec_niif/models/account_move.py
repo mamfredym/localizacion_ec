@@ -1268,6 +1268,9 @@ class AccountMove(models.Model):
         iva_group_0 = self.env.ref("l10n_ec_niif.tax_group_iva_0")
         error_list = []
         currency = self.currency_id
+        # validar que la empresa tenga ruc y tipo de documento
+        if self.is_invoice() and self.commercial_partner_id:
+            self.commercial_partner_id._check_l10n_ec_values()
         # validaciones para consumidor final
         # * no permitir factura de ventas mayor a un monto configurado(200 USD por defecto)
         # * no permitir emitir Nota de credito ni factura de proveedor

@@ -303,6 +303,10 @@ class L10nEcWithhold(models.Model):
                 # intentar validar el documento en linea con el SRI
                 rec._l10n_ec_action_validate_authorization_sri()
                 rec._create_account_move()
+            else:
+                # validar que la empresa tenga ruc y tipo de documento
+                if self.commercial_partner_id:
+                    self.commercial_partner_id._check_l10n_ec_values()
         return self.write({"state": "done"})
 
     def _create_account_move(self):
