@@ -1408,10 +1408,17 @@ class AccountMove(models.Model):
                 )
                 rent_withhold_taxes = line.tax_ids.filtered(lambda x: x.tax_group_id.id == withhold_rent_group.id)
                 if self.partner_id.country_id.code == "EC":
-                    if len(rent_withhold_taxes) == 0:
-                        error_list.append(_("You must apply at least one income withholding tax"))
-                    if len(iva_taxes) == 0 and len(iva_0_taxes) == 0:
-                        error_list.append(_("You must apply at least one VAT tax"))
+                    if self.l10n_latam_document_type_id.code == "41":
+                        if rent_withhold_taxes or withhold_iva_taxes:
+                            error_list.append(
+                                _("You cant not apply withholding for document types: %s")
+                                % self.l10n_latam_document_type_id.name
+                            )
+                    else:
+                        if len(rent_withhold_taxes) == 0:
+                            error_list.append(_("You must apply at least one income withholding tax"))
+                        if len(iva_taxes) == 0 and len(iva_0_taxes) == 0:
+                            error_list.append(_("You must apply at least one VAT tax"))
                 if len(iva_taxes) >= 1 and len(iva_0_taxes) >= 1:
                     error_list.append(_("Cannot apply VAT zero rate with another VAT rate"))
                 if len(iva_taxes) > 1:
