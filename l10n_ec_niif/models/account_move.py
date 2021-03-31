@@ -1608,6 +1608,7 @@ class AccountMove(models.Model):
         withhold_iva_group = self.env.ref("l10n_ec_niif.tax_group_iva_withhold")
         withhold_rent_group = self.env.ref("l10n_ec_niif.tax_group_renta_withhold")
         tax_data = {}
+        is_refund = self.type in ["out_refund", "in_refund"]
         for line in self.invoice_line_ids:
             for tax in line.tax_ids:
                 if tax.tax_group_id.id in (
@@ -1650,7 +1651,10 @@ class AccountMove(models.Model):
             tax_amount = 0
             base_tag_id = tax_data[tax].get("base_tag_id")
             tax_tag_id = tax_data[tax].get("tax_tag_id")
-            for line in self.line_ids:
+            line_with_taxes = self.line_ids.filtered(
+                lambda l: base_tag_id in l.tag_ids.ids or tax_tag_id in l.tag_ids.ids
+            )
+            for line in line_with_taxes:
                 for tag in line.tag_ids.filtered(lambda x: x.id in (base_tag_id, tax_tag_id)):
                     tag_amount = line.balance
                     if tag.id == base_tag_id:
@@ -1665,6 +1669,35 @@ class AccountMove(models.Model):
                         tax_data[tax]["tax_amount_currency"] += self.currency_id.compute(
                             tax_amount, self.company_id.currency_id
                         )
+            # cuando no hay lineas de impuesto por lo general sera en impuestos que el valor da 0
+            # odoo no crea un apunte contable por esa linea, pero si debemos calcular la base de ese impuesto
+            # para ello se tomaran todas las lineas que tengan el impuesto y desde ahi enviar a calcular la base
+            if not line_with_taxes:
+                lines_with_tax = self.invoice_line_ids.filtered(lambda l: tax in l.tax_ids)
+                tax_values = tax.compute_all(sum(lines_with_tax.mapped("price_subtotal")))
+                for tax_vals in tax_values.get("taxes", []):
+                    if tax_vals["id"] != tax.id:
+                        continue
+                    base_amount = abs(tax_vals["base"])
+                    tax_amount = abs(tax_vals["amount"])
+                    if tax_vals.get("tax_repartition_line_id"):
+                        tax_repartition_lines = self.env["account.tax.repartition.line"].browse(
+                            tax_vals.get("tax_repartition_line_id")
+                        )
+                        factor = tax_repartition_lines.factor
+                        # cuando es impuesto de retencion iva 0, a la base multiplicarla por el % de impuesto
+                        # para obtener la base correcta
+                        if not factor and tax.tax_group_id == withhold_iva_group:
+                            factor = tax.amount
+                        base_amount *= factor * 0.01
+                    tax_data[tax]["base_amount"] += base_amount
+                    tax_data[tax]["base_amount_currency"] += self.currency_id.compute(
+                        base_amount, self.company_id.currency_id
+                    )
+                    tax_data[tax]["tax_amount"] += tax_amount
+                    tax_data[tax]["tax_amount_currency"] += self.currency_id.compute(
+                        tax_amount, self.company_id.currency_id
+                    )
         for tax, tax_vals in tax_data.items():
             if tax.tax_group_id.id == withhold_iva_group.id:
                 tax_percentage = percent_model.browse(tax_vals["percent_id"])
