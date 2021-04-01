@@ -3019,8 +3019,8 @@ msgstr "La factura ya está conciliada, cancele los pagos"
 #. module: l10n_ec_niif
 #: code:addons/l10n_ec_niif/models/withhold.py:0
 #, python-format
-msgid "Invoice is already registered"
-msgstr "La factura ya se encuentra registrada"
+msgid "Withholding: %s, with partner: %s. Invoice: %s is already registered on other retention: %s"
+msgstr "Retencion: %s, con cliente: %s la factura: %s ya se encuentra registrada en otra retencion: %s"
 
 #. module: l10n_ec_niif
 #: model:ir.model.fields,field_description:l10n_ec_niif.field_res_company__l10n_ec_send_mail_invoice
