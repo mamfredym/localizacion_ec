@@ -409,6 +409,8 @@ class ResPartner(models.Model):
 
     def _check_l10n_ec_values(self):
         self.ensure_one()
+        if not self.country_id or self.country_id.code != "EC":
+            return True
         it_ruc = self.env.ref("l10n_ec_niif.it_ruc", False)
         it_cedula = self.env.ref("l10n_ec_niif.it_cedula", False)
         it_pasaporte = self.env.ref("l10n_ec_niif.it_pasaporte", False)
@@ -421,7 +423,8 @@ class ResPartner(models.Model):
             it_pasaporte.id,
         ):
             raise UserError(
-                _("You must set Identification type as RUC, Cedula or Passport on partner %s") % (self.name,)
+                _("You must set Identification type as RUC, Cedula or Passport for ecuadorian company, on partner %s")
+                % (self.name,)
             )
 
     @api.model
