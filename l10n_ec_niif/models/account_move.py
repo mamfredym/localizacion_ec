@@ -1615,7 +1615,6 @@ class AccountMove(models.Model):
         withhold_iva_group = self.env.ref("l10n_ec_niif.tax_group_iva_withhold")
         withhold_rent_group = self.env.ref("l10n_ec_niif.tax_group_renta_withhold")
         tax_data = {}
-        is_refund = self.type in ["out_refund", "in_refund"]
         for line in self.invoice_line_ids:
             for tax in line.tax_ids:
                 if tax.tax_group_id.id in (
