@@ -26,22 +26,23 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
 
     @api.constrains("l10n_ec_electronic_authorization")
     def _check_duplicity_electronic_authorization(self):
-        for rec in self:
-            if rec.l10n_ec_electronic_authorization:
-                other_docs = self.search(
-                    [
-                        (
-                            "l10n_ec_electronic_authorization",
-                            "=",
-                            rec.l10n_ec_electronic_authorization,
-                        ),
-                    ]
+        partner_company = self.env.company.partner_id
+        for rec in self.filtered("l10n_ec_electronic_authorization"):
+            other_docs = self.search(
+                [
+                    (
+                        "l10n_ec_electronic_authorization",
+                        "=",
+                        rec.l10n_ec_electronic_authorization,
+                    ),
+                    ("commercial_partner_id", "!=", partner_company.id),
+                ]
+            )
+            if len(other_docs) > 1:
+                raise ValidationError(
+                    _("There is already a document with electronic authorization %s please verify")
+                    % (rec.l10n_ec_electronic_authorization)
                 )
-                if len(other_docs) > 1:
-                    raise ValidationError(
-                        _("There is already a document with electronic authorization %s please verify")
-                        % (rec.l10n_ec_electronic_authorization)
-                    )
 
     def _prepare_l10n_ec_sri_xml_values(self, company):
         return {
