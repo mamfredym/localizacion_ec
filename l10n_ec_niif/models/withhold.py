@@ -414,9 +414,7 @@ class L10nEcWithhold(models.Model):
     def _l10n_ec_action_validate_authorization_sri(self):
         # intentar validar el documento en linea con el SRI
         if self.type == "sale":
-            if (self.document_type in ("pre_printed", "auto_printer")) and tools.config.get(
-                "validate_authorization_sri", True
-            ):
+            if (self.document_type == "pre_printed") and tools.config.get("validate_authorization_sri", True):
                 if self.partner_authorization_id:
                     authorization_number = self.partner_authorization_id.number
                 else:
