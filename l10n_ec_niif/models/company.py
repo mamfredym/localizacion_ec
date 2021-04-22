@@ -141,6 +141,17 @@ class ResCompany(models.Model):
                 sri_resolution_rec = sri_resolution
         return sri_resolution_rec and sri_resolution_rec.resolution or ""
 
+    def get_l10n_ec_documents_electronic_rejected(self):
+        self.ensure_one()
+        return (
+            self.env["sri.xml.data"]
+            .with_context(
+                allowed_company_ids=self.ids,
+                l10n_ec_xml_call_from_cron=True,
+            )
+            ._get_documents_rejected(self)
+        )
+
     l10n_ec_sri_login_url = fields.Char(
         string="Sri Login URL",
         required=False,

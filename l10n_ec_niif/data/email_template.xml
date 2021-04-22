@@ -2,9 +2,8 @@
 <odoo noupdate="0">
     <record id="email_template_e_invoice" model="mail.template">
         <field name="name">Factura Electronica</field>
-        <field
-            name="email_from"
-        >${(object.company_id.email and '%s &lt;%s&gt;' % (object.company_id.name, object.company_id.email) or '')|safe}</field>
+        <field name="email_from">
+            ${(object.company_id.email and '%s &lt;%s&gt;' % (object.company_id.name, object.company_id.email) or '')|safe}</field>
         <field name="subject">
             ${object.company_id.name}, Nuevo Documento Electronico (${object.display_name or 'n/a'})
         </field>
@@ -71,9 +70,8 @@
     </record>
     <record id="email_template_e_retention" model="mail.template">
         <field name="name">Retencion Electronica</field>
-        <field
-            name="email_from"
-        >${(object.company_id.email and '%s &lt;%s&gt;' % (object.company_id.name, object.company_id.email) or '')|safe}</field>
+        <field name="email_from">
+            ${(object.company_id.email and '%s &lt;%s&gt;' % (object.company_id.name, object.company_id.email) or '')|safe}</field>
         <field name="subject">
             ${object.company_id.name}, Nuevo Documento Electronico (${object.display_name or 'n/a'})
         </field>
@@ -138,7 +136,7 @@
             </div>
         </field>
     </record>
-    <record id="mail_documents_no_autorization" model="mail.template">
+    <record id="mail_documents_electronic_rejected" model="mail.template">
         <field name="name">Enviar Mail de Documentos no autorizada</field>
         <field name="email_from">${object.email}</field>
         <field name="subject">${object.name} - Documentos Electrónico no Autorizado</field>
@@ -150,32 +148,33 @@
                 <div style="margin-left:30px;align=center;">
                     Notificacion:
                     <br />
-                    % set documents = object.get_documents_electonic_no_autorization()
+                    % set documents = object.get_l10n_ec_documents_electronic_rejected()
                     <p class="text-center" style="font-weight: bold">Documentos Electrónicos no Autorizadas</p>
                     <div style="display:table;margin-left: 6%;width:95%">
-                        <div style="display:table-row-group;">
-                            % for doc in documents:
-                            <div style="display:table-row;">
-                                <div
-                                    style="display:table-cell;width:65%;text-align:center;border:solid;border-width: 1px 1px 1px 1px;"
-                                >
-                                    ${doc.display_name}
-                                </div>
-                                <div
-                                    style="display:table-cell;width:65%;text-align:center;border:solid;border-width: 1px 1px 1px 1px;"
-                                >
-                                    ${doc.last_error_id.display_name}
-                                </div>
-                                <div
-                                    style="display:table-cell;width:65%;text-align:center;border:solid;border-width: 1px 1px 1px 1px;"
-                                >
+                        <table width="100%" style="color: #454748; font-size: 12px; border-collapse: collapse;">
+                            <tr style="border-bottom: 2px solid #dee2e6;">
+                                <th style="width: 40%">Documento</th>
+                                <th style="width: 40%">Mensaje</th>
+                                <th style="width: 20%" />
+                            </tr>
+                        </table>
+                        % for doc in documents:
+                        <table width="100%" style="color: #454748; font-size: 12px; border-collapse: collapse;">
+                            <tr>
+                                <td style="width: 40%">
+                                    <span>${doc.display_name}</span>
+                                </td>
+                                <td style="width: 40%">
+                                    <span>${doc.last_error_id.display_name}</span>
+                                </td>
+                                <td style="width: 20%">
                                     <span>
                                         <a href="${doc.get_mail_url()}">Ver Documento</a>
                                     </span>
-                                </div>
-                            </div>
-                            % endfor
-                        </div>
+                                </td>
+                            </tr>
+                        </table>
+                        % endfor
                     </div>
                 </div>
             </div>

@@ -1163,7 +1163,7 @@ class AccountMove(models.Model):
             if (
                 move.l10n_ec_is_environment_production
                 and move.l10n_ec_xml_data_id
-                and move.l10n_ec_xml_data_id.state not in ["draft", "signed", "cancel"]
+                and move.l10n_ec_xml_data_id.state not in ["draft", "signed", "cancel", "returned"]
                 and not self.env.context.get("cancel_electronic_document", False)
             ):
                 wizard = self.env["wizard.cancel.electronic.documents"].create({"move_id": move.id})

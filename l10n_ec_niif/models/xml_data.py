@@ -1215,13 +1215,17 @@ class SriXmlData(models.Model):
             _logger.warning("Envio de documentos electronicos desactivado, verifique su archivo de configuracion")
             return True
         all_companies = self.env["res.company"].search([])
+        template_mail_docs_no_autorization = self.env.ref("l10n_ec_niif.mail_documents_electronic_rejected")
         for company in all_companies:
             xml_rejected = self.with_context(
                 allowed_company_ids=company.ids,
                 l10n_ec_xml_call_from_cron=True,
             )._get_documents_rejected(company)
-            # TODO: agregar notificacion por correo de documentos rechazados
             _logger.info(f"{len(xml_rejected)} Documentos electronicos rechazados a notificar")
+            if xml_rejected:
+                template_mail_docs_no_autorization.with_context(custom_layout="mail.mail_notification_light").send_mail(
+                    company.id
+                )
         return True
 
     @api.model
@@ -1508,14 +1512,6 @@ class SriXmlData(models.Model):
             return self.company_id.logo
         return False
 
-    @api.model
-    def send_massage_documents_no_autorization(self):
-        template_mail_docs_no_autorization = self.env.ref("ecua_documentos_electronicos.mail_documents_no_autorization")
-        company = self.env.company
-        if company.get_documents_electonic_no_autorization():
-            template_mail_docs_no_autorization.send_mail(company.id)
-        return True
-
     def action_desactive_notification_documents_no_autorization(self):
         return self.write(
             {
@@ -1531,7 +1527,7 @@ class SriXmlData(models.Model):
         )
 
     def get_mail_url(self):
-        return self.get_share_url()
+        return self.get_current_document()._get_share_url(redirect=True)
 
 
 class SriXmlDataMessageLine(models.Model):
