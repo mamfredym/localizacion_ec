@@ -33,6 +33,15 @@ class ResConfigSettings(models.TransientModel):
         related="company_id.l10n_ec_withhold_sale_rent_account_id",
         readonly=False,
     )
+    l10n_ec_withhold_iva_credit_card_account_id = fields.Many2one(
+        related="company_id.l10n_ec_withhold_iva_credit_card_account_id",
+        readonly=False,
+    )
+
+    l10n_ec_withhold_rent_credit_card_account_id = fields.Many2one(
+        related="company_id.l10n_ec_withhold_rent_credit_card_account_id",
+        readonly=False,
+    )
 
     l10n_ec_withhold_journal_id = fields.Many2one(
         comodel_name="account.journal",

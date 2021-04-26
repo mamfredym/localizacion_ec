@@ -299,10 +299,20 @@ class L10nEcWithhold(models.Model):
                     raise UserError(_("You must have at least one line to continue"))
                 if not rec.company_id.l10n_ec_withhold_journal_id:
                     raise UserError(_("You must configure Withhold Journal on Company to continue"))
-                if not rec.company_id.l10n_ec_withhold_sale_iva_account_id:
-                    raise UserError(_("You must configure Withhold Sale Vat Account on Company to continue"))
-                if not rec.company_id.l10n_ec_withhold_sale_rent_account_id:
-                    raise UserError(_("You must configure Withhold Sale Rent Account on Company to continue"))
+                if self.type == "sale":
+                    if not rec.company_id.l10n_ec_withhold_sale_iva_account_id:
+                        raise UserError(_("You must configure Withhold Sale Vat Account on Company to continue"))
+                    if not rec.company_id.l10n_ec_withhold_sale_rent_account_id:
+                        raise UserError(_("You must configure Withhold Sale Rent Account on Company to continue"))
+                else:
+                    if not rec.company_id.l10n_ec_withhold_iva_credit_card_account_id:
+                        raise UserError(
+                            _("You must configure Withhold Vat Account for Credit Card on Company to continue")
+                        )
+                    if not rec.company_id.l10n_ec_withhold_rent_credit_card_account_id:
+                        raise UserError(
+                            _("You must configure Withhold Rent Account for Credit Card on Company to continue")
+                        )
                 # intentar validar el documento en linea con el SRI
                 rec._l10n_ec_action_validate_authorization_sri()
                 rec._create_account_move()
@@ -366,6 +376,8 @@ class L10nEcWithhold(models.Model):
         )
         if line.type == "iva":
             account = self.company_id.l10n_ec_withhold_sale_iva_account_id
+            if self.type == "credit_card":
+                account = self.company_id.l10n_ec_withhold_iva_credit_card_account_id
             tax_code = self.company_id.l10n_ec_withhold_sale_iva_tag_id.ids
             name = _("Withhold Vat. %s - %s") % (
                 self.display_name,
@@ -373,6 +385,8 @@ class L10nEcWithhold(models.Model):
             )
         elif line.type == "rent":
             account = self.company_id.l10n_ec_withhold_sale_rent_account_id
+            if self.type == "credit_card":
+                account = self.company_id.l10n_ec_withhold_rent_credit_card_account_id
             tax_code = []
             name = _("Withhold Rent Tax. %s - %s") % (self.display_name, invoice_number)
         debit_vals = {
