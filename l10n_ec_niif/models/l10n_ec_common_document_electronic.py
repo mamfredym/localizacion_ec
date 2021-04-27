@@ -157,6 +157,21 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
     def _l10n_ec_get_info_aditional(self):
         # TODO: implementar modelo para informacion adicional
         info_data = []
+        company = self.env.user.company_id
+        if company.l10n_ec_retention_resolution:
+            info_data.append(
+                {
+                    "name": "AgenteRetencion",
+                    "description": "No. Resolucion: %s" % company.l10n_ec_retention_resolution,
+                }
+            )
+        if company.l10n_ec_microenterprise_regime_taxpayer:
+            info_data.append(
+                {
+                    "name": "Regimen",
+                    "description": "Contribuyente Regimen Microempresas",
+                }
+            )
         return info_data
 
     @api.model
