@@ -172,6 +172,6 @@ class ResCompany(models.Model):
     l10n_ec_sri_password = fields.Char(string="Sri Portal Password", required=False)
     l10n_ec_retention_resolution = fields.Char(string="Retention Resolution")
     l10n_ec_microenterprise_regime_taxpayer = fields.Boolean(
-        string='Microenterprise Regime Taxpayer',
+        string="Microenterprise Regime Taxpayer",
         required=False
     )
