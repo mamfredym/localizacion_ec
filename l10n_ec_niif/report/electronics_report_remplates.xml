@@ -88,6 +88,10 @@
                                 <span t-field="company.l10n_ec_retention_resolution" />
                                 <br />
                             </t>
+                            <t t-if="company.l10n_ec_microenterprise_regime_taxpayer">
+                                <strong>Contribuyente Régimen Microempresas</strong>
+                                <br />
+                            </t>
                             <strong t-esc="document_string" />
                             <br />
                             Nº.
