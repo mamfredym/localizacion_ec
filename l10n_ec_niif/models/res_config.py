@@ -256,6 +256,11 @@ class ResConfigSettings(models.TransientModel):
         related="company_id.l10n_ec_retention_resolution",
         readonly=False,
     )
+    l10n_ec_retention_resolution_number = fields.Integer(
+        string="Retention Resolution No.",
+        related="company_id.l10n_ec_retention_resolution_number",
+        readonly=False,
+    )
     l10n_ec_microenterprise_regime_taxpayer = fields.Boolean(
         string="Microenterprise Regime Taxpayer",
         related="company_id.l10n_ec_microenterprise_regime_taxpayer",
