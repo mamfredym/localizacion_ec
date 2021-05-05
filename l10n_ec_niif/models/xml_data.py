@@ -400,6 +400,11 @@ class SriXmlData(models.Model):
         # Debe ser la direccion matriz
         company_address = company.partner_id.get_direccion_matriz(printer)
         SubElement(infoTributaria, "dirMatriz").text = util_model._clean_str(company_address or "")
+        regimen = "CONTRIBUYENTE REGIMEN MICROEMPRESAS"
+        if company.l10n_ec_microenterprise_regime_taxpayer:
+            SubElement(infoTributaria, "regimenMicroempresas").text = util_model._clean_str(regimen)
+        if company.l10n_ec_retention_resolution:
+            SubElement(infoTributaria, "agenteRetencion").text = util_model._clean_str(company.l10n_ec_retention_resolution or "")
         return clave_acceso, node
 
     def check_xsd(self, xml_string, xsd_file_path):
