@@ -419,7 +419,7 @@
                 <xpath expr="//field[@name='debit_origin_id']" position="replace">
                     <field
                         name="debit_origin_id"
-                        attrs="{'invisible': ['|', ('debit_origin_id', '=', False), ('l10n_latam_internal_type', '!=', 'debit_note')], 'required': [('l10n_latam_internal_type', '=', 'debit_note')]}"
+                        attrs="{'invisible': ['|', ('debit_origin_id', '=', False), ('l10n_latam_internal_type', '!=', 'debit_note')], 'required': [('l10n_latam_internal_type', '=', 'debit_note'), ('l10n_ec_legacy_document', '=', False)]}"
                     />
                 </xpath>
             </field>
