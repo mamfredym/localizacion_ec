@@ -82,9 +82,7 @@
                             <t t-if="company.l10n_ec_retention_resolution">
                                 <br />
                                 <strong>Agente de Retención Resolución No.</strong>
-                                <span
-                                    t-field="company.l10n_ec_retention_resolution"
-                                />
+                                <span t-field="company.l10n_ec_retention_resolution" />
                             </t>
                         </div>
                     </td>

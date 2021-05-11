@@ -403,7 +403,9 @@ class SriXmlData(models.Model):
         if company.l10n_ec_microenterprise_regime_taxpayer:
             SubElement(infoTributaria, "regimenMicroempresas").text = "CONTRIBUYENTE RÉGIMEN MICROEMPRESAS"
         if company.l10n_ec_retention_resolution_number:
-            SubElement(infoTributaria, "agenteRetencion").text = util_model._clean_str(str(company.l10n_ec_retention_resolution_number) or "")
+            SubElement(infoTributaria, "agenteRetencion").text = util_model._clean_str(
+                str(company.l10n_ec_retention_resolution_number) or ""
+            )
         return clave_acceso, node
 
     def check_xsd(self, xml_string, xsd_file_path):
