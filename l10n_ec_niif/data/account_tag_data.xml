@@ -492,6 +492,11 @@
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
+        <record model="account.account.tag" id="tag_f103_3440">
+            <field name="name">Aplicables el 2,75% – BASE IMPONIBLE</field>
+            <field name="applicability">taxes</field>
+            <field name="country_id" ref="base.ec" />
+        </record>
         <record model="account.account.tag" id="tag_f103_345">
             <field name="name">Aplicables el 8% – BASE IMPONIBLE</field>
             <field name="applicability">taxes</field>
@@ -499,6 +504,19 @@
         </record>
         <record model="account.account.tag" id="tag_f103_346">
             <field name="name">Aplicables a otros porcentajes – BASE IMPONIBLE</field>
+            <field name="applicability">taxes</field>
+            <field name="country_id" ref="base.ec" />
+        </record>
+        <record model="account.account.tag" id="tag_f103_348">
+            <field name="name">
+                Impuesto único a ingresos provenientes de actividades agropecuarias en etapa de producción /
+                comercialización local o exportación – BASE IMPONIBLE
+            </field>
+            <field name="applicability">taxes</field>
+            <field name="country_id" ref="base.ec" />
+        </record>
+        <record model="account.account.tag" id="tag_f103_350">
+            <field name="name">Otras autoretenciones – BASE IMPONIBLE</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
@@ -888,6 +906,11 @@
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
+        <record model="account.account.tag" id="tag_f103_3940">
+            <field name="name">Aplicables el 2,75% – VALOR RETENIDO</field>
+            <field name="applicability">taxes</field>
+            <field name="country_id" ref="base.ec" />
+        </record>
         <record model="account.account.tag" id="tag_f103_395">
             <field name="name">Aplicables el 8% – VALOR RETENIDO</field>
             <field name="applicability">taxes</field>
@@ -895,6 +918,19 @@
         </record>
         <record model="account.account.tag" id="tag_f103_396">
             <field name="name">Aplicables a otros porcentajes – VALOR RETENIDO</field>
+            <field name="applicability">taxes</field>
+            <field name="country_id" ref="base.ec" />
+        </record>
+        <record model="account.account.tag" id="tag_f103_398">
+            <field name="name">
+                Impuesto único a ingresos provenientes de actividades agropecuarias en etapa de producción /
+                comercialización local o exportación – VALOR RETENIDO
+            </field>
+            <field name="applicability">taxes</field>
+            <field name="country_id" ref="base.ec" />
+        </record>
+        <record model="account.account.tag" id="tag_f103_400">
+            <field name="name">Otras autoretenciones – VALOR RETENIDO</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.ec" />
         </record>
