@@ -408,7 +408,9 @@ class AccountMove(models.Model):
             else:
                 invoice.l10n_ec_is_environment_production = False
 
-    @api.depends("l10n_latam_available_document_type_ids", "journal_id")
+    @api.depends(
+        "l10n_latam_available_document_type_ids", "journal_id", "partner_id.commercial_partner_id.l10n_ec_type_sri"
+    )
     @api.depends_context("internal_type")
     def _compute_l10n_latam_document_type(self):
         super(AccountMove, self)._compute_l10n_latam_document_type()

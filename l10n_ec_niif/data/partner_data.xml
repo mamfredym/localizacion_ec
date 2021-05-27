@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <data noupdate="False">
+    <data noupdate="1">
         <record id="consumidor_final" model="res.partner">
             <field name="name">Consumidor Final</field>
             <field name="vat">9999999999999</field>
@@ -9,8 +9,6 @@
             <field name="l10n_latam_identification_type_id" ref="l10n_ec_niif.it_ruc" />
             <field name="street">ECUADOR</field>
         </record>
-    </data>
-    <data noupdate="False">
         <record id="ec_social_security" model="res.partner">
             <field name="name">INSTITUTO ECUATORIANO DE SEGURIDAD SOCIAL IESS</field>
             <field name="country_id" ref="base.ec" />
