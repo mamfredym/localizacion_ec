@@ -360,15 +360,11 @@ class L10nECSriAuthorizationSupplier(models.Model):
         model_description = modules_mapping.get_document_name(document_type)
         res_model = self.env[model_name]
         partner = partner_model.browse(partner_id)
-        number_criteria = []
-        try:
-            numero = number.split("-")
-            num_shop, num_printer, num_doc = numero
-            num_doc = int(num_doc)
-            number_criteria = [(field_name, "like", "{}-{}-%{}".format(num_shop, num_printer, num_doc))]
-        except Exception as e:
-            _logger.debug("Error parsing number: %s" % str(e))
-            number_criteria = [(field_name, "=", str(number))]
+        # FIX: no usar like ya que si tengo un documento 001-001-00000004
+        # y el numero a validar es 001-001-000000044
+        # va a considerar como que coinciden
+        # debe ser el numero completo incluyendo agencia y punto de emision 001-001-0000001
+        number_criteria = [(field_name, "=", str(number))]
         args = (
             modules_mapping.get_domain(invoice_type, include_state=False)
             + [("partner_id", "=", partner_id)]
