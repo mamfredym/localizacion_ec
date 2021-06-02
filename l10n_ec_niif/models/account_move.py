@@ -2609,7 +2609,8 @@ class AccountMove(models.Model):
         # if self.base_no_iva != 0:
         #     self.l10n_ec_get_total_impuestos(impuestos, '2', '6', self.base_no_iva, 0.0, 'totalImpuesto', 0, False, True)
         SubElement(infoLiquidacionCompra, "importeTotal").text = util_model.formato_numero(
-            self.amount_total, decimales=currency.decimal_places
+            self.amount_total + sum(self.l10n_ec_withhold_line_ids.mapped("tax_amount_currency")),
+            decimales=currency.decimal_places,
         )
         SubElement(infoLiquidacionCompra, "moneda").text = self.company_id.currency_id.name
         payments_data = self.l10n_ec_get_payment_data()
