@@ -256,7 +256,9 @@ class L10nEcWithhold(models.Model):
         for rec in self:
             if not rec.invoice_id:
                 continue
-            withhold_find = self.search([("invoice_id", "=", rec.invoice_id.id), ("id", "!=", rec.id)], limit=1)
+            withhold_find = self.search(
+                [("invoice_id", "=", rec.invoice_id.id), ("id", "!=", rec.id), ("state", "!=", "cancelled")], limit=1
+            )
             if withhold_find:
                 raise UserError(
                     _("Withholding: %s, with partner: %s. Invoice: %s is already registered on other retention: %s")
