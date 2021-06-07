@@ -255,7 +255,7 @@ class L10nEcWithhold(models.Model):
             raise UserError(_("Ecuadorian Document %s must be like 001-001-123456789") % (self.display_name))
         return document_number
 
-    @api.constrains("invoice_id")
+    @api.constrains("invoice_id", "state")
     def _check_no_retention_same_invoice(self):
         for rec in self:
             if not rec.invoice_id:
