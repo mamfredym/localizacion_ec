@@ -15,17 +15,12 @@
                 <xpath expr="//field[@name='ref']" position="after">
                     <field
                         name="l10n_ec_original_invoice_id"
-                        attrs="{'invisible': ['|', ('type', '!=', 'out_refund'), ('l10n_ec_legacy_document', '=', True)],
-                        'required': [('type', '=', 'out_refund'), ('l10n_ec_legacy_document', '=', False)],
+                        attrs="{'invisible': ['|', ('type', 'not in', ['out_refund', 'in_refund']), ('l10n_ec_legacy_document', '=', True)],
+                        'required': [('type', 'in', ['out_refund', 'in_refund']), ('l10n_ec_legacy_document', '=', False)],
                         'readonly': [('state', '!=', 'draft')]}"
-                        domain="[('type', '=', 'in_invoice'), ('state', '=', 'posted'), ('commercial_partner_id', '=', commercial_partner_id)]"
-                    />
-                    <field
-                        name="l10n_ec_original_invoice_id"
-                        attrs="{'invisible': ['|', ('type', '!=', 'in_refund'), ('l10n_ec_legacy_document', '=', True)],
-                        'required': [('type', '=', 'in_refund'), ('l10n_ec_legacy_document', '=', False)],
-                        'readonly': [('state', '!=', 'draft')]}"
-                        domain="[('type', '=', 'out_invoice'), ('state', '=', 'posted'), ('commercial_partner_id', '=', commercial_partner_id)]"
+                        domain="[('state', '=', 'posted'), ('commercial_partner_id', '=', commercial_partner_id)]"
+                        context="{'filter_original_invoice_type': True, 'original_invoice_type': type}"
+                        options="{'no_create': True}"
                     />
                     <field
                         name="l10n_ec_legacy_document_number"

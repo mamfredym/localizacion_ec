@@ -1123,6 +1123,36 @@ class AccountMove(models.Model):
         super(AccountMove, ecuadorian_moves.with_context(force_delete=True)).unlink()
         return super(AccountMove, self - ecuadorian_moves).unlink()
 
+    @api.model
+    def _l10n_ec_get_extra_domain_move(self):
+        domain = []
+        if self.env.context.get("filter_original_invoice_type") and self.env.context.get("original_invoice_type"):
+            invoice_type = (
+                "out_invoice" if self.env.context.get("original_invoice_type") == "out_refund" else "in_invoice"
+            )
+            domain.append(("type", "=", invoice_type))
+        return domain
+
+    @api.model
+    def _search(
+        self,
+        args,
+        offset=0,
+        limit=None,
+        order=None,
+        count=False,
+        access_rights_uid=None,
+    ):
+        args.extend(self._l10n_ec_get_extra_domain_move())
+        res = super(AccountMove, self)._search(args, offset, limit, order, count, access_rights_uid)
+        return res
+
+    @api.model
+    def _read_group_raw(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        domain.extend(self._l10n_ec_get_extra_domain_move())
+        res = super(AccountMove, self)._read_group_raw(domain, fields, groupby, offset, limit, orderby, lazy)
+        return res
+
     def _get_name_invoice_report(self, report_xml_id):
         self.ensure_one()
         if self.l10n_latam_use_documents and self.company_id.country_id.code == "EC":
