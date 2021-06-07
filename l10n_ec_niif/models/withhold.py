@@ -28,6 +28,8 @@ class L10nEcWithhold(models.Model):
         "res.company",
         "Company",
         required=True,
+        readonly=True,
+        states=_STATES,
         ondelete="restrict",
         default=lambda self: self.env.company,
     )
@@ -126,6 +128,8 @@ class L10nEcWithhold(models.Model):
         size=49,
         required=False,
         tracking=True,
+        readonly=True,
+        states=_STATES,
     )
     point_of_emission_id = fields.Many2one(
         comodel_name="l10n_ec.point.of.emission",

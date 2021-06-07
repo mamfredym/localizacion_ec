@@ -237,8 +237,7 @@
                                 />
                                 <field
                                     name="electronic_authorization"
-                                    attrs="{'invisible': ['|', ('document_type', '!=', 'electronic'), '&amp;', ('type', '=', 'purchase'), ('electronic_authorization', '=', False)], 'required': [('document_type', '=', 'electronic'), ('type', '=', 'sale')],
-                                    'readonly': [('state', '=', 'cancelled')]}"
+                                    attrs="{'invisible': ['|', ('document_type', '!=', 'electronic'), '&amp;', ('type', '=', 'purchase'), ('electronic_authorization', '=', False)], 'required': [('document_type', '=', 'electronic'), ('type', '=', 'sale')]}"
                                 />
                                 <field name="l10n_ec_type_supplier_authorization" invisible="1" />
                                 <field name="type" invisible="1" />
