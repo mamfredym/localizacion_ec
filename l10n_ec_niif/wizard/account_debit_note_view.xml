@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="account_debit_note_form_view" model="ir.ui.view">
+        <field name="name">account.debit.note.form</field>
+        <field name="model">account.debit.note</field>
+        <field name="inherit_id" ref="account_debit_note.view_account_debit_note" />
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='copy_lines']" position="attributes">
+                <attribute name="attrs" />
+            </xpath>
+        </field>
+    </record>
+</odoo>
