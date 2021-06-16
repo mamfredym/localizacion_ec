@@ -920,6 +920,15 @@ class SriXmlData(models.Model):
         if self.state == "waiting" and not self.env.context.get("no_send", False):
             return True
         try:
+            if self.env['ir.module.module'].search([
+                ('name', '=', 'l10n_ec_niif')
+            ]).demo:
+                self.write({
+                    'xml_authorization': self.l10n_ec_xml_key,
+                    'l10n_ec_authorization_date': fields.Datetime.now(),
+                    'state': 'authorized',
+                })
+                return self.action_create_file_authorized()
             if not tools.config.get("send_sri_documents", False):
                 _logger.warning("Envio de documentos electronicos desactivado, verifique su archivo de configuracion")
                 return True
