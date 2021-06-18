@@ -58,6 +58,12 @@
                         force_save="1"
                     />
                     <field
+                            name="l10n_ec_tax_support_id"
+                            options="{'no_create': True}"
+                            domain="[('id', 'in', l10n_ec_tax_support_domain_ids)]"
+                            attrs="{'invisible': [('type', 'not in', ('in_invoice', 'in_refund'))]}"
+                        />
+                    <field
                         name="l10n_ec_supplier_authorization_id"
                         attrs="{'required': [('l10n_latam_country_code', '=', 'EC'),
                                             ('l10n_ec_type_supplier_authorization', '=', 'complete'),
@@ -170,12 +176,6 @@
                         <field name="l10n_ec_start_date" invisible="1" />
                         <field name="l10n_ec_expiration_date" invisible="1" />
                         <field name="l10n_ec_tax_support_domain_ids" widget="many2many_tags" invisible="True" />
-                        <field
-                            name="l10n_ec_tax_support_id"
-                            options="{'no_create': True}"
-                            domain="[('id', 'in', l10n_ec_tax_support_domain_ids)]"
-                            attrs="{'invisible': [('type', 'not in', ('in_invoice', 'in_refund'))]}"
-                        />
                         <field
                             name="l10n_ec_tipo_regimen_pago_exterior"
                             attrs="{'invisible':['|', ('l10n_ec_foreign','=',False), ('type', 'not in', ('in_invoice', 'in_refund'))]}"
