@@ -633,24 +633,24 @@ class AccountMove(models.Model):
 
     @api.constrains("l10n_ec_electronic_authorization", "l10n_ec_type_emission")
     def _check_electronic_authorization_supplier(self):
-        string_electronic_authorization = '(\d{37}$)|(\d{49}$)'
-        for rec in self.filtered(
-            lambda x: x.company_id.country_id.code == "EC"
-        ):
-            if rec.l10n_ec_electronic_authorization and rec.l10n_ec_type_emission == 'electronic':
+        string_electronic_authorization = r"(\d{37}$)|(\d{49}$)"
+        for rec in self.filtered(lambda x: x.company_id.country_id.code == "EC"):
+            if rec.l10n_ec_electronic_authorization and rec.l10n_ec_type_emission == "electronic":
                 if len(rec.l10n_ec_electronic_authorization) not in (37, 49):
                     raise ValidationError(
                         _(
                             "The electronic authorization number is incorrect, "
                             "this must be 37 or 49 digits. Check the invoice %s of supplier %s"
-                        ) % (rec.l10n_latam_document_number, rec.partner_id.display_name)
+                        )
+                        % (rec.l10n_latam_document_number, rec.partner_id.display_name)
                     )
                 if not re.match(string_electronic_authorization, rec.l10n_ec_electronic_authorization):
                     raise ValidationError(
                         _(
                             "The electronic authorization must have only numbers, "
                             "please check the invoice %s of supplier %s!"
-                        ) % (rec.l10n_latam_document_number, rec.partner_id.display_name)
+                        )
+                        % (rec.l10n_latam_document_number, rec.partner_id.display_name)
                     )
 
     @api.constrains("l10n_ec_start_date", "l10n_ec_expiration_date", "invoice_date")

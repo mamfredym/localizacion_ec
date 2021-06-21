@@ -58,11 +58,11 @@
                         force_save="1"
                     />
                     <field
-                            name="l10n_ec_tax_support_id"
-                            options="{'no_create': True}"
-                            domain="[('id', 'in', l10n_ec_tax_support_domain_ids)]"
-                            attrs="{'invisible': [('type', 'not in', ('in_invoice', 'in_refund'))]}"
-                        />
+                        name="l10n_ec_tax_support_id"
+                        options="{'no_create': True}"
+                        domain="[('id', 'in', l10n_ec_tax_support_domain_ids)]"
+                        attrs="{'invisible': [('type', 'not in', ('in_invoice', 'in_refund'))]}"
+                    />
                     <field
                         name="l10n_ec_supplier_authorization_id"
                         attrs="{'required': [('l10n_latam_country_code', '=', 'EC'),
