@@ -1124,7 +1124,7 @@ class SriXmlData(models.Model):
             xml_to_sign, xml_to_notify = self.action_create_xml_file()
             if xml_to_sign:
                 xml_to_sign.action_sing_xml_file()
-                xml_to_sign.action_send_xml_file()
+                xml_to_sign.filtered(lambda x: x.state == "signed").action_send_xml_file()
         # solo enviar a crear el xml con la clave de acceso,
         # una tarea cron se debe encargar de continuar con el proceso electronico
         if xml_process_offline:
