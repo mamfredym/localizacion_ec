@@ -1186,6 +1186,8 @@ class SriXmlData(models.Model):
                 continue
             # enviar a firmar el xml
             xml_data.action_sing_xml_file()
+            if xml_data.state != "signed":
+                continue
             # enviar a autorizar el xml(si se autorizo, enviara el mail a los involucrados)
             response = xml_data._send_xml_data_to_valid(receipt_client, auth_client)
             (
