@@ -1560,7 +1560,10 @@ class AccountMove(models.Model):
             )
             and tools.config.get("validate_authorization_sri", True)
         ):
-            if self.l10n_ec_type_emission == "pre_printed":
+            if self.l10n_ec_type_emission == "auto_printer":
+                self.write({"l10n_ec_sri_authorization_state": "valid"})
+                return True
+            elif self.l10n_ec_type_emission == "pre_printed":
                 # para in_invoice solo validar si es factura(01), Notas de venta u otro documento no validar
                 if self.l10n_ec_invoice_type == "in_invoice" and self.l10n_latam_document_type_id.code != "01":
                     self.write({"l10n_ec_sri_authorization_state": "valid"})
