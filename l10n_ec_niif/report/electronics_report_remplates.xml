@@ -308,7 +308,21 @@
                         <strong>VALOR TOTAL</strong>
                     </td>
                     <td class="text-right">
-                        <span t-field="o.amount_total" />
+                        <t
+                            t-set="amount_tax"
+                            t-value="round(sum(l.tax_amount_currency for l in o.l10n_ec_withhold_line_ids), 6)"
+                        />
+                        <t>
+                            <t t-set="amount_total" t-value="o.amount_total" />
+                        </t>
+                        <t t-if="o.type == 'in_invoice' and o.l10n_latam_internal_type == 'liquidation'">
+                            <t t-set="amount_total" t-value="(o.amount_total + amount_tax)" />
+                        </t>
+                        <span
+                            class="text-nowrap"
+                            t-esc="amount_total"
+                            t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'
+                        />
                     </td>
                 </tr>
             </tbody>
