@@ -491,6 +491,28 @@
                         'required': [('l10n_latam_sequence_id', '=', False), ('l10n_latam_use_documents', '=', True), ('type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))],
                         'readonly': ['|', ('state', '!=', 'draft'), '&amp;', '&amp;', ('l10n_latam_country_code', '=', 'EC'), ('type', 'in', ('out_invoice', 'out_refund', 'in_invoice')), ('l10n_ec_type_emission', 'in', ('electronic', 'auto_printer'))]}</attribute>
                 </xpath>
+                <xpath
+                    expr="//field[@name='invoice_line_ids']/tree/field[@name='analytic_account_id']"
+                    position="attributes"
+                >
+                    <attribute name="options">{'no_create': True}</attribute>
+                    ">
+                </xpath>
+                <xpath
+                    expr="//field[@name='invoice_line_ids']/tree/field[@name='analytic_tag_ids']"
+                    position="attributes"
+                >
+                    <attribute name="options">{'no_create': True}</attribute>
+                    ">
+                </xpath>
+                <xpath expr="//field[@name='line_ids']/tree/field[@name='analytic_account_id']" position="attributes">
+                    <attribute name="options">{'no_create': True}</attribute>
+                    ">
+                </xpath>
+                <xpath expr="//field[@name='line_ids']/tree/field[@name='analytic_tag_ids']" position="attributes">
+                    <attribute name="options">{'no_create': True}</attribute>
+                    ">
+                </xpath>
             </field>
         </record>
         <menuitem
