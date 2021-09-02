@@ -1243,6 +1243,7 @@ class AccountMove(models.Model):
             if move.company_id.country_id.code == "EC":
                 move._check_document_values_for_ecuador()
                 move._l10n_ec_action_validate_authorization_sri()
+                move.validate_quantity_move_line()
                 # proceso de retenciones en compra
                 if move.type == "in_invoice":
                     if move.l10n_ec_withhold_required:
@@ -1632,6 +1633,24 @@ class AccountMove(models.Model):
                     if date_delta.days > limit_days:
                         self.write({"l10n_ec_sri_authorization_state": "invalid"})
         return True
+
+    def validate_quantity_move_line(self):
+        error_list, product_not_quantity = [], []
+        for move in self:
+            if move.l10n_ec_invoice_type in ('in_invoice', 'out_invoice', 'in_refund', 'out_refund'):
+                for line in move.invoice_line_ids:
+                    if float_compare(line.quantity, 0.0, precision_digits=2) <= 0:
+                        product_not_quantity.append(
+                            "  - %s"
+                            % line.product_id.display_name
+                        )
+                if product_not_quantity:
+                    error_list.append(_("You cannot validate an invoice with zero quantity. "
+                                      "Please review the following items:\n%s") % "\n".join(product_not_quantity))
+                if float_compare(move.amount_total, 0.0, precision_digits=2) <= 0:
+                    error_list.append(_("You cannot validate an invoice with zero value."))
+                if error_list:
+                    raise UserError("\n".join(error_list))
 
     def _prepare_withhold_values(self):
         """
