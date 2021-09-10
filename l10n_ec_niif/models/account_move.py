@@ -1637,16 +1637,18 @@ class AccountMove(models.Model):
     def validate_quantity_move_line(self):
         error_list, product_not_quantity = [], []
         for move in self:
-            if move.l10n_ec_invoice_type in ('in_invoice', 'out_invoice', 'in_refund', 'out_refund'):
+            if move.l10n_ec_invoice_type in ("in_invoice", "out_invoice", "in_refund", "out_refund"):
                 for line in move.invoice_line_ids:
                     if float_compare(line.quantity, 0.0, precision_digits=2) <= 0:
-                        product_not_quantity.append(
-                            "  - %s"
-                            % line.product_id.display_name
-                        )
+                        product_not_quantity.append("  - %s" % line.product_id.display_name)
                 if product_not_quantity:
-                    error_list.append(_("You cannot validate an invoice with zero quantity. "
-                                      "Please review the following items:\n%s") % "\n".join(product_not_quantity))
+                    error_list.append(
+                        _(
+                            "You cannot validate an invoice with zero quantity. "
+                            "Please review the following items:\n%s"
+                        )
+                        % "\n".join(product_not_quantity)
+                    )
                 if float_compare(move.amount_total, 0.0, precision_digits=2) <= 0:
                     error_list.append(_("You cannot validate an invoice with zero value."))
                 if error_list:
