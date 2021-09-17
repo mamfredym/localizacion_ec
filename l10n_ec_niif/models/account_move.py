@@ -1552,15 +1552,10 @@ class AccountMove(models.Model):
 
     def _l10n_ec_action_validate_authorization_sri(self):
         # intentar validar el documento en linea con el SRI
-        if (
-            self.l10n_ec_invoice_type
-            in (
-                "in_invoice",
-                "in_refund",
-                "debit_note_in",
-            )
-            and tools.config.get("validate_authorization_sri", True)
-        ):
+        if self.l10n_ec_invoice_type in ("in_invoice", "in_refund", "debit_note_in"):
+            if not tools.config.get("validate_authorization_sri", True):
+                self.write({"l10n_ec_sri_authorization_state": "valid"})
+                return True
             if self.l10n_ec_type_emission == "auto_printer":
                 self.write({"l10n_ec_sri_authorization_state": "valid"})
                 return True
