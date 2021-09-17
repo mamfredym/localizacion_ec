@@ -119,6 +119,7 @@ class ResPartner(models.Model):
         string="is Ecuadorian Company?", compute="_compute_ecuadorian_company"
     )
     l10n_ec_sri_payment_id = fields.Many2one("l10n_ec.sri.payment.method", "SRI Payment Method")
+    vat = fields.Char(tracking=True)
 
     @api.depends("company_id.country_id")
     def _compute_ecuadorian_company(self):
