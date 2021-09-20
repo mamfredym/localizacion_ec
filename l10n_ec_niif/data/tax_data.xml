@@ -79,9 +79,9 @@
         </record>
         <record model="account.tax.template" id="tax_423_iva">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field name="name">
-                IVA generado en la diferencia entre ventas y notas de crédito con distinta tarifa (ajuste a pagar)
-            </field>
+            <field
+                name="name"
+            >IVA generado en la diferencia entre ventas y notas de crédito con distinta tarifa (ajuste a pagar)</field>
             <field name="description" />
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -99,9 +99,9 @@
         </record>
         <record model="account.tax.template" id="tax_424_iva">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field name="name">
-                IVA generado en la diferencia entre ventas y notas de crédito con distinta tarifa (ajuste a favor)
-            </field>
+            <field
+                name="name"
+            >IVA generado en la diferencia entre ventas y notas de crédito con distinta tarifa (ajuste a favor)</field>
             <field name="description" />
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -119,9 +119,9 @@
         </record>
         <record model="account.tax.template" id="tax_413_iva">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field name="name">
-                Ventas locales (excluye activos fijos) gravadas tarifa 0% que no dan derecho a crédito tributario
-            </field>
+            <field
+                name="name"
+            >Ventas locales (excluye activos fijos) gravadas tarifa 0% que no dan derecho a crédito tributario</field>
             <field name="description">IVA 0% SCT</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -139,9 +139,9 @@
         </record>
         <record model="account.tax.template" id="tax_414_iva">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field name="name">
-                Ventas de activos fijos gravadas tarifa 0% que no dan derecho a crédito tributario
-            </field>
+            <field
+                name="name"
+            >Ventas de activos fijos gravadas tarifa 0% que no dan derecho a crédito tributario</field>
             <field name="description">IVA AF 0% SCT</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -159,9 +159,9 @@
         </record>
         <record model="account.tax.template" id="tax_415_iva">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field name="name">
-                Ventas locales (excluye activos fijos) gravadas tarifa 0% que dan derecho a crédito tributario
-            </field>
+            <field
+                name="name"
+            >Ventas locales (excluye activos fijos) gravadas tarifa 0% que dan derecho a crédito tributario</field>
             <field name="description">IVA 0%</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -251,10 +251,9 @@
         </record>
         <record model="account.tax.template" id="tax_444_iva">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field name="name">
-                Ingresos por reembolso como intermediario / valores facturados por operadoras de transporte
-                (informativo)
-            </field>
+            <field
+                name="name"
+            >Ingresos por reembolso como intermediario / valores facturados por operadoras de transporte (informativo)</field>
             <field name="description">Por Reembolso</field>
             <field name="amount">12</field>
             <field name="amount_type">percent</field>
@@ -272,10 +271,9 @@
         </record>
         <record model="account.tax.template" id="tax_510_iva">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field name="name">
-                Adquisiciones y pagos (excluye activos fijos) gravados tarifa diferente de cero (con derecho a crédito
-                tributario)
-            </field>
+            <field
+                name="name"
+            >Adquisiciones y pagos (excluye activos fijos) gravados tarifa diferente de cero (con derecho a crédito tributario)</field>
             <field name="description">IVA 12%</field>
             <field name="amount">12</field>
             <field name="amount_type">percent</field>
@@ -294,10 +292,9 @@
         </record>
         <record model="account.tax.template" id="tax_511_iva">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field name="name">
-                Adquisiciones locales de activos fijos gravados tarifa diferente de cero (con derecho a crédito
-                tributario)
-            </field>
+            <field
+                name="name"
+            >Adquisiciones locales de activos fijos gravados tarifa diferente de cero (con derecho a crédito tributario)</field>
             <field name="description">IVA AF 12%</field>
             <field name="amount">12</field>
             <field name="amount_type">percent</field>
@@ -315,9 +312,9 @@
         </record>
         <record model="account.tax.template" id="tax_512_iva">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field name="name">
-                Otras adquisiciones y pagos gravados tarifa diferente de cero (sin derecho a crédito tributario)
-            </field>
+            <field
+                name="name"
+            >Otras adquisiciones y pagos gravados tarifa diferente de cero (sin derecho a crédito tributario)</field>
             <field name="description">IVA 12% SCT</field>
             <field name="amount">12</field>
             <field name="amount_type">percent</field>
@@ -389,10 +386,9 @@
         </record>
         <record model="account.tax.template" id="tax_526_iva">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field name="name">
-                IVA generado en la diferencia entre adquisiciones y notas de crédito con distinta tarifa (ajuste en
-                positivo al crédito tributario)
-            </field>
+            <field
+                name="name"
+            >IVA generado en la diferencia entre adquisiciones y notas de crédito con distinta tarifa (ajuste en positivo al crédito tributario)</field>
             <field name="description" />
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -410,10 +406,9 @@
         </record>
         <record model="account.tax.template" id="tax_527_iva">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field name="name">
-                IVA generado en la diferencia entre adquisiciones y notas de crédito con distinta tarifa (ajuste en
-                negativo al crédito tributario)
-            </field>
+            <field
+                name="name"
+            >IVA generado en la diferencia entre adquisiciones y notas de crédito con distinta tarifa (ajuste en negativo al crédito tributario)</field>
             <field name="description" />
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -521,10 +516,9 @@
         </record>
         <record model="account.tax.template" id="tax_545_iva">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field name="name">
-                Pagos netos por reembolso como intermediario / valores facturados por socios a operadoras de transporte
-                (informativo)
-            </field>
+            <field
+                name="name"
+            >Pagos netos por reembolso como intermediario / valores facturados por socios a operadoras de transporte (informativo)</field>
             <field name="description">Por Reembolso</field>
             <field name="amount">12</field>
             <field name="amount_type">percent</field>
@@ -839,10 +833,9 @@
         </record>
         <record model="account.tax.template" id="tax_312a">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field name="name">
-                Compra de bienes de origen agrícola, avícola, pecuario, apícola, cunícula, bioacuático, forestal y
-                carnes en estado natural
-            </field>
+            <field
+                name="name"
+            >Compra de bienes de origen agrícola, avícola, pecuario, apícola, cunícula, bioacuático, forestal y carnes en estado natural</field>
             <field name="description">312A</field>
             <field name="l10n_ec_ats_code">312A</field>
             <field name="amount">-1</field>
@@ -945,10 +938,9 @@
         </record>
         <record model="account.tax.template" id="tax_324">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field name="name">
-                Rendimientos financieros entre instituciones del sistema financiero y entidades economía popular y
-                solidaria
-            </field>
+            <field
+                name="name"
+            >Rendimientos financieros entre instituciones del sistema financiero y entidades economía popular y solidaria</field>
             <field name="description">324</field>
             <field name="amount">-1</field>
             <field name="amount_type">percent</field>
@@ -982,10 +974,9 @@
         </record>
         <record model="account.tax.template" id="tax_326">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field name="name">
-                Dividendos distribuidos que correspondan al impuesto a la renta único establecido en el art. 27 de la
-                LRTI
-            </field>
+            <field
+                name="name"
+            >Dividendos distribuidos que correspondan al impuesto a la renta único establecido en el art. 27 de la LRTI</field>
             <field name="description">326</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -1053,10 +1044,9 @@
         </record>
         <record model="account.tax.template" id="tax_330">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field name="name">
-                Dividendos gravados distribuidos en acciones (reinversión de utilidades sin derecho a reducción tarifa
-                IR)
-            </field>
+            <field
+                name="name"
+            >Dividendos gravados distribuidos en acciones (reinversión de utilidades sin derecho a reducción tarifa IR)</field>
             <field name="description">330</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -1073,10 +1063,9 @@
         </record>
         <record model="account.tax.template" id="tax_331">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field name="name">
-                Dividendos exentos distribuidos en acciones (reinversión de utilidades con derecho a reducción tarifa
-                IR)
-            </field>
+            <field
+                name="name"
+            >Dividendos exentos distribuidos en acciones (reinversión de utilidades con derecho a reducción tarifa IR)</field>
             <field name="description">331</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -1110,9 +1099,9 @@
         </record>
         <record model="account.tax.template" id="tax_333">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field name="name">
-                Enajenación de derechos representativos de capital y otros derechos cotizados en bolsa ecuatoriana
-            </field>
+            <field
+                name="name"
+            >Enajenación de derechos representativos de capital y otros derechos cotizados en bolsa ecuatoriana</field>
             <field name="description">333</field>
             <field name="amount">-10</field>
             <field name="amount_type">percent</field>
@@ -1129,9 +1118,9 @@
         </record>
         <record model="account.tax.template" id="tax_334">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field name="name">
-                Enajenación de derechos representativos de capital y otros derechos no cotizados en bolsa ecuatoriana
-            </field>
+            <field
+                name="name"
+            >Enajenación de derechos representativos de capital y otros derechos no cotizados en bolsa ecuatoriana</field>
             <field name="description">334</field>
             <field name="amount">-1</field>
             <field name="amount_type">percent</field>
@@ -1200,9 +1189,9 @@
         </record>
         <record model="account.tax.template" id="tax_343b">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field name="name">
-                Actividades de construcción de obra material inmueble, urbanización, lotización o actividades similares
-            </field>
+            <field
+                name="name"
+            >Actividades de construcción de obra material inmueble, urbanización, lotización o actividades similares</field>
             <field name="description">343B</field>
             <field name="l10n_ec_ats_code">343B</field>
             <field name="amount">-1.75</field>
@@ -1391,9 +1380,9 @@
         </record>
         <record model="account.tax.template" id="tax_408">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field name="name">
-                Con convenio de doble tributación Enajenación de derechos representativos de capital y otros derechos
-            </field>
+            <field
+                name="name"
+            >Con convenio de doble tributación Enajenación de derechos representativos de capital y otros derechos</field>
             <field name="description">408</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -1427,9 +1416,9 @@
         </record>
         <record model="account.tax.template" id="tax_410">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field name="name">
-                Con convenio de doble tributación Servicios técnicos, administrativos o de consultoría y regalías
-            </field>
+            <field
+                name="name"
+            >Con convenio de doble tributación Servicios técnicos, administrativos o de consultoría y regalías</field>
             <field name="description">410</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -1582,9 +1571,9 @@
         </record>
         <record model="account.tax.template" id="tax_419">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field name="name">
-                Sin convenio de doble tributación Enajenación de derechos representativos de capital y otros derechos
-            </field>
+            <field
+                name="name"
+            >Sin convenio de doble tributación Enajenación de derechos representativos de capital y otros derechos</field>
             <field name="description">419</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -1618,9 +1607,9 @@
         </record>
         <record model="account.tax.template" id="tax_421">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field name="name">
-                Sin convenio de doble tributación Servicios técnicos, administrativos o de consultoría y regalías
-            </field>
+            <field
+                name="name"
+            >Sin convenio de doble tributación Servicios técnicos, administrativos o de consultoría y regalías</field>
             <field name="description">421</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -1671,9 +1660,9 @@
         </record>
         <record model="account.tax.template" id="tax_424">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field name="name">
-                En paraísos fiscales o regímenes fiscales preferentes Intereses por financiamiento de proveedores
-            </field>
+            <field
+                name="name"
+            >En paraísos fiscales o regímenes fiscales preferentes Intereses por financiamiento de proveedores</field>
             <field name="description">424</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -1707,9 +1696,9 @@
         </record>
         <record model="account.tax.template" id="tax_426">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field name="name">
-                En paraísos fiscales o regímenes fiscales preferentes Dividendos distribuidos a personas naturales
-            </field>
+            <field
+                name="name"
+            >En paraísos fiscales o regímenes fiscales preferentes Dividendos distribuidos a personas naturales</field>
             <field name="description">426</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -1726,9 +1715,9 @@
         </record>
         <record model="account.tax.template" id="tax_427">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field name="name">
-                En paraísos fiscales o regímenes fiscales preferentes Dividendos distribuidos a sociedades
-            </field>
+            <field
+                name="name"
+            >En paraísos fiscales o regímenes fiscales preferentes Dividendos distribuidos a sociedades</field>
             <field name="description">427</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -1745,9 +1734,9 @@
         </record>
         <record model="account.tax.template" id="tax_428">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field name="name">
-                En paraísos fiscales o regímenes fiscales preferentes Dividendos distribuidos a fideicomisos
-            </field>
+            <field
+                name="name"
+            >En paraísos fiscales o regímenes fiscales preferentes Dividendos distribuidos a fideicomisos</field>
             <field name="description">428</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -1764,10 +1753,9 @@
         </record>
         <record model="account.tax.template" id="tax_429">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field name="name">
-                En paraísos fiscales o regímenes fiscales preferentes Enajenación de derechos representativos de capital
-                y otros derechos
-            </field>
+            <field
+                name="name"
+            >En paraísos fiscales o regímenes fiscales preferentes Enajenación de derechos representativos de capital y otros derechos</field>
             <field name="description">429</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -1784,9 +1772,9 @@
         </record>
         <record model="account.tax.template" id="tax_430">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field name="name">
-                En paraísos fiscales o regímenes fiscales preferentes Seguros y reaseguros (primas y cesiones)
-            </field>
+            <field
+                name="name"
+            >En paraísos fiscales o regímenes fiscales preferentes Seguros y reaseguros (primas y cesiones)</field>
             <field name="description">430</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -1803,10 +1791,9 @@
         </record>
         <record model="account.tax.template" id="tax_431">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field name="name">
-                En paraísos fiscales o regímenes fiscales preferentes Servicios técnicos, administrativos o de
-                consultoría y regalías
-            </field>
+            <field
+                name="name"
+            >En paraísos fiscales o regímenes fiscales preferentes Servicios técnicos, administrativos o de consultoría y regalías</field>
             <field name="description">431</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -1823,9 +1810,9 @@
         </record>
         <record model="account.tax.template" id="tax_432">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field name="name">
-                En paraísos fiscales o regímenes fiscales preferentes Otros conceptos de ingresos gravados
-            </field>
+            <field
+                name="name"
+            >En paraísos fiscales o regímenes fiscales preferentes Otros conceptos de ingresos gravados</field>
             <field name="description">432</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
@@ -1842,9 +1829,9 @@
         </record>
         <record model="account.tax.template" id="tax_433">
             <field name="chart_template_id" ref="l10n_ec_niif.ec_chart_template" />
-            <field name="name">
-                En paraísos fiscales o regímenes fiscales preferentes Otros pagos al exterior no sujetos a retención
-            </field>
+            <field
+                name="name"
+            >En paraísos fiscales o regímenes fiscales preferentes Otros pagos al exterior no sujetos a retención</field>
             <field name="description">433</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
