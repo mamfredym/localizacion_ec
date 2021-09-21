@@ -15,6 +15,7 @@ def migrate(cr, version):
             tax_idxml = external_id_data.get(tax_template.id) or ""
             try:
                 parts = tax_idxml.split(".")
+                module_name = "l10n_ec_niif"
                 if len(parts) > 1:
                     module_name = parts[0]
                     tax_idxml = "_".join(parts[1:])
