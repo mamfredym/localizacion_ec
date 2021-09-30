@@ -3,9 +3,9 @@
     <data>
         <record model="l10n_ec.tax.support" id="ts_01">
             <field name="code">01</field>
-            <field name="name">
-                Crédito Tributario para declaración de IVA (servicios y bienes distintos de inventarios y activos fijos)
-            </field>
+            <field
+                name="name"
+            >Crédito Tributario para declaración de IVA (servicios y bienes distintos de inventarios y activos fijos)</field>
             <field
                 name="document_type_ids"
                 eval="[(6,0,[ref('ec_dt_01'), ref('ec_dt_03'), ref('ec_dt_04'), ref('ec_dt_05'), ref('ec_dt_11'), ref('ec_dt_12'), ref('ec_dt_21'), ref('ec_dt_41'), ref('ec_dt_43'), ref('ec_dt_47'), ref('ec_dt_48'), ref('ec_dt_294'), ref('ec_dt_344')])]"
@@ -13,9 +13,9 @@
         </record>
         <record model="l10n_ec.tax.support" id="ts_02">
             <field name="code">02</field>
-            <field name="name">
-                Costo o Gasto para declaración de IR (servicios y bienes distintos de inventarios y activos fijos)
-            </field>
+            <field
+                name="name"
+            >Costo o Gasto para declaración de IR (servicios y bienes distintos de inventarios y activos fijos)</field>
             <field
                 name="document_type_ids"
                 eval="[(6,0,[ref('ec_dt_01'), ref('ec_dt_02'), ref('ec_dt_03'), ref('ec_dt_04'), ref('ec_dt_05'), ref('ec_dt_09'), ref('ec_dt_11'), ref('ec_dt_12'), ref('ec_dt_15'), ref('ec_dt_19'), ref('ec_dt_20'), ref('ec_dt_21'), ref('ec_dt_41'), ref('ec_dt_43'), ref('ec_dt_47'), ref('ec_dt_48'), ref('ec_dt_294'), ref('ec_dt_344'), ref('ec_dt_364')])]"
@@ -39,10 +39,9 @@
         </record>
         <record model="l10n_ec.tax.support" id="ts_05">
             <field name="code">05</field>
-            <field name="name">
-                Liquidación Gastos de Viaje, hospedaje y alimentación Gastos IR (a nombre de empleados y no de la
-                empresa)
-            </field>
+            <field
+                name="name"
+            >Liquidación Gastos de Viaje, hospedaje y alimentación Gastos IR (a nombre de empleados y no de la empresa)</field>
             <field
                 name="document_type_ids"
                 eval="[(6,0,[ref('ec_dt_01'), ref('ec_dt_02'), ref('ec_dt_03'), ref('ec_dt_04'), ref('ec_dt_05'), ref('ec_dt_11'), ref('ec_dt_15'), ref('ec_dt_41'), ref('ec_dt_294'), ref('ec_dt_344')])]"
@@ -102,9 +101,9 @@
         </record>
         <record model="l10n_ec.tax.support" id="ts_14">
             <field name="code">14</field>
-            <field name="name">
-                Valores facturados por socios a operadoras de transporte (que no constituyen gasto de dicha operadora)
-            </field>
+            <field
+                name="name"
+            >Valores facturados por socios a operadoras de transporte (que no constituyen gasto de dicha operadora)</field>
             <field
                 name="document_type_ids"
                 eval="[(6,0,[ref('ec_dt_01'), ref('ec_dt_02'), ref('ec_dt_03'), ref('ec_dt_04'), ref('ec_dt_05')])]"
