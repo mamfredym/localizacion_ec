@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo noupdate="1">
+    <record id="email_template_cancel_invoice" model="mail.template">
+        <field name="name">Documento Cancelado</field>
+        <field name="email_from">${user.email_formatted | safe}</field>
+        <field name="subject">
+            Documento Cancelado (${object.display_name or 'n/a'})
+        </field>
+        <field name="email_to">	${object.user_id.email}</field>
+        <field name="model_id" ref="account.model_account_move" />
+        <field name="auto_delete" eval="True" />
+        <field name="lang">${object.partner_id.lang}</field>
+        <field name="body_html" type="html">
+            <div>
+                <p>
+                    Estimado(a)
+                    <strong>${object.user_id.partner_id.name}</strong>
+                    % if object.user_id.partner_id.parent_id:
+                    (
+                    <i>${object.user_id.partner_id.parent_id.name}</i>
+                    )
+                    % endif
+                    ,
+                </p>
+                <br />
+                <p>
+                    Nos complace informarle que su documento <strong
+                    >${object.l10n_ec_get_document_number()}</strong> ha sido cancelado
+                    por el usuario <strong>${user.partner_id.name}</strong>.
+                    Detalles del Documento
+                    <ul>
+                        <li>
+                            <strong>Tipo de Documento:</strong>
+                            ${object.l10n_ec_get_document_string()}
+                        </li>
+                        <li>
+                            <strong>Número de Documento:</strong>
+                            ${object.l10n_ec_get_document_number()}
+                        </li>
+                        <li>
+                            <strong>Clave de acceso:</strong>
+                            ${object.l10n_ec_xml_key}
+                        </li>
+                        <li>
+                            <strong>Valor Total:</strong>
+                            ${format_amount(object.amount_total, object.currency_id)}
+                        </li>
+                        % if object.origin:
+                        <li>
+                            <strong>Referencia:</strong>
+                            ${object.origin}
+                        </li>
+                        % endif
+                    </ul>
+                </p>
+                <br />
+                <br />
+            </div>
+        </field>
+    </record>
+</odoo>

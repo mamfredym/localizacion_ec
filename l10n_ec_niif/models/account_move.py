@@ -14,7 +14,6 @@ _logger = logging.getLogger(__name__)
 
 
 class L10nECIdentificationType(models.Model):
-
     _name = "l10n_ec.identification.type"
 
     code = fields.Char(string="Code", required=True)
@@ -1140,10 +1139,51 @@ class AccountMove(models.Model):
     def unlink(self):
         ecuadorian_moves = self.filtered(lambda x: x.company_id.country_id.code == "EC")
         for move in ecuadorian_moves:
+            if move.l10n_ec_xml_data_id and move.l10n_ec_xml_data_id.xml_authorization:
+                raise UserError(_("You cannot delete a document that is authorized"))
             if move.is_invoice() and move.state != "draft":
                 raise UserError(_("You only delete invoices in draft state"))
         super(AccountMove, ecuadorian_moves.with_context(force_delete=True)).unlink()
         return super(AccountMove, self - ecuadorian_moves).unlink()
+
+    def action_cancel_invoice_sent_email(self):
+        MailComposeMessage = self.env["mail.compose.message"]
+        self.ensure_one()
+        template = self.env.ref("l10n_ec_niif.email_template_cancel_invoice", False)
+        ctx = {
+            "default_model": self._name,
+            "default_res_id": self.id,
+            "default_use_template": bool(template),
+            "default_template_id": template.id,
+            "default_composition_mode": "comment",
+            "custom_layout": "mail.mail_notification_light",
+            "force_email": True,
+            "model_description": self.l10n_ec_get_document_string(),
+        }
+        msj = MailComposeMessage.with_context(ctx).create({})
+        try:
+            msj.onchange_template_id_wrapper()
+            msj.send_mail()
+        except Exception:
+            pass
+        return
+
+    @api.model
+    def _l10n_ec_is_document_authorized_in_sri(self, client_ws, l10n_ec_xml_key):
+        # La función retorna True en el caso que el estado del xml este autorizado, esto por que el sri  cuando un Doc
+        # esta en estado cancelado no retorna un estado como tal por eso pregunta si el estado es Autorizado se devuelve un True
+        # caso contrario se devuelve False para seguir la validación
+        response = client_ws.service.autorizacionComprobante(claveAccesoComprobante=l10n_ec_xml_key)
+        autorizacion_list = []
+        if hasattr(response, "autorizaciones") and response.autorizaciones is not None:
+            if not isinstance(response.autorizaciones.autorizacion, list):
+                autorizacion_list = [response.autorizaciones.autorizacion]
+            else:
+                autorizacion_list = response.autorizaciones.autorizacion
+        for doc in autorizacion_list:
+            if doc.estado == "AUTORIZADO":
+                return True
+        return False
 
     @api.model
     def _l10n_ec_get_extra_domain_move(self):
@@ -1192,6 +1232,7 @@ class AccountMove(models.Model):
         return super(AccountMove, self)._reverse_move_vals(default_values, cancel=cancel)
 
     def button_draft(self):
+        xml_data = self.env["sri.xml.data"]
         for move in self:
             # si esta en modo produccion, mostrar asistente para que ingrese autorizacion para cancelar
             # esta autorizacion se debe pedir al SRI(tramite manual)
@@ -1220,6 +1261,15 @@ class AccountMove(models.Model):
                 and move.l10n_ec_xml_data_id.state not in ["draft", "signed", "cancel", "returned"]
                 and not self.env.context.get("cancel_electronic_document", False)
             ):
+                if move.company_id.l10n_ec_request_sri_validation_cancel_doc:
+                    client_ws = xml_data.get_current_wsClient("2", "authorization")
+                    if move._l10n_ec_is_document_authorized_in_sri(client_ws, move.l10n_ec_xml_data_id.l10n_ec_xml_key):
+                        raise UserError(
+                            _(
+                                "You must first cancel the document: %s in the SRI portal and then cancel it in the system"
+                            )
+                            % (move.l10n_ec_get_document_number())
+                        )
                 wizard = self.env["wizard.cancel.electronic.documents"].create({"move_id": move.id})
                 action = self.env.ref("l10n_ec_niif.action_wizard_cancel_electronic_documents_form_view").read()[0]
                 action["context"] = {
@@ -1234,7 +1284,9 @@ class AccountMove(models.Model):
                 move.l10n_ec_withhold_ids.with_context(cancel_from_invoice=True).unlink()
         self.mapped("l10n_ec_xml_data_id").action_cancel()
         self.write({"l10n_ec_sri_authorization_state": "to_check"})
-        return super(AccountMove, self).button_draft()
+        res = super(AccountMove, self).button_draft()
+        self.action_cancel_invoice_sent_email()
+        return res
 
     def post(self):
         withhold_model = self.env["l10n_ec.withhold"]

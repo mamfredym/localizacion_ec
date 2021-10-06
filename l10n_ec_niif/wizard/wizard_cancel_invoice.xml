@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+	<data>
+		<record id="view_wizard_cancel_invoice" model="ir.ui.view">
+			<field name="name">wizard.cancel.invoice.form</field>
+			<field name="model">wizard.cancel.invoice</field>
+			<field name="arch" type="xml">
+				<form string="Cancelar Documentos">
+                    <group string="Cancelar Documentos" colspan="4">
+                        <div>
+                            <p
+                            >Ingrese los números de documentos que se crearan en estado cancelado y la fecha de la cancelación."</p>
+                            <p>*Sí especifica el cliente, éste se pasará a la información del documento cancelado</p>
+                            <p
+                            >*Sí especifica la descripción, ésta se pasará a la información del documento cancelado.</p>
+                        </div>
+					</group>
+					<separator string="" colspan="4" />
+					<group col="4">
+						<field name="date" />
+						<field name="company_id" widget="selection" />
+						<field name="account_line_id" />
+                        <field name="type_document" invisible="1" />
+                    </group>
+					<notebook>
+						<page string="Documentos a Cancelar">
+							<field name="line_ids" nolabel="1">
+								<tree string="Documentos a Cancelar" editable="top">
+									<field name="number" />
+									<field
+                                        name="partner_id"
+                                        context="{'search_default_customer':1}"
+                                        domain="[('is_company','=',True)]"
+                                        options="{'no_quick_create': True}"
+                                    />
+									<field name="name" />
+									<field name="date" />
+									<field name="auth_number" />
+								</tree>
+								<form string="Documentos a Cancelar">
+									<field name="number" />
+									<field
+                                        name="partner_id"
+                                        context="{'search_default_customer':1}"
+                                        domain="[('is_company','=',True)]"
+                                        options="{'no_quick_create': True}"
+                                    />
+									<field name="name" />
+								</form>
+							</field>
+						</page>
+					</notebook>
+					<footer>
+						<div class="oe_left">
+							<button string="Continuar" name="action_cancel_invoice" type="object" icon="fa-gear" class="oe_highlight" />
+							<button string="Cerrar" special="cancel" type="object" icon="fa-close" class="oe_link" />
+						</div>
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_wizard_cancel_invoice" model="ir.actions.act_window">
+			<field name="name">Cancelar Facturas</field>
+			<field name="res_model">wizard.cancel.invoice</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="view_wizard_cancel_invoice" />
+			<field name="target">new</field>
+			<field name="context">{'default_type_document': 'invoice'}</field>
+		</record>
+
+        <record id="action_wizard_cancel_liquidation" model="ir.actions.act_window">
+			<field name="name">Cancelar Liquidacion de Compras</field>
+			<field name="res_model">wizard.cancel.invoice</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="view_wizard_cancel_invoice" />
+            <field name="target">new</field>
+            <field name="context">{'default_type_document': 'liquidation'}</field>
+		</record>
+
+        <record id="action_wizard_cancel_credit_note" model="ir.actions.act_window">
+			<field name="name">Cancelar Notas de crédito</field>
+			<field name="res_model">wizard.cancel.invoice</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="view_wizard_cancel_invoice" />
+            <field name="target">new</field>
+            <field name="context">{'default_type_document': 'credit_note'}</field>
+		</record>
+
+        <record id="action_wizard_cancel_debit_note" model="ir.actions.act_window">
+			<field name="name">Cancelar Notas de débito</field>
+			<field name="res_model">wizard.cancel.invoice</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="view_wizard_cancel_invoice" />
+            <field name="target">new</field>
+            <field name="context">{'default_type_document': 'debit_note'}</field>
+		</record>
+
+		<menuitem
+            name="Cancelar Facturas"
+            id="cancel_invoice_menu"
+            sequence="90"
+            parent="sri_cancel_documents_menu"
+            action="action_wizard_cancel_invoice"
+        />
+        <menuitem
+            name="Cancelar Liquidacion de Compras"
+            id="cancel_liquidation_menu"
+            sequence="91"
+            parent="sri_cancel_documents_menu"
+            action="action_wizard_cancel_liquidation"
+        />
+        <menuitem
+            name="Cancelar Notas de crédito"
+            id="wizard_cancel_credit_note"
+            sequence="92"
+            parent="sri_cancel_documents_menu"
+            action="action_wizard_cancel_credit_note"
+        />
+        <menuitem
+            name="Cancelar Notas de débito"
+            id="wizard_cancel_debit_note"
+            sequence="93"
+            parent="sri_cancel_documents_menu"
+            action="action_wizard_cancel_debit_note"
+        />
+	</data>
+</odoo>

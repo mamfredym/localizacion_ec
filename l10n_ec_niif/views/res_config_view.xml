@@ -214,6 +214,16 @@
                                         <label for="l10n_ec_ws_timeout" class="col-5" />
                                         <field name="l10n_ec_ws_timeout" />
                                     </div>
+                                    <div class="row">
+                                        <label for="l10n_ec_request_sri_validation_cancel_doc" class="col-5" />
+                                        <field name="l10n_ec_request_sri_validation_cancel_doc" />
+                                    </div>
+                                    <div class="text-muted">
+                                        <p>Check the box if you want the system to consult the SRI if a document is
+                                            canceled in order to cancel it in the system, if it is not checked,
+                                            the system will not validate the SRI and proceed to cancel the document
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-12 col-md-12 o_setting_box">

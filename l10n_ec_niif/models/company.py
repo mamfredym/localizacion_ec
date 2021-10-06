@@ -19,6 +19,10 @@ class ResCompany(models.Model):
 
     l10n_ec_consumidor_final_limit = fields.Float(string="Invoice Sales Limit Final Consumer", default=200.0)
 
+    l10n_ec_request_sri_validation_cancel_doc = fields.Boolean(
+        string="Request sri validation for cancel documents", required=False
+    )
+
     l10n_ec_withhold_sale_iva_account_id = fields.Many2one(
         comodel_name="account.account",
         string="Withhold Sales IVA Account",

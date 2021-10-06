@@ -20,6 +20,12 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
     )
 
+    l10n_ec_request_sri_validation_cancel_doc = fields.Boolean(
+        string="Request sri validation for cancel documents",
+        related="company_id.l10n_ec_request_sri_validation_cancel_doc",
+        readonly=False,
+    )
+
     l10n_ec_withhold_sale_iva_tag_id = fields.Many2one(
         comodel_name="account.account.tag",
         string="Withhold Sales IVA Account Tag",
