@@ -1879,13 +1879,8 @@ class AccountMove(models.Model):
                 message_list.append(
                     _("Credit Note: %s has not document to modified, please review.") % (self.display_name)
                 )
-            # validar que la factura este autorizada electronicamente
-            if (
-                self.l10n_ec_original_invoice_id
-                and self.l10n_ec_original_invoice_id.l10n_ec_xml_data_id
-                and self.l10n_ec_original_invoice_id.l10n_ec_xml_data_id.l10n_ec_type_environment == "production"
-                and self.l10n_ec_original_invoice_id.l10n_ec_xml_data_id.state != "authorized"
-            ):
+            # validar que la factura este autorizada electronicamente(o en proceso de envio)
+            if self.l10n_ec_original_invoice_id and not self.l10n_ec_original_invoice_id.l10n_ec_xml_data_id:
                 message_list.append(
                     _(
                         "You cannot create Credit Note electronic if original document : %s has not electronic authorization"
