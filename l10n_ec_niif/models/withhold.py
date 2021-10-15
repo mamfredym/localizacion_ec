@@ -240,6 +240,12 @@ class L10nEcWithhold(models.Model):
         for withhold in self:
             withhold.access_url = "/my/retencion/%s" % (withhold.id)
 
+    def write(self, vals):
+        if "invoice_id" in vals:
+            for withold in self:
+                withold.line_ids.write({"invoice_id": withold.invoice_id})
+        return super(L10nEcWithhold, self).write(vals)
+
     @api.depends("invoice_id")
     def _compute_is_related_document(self):
         for rec in self:
