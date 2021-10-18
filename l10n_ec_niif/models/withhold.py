@@ -243,7 +243,7 @@ class L10nEcWithhold(models.Model):
     def write(self, vals):
         if "invoice_id" in vals:
             for withold in self:
-                withold.line_ids.write({"invoice_id": withold.invoice_id})
+                withold.line_ids.write({"invoice_id": vals["invoice_id"]})
         return super(L10nEcWithhold, self).write(vals)
 
     @api.depends("invoice_id")
