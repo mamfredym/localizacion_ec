@@ -1285,7 +1285,8 @@ class AccountMove(models.Model):
         self.mapped("l10n_ec_xml_data_id").action_cancel()
         self.write({"l10n_ec_sri_authorization_state": "to_check"})
         res = super(AccountMove, self).button_draft()
-        self.filtered(lambda x: x.l10n_ec_xml_data_id).action_cancel_invoice_sent_email()
+        for move in self.filtered(lambda x: x.l10n_ec_xml_data_id):
+            move.action_cancel_invoice_sent_email()
         return res
 
     def post(self):
