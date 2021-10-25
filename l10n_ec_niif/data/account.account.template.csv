@@ -22,7 +22,7 @@ id,code,name,reconcile,user_type_id/id,chart_template_id/id,group_id/id
 1010311,1010311,"INVENTARIOS REPUESTOS, HERRAMIENTAS Y ACCESORIOS",0,account.data_account_type_current_assets,l10n_ec_niif.ec_chart_template,l10n_ec_niif.account_group_10103
 1010312,1010312,OTROS INVENTARIOS,0,account.data_account_type_current_assets,l10n_ec_niif.ec_chart_template,l10n_ec_niif.account_group_10103
 1010313,1010313,(-) PROVISIÓN POR VALOR NETO DE REALIZACIÓN Y OTRAS PERDIDAS EN INVENTARIO,0,account.data_account_type_current_assets,l10n_ec_niif.ec_chart_template,l10n_ec_niif.account_group_10103
-1010314,1010314,INVENTARIO ENTREGADO NO FACTURADO,0,account.data_account_type_current_assets,l10n_ec_niif.ec_chart_template,l10n_ec_niif.account_group_10103
+1010314,1010314,INVENTARIO ENTREGADO NO FACTURADO,1,account.data_account_type_current_assets,l10n_ec_niif.ec_chart_template,l10n_ec_niif.account_group_10103
 1010401,1010401,SEGUROS PAGADOS POR ANTICIPADO,0,account.data_account_type_current_assets,l10n_ec_niif.ec_chart_template,l10n_ec_niif.account_group_10104
 1010402,1010402,ARRIENDOS PAGADOS POR ANTICIPADO,0,account.data_account_type_current_assets,l10n_ec_niif.ec_chart_template,l10n_ec_niif.account_group_10104
 1010403,1010403,ANTICIPOS A PROVEEDORES,0,account.data_account_type_current_assets,l10n_ec_niif.ec_chart_template,l10n_ec_niif.account_group_10104
