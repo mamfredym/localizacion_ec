@@ -459,6 +459,14 @@
                     <field name="l10n_ec_agency_id" />
                     <field name="l10n_ec_authorization_id" />
                 </xpath>
+                 <xpath expr="//filter[@name='late']" position="after">
+                    <separator />
+                    <filter
+                        name="without_withholding"
+                        string="Without Withholding"
+                        domain="[('state', '=', 'posted'), ('l10n_ec_withhold_line_ids', '=', False)]"
+                    />
+                </xpath>
                 <xpath expr="//filter[@name='salesperson']" position="after">
                     <filter
                         name="l10n_ec_point_of_emission_id"
