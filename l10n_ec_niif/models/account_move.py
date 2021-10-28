@@ -1532,18 +1532,6 @@ class AccountMove(models.Model):
                             error_list.append(_("You must apply at least one income withholding tax"))
                         if len(iva_taxes) == 0 and len(iva_0_taxes) == 0:
                             error_list.append(_("You must apply at least one VAT tax"))
-                if len(iva_taxes) >= 1 and len(iva_0_taxes) >= 1:
-                    error_list.append(_("Cannot apply VAT zero rate with another VAT rate"))
-                if len(iva_taxes) > 1:
-                    error_list.append(
-                        _("You cannot have more than one VAT tax %s")
-                        % (" / ".join(t.description or t.name for t in iva_taxes))
-                    )
-                if len(iva_0_taxes) > 1:
-                    error_list.append(
-                        _("You cannot have more than one VAT 0 tax %s")
-                        % (" / ".join(t.description or t.name for t in iva_0_taxes))
-                    )
                 if len(withhold_iva_taxes) > 1:
                     error_list.append(
                         _("You cannot have more than one VAT Withholding tax %s")
@@ -1559,9 +1547,28 @@ class AccountMove(models.Model):
                         _("You cannot apply VAT withholding without an assigned VAT tax %s")
                         % (" / ".join(t.description or t.name for t in withhold_iva_taxes))
                     )
+        for line in self.invoice_line_ids:
+            iva_taxes = line.tax_ids.filtered(lambda x: x.tax_group_id.id == iva_group.id and x.amount > 0)
+            iva_0_taxes = line.tax_ids.filtered(
+                lambda x: x.tax_group_id.id in (iva_group_0.id, iva_no_apply_group.id, iva_exempt_group.id)
+                and x.amount == 0
+            )
+            if len(iva_taxes) >= 1 and len(iva_0_taxes) >= 1:
+                error_list.append(_("Cannot apply VAT zero rate with another VAT rate"))
+            if len(iva_taxes) > 1:
+                error_list.append(
+                    _("You cannot have more than one VAT tax %s")
+                    % (" / ".join(t.description or t.name for t in iva_taxes))
+                )
+            if len(iva_0_taxes) > 1:
+                error_list.append(
+                    _("You cannot have more than one VAT 0 tax %s")
+                    % (" / ".join(t.description or t.name for t in iva_0_taxes))
+                )
         # al validar un documento, si tiene xml autorizado
         # o una autorizacion de cancelacion, no permitir validar nuevamente,
         # ya que el SRI rechazara por secuencial registrado
+
         current_xml_recs = self.filtered(
             lambda x: x.l10n_ec_xml_data_id
             and (x.l10n_ec_xml_data_id.state == "cancel" and x.l10n_ec_xml_data_id.authorization_to_cancel)
