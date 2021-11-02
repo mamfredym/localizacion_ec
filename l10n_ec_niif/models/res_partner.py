@@ -273,7 +273,7 @@ class ResPartner(models.Model):
     def write(self, values):
         for partner in self:
             if (
-                partner.ref == "9999999999999"
+                partner.vat == "9999999999999"
                 and self._uid != SUPERUSER_ID
                 and ("name" in values or "vat" in values or "active" in values or "country_id" in values)
             ):
@@ -282,7 +282,7 @@ class ResPartner(models.Model):
 
     def unlink(self):
         for partner in self:
-            if partner.ref == "9999999999999":
+            if partner.vat == "9999999999999":
                 raise UserError(_("You cannot unlink final consumer"))
         return super(ResPartner, self).unlink()
 
