@@ -1217,6 +1217,7 @@ class SriXmlData(models.Model):
             [
                 ("state", "in", ("returned", "rejected")),
                 ("company_id", "=", company.id),
+                ("notification_active", "=", True),
             ],
             limit=company.l10n_ec_cron_process,
         )
