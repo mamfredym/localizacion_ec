@@ -427,7 +427,7 @@ class L10nEcWithhold(models.Model):
 
     def action_cancel(self):
         for rec in self:
-            if rec.type == "sale":
+            if rec.type in ("sale", "credit_card"):
                 if rec.move_id:
                     rec.move_id.button_cancel()
                     rec.move_id.line_ids.remove_move_reconcile()
