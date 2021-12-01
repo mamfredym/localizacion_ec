@@ -731,10 +731,10 @@ class L10nEcWithholdLinePercent(models.Model):
     )
     percent = fields.Float(string="Percent", required=False)
 
-    def _get_percent(self, percent, type):
+    def _get_percent(self, percent, withhold_type):
         rec = self.search(
             [
-                ("type", "=", type),
+                ("type", "=", withhold_type),
                 ("percent", "=", percent),
             ]
         )
@@ -742,7 +742,7 @@ class L10nEcWithholdLinePercent(models.Model):
             rec = self.create(
                 {
                     "name": str(percent),
-                    "type": type,
+                    "type": withhold_type,
                     "percent": percent,
                 }
             )

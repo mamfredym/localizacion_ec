@@ -34,23 +34,23 @@ class AccountTax(models.Model):
         percent_model = self.env["l10n_ec.withhold.line.percent"]
         for rec in self:
             if rec.tax_group_id.id in (withhold_iva_group.id, withhold_rent_group.id):
-                type = (
+                withhold_type = (
                     rec.tax_group_id.id == withhold_iva_group.id
                     and "iva"
                     or rec.tax_group_id.id == withhold_rent_group.id
                     and "rent"
                 )
                 percent = abs(rec.amount)
-                if type == "iva":
+                if withhold_type == "iva":
                     percent = abs(
                         rec.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == "tax").factor_percent
                     )
-                current_percent = percent_model.search([("type", "=", type), ("percent", "=", percent)])
+                current_percent = percent_model.search([("type", "=", withhold_type), ("percent", "=", percent)])
                 if not current_percent:
                     percent_model.create(
                         {
                             "name": str(percent),
-                            "type": type,
+                            "type": withhold_type,
                             "percent": percent,
                         }
                     )

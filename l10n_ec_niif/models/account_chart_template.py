@@ -12,7 +12,7 @@ class AccountChartTemplate(models.Model):
         return res
 
     def _prepare_all_journals(self, acc_template_ref, company, journals_dict=None):
-        def _get_default_account(journal_vals, type="debit"):
+        def _get_default_account(journal_vals, account_type="debit"):
             # Get the default accounts
             default_account = False
             if journal["type"] == "sale":
@@ -20,7 +20,7 @@ class AccountChartTemplate(models.Model):
             elif journal["type"] == "purchase":
                 default_account = acc_template_ref.get(self.property_account_expense_categ_id.id)
             elif journal["type"] == "general" and journal["code"] == _("EXCH"):
-                if type == "credit":
+                if account_type == "credit":
                     default_account = acc_template_ref.get(self.income_currency_exchange_account_id.id)
                 else:
                     default_account = acc_template_ref.get(self.expense_currency_exchange_account_id.id)
