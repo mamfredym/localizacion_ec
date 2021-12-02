@@ -1693,7 +1693,7 @@ class AccountMove(models.Model):
         error_list, product_not_quantity = [], []
         for move in self:
             if move.l10n_ec_invoice_type in ("in_invoice", "out_invoice", "in_refund", "out_refund"):
-                for line in move.invoice_line_ids:
+                for line in move.invoice_line_ids.filtered(lambda x: not x.display_type):
                     if float_compare(line.quantity, 0.0, precision_digits=2) <= 0:
                         product_not_quantity.append("  - %s" % line.product_id.display_name)
                 if product_not_quantity:
