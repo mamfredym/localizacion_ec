@@ -2178,7 +2178,7 @@ class AccountMove(models.Model):
         """
         iva_group = self.env.ref("l10n_ec_niif.tax_group_iva")
         iva0_group = self.env.ref("l10n_ec_niif.tax_group_iva_0")
-        invoice_lines = self.invoice_line_ids.filtered(lambda x: not x.display_type).sorted("price_subtotal")
+        invoice_lines = self.invoice_line_ids.sorted("price_subtotal")
         lines_discount = invoice_lines.filtered(lambda x: x.price_subtotal < 0)
         invoice_lines -= lines_discount
         invoice_line_data = {}
@@ -2249,7 +2249,7 @@ class AccountMove(models.Model):
                 "tarifa_iva": tarifa_iva,
             }
         return {
-            "invoice_lines": invoice_lines,
+            "invoice_lines": self.env["account.move.line"].search([("id", "in", invoice_lines.ids)], order="sequence"),
             "lines_discount": lines_discount,
             "invoice_line_data": invoice_line_data,
         }

@@ -187,7 +187,7 @@
                     <t t-set="line_data" t-value="invoice_line_data.get(line.id, {})" />
                     <t t-set="discount" t-value="line_data['discount']" />
                     <t t-set="subtotal" t-value="line_data['subtotal']" />
-                    <tr style="font-size: 9px;">
+                    <tr style="font-size: 9px;" t-if="not line.display_type">
                         <td t-if="company.l10n_ec_print_ride_main_code">
                             <span t-esc="line.product_id and line.product_id.default_code or 'S/N'" />
                         </td>
@@ -220,6 +220,18 @@
                             />
                         </td>
                     </tr>
+                    <t t-if="line.display_type == 'line_section'">
+                        <td name="td_section_line" colspan="99">
+                            <span t-field="line.name" />
+                        </td>
+                        <t t-set="current_section" t-value="line" />
+                        <t t-set="current_subtotal" t-value="0" />
+                    </t>
+                    <t t-if="line.display_type == 'line_note'">
+                        <td name="td_note_line" colspan="99">
+                            <span t-field="line.name" />
+                        </td>
+                    </t>
                 </t>
             </tbody>
         </table>
