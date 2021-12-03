@@ -81,6 +81,7 @@
         <t t-set="tarifa_iva" t-value="o.l10n_ec_get_tarifa_iva()" />
         <t t-set="invoice_lines_data" t-value="o._l10n_ec_get_invoice_lines_to_fe()" />
         <t t-set="invoice_lines" t-value="invoice_lines_data['invoice_lines']" />
+        <t t-set="ordered_lines" t-value="invoice_lines_data['ordered_lines']" />
         <t t-set="lines_discount" t-value="invoice_lines_data['lines_discount']" />
         <t t-set="invoice_line_data" t-value="invoice_lines_data['invoice_line_data']" />
         <t t-set="discount_additional" t-value="abs(sum(lines_discount.mapped('price_subtotal')))" />
@@ -183,10 +184,10 @@
                 </tr>
             </thead>
             <tbody>
-                <t t-foreach="invoice_lines" t-as="line">
+                <t t-foreach="ordered_lines" t-as="line">
                     <t t-set="line_data" t-value="invoice_line_data.get(line.id, {})" />
-                    <t t-set="discount" t-value="line_data['discount']" />
-                    <t t-set="subtotal" t-value="line_data['subtotal']" />
+                    <t t-set="discount" t-value="line_data.get('discount', 0.0)" />
+                    <t t-set="subtotal" t-value="line_data.get('subtotal', 0.0)" />
                     <tr style="font-size: 9px;" t-if="not line.display_type">
                         <td t-if="company.l10n_ec_print_ride_main_code">
                             <span t-esc="line.product_id and line.product_id.default_code or 'S/N'" />
