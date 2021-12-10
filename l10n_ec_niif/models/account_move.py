@@ -1598,7 +1598,11 @@ class AccountMove(models.Model):
             ]
         )
         for invoice in invoices:
-            invoice._l10n_ec_action_validate_authorization_sri()
+            try:
+                with self.env.cr.savepoint():
+                    invoice._l10n_ec_action_validate_authorization_sri()
+            except Exception as ex:
+                _logger.error(tools.ustr(ex))
         withholding = self.env["l10n_ec.withhold"].search(
             [
                 ("type", "=", "sale"),
@@ -1607,7 +1611,11 @@ class AccountMove(models.Model):
             ]
         )
         for withhold in withholding:
-            withhold._l10n_ec_action_validate_authorization_sri()
+            try:
+                with self.env.cr.savepoint():
+                    withhold._l10n_ec_action_validate_authorization_sri()
+            except Exception as ex:
+                _logger.error(tools.ustr(ex))
         return True
 
     def _l10n_ec_action_validate_authorization_sri(self):
