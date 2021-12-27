@@ -16,6 +16,22 @@
                 <field name="country_id" position="attributes">
                     <attribute name="required">1</attribute>
                 </field>
+                <field name="vat" position="after">
+                    <field name="l10n_ec_show_force_validate" invisible="True" />
+                    <field
+                        name="l10n_ec_force_validate_nif"
+                        attrs="{'invisible': [('l10n_ec_show_force_validate','=',False)]}"
+                    />
+                    <div
+                        colspan="2"
+                        role="alert"
+                        class="alert alert-warning"
+                        attrs="{'invisible': [('l10n_ec_show_force_validate','=',False)]}"
+                    >
+                        RUC is not valid, if you entered data correctly, mark field <strong
+                        >Force validate nif</strong> to force save or try in few seconds again
+                    </div>
+                </field>
                 <xpath expr="//page[@name='sales_purchases']//group[@name='purchase']" position="inside">
                     <field name="l10n_ec_foreign" />
                     <field

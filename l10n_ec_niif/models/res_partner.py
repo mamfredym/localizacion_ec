@@ -4,7 +4,7 @@ import re
 import requests
 from stdnum.ec import ci, ruc
 
-from odoo import SUPERUSER_ID, api, fields, models
+from odoo import SUPERUSER_ID, api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.tools.translate import _
 
@@ -121,6 +121,13 @@ class ResPartner(models.Model):
     l10n_ec_sri_payment_id = fields.Many2one("l10n_ec.sri.payment.method", "SRI Payment Method")
     vat = fields.Char(tracking=True)
 
+    # campo tecnico para mostrar el campo l10n_ec_force_validate_nif
+    # esto se usara solamente cuando el RUC no pase el modulo 11 y el SRI no responda
+    # pero si el SRI responde, segun la respuesta se dara por valido o no el RUC, pero no se mostrara el campo l10n_ec_force_validate_nif
+    l10n_ec_show_force_validate = fields.Boolean(string="Show force validate?", copy=False, default=False)
+    # campo para permitir saltar la validacion de RUC solo bajo la condicion que no pase el modulo 11 y el SRI este caido
+    l10n_ec_force_validate_nif = fields.Boolean(string="Force validate nif?", copy=False)
+
     @api.depends("company_id.country_id")
     def _compute_ecuadorian_company(self):
         for rec in self:
@@ -181,6 +188,20 @@ class ResPartner(models.Model):
         else:
             return False, False
 
+    @api.model
+    def _get_partner_info_from_sri(self, vat):
+        """
+        Consultar informacion del contribuyente segun el numero de RUC
+        :return: dict con la data devuelta por el SRI
+        """
+        try:
+            response = requests.get(f"https://srienlinea.sri.gob.ec/movil-servicios/api/v1.0/estadoTributario/{vat}")
+            data = response.json()
+        except Exception as e:
+            data = {}
+            _logger.error("Error retrieving data from sri: %s" % tools.ustr(e))
+        return data
+
     @api.constrains("vat", "country_id", "l10n_latam_identification_type_id")
     def check_vat(self):
         it_ruc = self.env.ref("l10n_ec_niif.it_ruc", False)
@@ -192,6 +213,19 @@ class ResPartner(models.Model):
                     if partner.l10n_latam_identification_type_id.id in (it_ruc.id, it_cedula.id):
                         valid, vat_type = self.check_vat_ec(partner.vat)
                         if not valid:
+                            # cuando no pasa el algoritmo de modulo 11
+                            # intentar validarlo contra el SRI
+                            # si es un ruc valido, me devolvera la data del contribuyente
+                            # caso contrario me devolvera un mensaje
+                            # pero si no obtengo respuesta posiblemente este caido el SRI<data estara vacio>
+                            # NOTA: si el usuario activo l10n_ec_force_validate_nif se omitira la validacion
+                            data = self._get_partner_info_from_sri(partner.vat)
+                            if data:
+                                if data.get("razonSocial"):
+                                    valid = True
+                                elif not data.get("mensaje"):
+                                    valid = True
+                        if not valid and not partner.l10n_ec_force_validate_nif:
                             raise UserError(
                                 _(
                                     "VAT %s is not valid for an Ecuadorian company, "
@@ -202,6 +236,24 @@ class ResPartner(models.Model):
             return super(ResPartner, self).check_vat()
         else:
             return True
+
+    @api.onchange("vat", "country_id")
+    def _onchange_vat(self):
+        if self.country_id and self.vat and self.country_id.code == "EC":
+            valid, vat_type = self.check_vat_ec(self.vat)
+            # habilitar el mostrar check pasa saltar la validacion cuando el RUC no sea valido
+            self.l10n_ec_show_force_validate = not valid
+            self.l10n_ec_force_validate_nif = False
+            if not valid:
+                data = self._get_partner_info_from_sri(self.vat)
+                # si el SRI me devuelve explicitamente que no es valido, no habilitar check NUNCA
+                # cuando el SRI esta caido, data sera vacio y me habilitara el check para saltar la validacion temporalmente
+                if data.get("razonSocial"):
+                    self.l10n_ec_show_force_validate = False
+                elif data.get("mensaje"):
+                    self.l10n_ec_show_force_validate = False
+                else:
+                    self.l10n_ec_show_force_validate = True
 
     @api.depends("vat", "country_id", "l10n_latam_identification_type_id")
     def _compute_l10n_ec_type_sri(self):
@@ -335,7 +387,7 @@ class ResPartner(models.Model):
         default=lambda self: not ("default_parent_id" in self.env.context),
     )
     l10n_ec_require_email_electronic = fields.Boolean(
-        string=u"Requerir Correo Electronico",
+        string="Requerir Correo Electronico",
         store=False,
         compute="_compute_l10n_ec_require_email_electronic",
     )
@@ -372,35 +424,23 @@ class ResPartner(models.Model):
         for rec in self:
             l10n_ec_sri_status = ""
             if rec.vat:
-                response = False
-                try:
-                    response = requests.get(
-                        "https://srienlinea.sri.gob.ec/movil-servicios/api/v1.0/estadoTributario/%s" % rec.vat
+                data = self._get_partner_info_from_sri(rec.vat)
+                if "razonSocial" in data:
+                    l10n_ec_sri_status += "<p><strong>Razon Social: </strong><span>%s</span></p>" % data.get(
+                        "razonSocial", ""
                     )
-                except Exception as e:
-                    _logger.debug("Error retrieving data from sri: %s" % str(e))
-                if response:
-                    data = response.json()
-                    if isinstance(data, dict):
-                        if "razonSocial" in data:
-                            l10n_ec_sri_status += "<p><strong>Razon Social: </strong><span>%s</span></p>" % data.get(
-                                "razonSocial", ""
-                            )
-                        if "descripcion" in data:
-                            l10n_ec_sri_status += (
-                                "<p><strong>Estado Tributario: </strong><span>%s</span></p>"
-                                % data.get("descripcion", "")
-                            )
-                        if "plazoVigenciaDoc" in data:
-                            l10n_ec_sri_status += (
-                                "<p><strong>Plazo de Vigencia: </strong><span>%s</span></p>"
-                                % data.get("plazoVigenciaDoc", "")
-                            )
-                        if "claseContribuyente" in data:
-                            l10n_ec_sri_status += (
-                                "<p><strong>Clase de Contribuyente: </strong><span>%s</span></p>"
-                                % data.get("claseContribuyente", "")
-                            )
+                if "descripcion" in data:
+                    l10n_ec_sri_status += "<p><strong>Estado Tributario: </strong><span>%s</span></p>" % data.get(
+                        "descripcion", ""
+                    )
+                if "plazoVigenciaDoc" in data:
+                    l10n_ec_sri_status += "<p><strong>Plazo de Vigencia: </strong><span>%s</span></p>" % data.get(
+                        "plazoVigenciaDoc", ""
+                    )
+                if "claseContribuyente" in data:
+                    l10n_ec_sri_status += "<p><strong>Clase de Contribuyente: </strong><span>%s</span></p>" % data.get(
+                        "claseContribuyente", ""
+                    )
             rec.l10n_ec_sri_status = l10n_ec_sri_status
 
     l10n_ec_sri_status = fields.Html(string="SRI Status", readonly=True, compute="_compute_sri_status")
@@ -450,6 +490,3 @@ class ResPartner(models.Model):
         else:
             tipoIdentificacion_purchase = "03"
         return tipoIdentificacion_purchase
-
-
-ResPartner()
