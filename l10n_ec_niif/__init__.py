@@ -9,6 +9,13 @@ from odoo.addons import account
 native_auto_install_l10n = account._auto_install_l10n
 
 
+def update_payment_term_type(cr, registry):
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    payment_term_inmediate = env.ref("account.account_payment_term_immediate", False)
+    if payment_term_inmediate:
+        payment_term_inmediate.write({"l10n_ec_sri_type": "contado"})
+
+
 def _auto_install_l10n_ec(cr, registry):
     env = api.Environment(cr, SUPERUSER_ID, {})
     country_code = env.company.country_id.code

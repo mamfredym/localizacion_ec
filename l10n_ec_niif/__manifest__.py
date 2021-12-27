@@ -1,6 +1,6 @@
 {
     "name": "Ecuador - Accounting IFRS",
-    "version": "13.0.1.2.1",
+    "version": "13.0.1.2.2",
     "category": "Localization",
     "author": "Spearhead",
     "website": "https://www.spearhead.global",
@@ -87,4 +87,5 @@
     "external_dependencies": {
         "python": ["stdnum", "xmlsig", "OpenSSL", "xades", "zeep"],
     },
+    "post_init_hook": "update_payment_term_type",
 }
