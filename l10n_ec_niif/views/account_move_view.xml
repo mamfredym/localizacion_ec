@@ -340,6 +340,21 @@
                 </xpath>
             </field>
         </record>
+
+        <record id="account_invoice_form_view_editable_date" model="ir.ui.view">
+            <field name="name">account.move.form</field>
+            <field name="model">account.move</field>
+            <field name="priority">100</field>
+            <field name="inherit_id" ref="l10n_ec_niif.account_move_form_view_latam" />
+            <field name="groups_id" eval="[(4, ref('group_edit_invoice_date_edi'))]" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='invoice_date']" position="attributes">
+                    <attribute name="attrs">{}</attribute>
+                    <attribute name="force_save">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
         <record id="account_move_form_view" model="ir.ui.view">
             <field name="name">account.move.form</field>
             <field name="model">account.move</field>
