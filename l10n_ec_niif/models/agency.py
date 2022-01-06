@@ -63,6 +63,12 @@ class L10nEcAgency(models.Model):
                     _logger.debug("Error parsing agency number %s" % str(e))
                     raise ValidationError(_("Number of agency must be only numbers"))
 
+    def write(self, values):
+        if "active" in values:
+            # Debo desactivar todos los puntos de misión o activales cuando se activa a desactiva la agencia
+            self.mapped("printer_point_ids").write({"active": values.get("active")})
+        return super(L10nEcAgency, self).write(values)
+
     _sql_constraints = [
         (
             "number_uniq",
@@ -85,7 +91,7 @@ class L10EcPointOfEmission(models.Model):
     agency_id = fields.Many2one("l10n_ec.agency", "Agency", required=False, index=True, auto_join=True)
     company_id = fields.Many2one(comodel_name="res.company", string="Company", related="agency_id.company_id")
     number = fields.Char("S.R.I. Number", size=3, required=True, readonly=False, index=True)
-    active = fields.Boolean(string="Active?", related="agency_id.active", default=True)
+    active = fields.Boolean(string="Active?", default=True)
     count_invoice = fields.Integer(string="Count Invoice", related="agency_id.count_invoice")
     type_emission = fields.Selection(
         string="Type Emission",
