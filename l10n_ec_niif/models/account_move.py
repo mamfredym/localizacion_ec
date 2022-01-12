@@ -1538,7 +1538,7 @@ class AccountMove(models.Model):
         # * tener 1 impuesto de retencion IVA y 1 impuesto de retencion RENTA
         # * no permitir retener IVA si no hay impuesto de IVA(evitar IVA 0)
         if self.type == "in_invoice":
-            if not self.l10n_ec_tax_support_id and self.l10n_ec_invoice_type == "in_invoice":
+            if self.partner_id.country_id.code == "EC" and not self.l10n_ec_tax_support_id and self.l10n_ec_invoice_type == "in_invoice":
                 error_list.append(
                     _("You must select the fiscal support to validate invoices %s of supplier %s.")
                     % (self.l10n_latam_document_number, self.partner_id.display_name)
