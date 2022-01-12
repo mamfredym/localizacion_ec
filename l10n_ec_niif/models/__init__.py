@@ -22,6 +22,7 @@ from . import account_payment
 from . import account_move
 from . import account_journal
 from . import withhold
+from . import xml_info_additional
 from . import res_users
 from . import res_config
 from . import l10n_ec_utils

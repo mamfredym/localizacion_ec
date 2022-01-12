@@ -155,11 +155,17 @@ class L10nEcCommonDocumentElectronic(models.AbstractModel):
         raise UserError(_("You must replace this function l10n_ec_action_generate_xml_data in its inherited class"))
 
     def _l10n_ec_get_info_aditional(self):
-        # TODO: implementar modelo para informacion adicional
         info_data = []
+        if "l10n_ec_info_aditional_ids" in self._fields:
+            for line in self.l10n_ec_info_aditional_ids:
+                info_data.append(
+                    {
+                        "name": line.name,
+                        "description": line.description,
+                    }
+                )
         return info_data
 
-    @api.model
     def l10n_ec_add_info_adicional(self, NodeRoot):
         util_model = self.env["l10n_ec.utils"]
         infoAdicional = SubElement(NodeRoot, "infoAdicional")

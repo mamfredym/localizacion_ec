@@ -337,6 +337,24 @@
                             </form>
                         </field>
                     </page>
+                    <page
+                        name="l10n_ec_info_aditional"
+                        string="Additional Info(RIDE)"
+                        attrs="{'invisible': [('l10n_ec_invoice_type', 'not in', ('liquidation', 'out_invoice', 'out_refund', 'debit_note_out'))]}"
+                    >
+                        <field name="l10n_ec_info_aditional_ids">
+                            <tree editable="bottom">
+                                <field name="name" />
+                                <field name="description" />
+                            </tree>
+                            <form>
+                                <group>
+                                    <field name="name" />
+                                    <field name="description" />
+                                </group>
+                            </form>
+                        </field>
+                    </page>
                 </xpath>
             </field>
         </record>

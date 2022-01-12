@@ -156,12 +156,13 @@
                 <span t-esc="partner.email or (partner.child_ids and partner.child_ids[0].email) or ''" />
                 <br />
             </t>
-            <!--			<t t-foreach="o.info_aditional_ids" t-as="info_aditional">-->
-            <!--				<strong t-field="info_aditional.name" />:-->
-            <!--				<span-->
-            <!--					t-field="info_aditional.description" />-->
-            <!--				<br />-->
-            <!--			</t>-->
+            <t t-if="'l10n_ec_info_aditional_ids' in o">
+                <t t-foreach="o.l10n_ec_info_aditional_ids" t-as="info_aditional">
+                    <strong t-field="info_aditional.name" />:
+                    <span t-field="info_aditional.description" />
+                        <br />
+                </t>
+            </t>
         </div>
     </template>
     <template id="electronic_report_common_payment_info">

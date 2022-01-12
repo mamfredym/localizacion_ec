@@ -353,6 +353,14 @@ class AccountMove(models.Model):
     l10n_ec_withhold_count = fields.Integer(
         string="Withhold Count", compute="_compute_l10n_ec_withhold_ids", store=False
     )
+    l10n_ec_info_aditional_ids = fields.One2many(
+        "sri.xml.info.aditional",
+        "move_id",
+        "Additional Info(RIDE)",
+        readonly=True,
+        copy=False,
+        states={"draft": [("readonly", False)]},
+    )
 
     @api.depends(
         "invoice_line_ids.price_unit",
