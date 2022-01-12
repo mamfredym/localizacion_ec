@@ -233,6 +233,18 @@ class ResConfigSettings(models.TransientModel):
         related="company_id.l10n_ec_print_ride_detail3",
         readonly=False,
     )
+    l10n_ec_string_ride_detail1 = fields.Char(
+        related="company_id.l10n_ec_string_ride_detail1",
+        readonly=False,
+    )
+    l10n_ec_string_ride_detail2 = fields.Char(
+        related="company_id.l10n_ec_string_ride_detail2",
+        readonly=False,
+    )
+    l10n_ec_string_ride_detail3 = fields.Char(
+        related="company_id.l10n_ec_string_ride_detail3",
+        readonly=False,
+    )
     l10n_ec_sri_payment_id = fields.Many2one(
         "l10n_ec.sri.payment.method",
         string=u"S.R.I Payment Method",

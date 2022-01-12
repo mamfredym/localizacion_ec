@@ -163,21 +163,15 @@
                     <th name="th_caux" class="amount-sm" t-if="company.l10n_ec_print_ride_aux_code">Código Auxiliar</th>
                     <th name="th_cant" class="amount-sm">Cantidad</th>
                     <th name="th_descrip" class="">Descripción</th>
-                    <th
-                        name="th_detalle1"
-                        class="amount-sm"
-                        t-if="company.l10n_ec_print_ride_detail1"
-                    >Detalle adicional</th>
-                    <th
-                        name="th_detalle2"
-                        class="amount-sm"
-                        t-if="company.l10n_ec_print_ride_detail2"
-                    >Detalle adicional</th>
-                    <th
-                        name="th_detalle3"
-                        class="amount-sm"
-                        t-if="company.l10n_ec_print_ride_detail3"
-                    >Detalle adicional</th>
+                    <th name="th_detalle1" class="amount-sm" t-if="company.l10n_ec_print_ride_detail1"><strong
+                            t-field="company.l10n_ec_string_ride_detail1"
+                        /></th>
+                    <th name="th_detalle2" class="amount-sm" t-if="company.l10n_ec_print_ride_detail2"><strong
+                            t-field="company.l10n_ec_string_ride_detail2"
+                        /></th>
+                    <th name="th_detalle3" class="amount-sm" t-if="company.l10n_ec_print_ride_detail3"><strong
+                            t-field="company.l10n_ec_string_ride_detail3"
+                        /></th>
                     <th name="th_punit" class="amount-sm">Precio Unitario</th>
                     <th name="th_dscto" class="amount-sm">Descuento</th>
                     <th name="th_ptotal" class="amount-md">Precio Total</th>
@@ -199,9 +193,15 @@
                         <td>
                             <span t-field="line.name" />
                         </td>
-                        <td t-if="company.l10n_ec_print_ride_detail1" name="detail1" />
-                        <td t-if="company.l10n_ec_print_ride_detail2" name="detail2" />
-                        <td t-if="company.l10n_ec_print_ride_detail3" name="detail3" />
+                        <td t-if="company.l10n_ec_print_ride_detail1" name="detail1">
+                            <span t-field="line.l10n_ec_xml_additional_info1" />
+                        </td>
+                        <td t-if="company.l10n_ec_print_ride_detail2" name="detail2">
+                            <span t-field="line.l10n_ec_xml_additional_info2" />
+                        </td>
+                        <td t-if="company.l10n_ec_print_ride_detail3" name="detail3">
+                            <span t-field="line.l10n_ec_xml_additional_info3" />
+                        </td>
                         <td class="text-right">
                             <span
                                 t-field="line.price_unit"
@@ -298,9 +298,15 @@
                     <th class="amount-sm" t-if="company.l10n_ec_print_ride_aux_code">Código Auxiliar</th>
                     <th class="amount-sm">Cantidad</th>
                     <th class="">Descripción</th>
-                    <th class="amount-sm" t-if="company.l10n_ec_print_ride_detail1">Detalle adicional</th>
-                    <th class="amount-sm" t-if="company.l10n_ec_print_ride_detail2">Detalle adicional</th>
-                    <th class="amount-sm" t-if="company.l10n_ec_print_ride_detail3">Detalle adicional</th>
+                    <th class="amount-sm" t-if="company.l10n_ec_print_ride_detail1"><strong
+                            t-field="company.l10n_ec_string_ride_detail1"
+                        /></th>
+                    <th class="amount-sm" t-if="company.l10n_ec_print_ride_detail2"><strong
+                            t-field="company.l10n_ec_string_ride_detail2"
+                        /></th>
+                    <th class="amount-sm" t-if="company.l10n_ec_print_ride_detail3"><strong
+                            t-field="company.l10n_ec_string_ride_detail3"
+                        /></th>
                     <th class="amount-sm">Precio Unitario</th>
                     <th class="amount-sm">Descuento</th>
                     <th class="amount-md">Precio Total</th>
@@ -324,9 +330,15 @@
                         <td>
                             <span t-field="line.name" />
                         </td>
-                        <td t-if="company.l10n_ec_print_ride_detail1" name="detail1" />
-                        <td t-if="company.l10n_ec_print_ride_detail2" name="detail2" />
-                        <td t-if="company.l10n_ec_print_ride_detail3" name="detail3" />
+                        <td t-if="company.l10n_ec_print_ride_detail1" name="detail1">
+                            <span t-field="line.l10n_ec_xml_additional_info1" />
+                        </td>
+                        <td t-if="company.l10n_ec_print_ride_detail2" name="detail2">
+                            <span t-field="line.l10n_ec_xml_additional_info2" />
+                        </td>
+                        <td t-if="company.l10n_ec_print_ride_detail3" name="detail3">
+                            <span t-field="line.l10n_ec_xml_additional_info3" />
+                        </td>
                         <td class="text-right">
                             <span
                                 t-field="line.price_unit"
@@ -453,9 +465,15 @@
                     <th class="amount-sm" t-if="company.l10n_ec_print_ride_aux_code">Código Auxiliar</th>
                     <th class="amount-sm">Cantidad</th>
                     <th class="">Descripción</th>
-                    <th class="amount-sm" t-if="company.l10n_ec_print_ride_detail1">Detalle adicional</th>
-                    <th class="amount-sm" t-if="company.l10n_ec_print_ride_detail2">Detalle adicional</th>
-                    <th class="amount-sm" t-if="company.l10n_ec_print_ride_detail3">Detalle adicional</th>
+                    <th class="amount-sm" t-if="company.l10n_ec_print_ride_detail1"><strong
+                            t-field="company.l10n_ec_string_ride_detail1"
+                        /></th>
+                    <th class="amount-sm" t-if="company.l10n_ec_print_ride_detail2"><strong
+                            t-field="company.l10n_ec_string_ride_detail2"
+                        /></th>
+                    <th class="amount-sm" t-if="company.l10n_ec_print_ride_detail3"><strong
+                            t-field="company.l10n_ec_string_ride_detail3"
+                        /></th>
                     <th class="amount-sm">Precio Unitario</th>
                     <th class="amount-sm">Descuento</th>
                     <th class="amount-md">Precio Total</th>
@@ -474,9 +492,15 @@
                         <td>
                             <span t-field="line.name" />
                         </td>
-                        <td t-if="company.l10n_ec_print_ride_detail1" name="detail1" />
-                        <td t-if="company.l10n_ec_print_ride_detail2" name="detail2" />
-                        <td t-if="company.l10n_ec_print_ride_detail3" name="detail3" />
+                        <td t-if="company.l10n_ec_print_ride_detail1" name="detail1">
+                            <span t-field="line.l10n_ec_xml_additional_info1" />
+                        </td>
+                        <td t-if="company.l10n_ec_print_ride_detail2" name="detail2">
+                            <span t-field="line.l10n_ec_xml_additional_info2" />
+                        </td>
+                        <td t-if="company.l10n_ec_print_ride_detail3" name="detail3">
+                            <span t-field="line.l10n_ec_xml_additional_info3" />
+                        </td>
                         <td class="text-right">
                             <span
                                 t-field="line.price_unit"

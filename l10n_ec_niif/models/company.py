@@ -142,6 +142,10 @@ class ResCompany(models.Model):
     l10n_ec_print_ride_detail1 = fields.Boolean("Print detail additional 1?", default=True)
     l10n_ec_print_ride_detail2 = fields.Boolean("Print detail additional 2?", default=False)
     l10n_ec_print_ride_detail3 = fields.Boolean("Print detail additional 3?", default=False)
+    l10n_ec_string_ride_detail1 = fields.Char("Nombre Detalle 1")
+    l10n_ec_string_ride_detail2 = fields.Char("Nombre Detalle 2")
+    l10n_ec_string_ride_detail3 = fields.Char("Nombre Detalle 3")
+
     l10n_ec_sri_payment_id = fields.Many2one("l10n_ec.sri.payment.method", string=u"S.R.I Payment Method")
 
     @api.model

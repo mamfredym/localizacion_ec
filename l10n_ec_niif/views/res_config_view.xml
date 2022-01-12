@@ -561,6 +561,12 @@
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="l10n_ec_print_ride_detail1" />
+                                    <field
+                                        name="l10n_ec_string_ride_detail1"
+                                        placeholder="Some Tittle 1"
+                                        class="oe_inline"
+                                        attrs="{'invisible': [('l10n_ec_print_ride_detail1', '=', False)]}"
+                                    />
                                 </div>
                             </div>
                             <div id="option_l10n_ec_print_ride_detail2" class="col-12 col-md-6 o_setting_box">
@@ -569,6 +575,12 @@
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="l10n_ec_print_ride_detail2" />
+                                    <field
+                                        name="l10n_ec_string_ride_detail2"
+                                        placeholder="Some Tittle 2"
+                                        class="oe_inline"
+                                        attrs="{'invisible': [('l10n_ec_print_ride_detail2', '=', False)]}"
+                                    />
                                 </div>
                             </div>
                             <div id="option_l10n_ec_print_ride_detail3" class="col-12 col-md-6 o_setting_box">
@@ -577,6 +589,12 @@
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="l10n_ec_print_ride_detail3" />
+                                    <field
+                                        name="l10n_ec_string_ride_detail3"
+                                        placeholder="Some Tittle 3"
+                                        class="oe_inline"
+                                        attrs="{'invisible': [('l10n_ec_print_ride_detail3', '=', False)]}"
+                                    />
                                 </div>
                             </div>
                         </div>

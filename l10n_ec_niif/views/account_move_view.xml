@@ -411,6 +411,16 @@
                         attrs="{'invisible': ['|', '|', ('l10n_ec_withhold_count', '!=', 0), ('type', '!=', 'out_invoice'), ('state', '!=', 'posted')]}"
                     />
                 </div>
+                <xpath expr="//field[@name='invoice_line_ids']/tree//field[@name='name']" position="after">
+                    <field name="l10n_ec_xml_additional_info1" optional="hide" />
+                    <field name="l10n_ec_xml_additional_info2" optional="hide" />
+                    <field name="l10n_ec_xml_additional_info3" optional="hide" />
+                </xpath>
+                <xpath expr="//field[@name='line_ids']/tree//field[@name='name']" position="after">
+                    <field name="l10n_ec_xml_additional_info1" invisible="1" />
+                    <field name="l10n_ec_xml_additional_info2" invisible="1" />
+                    <field name="l10n_ec_xml_additional_info3" invisible="1" />
+                </xpath>
                 <xpath expr="//field[@name='invoice_line_ids']/tree//field[@name='tax_ids']" position="after">
                     <field name="l10n_ec_base_iva_0" optional="hide" />
                     <field name="l10n_ec_base_iva" optional="hide" />

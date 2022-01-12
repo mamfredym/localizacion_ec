@@ -1,6 +1,9 @@
+import json
 import logging
 import re
 from xml.etree.ElementTree import SubElement
+
+from lxml import etree
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
@@ -1108,6 +1111,28 @@ class AccountMove(models.Model):
                         if auth_line:
                             values["l10n_ec_authorization_line_id"] = auth_line.id
         return values
+
+    @api.model
+    def fields_view_get(self, view_id=None, view_type=False, toolbar=False, submenu=False):
+        res = super(AccountMove, self).fields_view_get(
+            view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu
+        )
+        inv_type = self.env.context.get("type", "out_invoice")
+        if view_type == "form" and inv_type == "out_invoice" and "invoice_line_ids" in res["fields"]:
+            doc = etree.XML(res["fields"]["invoice_line_ids"]["views"]["tree"]["arch"])
+            company = self.env.company
+            for ind in [1, 2, 3]:
+                field_name = "l10n_ec_xml_additional_info%s" % (ind)
+                field_string = company["l10n_ec_string_ride_detail%s" % ind] or "Informacion Adicional %s" % (ind)
+                modifiers = {
+                    "invisible": not company["l10n_ec_print_ride_detail%s" % ind],
+                }
+                nodes = doc.xpath(f"//field[@name='{field_name}']")
+                for node in nodes:
+                    node.set("modifiers", json.dumps(modifiers))
+                    node.set("string", field_string)
+            res["fields"]["invoice_line_ids"]["views"]["tree"]["arch"] = etree.tostring(doc)
+        return res
 
     def copy_data(self, default=None):
         if not default:
@@ -2396,6 +2421,25 @@ class AccountMove(models.Model):
             SubElement(detalle, "precioTotalSinImpuesto").text = util_model.formato_numero(
                 subtotal, currency.decimal_places
             )
+            if (
+                line.l10n_ec_xml_additional_info1
+                or line.l10n_ec_xml_additional_info2
+                or line.l10n_ec_xml_additional_info3
+            ):
+                detallesAdicionales = SubElement(detalle, "detallesAdicionales")
+                if line.l10n_ec_xml_additional_info1:
+                    detAdicional = SubElement(detallesAdicionales, "detAdicional")
+                    detAdicional.set("nombre", company.l10n_ec_string_ride_detail1 or "Detalle1")
+                    detAdicional.set("valor", line.l10n_ec_xml_additional_info1)
+                if line.l10n_ec_xml_additional_info2:
+                    detAdicional = SubElement(detallesAdicionales, "detAdicional")
+                    detAdicional.set("nombre", company.l10n_ec_string_ride_detail2 or "Detalle2")
+                    detAdicional.set("valor", line.l10n_ec_xml_additional_info2)
+                if line.l10n_ec_xml_additional_info3:
+                    detAdicional = SubElement(detallesAdicionales, "detAdicional")
+                    detAdicional.set("nombre", company.l10n_ec_string_ride_detail3 or "Detalle3")
+                    detAdicional.set("valor", line.l10n_ec_xml_additional_info3)
+
             impuestos = SubElement(detalle, "impuestos")
             if tarifa_iva <= 0:
                 self.l10n_ec_get_total_impuestos(
@@ -2920,6 +2964,9 @@ class AccountMoveLine(models.Model):
     l10n_ec_original_invoice_line_id = fields.Many2one(
         "account.move.line", string="Origin invoice line", copy=False, index=True
     )
+    l10n_ec_xml_additional_info1 = fields.Char(string="Additional Info")
+    l10n_ec_xml_additional_info2 = fields.Char(string="Additional Info 2")
+    l10n_ec_xml_additional_info3 = fields.Char(string="Additional Info 3")
 
     def _l10n_ec_get_discount_total(self):
         discount_total = self.price_unit * self.quantity * self.discount * 0.01
