@@ -40,7 +40,7 @@ class ResUsers(models.Model):
         if (
             not res["default_printer_default_id"]
             and raise_exception
-            and user.company_id.country_id.code == "EC"
+            and self.env.company.country_id.code == "EC"
             and not (user.has_group("base.group_public") or user.has_group("base.group_portal"))
         ):
             raise UserError(
