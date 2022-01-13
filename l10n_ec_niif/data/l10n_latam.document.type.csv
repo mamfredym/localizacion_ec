@@ -21,7 +21,7 @@
 "ec_dt_42",20,"42","Documento retención presuntiva y retención emitida por propio vendedor o por intermediario","Documento retención presuntiva y retención emitida por propio vendedor o por intermediario","invoice","DOC","base.ec",1,0
 "ec_dt_43",21,"43","Liquidacion para Explotacion y Exploracion de Hidrocarburos","Liquidacion para Explotacion y Exploracion de Hidrocarburos","invoice","DOC","base.ec",1,0
 "ec_dt_44",22,"44","Comprobante de Contribuciones y Aportes","Comprobante de Contribuciones y Aportes","invoice","DOC","base.ec",1,0
-"ec_dt_45",23,"45","Liquidación de medicina prepagada","Liquidación de medicina prepagada","liquidation","DOC","base.ec",1,0
+"ec_dt_45",23,"45","Liquidación de medicina prepagada","Liquidación de medicina prepagada","invoice","DOC","base.ec",1,0
 "ec_dt_47",24,"47","N/C por Reembolso Emitida por Intermediario","N/C por Reembolso Emitida por Intermediario","credit_note","NCR","base.ec",1,1
 "ec_dt_48",25,"48","N/D por Reembolso Emitida por Intermediario","N/D por Reembolso Emitida por Intermediario","debit_note","NDR","base.ec",1,1
 "ec_dt_49",26,"49","Proveedor Directo de Exportador Bajo Régimen Especial","Proveedor Directo de Exportador Bajo Régimen Especial","invoice","DOC","base.ec",1,0
