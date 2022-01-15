@@ -1,0 +1,4 @@
+[submodule "oca_modules"]
+	path = oca_modules
+	url = git@github.com:Spearhead-Odoo/oca_modules.git
+	branch = master
