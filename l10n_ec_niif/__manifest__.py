@@ -12,7 +12,6 @@
         "base_vat",
         "l10n_latam_base",
         "l10n_latam_invoice_document",
-        "account_accountant",
         "account_debit_note",
         "portal",
         "mail",
