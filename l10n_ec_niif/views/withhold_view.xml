@@ -503,5 +503,33 @@
             action="l10n_ec_withhold_sales_act_window"
             sequence="10"
         />
+
+        <record id="l10n_ec_withhold_line_percent_tree_view" model="ir.ui.view">
+            <field name="name">l10n_ec.withhold.line.percent.tree</field>
+            <field name="model">l10n_ec.withhold.line.percent</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="name" required="1" string="Description" />
+                    <field name="type" required="1" />
+                    <field name="percent" required="1" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="l10n_ec_withhold_line_percent_act_window" model="ir.actions.act_window">
+            <field name="name">Percentage Withholds</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">l10n_ec.withhold.line.percent</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="l10n_ec_withhold_line_percent_tree_view" />
+        </record>
+        <menuitem
+            name="Percentage Withholds"
+            id="menu_l10n_ec_withhold_line_percent_act_window"
+            parent="withholds_root"
+            action="l10n_ec_withhold_line_percent_act_window"
+            groups="account.group_account_manager"
+            sequence="100"
+        />
     </data>
 </odoo>
