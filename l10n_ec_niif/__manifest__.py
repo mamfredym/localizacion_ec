@@ -15,6 +15,7 @@
         "account_debit_note",
         "portal",
         "mail",
+        "web",
     ],
     "data": [
         "security/ir.model.access.csv",

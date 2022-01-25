@@ -1,11 +1,11 @@
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests import tagged
 
-from odoo.addons.account.tests.account_test_savepoint import AccountTestInvoicingCommon
+from odoo.tests.common import SavepointCase
 
 
 @tagged("post_install", "-at_install")
-class EcuadorianNiifTest(AccountTestInvoicingCommon):
+class EcuadorianNiifTest(SavepointCase):
     @classmethod
     def setUpClass(cls, chart_template_ref="l10n_ec_niif.ec_chart_template"):
         super().setUpClass(chart_template_ref=chart_template_ref)
