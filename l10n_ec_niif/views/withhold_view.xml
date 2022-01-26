@@ -93,7 +93,7 @@
             <field name="name">l10n_ec.withhold.line.pivot</field>
             <field name="model">l10n_ec.withhold.line</field>
             <field name="arch" type="xml">
-                <pivot string="Withhold Line">
+                <pivot>
                     <field name="tax_id" type="row" />
                     <field name="issue_date" type="col" />
                     <field name="base_amount_currency" type="measure" />

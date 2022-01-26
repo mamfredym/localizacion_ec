@@ -974,7 +974,7 @@ class AccountMove(models.Model):
         return res
 
     @api.onchange(
-        "type",
+        "move_type",
         "l10n_latam_document_type_id",
         "l10n_ec_point_of_emission_id",
         "invoice_date",
@@ -1067,7 +1067,7 @@ class AccountMove(models.Model):
     @api.model
     def default_get(self, fields):
         values = super(AccountMove, self).default_get(fields)
-        inv_type = values.get("type", self.move_type)
+        inv_type = values.get("move_type", self.move_type)
         internal_type = values.get("internal_type") or self.env.context.get("internal_type") or "invoice"
         fields_ec_to_fill = {
             "l10n_ec_point_of_emission_id",
@@ -1125,7 +1125,7 @@ class AccountMove(models.Model):
         res = super(AccountMove, self).fields_view_get(
             view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu
         )
-        inv_type = self.env.context.get("type", "out_invoice")
+        inv_type = self.env.context.get("move_type", "out_invoice")
         if view_type == "form" and inv_type == "out_invoice" and "invoice_line_ids" in res["fields"]:
             doc = etree.XML(res["fields"]["invoice_line_ids"]["views"]["tree"]["arch"])
             company = self.env.company
@@ -1148,7 +1148,7 @@ class AccountMove(models.Model):
         if self.filtered(lambda x: x.company_id.country_id.code == "EC") and not default.get(
             "l10n_latam_document_number"
         ):
-            inv_type = default.get("type") or self.move_type
+            inv_type = default.get("move_type") or self.move_type
             internal_type = (
                 default.get("l10n_latam_internal_type")
                 or self.env.context.get("internal_type")
@@ -1225,7 +1225,7 @@ class AccountMove(models.Model):
             invoice_type = (
                 "out_invoice" if self.env.context.get("original_invoice_type") == "out_refund" else "in_invoice"
             )
-            domain.append(("type", "=", invoice_type))
+            domain.append(("move_type", "=", invoice_type))
         return domain
 
     @api.model

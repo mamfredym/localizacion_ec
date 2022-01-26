@@ -103,7 +103,7 @@ class EcuadorianNiifTest(SavepointCase):
         )
         self.test_invoice1 = self.test_obj5.create(
             {
-                "type": "out_invoice",
+                "move_type": "out_invoice",
                 "l10n_ec_point_of_emission_id": self.test_pofe1.id,
                 "l10n_ec_authorization_line_id": self.test_doc1.id,
             }
